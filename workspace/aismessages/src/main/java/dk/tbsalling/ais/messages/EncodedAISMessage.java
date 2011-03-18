@@ -2,10 +2,13 @@ package dk.tbsalling.ais.messages;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Logger;
 
 import dk.tbsalling.ais.messages.types.AISMessageType;
 
 public class EncodedAISMessage {
+
+    private static final Logger log = Logger.getLogger(EncodedAISMessage.class.getName());
 
 	/**
 	 * A container class for ITU 1371 encoded AIS messages.
@@ -35,32 +38,45 @@ public class EncodedAISMessage {
 	}
 	
 	public Boolean isValid() {
-		if (bitString.length() < 6)
+		if (bitString.length() < 6) {
+			log.warning("Message is too short: " + bitString.length() + " bits.");
 			return Boolean.FALSE;
-		
-		if (bitString.length() % 6 != 0)
-			return Boolean.FALSE;
+		}
 		
 		int messageType = Integer.parseInt(bitString.substring(0,6), 2);
-		if (messageType < 1 || messageType > 26) 
+		if (messageType < 1 || messageType > 26) {
+			log.warning("Unsupported message type: " + messageType);
 			return Boolean.FALSE;
+		}
 		
 		int actualMessageLength = bitString.length();
 		switch (messageType) {
 		case 1: 
-			if (actualMessageLength != 168) return Boolean.FALSE;
+			if (actualMessageLength != 168) {
+				log.warning("Message type 1: Illegal message length: " + bitString.length() + " bits.");
+				return Boolean.FALSE;
+			}
 			break;
 		case 2: 
-			if (actualMessageLength != 168) return Boolean.FALSE;
+			if (actualMessageLength != 168) {
+				log.warning("Message type 2: Illegal message length: " + bitString.length() + " bits.");
+				return Boolean.FALSE;
+			}
 			break;
 		case 3: 
-			if (actualMessageLength != 168) return Boolean.FALSE;
+			if (actualMessageLength != 168) {
+				log.warning("Message type 3: Illegal message length: " + bitString.length() + " bits.");
+				return Boolean.FALSE;
+			}
 			break;
 		case 4: 
 			if (actualMessageLength != 168) return Boolean.FALSE;
 			break;
 		case 5: 
-			if (actualMessageLength != 424) return Boolean.FALSE;
+			if (actualMessageLength != 424) {
+				log.warning("Message type 5: Illegal message length: " + bitString.length() + " bits.");
+				return Boolean.FALSE;
+			}
 			break;
 		case 6: 
 			break;

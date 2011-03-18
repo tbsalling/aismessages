@@ -68,6 +68,21 @@ public class BaseStationReport extends DecodedAISMessage {
 		return raimFlag;
 	}
 	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("BaseStationReport [year=").append(year)
+				.append(", month=").append(month).append(", day=").append(day)
+				.append(", hour=").append(hour).append(", minute=")
+				.append(minute).append(", second=").append(second)
+				.append(", positionAccurate=").append(positionAccurate)
+				.append(", latitude=").append(latitude).append(", longitude=")
+				.append(longitude).append(", positionFixingDevice=")
+				.append(positionFixingDevice).append(", raimFlag=")
+				.append(raimFlag).append("]");
+		return builder.toString();
+	}
+
 	public static BaseStationReport fromEncodedMessage(EncodedAISMessage encodedMessage) {
 		if (! encodedMessage.isValid())
 			throw new InvalidEncodedMessage(encodedMessage);
