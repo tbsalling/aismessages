@@ -12,6 +12,7 @@ import dk.tbsalling.ais.messages.AidToNavigationReport;
 import dk.tbsalling.ais.messages.AssignedModeCommand;
 import dk.tbsalling.ais.messages.BaseStationReport;
 import dk.tbsalling.ais.messages.BinaryAcknowledge;
+import dk.tbsalling.ais.messages.BinaryBroadcastMessage;
 import dk.tbsalling.ais.messages.BinaryMessageMultipleSlot;
 import dk.tbsalling.ais.messages.BinaryMessageSingleSlot;
 import dk.tbsalling.ais.messages.ChannelManagement;
@@ -19,6 +20,7 @@ import dk.tbsalling.ais.messages.ClassBCSStaticDataReport;
 import dk.tbsalling.ais.messages.DataLinkManagement;
 import dk.tbsalling.ais.messages.DecodedAISMessage;
 import dk.tbsalling.ais.messages.EncodedAISMessage;
+import dk.tbsalling.ais.messages.ExtendedClassBEquipmentPositionReport;
 import dk.tbsalling.ais.messages.GNSSBinaryBroadcastMessage;
 import dk.tbsalling.ais.messages.GroupAssignmentCommand;
 import dk.tbsalling.ais.messages.Interrogation;
@@ -58,64 +60,98 @@ public class Decoder {
 	}
 	
 	public static DecodedAISMessage decode(EncodedAISMessage encodedMessage) {
+		long startTime = System.nanoTime();
+
+		DecodedAISMessage decodedMessage;
 		AISMessageType messageType = encodedMessage.getMessageType();
 		log.log(Level.FINER, "Attempting to decode message of type " + messageType);
+
 		switch(messageType) {
 		case ShipAndVoyageRelatedData:
-			return ShipAndVoyageData.fromEncodedMessage(encodedMessage);
+			decodedMessage = ShipAndVoyageData.fromEncodedMessage(encodedMessage);
+			break;
 		case PositionReportClassAScheduled:
-			return PositionReportClassAScheduled.fromEncodedMessage(encodedMessage);
+			decodedMessage = PositionReportClassAScheduled.fromEncodedMessage(encodedMessage);
+			break;
 		case PositionReportClassAAssignedSchedule:
-			return PositionReportClassAAssignedSchedule.fromEncodedMessage(encodedMessage);
+			decodedMessage = PositionReportClassAAssignedSchedule.fromEncodedMessage(encodedMessage);
+			break;
 		case PositionReportClassAResponseToInterrogation:
-			return PositionReportClassAResponseToInterrogation.fromEncodedMessage(encodedMessage);
+			decodedMessage = PositionReportClassAResponseToInterrogation.fromEncodedMessage(encodedMessage);
+			break;
 		case BaseStationReport:
-			return BaseStationReport.fromEncodedMessage(encodedMessage);
+			decodedMessage = BaseStationReport.fromEncodedMessage(encodedMessage);
+			break;
 		case AddressedBinaryMessage: 
-			return AddressedBinaryMessage.fromEncodedMessage(encodedMessage);
+			decodedMessage = AddressedBinaryMessage.fromEncodedMessage(encodedMessage);
+			break;
 		case BinaryAcknowledge:
-			return BinaryAcknowledge.fromEncodedMessage(encodedMessage);
+			decodedMessage = BinaryAcknowledge.fromEncodedMessage(encodedMessage);
+			break;
 		case BinaryBroadcastMessage:
-			return BinaryAcknowledge.fromEncodedMessage(encodedMessage);
+			decodedMessage = BinaryBroadcastMessage.fromEncodedMessage(encodedMessage);
+			break;
 		case StandardSARAircraftPositionReport:
-			return StandardSARAircraftPositionReport.fromEncodedMessage(encodedMessage);
+			decodedMessage = StandardSARAircraftPositionReport.fromEncodedMessage(encodedMessage);
+			break;
 		case UTCAndDateInquiry:
-			return UTCAndDateInquiry.fromEncodedMessage(encodedMessage);
+			decodedMessage = UTCAndDateInquiry.fromEncodedMessage(encodedMessage);
+			break;
 		case UTCAndDateResponse:
-			return UTCAndDateResponse.fromEncodedMessage(encodedMessage);
+			decodedMessage = UTCAndDateResponse.fromEncodedMessage(encodedMessage);
+			break;
 		case AddressedSafetyRelatedMessage:
-			return AddressedSafetyRelatedMessage.fromEncodedMessage(encodedMessage);
+			decodedMessage = AddressedSafetyRelatedMessage.fromEncodedMessage(encodedMessage);
+			break;
 		case SafetyRelatedAcknowledge:
-			return SafetyRelatedAcknowledge.fromEncodedMessage(encodedMessage);
+			decodedMessage = SafetyRelatedAcknowledge.fromEncodedMessage(encodedMessage);
+			break;
 		case SafetyRelatedBroadcastMessage:
-			return SafetyRelatedBroadcastMessage.fromEncodedMessage(encodedMessage);
+			decodedMessage = SafetyRelatedBroadcastMessage.fromEncodedMessage(encodedMessage);
+			break;
 		case Interrogation:
-			return Interrogation.fromEncodedMessage(encodedMessage);
+			decodedMessage = Interrogation.fromEncodedMessage(encodedMessage);
+			break;
 		case AssignedModeCommand:
-			return AssignedModeCommand.fromEncodedMessage(encodedMessage);
+			decodedMessage = AssignedModeCommand.fromEncodedMessage(encodedMessage);
+			break;
 		case GNSSBinaryBroadcastMessage:
-			return GNSSBinaryBroadcastMessage.fromEncodedMessage(encodedMessage);
+			decodedMessage = GNSSBinaryBroadcastMessage.fromEncodedMessage(encodedMessage);
+			break;
 		case StandardClassBCSPositionReport:
-			return StandardClassBCSPositionReport.fromEncodedMessage(encodedMessage);
+			decodedMessage = StandardClassBCSPositionReport.fromEncodedMessage(encodedMessage);
+			break;
 		case ExtendedClassBEquipmentPositionReport:
-			return StandardClassBCSPositionReport.fromEncodedMessage(encodedMessage);
+			decodedMessage = ExtendedClassBEquipmentPositionReport.fromEncodedMessage(encodedMessage);
+			break;
 		case DataLinkManagement:
-			return DataLinkManagement.fromEncodedMessage(encodedMessage);
+			decodedMessage = DataLinkManagement.fromEncodedMessage(encodedMessage);
+			break;
 		case AidToNavigationReport:
-			return AidToNavigationReport.fromEncodedMessage(encodedMessage);
+			decodedMessage = AidToNavigationReport.fromEncodedMessage(encodedMessage);
+			break;
 		case ChannelManagement:
-			return ChannelManagement.fromEncodedMessage(encodedMessage);
+			decodedMessage = ChannelManagement.fromEncodedMessage(encodedMessage);
+			break;
 		case GroupAssignmentCommand:
-			return GroupAssignmentCommand.fromEncodedMessage(encodedMessage);
+			decodedMessage = GroupAssignmentCommand.fromEncodedMessage(encodedMessage);
+			break;
 		case ClassBCSStaticDataReport:
-			return ClassBCSStaticDataReport.fromEncodedMessage(encodedMessage);
+			decodedMessage = ClassBCSStaticDataReport.fromEncodedMessage(encodedMessage);
+			break;
 		case BinaryMessageSingleSlot:
-			return BinaryMessageSingleSlot.fromEncodedMessage(encodedMessage);
+			decodedMessage = BinaryMessageSingleSlot.fromEncodedMessage(encodedMessage);
+			break;
 		case BinaryMessageMultipleSlot:
-			return BinaryMessageMultipleSlot.fromEncodedMessage(encodedMessage);
+			decodedMessage = BinaryMessageMultipleSlot.fromEncodedMessage(encodedMessage);
+			break;
 		default:
 			throw new UnsupportedMessageType(messageType.getCode());
 		}
+		
+		long endTime = System.nanoTime();
+		log.fine("Decoding of " + decodedMessage.getClass().getSimpleName() + " took " + (endTime - startTime)/1000000f + " msecs.");
+		return decodedMessage;
 	}
 
 	public static Boolean convertToBoolean(String bits) {

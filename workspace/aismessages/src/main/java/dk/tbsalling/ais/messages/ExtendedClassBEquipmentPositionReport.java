@@ -41,64 +41,107 @@ public class ExtendedClassBEquipmentPositionReport extends DecodedAISMessage {
 		this.dataTerminalReady = dataTerminalReady;
 		this.assigned = assigned;
 	}
+
 	public final String getRegionalReserved1() {
 		return regionalReserved1;
 	}
+
 	public final Float getSpeedOverGround() {
 		return speedOverGround;
 	}
+
 	public final Boolean getPositionAccurate() {
 		return positionAccurate;
 	}
+
 	public final Float getLatitude() {
 		return latitude;
 	}
+
 	public final Float getLongitude() {
 		return longitude;
 	}
+
 	public final Float getCourseOverGround() {
 		return courseOverGround;
 	}
+
 	public final Integer getTrueHeading() {
 		return trueHeading;
 	}
+
 	public final Integer getSecond() {
 		return second;
 	}
+
 	public final String getRegionalReserved2() {
 		return regionalReserved2;
 	}
+
 	public final String getShipName() {
 		return shipName;
 	}
+
 	public final ShipType getShipType() {
 		return shipType;
 	}
+
 	public final Integer getToBow() {
 		return toBow;
 	}
+
 	public final Integer getToStern() {
 		return toStern;
 	}
+
 	public final Integer getToStarboard() {
 		return toStarboard;
 	}
+
 	public final Integer getToPort() {
 		return toPort;
 	}
+
 	public final PositionFixingDevice getPositionFixingDevice() {
 		return positionFixingDevice;
 	}
+
 	public final Boolean getRaimFlag() {
 		return raimFlag;
 	}
+
 	public final Boolean getDataTerminalReady() {
 		return dataTerminalReady;
 	}
+
 	public final Boolean getAssigned() {
 		return assigned;
 	}
 	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append(
+				"ExtendedClassBEquipmentPositionReport [regionalReserved1=")
+				.append(regionalReserved1).append(", speedOverGround=")
+				.append(speedOverGround).append(", positionAccurate=")
+				.append(positionAccurate).append(", latitude=")
+				.append(latitude).append(", longitude=").append(longitude)
+				.append(", courseOverGround=").append(courseOverGround)
+				.append(", trueHeading=").append(trueHeading)
+				.append(", second=").append(second)
+				.append(", regionalReserved2=").append(regionalReserved2)
+				.append(", shipName=").append(shipName).append(", shipType=")
+				.append(shipType).append(", toBow=").append(toBow)
+				.append(", toStern=").append(toStern).append(", toStarboard=")
+				.append(toStarboard).append(", toPort=").append(toPort)
+				.append(", positionFixingDevice=").append(positionFixingDevice)
+				.append(", raimFlag=").append(raimFlag)
+				.append(", dataTerminalReady=").append(dataTerminalReady)
+				.append(", assigned=").append(assigned).append("]");
+		return builder.toString();
+	}
+
 	public static ExtendedClassBEquipmentPositionReport fromEncodedMessage(EncodedAISMessage encodedMessage) {
 		if (! encodedMessage.isValid())
 			throw new InvalidEncodedMessage(encodedMessage);

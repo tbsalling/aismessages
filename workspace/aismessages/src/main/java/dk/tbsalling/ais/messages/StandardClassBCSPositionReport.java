@@ -42,58 +42,96 @@ public class StandardClassBCSPositionReport extends DecodedAISMessage {
 		this.raimFlag = raimFlag;
 		this.radioStatus = radioStatus;
 	}
+
 	public final String getRegionalReserved1() {
 		return regionalReserved1;
 	}
+
 	public final Float getSpeedOverGround() {
 		return speedOverGround;
 	}
+
 	public final Boolean getPositionAccurate() {
 		return positionAccurate;
 	}
+
 	public final Float getLatitude() {
 		return latitude;
 	}
+
 	public final Float getLongitude() {
 		return longitude;
 	}
+
 	public final Float getCourseOverGround() {
 		return courseOverGround;
 	}
+
 	public final Integer getTrueHeading() {
 		return trueHeading;
 	}
+
 	public final Integer getSecond() {
 		return second;
 	}
+
 	public final String getRegionalReserved2() {
 		return regionalReserved2;
 	}
+
 	public final Boolean getCsUnit() {
 		return csUnit;
 	}
+
 	public final Boolean getDisplay() {
 		return display;
 	}
+
 	public final Boolean getDsc() {
 		return dsc;
 	}
+
 	public final Boolean getBand() {
 		return band;
 	}
+
 	public final Boolean getMessage22() {
 		return message22;
 	}
+
 	public final Boolean getAssigned() {
 		return assigned;
 	}
+
 	public final Boolean getRaimFlag() {
 		return raimFlag;
 	}
+
 	public final String getRadioStatus() {
 		return radioStatus;
 	}
-	
+
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("StandardClassBCSPositionReport [regionalReserved1=")
+				.append(regionalReserved1).append(", speedOverGround=")
+				.append(speedOverGround).append(", positionAccurate=")
+				.append(positionAccurate).append(", latitude=")
+				.append(latitude).append(", longitude=").append(longitude)
+				.append(", courseOverGround=").append(courseOverGround)
+				.append(", trueHeading=").append(trueHeading)
+				.append(", second=").append(second)
+				.append(", regionalReserved2=").append(regionalReserved2)
+				.append(", csUnit=").append(csUnit).append(", display=")
+				.append(display).append(", dsc=").append(dsc).append(", band=")
+				.append(band).append(", message22=").append(message22)
+				.append(", assigned=").append(assigned).append(", raimFlag=")
+				.append(raimFlag).append(", radioStatus=").append(radioStatus)
+				.append("]");
+		return builder.toString();
+	}
+
 	public static StandardClassBCSPositionReport fromEncodedMessage(EncodedAISMessage encodedMessage) {
 		if (! encodedMessage.isValid())
 			throw new InvalidEncodedMessage(encodedMessage);

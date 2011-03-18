@@ -23,10 +23,15 @@ public class EncodedAISMessage {
 	 */
 	public EncodedAISMessage(String encodedPayload, Integer paddingBits) {
 		this.bitString = toBitString(encodedPayload, paddingBits);
+		log.finest(this.bitString.length() + " bits in encoded bitstring: " + this.bitString);
 	}
 
 	public final AISMessageType getMessageType() {
 		return AISMessageType.fromInteger(Integer.parseInt(bitString.substring(0,6), 2));
+	}
+
+	public final String getBits() {
+		return bitString;
 	}
 
 	public final String getBits(Integer beginIndex, Integer endIndex) {

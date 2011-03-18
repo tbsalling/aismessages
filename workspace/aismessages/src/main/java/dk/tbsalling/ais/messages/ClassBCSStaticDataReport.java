@@ -27,37 +27,61 @@ public class ClassBCSStaticDataReport extends DecodedAISMessage {
 		this.toPort = toPort;
 		this.mothershipMmsi = mothershipMmsi;
 	}
+
 	public final Integer getPartNumber() {
 		return partNumber;
 	}
+
 	public final String getShipName() {
 		return shipName;
 	}
+
 	public final ShipType getShipType() {
 		return shipType;
 	}
+
 	public final String getVendorId() {
 		return vendorId;
 	}
+
 	public final String getCallsign() {
 		return callsign;
 	}
+
 	public final Integer getToBow() {
 		return toBow;
 	}
+
 	public final Integer getToStern() {
 		return toStern;
 	}
+
 	public final Integer getToStarboard() {
 		return toStarboard;
 	}
+
 	public final Integer getToPort() {
 		return toPort;
 	}
+
 	public final MMSI getMothershipMmsi() {
 		return mothershipMmsi;
 	}
 	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("ClassBCSStaticDataReport [partNumber=")
+				.append(partNumber).append(", shipName=").append(shipName)
+				.append(", shipType=").append(shipType).append(", vendorId=")
+				.append(vendorId).append(", callsign=").append(callsign)
+				.append(", toBow=").append(toBow).append(", toStern=")
+				.append(toStern).append(", toStarboard=").append(toStarboard)
+				.append(", toPort=").append(toPort).append(", mothershipMmsi=")
+				.append(mothershipMmsi).append("]");
+		return builder.toString();
+	}
+
 	public static ClassBCSStaticDataReport fromEncodedMessage(EncodedAISMessage encodedMessage) {
 		if (! encodedMessage.isValid())
 			throw new InvalidEncodedMessage(encodedMessage);

@@ -39,6 +39,16 @@ public class BinaryBroadcastMessage extends DecodedAISMessage {
 		return binaryData;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("BinaryBroadcastMessage [designatedAreaCode=")
+				.append(designatedAreaCode).append(", functionalId=")
+				.append(functionalId).append(", binaryData=")
+				.append(binaryData).append("]");
+		return builder.toString();
+	}
+
 	public static BinaryBroadcastMessage fromEncodedMessage(EncodedAISMessage encodedMessage) {
 		if (! encodedMessage.isValid())
 			throw new InvalidEncodedMessage(encodedMessage);

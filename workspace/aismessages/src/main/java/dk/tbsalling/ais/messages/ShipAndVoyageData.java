@@ -94,6 +94,23 @@ public class ShipAndVoyageData extends DecodedAISMessage {
 		return dataTerminalReady;
 	}
 
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("ShipAndVoyageData [imo=").append(imo)
+				.append(", callsign=").append(callsign).append(", shipName=")
+				.append(shipName).append(", shipType=").append(shipType)
+				.append(", toBow=").append(toBow).append(", toStern=")
+				.append(toStern).append(", toStarboard=").append(toStarboard)
+				.append(", toPort=").append(toPort)
+				.append(", positionFixingDevice=").append(positionFixingDevice)
+				.append(", eta=").append(eta).append(", draught=")
+				.append(draught).append(", destination=").append(destination)
+				.append(", dataTerminalReady=").append(dataTerminalReady)
+				.append("]");
+		return builder.toString();
+	}
+
 	public static ShipAndVoyageData fromEncodedMessage(EncodedAISMessage encodedMessage) {
 		if (! encodedMessage.isValid())
 			throw new InvalidEncodedMessage(encodedMessage);
