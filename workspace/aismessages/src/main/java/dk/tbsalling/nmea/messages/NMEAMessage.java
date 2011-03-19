@@ -1,4 +1,23 @@
+/*
+ * AISMessages
+ * - a java-based library for decoding of AIS messages from digital VHF radio traffic related
+ * to maritime navigation and safety in compliance with ITU 1371.
+ * 
+ * (C) Copyright 2011 by S-Consult ApS, DK31327490, http://s-consult.dk, Denmark.
+ * 
+ * Released under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+ * For details of this license see the nearby LICENCE-full file, visit http://creativecommons.org/licenses/by-nc-sa/3.0/
+ * or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
+ * 
+ * NOT FOR COMMERCIAL USE!
+ * Contact sales@s-consult.dk to obtain a commercially licensed version of this software.
+ * 
+ */
+
 package dk.tbsalling.nmea.messages;
+
+import dk.tbsalling.nmea.exceptions.NMEAParseException;
+import dk.tbsalling.nmea.exceptions.UnsupportedMessageType;
 
 /*
  * AISMessages
@@ -17,60 +36,101 @@ package dk.tbsalling.nmea.messages;
  */
 
 public class NMEAMessage {
-	
-	public NMEAMessage(String messageType, int numberOfFragments,
-			int fragmentNumber, char radioChannelCode, String encodedPayload,
-			byte fillBits, byte checksum) {
-		this.messageType = messageType;
-		this.numberOfFragments = numberOfFragments;
-		this.fragmentNumber = fragmentNumber;
-		this.radioChannelCode = radioChannelCode;
-		this.encodedPayload = encodedPayload;
-		this.fillBits = fillBits;
-		this.checksum = checksum;
+
+	public static NMEAMessage fromString(String nmeaString) {
+		return new NMEAMessage(nmeaString);
+	}
+
+	public final boolean isValid() {
+		return true;
+	}
+
+	public final String getMessageType() {
+		return messageType;
+	}
+
+	public final Integer getNumberOfFragments() {
+		return numberOfFragments;
+	}
+
+	public final Integer getFragmentNumber() {
+		return fragmentNumber;
+	}
+
+	public final Integer getSequenceNumber() {
+		return sequenceNumber;
+	}
+
+	public final String getRadioChannelCode() {
+		return radioChannelCode;
 	}
 
 	public final String getEncodedPayload() {
 		return encodedPayload;
 	}
 
-	public final char getRadioChannelCode() {
-		return radioChannelCode;
-	}
-
-	public final byte getFillBits() {
+	public final Integer getFillBits() {
 		return fillBits;
 	}
 
-	public final byte getChecksum() {
+	public final Integer getChecksum() {
 		return checksum;
 	}
 
-	public String toString() {
-		final StringBuffer nmeaString = new StringBuffer();
-		nmeaString.append("!");
-		nmeaString.append(messageType);
-		nmeaString.append(",");
-		nmeaString.append(numberOfFragments);
-		nmeaString.append(",");
-		nmeaString.append(fragmentNumber);
-		nmeaString.append(",");
-		nmeaString.append(",");
-		nmeaString.append(radioChannelCode);
-		nmeaString.append(",");
-		nmeaString.append(encodedPayload);
-		nmeaString.append(",");
-		nmeaString.append(fillBits);
-		nmeaString.append("*");
-		nmeaString.append(checksum);
-		return nmeaString.toString();
+	private NMEAMessage() {
+		this.messageType = null;
+		this.numberOfFragments = null;
+		this.fragmentNumber = null;
+		this.sequenceNumber = null;
+		this.radioChannelCode = null;
+		this.encodedPayload = null;
+		this.fillBits = null;
+		this.checksum = null;
+	}
+	
+	private NMEAMessage(String rawMessage) {
+		// !AIVDM,1,1,,B,15MvlfPOh2G?nwbEdVDsnSTR00S?,0*41
+		
+		if (! rawMessage.matches("^!.*\\*[0-9A-Fa-f]{2}$"))
+			throw new NMEAParseException();
+
+		String[] msg = rawMessage.split(",");
+		if (msg.length != 7)
+			throw new NMEAParseException();
+
+		this.messageType = isBlank(msg[0]) ? null : msg[0].replace("!", "");
+		this.numberOfFragments = isBlank(msg[1]) ? null : Integer.valueOf(msg[1]);
+		this.fragmentNumber = isBlank(msg[2]) ? null : Integer.valueOf(msg[2]);
+		this.sequenceNumber = isBlank(msg[3]) ? null : Integer.valueOf(msg[3]);
+		this.radioChannelCode = isBlank(msg[4]) ? null : msg[4];
+		this.encodedPayload = isBlank(msg[5]) ? null : msg[5];
+		
+		String msg1[] = msg[6].split("\\*");
+		if (msg1.length != 2)
+			throw new NMEAParseException();
+		
+		this.fillBits = isBlank(msg1[0]) ? null : Integer.valueOf(msg1[0]);
+		this.checksum = isBlank(msg1[1]) ? null : Integer.valueOf(msg1[1], 16);
+
+		validate();
+	}
+
+	private void validate() {
+		if (! ("AIVDM".equals(messageType) || "AIVDO".equals(messageType))) {
+			throw new UnsupportedMessageType(messageType);
+		}
+	}
+	
+	private final static boolean isBlank(String s) {
+		return s == null || s.trim().length() == 0;
 	}
 	
 	private final String messageType;
-	private final int numberOfFragments;
-	private final int fragmentNumber;
-	private final char radioChannelCode;
+	private final Integer numberOfFragments;
+	private final Integer fragmentNumber;
+	private final Integer sequenceNumber;
+	private final String radioChannelCode;
 	private final String encodedPayload;
-	private final byte fillBits;
-	private final byte checksum;
+	private final Integer fillBits;
+	private final Integer checksum;
 }

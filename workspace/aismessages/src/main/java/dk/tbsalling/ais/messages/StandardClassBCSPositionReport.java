@@ -16,9 +16,9 @@
 
 package dk.tbsalling.ais.messages;
 
-import dk.tbsalling.ais.Decoder;
 import dk.tbsalling.ais.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.ais.exceptions.UnsupportedMessageType;
+import dk.tbsalling.ais.internal.DecoderImpl;
 import dk.tbsalling.ais.messages.types.AISMessageType;
 import dk.tbsalling.ais.messages.types.MMSI;
 
@@ -154,26 +154,26 @@ public class StandardClassBCSPositionReport extends DecodedAISMessage {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.StandardClassBCSPositionReport))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 			
-		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 
-		String regionalReserved1 = Decoder.convertToBitString(encodedMessage.getBits(38, 46));
-		Float speedOverGround = (float) (Decoder.convertToSignedInteger(encodedMessage.getBits(46, 55)) / 10);
-		Boolean positionAccurate = Decoder.convertToBoolean(encodedMessage.getBits(56, 57));
-		Float longitude = (float) (Decoder.convertToSignedInteger(encodedMessage.getBits(57, 85)) / 10000);
-		Float latitude = (float) (Decoder.convertToSignedInteger(encodedMessage.getBits(85, 112)) / 10000);
-		Float courseOverGround = (float) (Decoder.convertToSignedInteger(encodedMessage.getBits(112, 124)) / 10);
-		Integer trueHeading = Decoder.convertToUnsignedInteger(encodedMessage.getBits(124, 133));
-		Integer second = Decoder.convertToUnsignedInteger(encodedMessage.getBits(133, 139));
-		String regionalReserved2 = Decoder.convertToBitString(encodedMessage.getBits(139, 141));
-		Boolean csUnit = Decoder.convertToBoolean(encodedMessage.getBits(141, 142));
-		Boolean display = Decoder.convertToBoolean(encodedMessage.getBits(142, 143));
-		Boolean dsc = Decoder.convertToBoolean(encodedMessage.getBits(143, 144));
-		Boolean band = Decoder.convertToBoolean(encodedMessage.getBits(144, 145));
-		Boolean message22 = Decoder.convertToBoolean(encodedMessage.getBits(145, 146));
-		Boolean assigned = Decoder.convertToBoolean(encodedMessage.getBits(146, 147));
-		Boolean raimFlag = Decoder.convertToBoolean(encodedMessage.getBits(147, 148));
-		String radioStatus = Decoder.convertToBitString(encodedMessage.getBits(148, 168));
+		String regionalReserved1 = DecoderImpl.convertToBitString(encodedMessage.getBits(38, 46));
+		Float speedOverGround = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(46, 55)) / 10);
+		Boolean positionAccurate = DecoderImpl.convertToBoolean(encodedMessage.getBits(56, 57));
+		Float longitude = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(57, 85)) / 10000);
+		Float latitude = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(85, 112)) / 10000);
+		Float courseOverGround = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(112, 124)) / 10);
+		Integer trueHeading = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(124, 133));
+		Integer second = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(133, 139));
+		String regionalReserved2 = DecoderImpl.convertToBitString(encodedMessage.getBits(139, 141));
+		Boolean csUnit = DecoderImpl.convertToBoolean(encodedMessage.getBits(141, 142));
+		Boolean display = DecoderImpl.convertToBoolean(encodedMessage.getBits(142, 143));
+		Boolean dsc = DecoderImpl.convertToBoolean(encodedMessage.getBits(143, 144));
+		Boolean band = DecoderImpl.convertToBoolean(encodedMessage.getBits(144, 145));
+		Boolean message22 = DecoderImpl.convertToBoolean(encodedMessage.getBits(145, 146));
+		Boolean assigned = DecoderImpl.convertToBoolean(encodedMessage.getBits(146, 147));
+		Boolean raimFlag = DecoderImpl.convertToBoolean(encodedMessage.getBits(147, 148));
+		String radioStatus = DecoderImpl.convertToBitString(encodedMessage.getBits(148, 168));
 
 		return new StandardClassBCSPositionReport(repeatIndicator, sourceMmsi,
 				regionalReserved1, speedOverGround, positionAccurate, latitude,

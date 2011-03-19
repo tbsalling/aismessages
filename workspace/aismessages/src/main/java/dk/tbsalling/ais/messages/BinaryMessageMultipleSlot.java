@@ -16,9 +16,9 @@
 
 package dk.tbsalling.ais.messages;
 
-import dk.tbsalling.ais.Decoder;
 import dk.tbsalling.ais.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.ais.exceptions.UnsupportedMessageType;
+import dk.tbsalling.ais.internal.DecoderImpl;
 import dk.tbsalling.ais.messages.types.AISMessageType;
 import dk.tbsalling.ais.messages.types.MMSI;
 
@@ -63,14 +63,14 @@ public class BinaryMessageMultipleSlot extends DecodedAISMessage {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.BinaryMessageMultipleSlot))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 			
-		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 
-		Boolean addressed = Decoder.convertToBoolean(encodedMessage.getBits(38, 39));
-		Boolean structured = Decoder.convertToBoolean(encodedMessage.getBits(39, 40));
-		MMSI destinationMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
-		Integer applicationId = Decoder.convertToUnsignedInteger(encodedMessage.getBits(70, 86));
-		String data = Decoder.convertToBitString(encodedMessage.getBits(86, 86+1004+1));
+		Boolean addressed = DecoderImpl.convertToBoolean(encodedMessage.getBits(38, 39));
+		Boolean structured = DecoderImpl.convertToBoolean(encodedMessage.getBits(39, 40));
+		MMSI destinationMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
+		Integer applicationId = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(70, 86));
+		String data = DecoderImpl.convertToBitString(encodedMessage.getBits(86, 86+1004+1));
 		String radioStatus = null; // Decoder.convertToBinaryString(encodedMessage.getBits(6, 8));
 
 		return new BinaryMessageMultipleSlot(repeatIndicator, sourceMmsi,

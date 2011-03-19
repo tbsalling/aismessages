@@ -16,9 +16,9 @@
 
 package dk.tbsalling.ais.messages;
 
-import dk.tbsalling.ais.Decoder;
 import dk.tbsalling.ais.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.ais.exceptions.UnsupportedMessageType;
+import dk.tbsalling.ais.internal.DecoderImpl;
 import dk.tbsalling.ais.messages.types.AISMessageType;
 import dk.tbsalling.ais.messages.types.AidType;
 import dk.tbsalling.ais.messages.types.MMSI;
@@ -134,26 +134,26 @@ public class AidToNavigationReport extends DecodedAISMessage {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.AidToNavigationReport))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 		
-		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 
-		AidType aidType = AidType.fromInteger(Decoder.convertToUnsignedInteger(encodedMessage.getBits(38, 43)));
-		String name = Decoder.convertToString(encodedMessage.getBits(43, 163));
-		Boolean positionAccurate = Decoder.convertToBoolean(encodedMessage.getBits(163, 164));
-		Float longitude = (float) (Decoder.convertToSignedInteger(encodedMessage.getBits(164, 192)) / 10000);
-		Float latitude = (float) (Decoder.convertToSignedInteger(encodedMessage.getBits(192, 219)) / 10000);
-		Integer toBow = Decoder.convertToUnsignedInteger(encodedMessage.getBits(219, 228));
-		Integer toStern = Decoder.convertToUnsignedInteger(encodedMessage.getBits(228, 237));
-		Integer toPort = Decoder.convertToUnsignedInteger(encodedMessage.getBits(237, 243));
-		Integer toStarboard = Decoder.convertToUnsignedInteger(encodedMessage.getBits(243, 249));
-		PositionFixingDevice positionFixingDevice = PositionFixingDevice.fromInteger(Decoder.convertToUnsignedInteger(encodedMessage.getBits(249, 253)));
-		Integer second = Decoder.convertToUnsignedInteger(encodedMessage.getBits(253, 259));
-		Boolean offPosition = Decoder.convertToBoolean(encodedMessage.getBits(259, 260));
-		String regionalUse = Decoder.convertToBitString(encodedMessage.getBits(260,268));
-		Boolean raimFlag = Decoder.convertToBoolean(encodedMessage.getBits(268, 269));
-		Boolean virtualAid = Decoder.convertToBoolean(encodedMessage.getBits(269, 270));
-		Boolean assignedMode = Decoder.convertToBoolean(encodedMessage.getBits(270, 271));
-		String nameExtension = Decoder.convertToString(encodedMessage.getBits(272, 361));
+		AidType aidType = AidType.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(38, 43)));
+		String name = DecoderImpl.convertToString(encodedMessage.getBits(43, 163));
+		Boolean positionAccurate = DecoderImpl.convertToBoolean(encodedMessage.getBits(163, 164));
+		Float longitude = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(164, 192)) / 10000);
+		Float latitude = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(192, 219)) / 10000);
+		Integer toBow = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(219, 228));
+		Integer toStern = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(228, 237));
+		Integer toPort = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(237, 243));
+		Integer toStarboard = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(243, 249));
+		PositionFixingDevice positionFixingDevice = PositionFixingDevice.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(249, 253)));
+		Integer second = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(253, 259));
+		Boolean offPosition = DecoderImpl.convertToBoolean(encodedMessage.getBits(259, 260));
+		String regionalUse = DecoderImpl.convertToBitString(encodedMessage.getBits(260,268));
+		Boolean raimFlag = DecoderImpl.convertToBoolean(encodedMessage.getBits(268, 269));
+		Boolean virtualAid = DecoderImpl.convertToBoolean(encodedMessage.getBits(269, 270));
+		Boolean assignedMode = DecoderImpl.convertToBoolean(encodedMessage.getBits(270, 271));
+		String nameExtension = DecoderImpl.convertToString(encodedMessage.getBits(272, 361));
 
 		return new AidToNavigationReport(repeatIndicator, sourceMmsi, aidType,
 				name, positionAccurate, latitude, longitude, toBow, toStern,

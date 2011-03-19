@@ -16,9 +16,9 @@
 
 package dk.tbsalling.ais.messages;
 
-import dk.tbsalling.ais.Decoder;
 import dk.tbsalling.ais.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.ais.exceptions.UnsupportedMessageType;
+import dk.tbsalling.ais.internal.DecoderImpl;
 import dk.tbsalling.ais.messages.types.AISMessageType;
 import dk.tbsalling.ais.messages.types.MMSI;
 
@@ -59,12 +59,12 @@ public class GNSSBinaryBroadcastMessage extends DecodedAISMessage {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.GNSSBinaryBroadcastMessage))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 			
-		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 
-		Float longitude = (float) (Decoder.convertToSignedInteger(encodedMessage.getBits(40, 58)) / 10);
-		Float latitude = (float) (Decoder.convertToSignedInteger(encodedMessage.getBits(58, 75)) / 10);
-		String binaryData = Decoder.convertToBitString(encodedMessage.getBits(80, 816));
+		Float longitude = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(40, 58)) / 10);
+		Float latitude = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(58, 75)) / 10);
+		String binaryData = DecoderImpl.convertToBitString(encodedMessage.getBits(80, 816));
 
 		return new GNSSBinaryBroadcastMessage(repeatIndicator, sourceMmsi, latitude, longitude, binaryData);
 	}

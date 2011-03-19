@@ -18,9 +18,9 @@ package dk.tbsalling.ais.messages;
 
 import java.util.logging.Logger;
 
-import dk.tbsalling.ais.Decoder;
 import dk.tbsalling.ais.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.ais.exceptions.UnsupportedMessageType;
+import dk.tbsalling.ais.internal.DecoderImpl;
 import dk.tbsalling.ais.messages.types.AISMessageType;
 import dk.tbsalling.ais.messages.types.MMSI;
 
@@ -101,18 +101,18 @@ public class Interrogation extends DecodedAISMessage {
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 		
 		int messageLength = encodedMessage.getNumberOfBits();
-		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 
-		MMSI mmsi1 = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
-		Integer type1_1 = Decoder.convertToUnsignedInteger(encodedMessage.getBits(70, 76));
-		Integer offset1_1 = Decoder.convertToUnsignedInteger(encodedMessage.getBits(76, 88));
-		Integer type1_2 = messageLength > 88 ? Decoder.convertToUnsignedInteger(encodedMessage.getBits(90, 96)) : null;
-		Integer offset1_2 = messageLength > 88 ? Decoder.convertToUnsignedInteger(encodedMessage.getBits(96, 108)) : null;
+		MMSI mmsi1 = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
+		Integer type1_1 = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(70, 76));
+		Integer offset1_1 = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(76, 88));
+		Integer type1_2 = messageLength > 88 ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(90, 96)) : null;
+		Integer offset1_2 = messageLength > 88 ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(96, 108)) : null;
 		
-		MMSI mmsi2 = messageLength > 160 ? MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(110, 140))) : null;
-		Integer type2_1 = messageLength > 160 ? Decoder.convertToUnsignedInteger(encodedMessage.getBits(140, 146)) : null;
-		Integer offset2_1 = messageLength > 160 ? Decoder.convertToUnsignedInteger(encodedMessage.getBits(146, 158)) : null;
+		MMSI mmsi2 = messageLength > 160 ? MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(110, 140))) : null;
+		Integer type2_1 = messageLength > 160 ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(140, 146)) : null;
+		Integer offset2_1 = messageLength > 160 ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(146, 158)) : null;
 		
 		return new Interrogation(repeatIndicator, sourceMmsi, mmsi1, type1_1, offset1_1, type1_2, offset1_2, mmsi2, type2_1, offset2_1);
 	}

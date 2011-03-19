@@ -14,7 +14,7 @@
  * 
  */
 
-package dk.tbsalling.ais;
+package dk.tbsalling.ais.internal;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -52,9 +52,9 @@ import dk.tbsalling.ais.messages.UTCAndDateInquiry;
 import dk.tbsalling.ais.messages.UTCAndDateResponse;
 import dk.tbsalling.ais.messages.types.AISMessageType;
 
-public class Decoder {
+public class DecoderImpl implements Decoder {
 
-    private static final Logger log = Logger.getLogger(Decoder.class.getName());
+    private static final Logger log = Logger.getLogger(DecoderImpl.class.getName());
 	
 	static {
 		StringBuffer sb = new StringBuffer();
@@ -72,10 +72,10 @@ public class Decoder {
 		log.info(sb.toString());
 	}
 	
-	private Decoder() {
+	public DecoderImpl() {
 	}
 	
-	public static DecodedAISMessage decode(EncodedAISMessage encodedMessage) {
+	public DecodedAISMessage decode(EncodedAISMessage encodedMessage) {
 		long startTime = System.nanoTime();
 
 		DecodedAISMessage decodedMessage;

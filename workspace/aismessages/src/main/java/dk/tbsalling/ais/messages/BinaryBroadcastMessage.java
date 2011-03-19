@@ -16,9 +16,9 @@
 
 package dk.tbsalling.ais.messages;
 
-import dk.tbsalling.ais.Decoder;
 import dk.tbsalling.ais.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.ais.exceptions.UnsupportedMessageType;
+import dk.tbsalling.ais.internal.DecoderImpl;
 import dk.tbsalling.ais.messages.types.AISMessageType;
 import dk.tbsalling.ais.messages.types.MMSI;
 
@@ -71,12 +71,12 @@ public class BinaryBroadcastMessage extends DecodedAISMessage {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.BinaryBroadcastMessage))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 			
-		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 
-		Integer designatedAreaCode = Decoder.convertToUnsignedInteger(encodedMessage.getBits(38, 52));
-		Integer functionalId = Decoder.convertToUnsignedInteger(encodedMessage.getBits(52, 56));
-		String binaryData = Decoder.convertToBitString(encodedMessage.getBits(52, 56));
+		Integer designatedAreaCode = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(38, 52));
+		Integer functionalId = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(52, 56));
+		String binaryData = DecoderImpl.convertToBitString(encodedMessage.getBits(52, 56));
 		
 		return new BinaryBroadcastMessage(repeatIndicator, sourceMmsi, designatedAreaCode, functionalId, binaryData);
 	}

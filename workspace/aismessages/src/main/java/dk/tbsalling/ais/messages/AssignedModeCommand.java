@@ -16,9 +16,9 @@
 
 package dk.tbsalling.ais.messages;
 
-import dk.tbsalling.ais.Decoder;
 import dk.tbsalling.ais.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.ais.exceptions.UnsupportedMessageType;
+import dk.tbsalling.ais.internal.DecoderImpl;
 import dk.tbsalling.ais.messages.types.AISMessageType;
 import dk.tbsalling.ais.messages.types.MMSI;
 
@@ -78,16 +78,16 @@ public class AssignedModeCommand extends DecodedAISMessage {
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 		
 		int messageLength = encodedMessage.getNumberOfBits();
-		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 
-		MMSI destinationMmsiA = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
-		Integer offsetA = Decoder.convertToUnsignedInteger(encodedMessage.getBits(70, 82));
-		Integer incrementA = Decoder.convertToUnsignedInteger(encodedMessage.getBits(82, 92));
+		MMSI destinationMmsiA = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
+		Integer offsetA = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(70, 82));
+		Integer incrementA = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(82, 92));
 		
-		MMSI destinationMmsiB = messageLength >= 144 ? MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(92, 122))) : null;
-		Integer offsetB = messageLength >= 144 ? Decoder.convertToUnsignedInteger(encodedMessage.getBits(122, 134)) : null;
-		Integer incrementB = messageLength >= 144 ? Decoder.convertToUnsignedInteger(encodedMessage.getBits(134, 144)) : null;
+		MMSI destinationMmsiB = messageLength >= 144 ? MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(92, 122))) : null;
+		Integer offsetB = messageLength >= 144 ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(122, 134)) : null;
+		Integer incrementB = messageLength >= 144 ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(134, 144)) : null;
 		
 		return new AssignedModeCommand(repeatIndicator, sourceMmsi, destinationMmsiA, offsetA, incrementA, destinationMmsiB, offsetB, incrementB);
 	}

@@ -16,9 +16,9 @@
 
 package dk.tbsalling.ais.messages;
 
-import dk.tbsalling.ais.Decoder;
 import dk.tbsalling.ais.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.ais.exceptions.UnsupportedMessageType;
+import dk.tbsalling.ais.internal.DecoderImpl;
 import dk.tbsalling.ais.messages.types.AISMessageType;
 import dk.tbsalling.ais.messages.types.MMSI;
 
@@ -65,12 +65,12 @@ public class BinaryAcknowledge extends DecodedAISMessage {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.BinaryAcknowledge))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 			
-		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
-		MMSI mmsi1 = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
-		MMSI mmsi2 = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(72, 102)));
-		MMSI mmsi3 = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(104, 134)));
-		MMSI mmsi4 = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(136, 166)));
+		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		MMSI mmsi1 = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
+		MMSI mmsi2 = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(72, 102)));
+		MMSI mmsi3 = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(104, 134)));
+		MMSI mmsi4 = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(136, 166)));
 
 		return new BinaryAcknowledge(repeatIndicator, sourceMmsi, mmsi1, mmsi2, mmsi3, mmsi4);
 	}

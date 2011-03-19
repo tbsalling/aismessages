@@ -16,9 +16,9 @@
 
 package dk.tbsalling.ais.messages;
 
-import dk.tbsalling.ais.Decoder;
 import dk.tbsalling.ais.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.ais.exceptions.UnsupportedMessageType;
+import dk.tbsalling.ais.internal.DecoderImpl;
 import dk.tbsalling.ais.messages.types.AISMessageType;
 import dk.tbsalling.ais.messages.types.MMSI;
 import dk.tbsalling.ais.messages.types.TxRxMode;
@@ -112,23 +112,23 @@ public class ChannelManagement extends DecodedAISMessage {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.ChannelManagement))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 			
-		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 		
-		Integer channelA = Decoder.convertToUnsignedInteger(encodedMessage.getBits(40, 52));
-		Integer channelB = Decoder.convertToUnsignedInteger(encodedMessage.getBits(52, 64));
-		TxRxMode transmitReceiveMode = TxRxMode.fromInteger(Decoder.convertToUnsignedInteger(encodedMessage.getBits(64, 68)));
-		Boolean power = Decoder.convertToBoolean(encodedMessage.getBits(68, 69));
-		Boolean addressed = Decoder.convertToBoolean(encodedMessage.getBits(139, 140));
-		Boolean bandA = Decoder.convertToBoolean(encodedMessage.getBits(140, 141));
-		Boolean bandB = Decoder.convertToBoolean(encodedMessage.getBits(141, 142));
-		Integer zoneSize = Decoder.convertToUnsignedInteger(encodedMessage.getBits(142, 145));
-		MMSI destinationMmsi1 = !addressed ? null : MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(69, 99)));
-		MMSI destinationMmsi2 = !addressed ? null : MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(104, 134)));
-		Float northEastLatitude = addressed ? null : (float) (Decoder.convertToSignedInteger(encodedMessage.getBits(87, 104)) / 10);
-		Float northEastLongitude = addressed ? null : (float) (Decoder.convertToSignedInteger(encodedMessage.getBits(69, 87)) / 10);
-		Float southWestLatitude = addressed ? null : (float) (Decoder.convertToSignedInteger(encodedMessage.getBits(122, 138)) / 10);
-		Float southWestLongitude = addressed ? null : (float) (Decoder.convertToSignedInteger(encodedMessage.getBits(104, 122)) / 10);
+		Integer channelA = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(40, 52));
+		Integer channelB = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(52, 64));
+		TxRxMode transmitReceiveMode = TxRxMode.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(64, 68)));
+		Boolean power = DecoderImpl.convertToBoolean(encodedMessage.getBits(68, 69));
+		Boolean addressed = DecoderImpl.convertToBoolean(encodedMessage.getBits(139, 140));
+		Boolean bandA = DecoderImpl.convertToBoolean(encodedMessage.getBits(140, 141));
+		Boolean bandB = DecoderImpl.convertToBoolean(encodedMessage.getBits(141, 142));
+		Integer zoneSize = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(142, 145));
+		MMSI destinationMmsi1 = !addressed ? null : MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(69, 99)));
+		MMSI destinationMmsi2 = !addressed ? null : MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(104, 134)));
+		Float northEastLatitude = addressed ? null : (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(87, 104)) / 10);
+		Float northEastLongitude = addressed ? null : (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(69, 87)) / 10);
+		Float southWestLatitude = addressed ? null : (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(122, 138)) / 10);
+		Float southWestLongitude = addressed ? null : (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(104, 122)) / 10);
 
 		return new ChannelManagement(repeatIndicator, sourceMmsi, channelA,
 				channelB, transmitReceiveMode, power, northEastLongitude,
