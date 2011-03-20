@@ -70,6 +70,7 @@
 	</dependencies>
 	<scm>
         <connection>scm:git:git://git@github.com:tbsalling/aismessages.git</connection>
+        <developerConnection>scm:git:git://git@github.com:tbsalling/aismessages.git</developerConnection>
         <url>scm:git:git://git@github.com:tbsalling/aismessages.git</url>
     </scm>
 </project>
