@@ -16,8 +16,6 @@
 
 package dk.tbsalling.aismessages.messages;
 
-import java.util.logging.Logger;
-
 import dk.tbsalling.aismessages.decoder.DecoderImpl;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
@@ -31,8 +29,6 @@ import dk.tbsalling.aismessages.messages.types.MMSI;
  */
 @SuppressWarnings("serial")
 public class Interrogation extends DecodedAISMessage {
-
-    private static final Logger log = Logger.getLogger(Interrogation.class.getName());
 
     public Interrogation(Integer repeatIndicator,
 			MMSI sourceMmsi, MMSI mmsi1, Integer type1_1, Integer offset1_1,

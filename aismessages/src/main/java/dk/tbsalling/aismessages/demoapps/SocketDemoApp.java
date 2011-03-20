@@ -18,7 +18,6 @@ package dk.tbsalling.aismessages.demoapps;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.Calendar;
 
 import dk.tbsalling.aismessages.DecodedAISMessageHandler;
 import dk.tbsalling.aismessages.NMEAMessageSocketClient;
