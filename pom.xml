@@ -10,4 +10,9 @@
 	<modules>
 		<module>aismessages</module>
 	</modules>
+	<scm>
+	  <connection>scm:git:https://tbsalling@github.com/tbsalling/aismessages.git</connection>
+	  <url>scm:git:https://tbsalling@github.com/tbsalling/aismessages.git</url>
+	  <developerConnection>scm:git:https://tbsalling@github.com/tbsalling/aismessages.git</developerConnection>
+	</scm>
 </project>
