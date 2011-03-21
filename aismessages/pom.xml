@@ -69,4 +69,10 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+       <distributionManagement>
+          <repository>
+            <id>repo</id>
+            <url>github.com/tbsalling/aismessages/raw/master/releases</url>
+          </repository>
+        </distributionManagement>
 </project>
