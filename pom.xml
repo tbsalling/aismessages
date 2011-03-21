@@ -4,7 +4,7 @@
 	<groupId>dk.tbsalling.aismessages</groupId>
 	<artifactId>aismessages-parent</artifactId>
 	<packaging>pom</packaging>
-	<version>1.02-SNAPSHOT</version>
+	<version>1.02</version>
 	<name>aismessages-parent</name>
 	<url>http://s-consult.dk</url>
 	<modules>
