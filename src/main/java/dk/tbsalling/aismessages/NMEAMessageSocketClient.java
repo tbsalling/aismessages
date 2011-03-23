@@ -23,16 +23,21 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
+import java.util.logging.Logger;
 
 public class NMEAMessageSocketClient {
 
+	private static final Logger log = Logger.getLogger(NMEAMessageSocketClient.class.getName());
+
 	@SuppressWarnings("unused")
 	private NMEAMessageSocketClient() {
+		this.source = null;
 		this.socketAddress = null;
 		this.decodedMessageHandler = null;
 	}
 
-	public NMEAMessageSocketClient(String host, Integer port, DecodedAISMessageHandler decodedMessageHandler) throws UnknownHostException {
+	public NMEAMessageSocketClient(String source, String host, Integer port, DecodedAISMessageHandler decodedMessageHandler) throws UnknownHostException {
+		this.source = source;
 		InetAddress inetAddress = InetAddress.getByName(host);
 		this.socketAddress = new InetSocketAddress(inetAddress, port);
 		this.decodedMessageHandler = decodedMessageHandler;
@@ -44,14 +49,19 @@ public class NMEAMessageSocketClient {
 	}
 
 	public void run() throws IOException {
-		Socket socket = new Socket();
-		socket.connect(socketAddress);
-		InputStream inputStream = socket.getInputStream();
-		streamReader = new NMEAMessageInputStreamReader(inputStream, decodedMessageHandler);
-		streamReader.run();
+	    log.info("NMEAMessageSocketClient running.");
+	    Socket socket = new Socket();
+	    socket.connect(socketAddress);
+	    log.info("Connected to AIS server on " + socketAddress.toString());
+	    InputStream inputStream = socket.getInputStream();
+	    streamReader = new NMEAMessageInputStreamReader(source, inputStream, decodedMessageHandler);
+	    streamReader.run();
+	    // TODO: Close socket
+	    log.info("NMEAMessageSocketClient stopping.");
 	}
 
 	private NMEAMessageInputStreamReader streamReader;
+	private final String source;
 	private final SocketAddress socketAddress;
 	private final DecodedAISMessageHandler decodedMessageHandler;
 }

@@ -51,11 +51,11 @@ public class PositionReportClassAResponseToInterrogation extends PositionReport 
 
 		NavigationStatus navigationStatus = NavigationStatus.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(38, 42)));
 		Integer rateOfTurn = DecoderImpl.convertToSignedInteger(encodedMessage.getBits(42, 50));
-		Float speedOverGround = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(50, 60)) / 10);
+		Float speedOverGround = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(50, 60)) / 10f);
 		Boolean positionAccurate = DecoderImpl.convertToBoolean(encodedMessage.getBits(60, 61));
-		Float longitude = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(61, 89)) / 10000);
-		Float latitude = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(89, 116)) / 10000);
-		Float courseOverGround = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(116, 128)) / 10);
+		Float longitude = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(61, 89)) / 10000f);
+		Float latitude = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(89, 116)) / 10000f);
+		Float courseOverGround = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(116, 128)) / 10f);
 		Integer trueHeading = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(128, 137));
 		Integer second = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(137, 143));
 		ManeuverIndicator maneuverIndicator = ManeuverIndicator.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(143, 145)));

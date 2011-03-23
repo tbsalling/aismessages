@@ -30,8 +30,8 @@ public class NMEAMessageInputStreamReader {
 
 	private static final Logger log = Logger.getLogger(NMEAMessageInputStreamReader.class.getName());
 
-	public NMEAMessageInputStreamReader(InputStream inputStream, DecodedAISMessageHandler decodedAISMessageHandler) {
-		this.messageReceiver = new NMEAMessageReceiver(decodedAISMessageHandler);
+	public NMEAMessageInputStreamReader(String source, InputStream inputStream, DecodedAISMessageHandler decodedAISMessageHandler) {
+		this.messageReceiver = new NMEAMessageReceiver(source, decodedAISMessageHandler);
 		this.inputStream = inputStream;
 	}
 
@@ -40,6 +40,8 @@ public class NMEAMessageInputStreamReader {
 	}
 
 	public void run() throws IOException {
+	    log.info("NMEAMessageInputStreamReader running.");
+
 		InputStreamReader reader = new InputStreamReader(inputStream);
 		BufferedReader bufferedReader = new BufferedReader(reader);
 		String string;
@@ -49,11 +51,13 @@ public class NMEAMessageInputStreamReader {
 				messageReceiver.handleMessageReceived(nmea);
 				log.fine("Received: " + nmea.toString());
 			} catch (InvalidEncodedMessage invalidEncodedMessageException) {
-				log.severe("Invalid encoded message: \"" + invalidEncodedMessageException.getMessage() + "\"");
+				log.warning("Invalid encoded message: \"" + invalidEncodedMessageException.getMessage() + "\"");
 			} catch (NMEAParseException parseException) {
 				log.warning("Received non-compliant string: \"" + string + "\"");
 			}
 		}
+
+		log.info("NMEAMessageInputStreamReader stopping.");
 	}
 
 	private final synchronized Boolean stopRequested() {

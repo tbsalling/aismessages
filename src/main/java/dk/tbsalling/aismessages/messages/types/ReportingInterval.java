@@ -42,6 +42,10 @@ public enum ReportingInterval {
 		return code;
 	}
 
+	public String getValue() {
+	    return toString();
+	}
+
 	private final Integer code;
 
 	public static ReportingInterval fromInteger(Integer integer) {

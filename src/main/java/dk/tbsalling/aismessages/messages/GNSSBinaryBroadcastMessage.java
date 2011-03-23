@@ -62,8 +62,8 @@ public class GNSSBinaryBroadcastMessage extends DecodedAISMessage {
 		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
 		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 
-		Float longitude = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(40, 58)) / 10);
-		Float latitude = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(58, 75)) / 10);
+		Float longitude = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(40, 58)) / 10f);
+		Float latitude = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(58, 75)) / 10f);
 		String binaryData = DecoderImpl.convertToBitString(encodedMessage.getBits(80, 816));
 
 		return new GNSSBinaryBroadcastMessage(repeatIndicator, sourceMmsi, latitude, longitude, binaryData);

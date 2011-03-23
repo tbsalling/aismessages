@@ -158,11 +158,11 @@ public class StandardClassBCSPositionReport extends DecodedAISMessage {
 		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 
 		String regionalReserved1 = DecoderImpl.convertToBitString(encodedMessage.getBits(38, 46));
-		Float speedOverGround = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(46, 55)) / 10);
+		Float speedOverGround = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(46, 55)) / 10f);
 		Boolean positionAccurate = DecoderImpl.convertToBoolean(encodedMessage.getBits(56, 57));
-		Float longitude = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(57, 85)) / 10000);
-		Float latitude = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(85, 112)) / 10000);
-		Float courseOverGround = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(112, 124)) / 10);
+		Float longitude = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(57, 85)) / 10000f);
+		Float latitude = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(85, 112)) / 10000f);
+		Float courseOverGround = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(112, 124)) / 10f);
 		Integer trueHeading = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(124, 133));
 		Integer second = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(133, 139));
 		String regionalReserved2 = DecoderImpl.convertToBitString(encodedMessage.getBits(139, 141));

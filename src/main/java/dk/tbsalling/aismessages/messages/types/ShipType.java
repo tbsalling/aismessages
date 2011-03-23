@@ -95,6 +95,10 @@ public enum ShipType {
 		return code;
 	}
 
+	public String getValue() {
+	    return toString();
+	}
+
 	private final Integer code;
 
 	public static ShipType fromInteger(Integer integer) {

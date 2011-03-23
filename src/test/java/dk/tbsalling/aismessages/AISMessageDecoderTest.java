@@ -40,7 +40,7 @@ public class AISMessageDecoderTest {
 	@BeforeClass
 	public static void setUp() {
 		aisMessageHandler = context.mock(DecodedAISMessageHandler.class);
-		aisMessageDecoder = new NMEAMessageReceiver(aisMessageHandler);
+		aisMessageDecoder = new NMEAMessageReceiver("TEST", aisMessageHandler);
 	}
 	
 	@Test

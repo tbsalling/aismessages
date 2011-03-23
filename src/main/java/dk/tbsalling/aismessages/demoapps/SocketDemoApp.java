@@ -34,7 +34,7 @@ public class SocketDemoApp implements DecodedAISMessageHandler {
 		System.out.println("--------------------");
 
 		try {
-			NMEAMessageSocketClient nmeaMessageHandler = new NMEAMessageSocketClient("207.7.148.216", 9009, this);
+			NMEAMessageSocketClient nmeaMessageHandler = new NMEAMessageSocketClient("DEMO2", "207.7.148.216", 9009, this);
 			nmeaMessageHandler.run();
 		} catch (UnknownHostException e) {
 			System.err.println("Unknown host: " + e.getMessage());

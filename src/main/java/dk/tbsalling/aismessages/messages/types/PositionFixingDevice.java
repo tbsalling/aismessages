@@ -35,6 +35,10 @@ public enum PositionFixingDevice {
 		return code;
 	}
 
+	public String getValue() {
+	    return toString();
+	}
+
 	private final Integer code;
 
 	public static PositionFixingDevice fromInteger(Integer integer) {

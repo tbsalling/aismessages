@@ -55,7 +55,9 @@ public class MMSI {
 	public String toString() {
 		return "MMSI [mmsi=" + mmsi + "]";
 	}
+k
 
+	@Override
 	public Long getMMSI() {
 	    return mmsi;
 	}

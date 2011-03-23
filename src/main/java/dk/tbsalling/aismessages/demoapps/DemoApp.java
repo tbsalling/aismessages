@@ -16,8 +16,8 @@
 
 package dk.tbsalling.aismessages.demoapps;
 
-import dk.tbsalling.aismessages.NMEAMessageReceiver;
 import dk.tbsalling.aismessages.DecodedAISMessageHandler;
+import dk.tbsalling.aismessages.NMEAMessageReceiver;
 import dk.tbsalling.aismessages.messages.DecodedAISMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
@@ -111,7 +111,7 @@ public class DemoApp implements DecodedAISMessageHandler {
 		System.out.println("AISMessages Demo App");
 		System.out.println("--------------------");
 
-		NMEAMessageReceiver nmeaMessageHandler = new NMEAMessageReceiver(this);
+		NMEAMessageReceiver nmeaMessageHandler = new NMEAMessageReceiver("DEMO1", this);
 		
 		long startTime = System.nanoTime();
 		

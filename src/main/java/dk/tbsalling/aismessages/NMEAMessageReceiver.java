@@ -17,6 +17,7 @@
 package dk.tbsalling.aismessages;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.logging.Logger;
 
@@ -24,6 +25,7 @@ import dk.tbsalling.aismessages.decoder.Decoder;
 import dk.tbsalling.aismessages.decoder.DecoderImpl;
 import dk.tbsalling.aismessages.messages.DecodedAISMessage;
 import dk.tbsalling.aismessages.messages.EncodedAISMessage;
+import dk.tbsalling.aismessages.messages.Metadata;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 public class NMEAMessageReceiver {
@@ -32,27 +34,35 @@ public class NMEAMessageReceiver {
 
     private final Decoder decoder = new DecoderImpl();
     private final DecodedAISMessageHandler aisMessageHandler;
-    
+    private final String source;
     private final ArrayList<NMEAMessage> messageFragments = new ArrayList<NMEAMessage>();
     
-    public NMEAMessageReceiver(DecodedAISMessageHandler aisMessageHandler) {
+    public NMEAMessageReceiver(String source, DecodedAISMessageHandler aisMessageHandler) {
+    	this.source = source;
     	this.aisMessageHandler = aisMessageHandler;
     }
     
 	public void handleMessageReceived(NMEAMessage nmeaMessage) {
+		Metadata metadata = new Metadata();
+		metadata.setSource(source);
+		metadata.setProcessedAt(new Date());
+		long startTime = System.nanoTime();
+
+		log.finer("Received for processing: " + nmeaMessage.getRawMessage());
+		
 		if (! nmeaMessage.isValid()) {
-			log.severe("NMEA message is invalid: " + nmeaMessage.toString());
+			log.warning("NMEA message is invalid: " + nmeaMessage.toString());
 			return;
 		}
 		
 		if (! ("AIVDM".equals(nmeaMessage.getMessageType()) || ("AIVDO".equals(nmeaMessage.getMessageType())))) {
-			log.severe("NMEA messages of type " + nmeaMessage + " cannot be treated by " + this.getClass().getSimpleName());
+			log.warning("NMEA messages of type " + nmeaMessage + " cannot be treated by " + this.getClass().getSimpleName());
 			return;
 		}
 		
 		int numberOfFragments = nmeaMessage.getNumberOfFragments();
 		if (numberOfFragments <= 0) {
-			log.severe("NMEA message is invalid: " + nmeaMessage.toString());
+			log.warning("NMEA message is invalid: " + nmeaMessage.toString());
 			messageFragments.clear();
 		} else if (numberOfFragments == 1) {
 			log.finest("Handling unfragmented NMEA message");
@@ -61,6 +71,8 @@ public class NMEAMessageReceiver {
 			EncodedAISMessage encodedAISMessage = new EncodedAISMessage(payload, fillBits);
 			DecodedAISMessage decodedAISMessage = decoder.decode(encodedAISMessage);
 			messageFragments.clear();
+			metadata.setProcessedIn((System.nanoTime() - startTime)/1000);
+			decodedAISMessage.setMetadata(metadata);
 			aisMessageHandler.handleMessageReceived(decodedAISMessage);
 		} else {
 			int fragmentNumber = nmeaMessage.getFragmentNumber();
@@ -68,17 +80,17 @@ public class NMEAMessageReceiver {
 			log.finest("Handling fragmented NMEA message with fragment number " + fragmentNumber);
 
 			if (fragmentNumber < 0) {
-				log.severe("Fragment number cannot be negative: " + fragmentNumber);
+				log.warning("Fragment number cannot be negative: " + fragmentNumber + ": " + nmeaMessage.getRawMessage());
 				messageFragments.clear();
 			} else if (fragmentNumber > numberOfFragments) {
-				log.severe("Fragment number " + fragmentNumber + " higher than expected " + numberOfFragments);
+				log.fine("Fragment number " + fragmentNumber + " higher than expected " + numberOfFragments + ": " + nmeaMessage.getRawMessage());
 				messageFragments.clear();
 			} else {
 				int expectedFragmentNumber = messageFragments.size() + 1;
-				log.finest("Expected fragment number is: " + expectedFragmentNumber);
+				log.finest("Expected fragment number is: " + expectedFragmentNumber + ": " + nmeaMessage.getRawMessage());
 				
 				if (expectedFragmentNumber != fragmentNumber) {
-					log.severe("Expected fragment number " + expectedFragmentNumber + "; not " + fragmentNumber + ".");
+					log.fine("Expected fragment number " + expectedFragmentNumber + "; not " + fragmentNumber + ": " + nmeaMessage.getRawMessage());
 					messageFragments.clear();
 				} else {
 					messageFragments.add(nmeaMessage);
@@ -98,6 +110,7 @@ public class NMEAMessageReceiver {
 						EncodedAISMessage encodedAISMessage = new EncodedAISMessage(payload.toString(), fillBits);
 						DecodedAISMessage decodedAISMessage = decoder.decode(encodedAISMessage);
 						messageFragments.clear();
+						decodedAISMessage.setMetadata(metadata);
 						aisMessageHandler.handleMessageReceived(decodedAISMessage);
 					} else
 						log.finest("Fragmented message not yet complete; missing " + (nmeaMessage.getNumberOfFragments() - messageFragments.size()) + " fragment(s).");

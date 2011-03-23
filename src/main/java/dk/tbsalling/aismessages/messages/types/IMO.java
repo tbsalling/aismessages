@@ -56,5 +56,9 @@ public class IMO {
 		return "IMO [imo=" + imo + "]";
 	}
 
+        public Long getIMO() {
+	    return imo;
+	}
+
 	private final Long imo;
 }

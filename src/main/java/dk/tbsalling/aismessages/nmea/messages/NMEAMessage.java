@@ -77,6 +77,10 @@ public class NMEAMessage {
 		return checksum;
 	}
 
+	public final String getRawMessage() {
+		return rawMessage;
+	}
+
 	private NMEAMessage() {
 		this.messageType = null;
 		this.numberOfFragments = null;
@@ -86,6 +90,7 @@ public class NMEAMessage {
 		this.encodedPayload = null;
 		this.fillBits = null;
 		this.checksum = null;
+		this.rawMessage = null;
 	}
 	
 	private NMEAMessage(String rawMessage) {
@@ -98,6 +103,7 @@ public class NMEAMessage {
 		if (msg.length != 7)
 			throw new NMEAParseException();
 
+		this.rawMessage = new String(rawMessage);
 		this.messageType = isBlank(msg[0]) ? null : msg[0].replace("!", "");
 		this.numberOfFragments = isBlank(msg[1]) ? null : Integer.valueOf(msg[1]);
 		this.fragmentNumber = isBlank(msg[2]) ? null : Integer.valueOf(msg[2]);
@@ -133,4 +139,5 @@ public class NMEAMessage {
 	private final String encodedPayload;
 	private final Integer fillBits;
 	private final Integer checksum;
+	private final String rawMessage;
 }

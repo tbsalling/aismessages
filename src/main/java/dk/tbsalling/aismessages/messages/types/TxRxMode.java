@@ -30,6 +30,10 @@ public enum TxRxMode {
 		return code;
 	}
 
+	public String getValue() {
+	    return toString();
+	}
+
 	private final Integer code;
 
 	public static TxRxMode fromInteger(Integer integer) {

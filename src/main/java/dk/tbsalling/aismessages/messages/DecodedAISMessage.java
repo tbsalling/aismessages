@@ -30,11 +30,19 @@ public abstract class DecodedAISMessage implements Serializable {
 		this.sourceMmsi = sourceMmsi;
 	}
 
-	public AISMessageType getMessageType() {
+	public final Metadata getMetadata() {
+		return metadata;
+	}
+	
+	public final void setMetadata(Metadata metadata) {
+		this.metadata = metadata;
+	}
+
+	public final AISMessageType getMessageType() {
 		return messageType;
 	}
 
-	public Integer getRepeatIndicator() {
+	public final Integer getRepeatIndicator() {
 		return repeatIndicator;
 	}
 
@@ -88,6 +96,7 @@ public abstract class DecodedAISMessage implements Serializable {
 		return true;
 	}
 
+	private Metadata metadata;
 	private final AISMessageType messageType;
 	private final Integer repeatIndicator;
 	private final MMSI sourceMmsi;

@@ -58,6 +58,10 @@ public enum AidType {
 		return code;
 	}
 
+	public String getValue() {
+	    return toString();
+	}
+
 	private final Integer code;
 
 	public static AidType fromInteger(Integer integer) {

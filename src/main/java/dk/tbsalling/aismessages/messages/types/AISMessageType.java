@@ -53,6 +53,10 @@ public enum AISMessageType {
 		return code;
 	}
 
+	public String getValue() {
+	    return toString();
+	}
+
 	public static AISMessageType fromInteger(Integer integer) {
 		if (integer != null) {
 			for (AISMessageType b : AISMessageType.values()) {

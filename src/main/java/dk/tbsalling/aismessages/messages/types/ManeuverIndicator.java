@@ -29,6 +29,10 @@ public enum ManeuverIndicator {
 		return code;
 	}
 
+	public String getValue() {
+	    return toString();
+	}
+
 	private final Integer code;
 
 	public static ManeuverIndicator fromInteger(Integer integer) {

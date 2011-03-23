@@ -125,10 +125,10 @@ public class ChannelManagement extends DecodedAISMessage {
 		Integer zoneSize = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(142, 145));
 		MMSI destinationMmsi1 = !addressed ? null : MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(69, 99)));
 		MMSI destinationMmsi2 = !addressed ? null : MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(104, 134)));
-		Float northEastLatitude = addressed ? null : (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(87, 104)) / 10);
-		Float northEastLongitude = addressed ? null : (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(69, 87)) / 10);
-		Float southWestLatitude = addressed ? null : (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(122, 138)) / 10);
-		Float southWestLongitude = addressed ? null : (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(104, 122)) / 10);
+		Float northEastLatitude = addressed ? null : (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(87, 104)) / 10f);
+		Float northEastLongitude = addressed ? null : (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(69, 87)) / 10f);
+		Float southWestLatitude = addressed ? null : (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(122, 138)) / 10f);
+		Float southWestLongitude = addressed ? null : (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(104, 122)) / 10f);
 
 		return new ChannelManagement(repeatIndicator, sourceMmsi, channelA,
 				channelB, transmitReceiveMode, power, northEastLongitude,

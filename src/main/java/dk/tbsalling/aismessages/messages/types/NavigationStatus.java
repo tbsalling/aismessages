@@ -42,6 +42,10 @@ public enum NavigationStatus {
 		return code;
 	}
 
+	public String getValue() {
+	    return toString();
+	}
+
 	private final Integer code;
 
 	public static NavigationStatus fromInteger(Integer integer) {

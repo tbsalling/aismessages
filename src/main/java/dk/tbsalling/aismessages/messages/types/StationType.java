@@ -42,6 +42,10 @@ public enum StationType {
 		return code;
 	}
 
+	public String getValue() {
+	    return toString();
+	}
+
 	private final Integer code;
 
 	public static StationType fromInteger(Integer integer) {
