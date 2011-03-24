@@ -125,10 +125,10 @@ public class ChannelManagement extends DecodedAISMessage {
 		Integer zoneSize = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(142, 145));
 		MMSI destinationMmsi1 = !addressed ? null : MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(69, 99)));
 		MMSI destinationMmsi2 = !addressed ? null : MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(104, 134)));
-		Float northEastLatitude = addressed ? null : (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(87, 104)) / 10f);
-		Float northEastLongitude = addressed ? null : (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(69, 87)) / 10f);
-		Float southWestLatitude = addressed ? null : (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(122, 138)) / 10f);
-		Float southWestLongitude = addressed ? null : (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(104, 122)) / 10f);
+		Float northEastLatitude = addressed ? null : DecoderImpl.convertToFloat(encodedMessage.getBits(87, 104)) / 10f;
+		Float northEastLongitude = addressed ? null : DecoderImpl.convertToFloat(encodedMessage.getBits(69, 87)) / 10f;
+		Float southWestLatitude = addressed ? null : DecoderImpl.convertToFloat(encodedMessage.getBits(122, 138)) / 10f;
+		Float southWestLongitude = addressed ? null : DecoderImpl.convertToFloat(encodedMessage.getBits(104, 122)) / 10f;
 
 		return new ChannelManagement(repeatIndicator, sourceMmsi, channelA,
 				channelB, transmitReceiveMode, power, northEastLongitude,

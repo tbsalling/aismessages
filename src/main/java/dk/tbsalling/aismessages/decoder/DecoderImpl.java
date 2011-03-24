@@ -182,16 +182,28 @@ public class DecoderImpl implements Decoder {
 		Integer value;
 		String signBit = bitString.substring(0, 1);
 		String valueBits = bitString.substring(1);
-		if (signBit.endsWith("0"))
+		if ("0".equals(signBit))
 			value = convertToUnsignedInteger(valueBits);
 		else {
-			value = - convertToUnsignedInteger(valueBits) - 1;
-		}
+			valueBits = valueBits.replaceAll("0", "x");
+			valueBits = valueBits.replaceAll("1", "0");
+			valueBits = valueBits.replaceAll("x", "1");
+			value = convertToUnsignedInteger("-" + valueBits);
+		}	
+
 		return value;
 	}
 
 	public static Long convertToUnsignedLong(String bitString) {
 		return Long.parseLong(bitString, 2);
+	}
+
+	public static Float convertToFloat(String bitString) {
+		return Float.valueOf(convertToSignedInteger(bitString));
+	}
+	
+	public static Float convertToUnsignedFloat(String bitString) {
+		return Float.valueOf(convertToUnsignedInteger(bitString));
 	}
 
 	public static String convertToTime(String bits) {

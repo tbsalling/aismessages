@@ -46,16 +46,20 @@ public class PositionReportClassAAssignedSchedule extends PositionReport {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.PositionReportClassAAssignedSchedule))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 			
+		System.err.println(encodedMessage.getBits());
+		System.err.println(encodedMessage.getBits(61, 89));
+		System.err.println(encodedMessage.getBits(89, 116));
+		
 		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
 		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 
 		NavigationStatus navigationStatus = NavigationStatus.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(38, 42)));
 		Integer rateOfTurn = DecoderImpl.convertToSignedInteger(encodedMessage.getBits(42, 50));
-		Float speedOverGround = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(50, 60)) / 10f);
+		Float speedOverGround = DecoderImpl.convertToUnsignedFloat(encodedMessage.getBits(50, 60)) / 10f;
 		Boolean positionAccurate = DecoderImpl.convertToBoolean(encodedMessage.getBits(60, 61));
-		Float longitude = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(61, 89)) / 10000f);
-		Float latitude = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(89, 116)) / 10000f);
-		Float courseOverGround = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(116, 128)) / 10f);
+		Float longitude = DecoderImpl.convertToFloat(encodedMessage.getBits(61, 89)) / 600000f;
+		Float latitude = DecoderImpl.convertToFloat(encodedMessage.getBits(89, 116)) / 600000f;
+		Float courseOverGround = DecoderImpl.convertToUnsignedFloat(encodedMessage.getBits(116, 128)) / 10f;
 		Integer trueHeading = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(128, 137));
 		Integer second = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(137, 143));
 		ManeuverIndicator maneuverIndicator = ManeuverIndicator.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(143, 145)));

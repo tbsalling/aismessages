@@ -106,9 +106,9 @@ public class StandardSARAircraftPositionReport extends DecodedAISMessage {
 		 Integer altitude = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(38, 50));
 		 Integer speed = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(50, 60));
 		 Boolean positionAccurate = DecoderImpl.convertToBoolean(encodedMessage.getBits(60, 61));
-		 Float longitude = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(61, 89)) / 10000f);
-		 Float latitude = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(89, 116)) / 10000f);
-		 Float courseOverGround = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(116, 128)) / 10f);
+		 Float longitude = DecoderImpl.convertToFloat(encodedMessage.getBits(61, 89)) / 600000f;
+		 Float latitude = DecoderImpl.convertToFloat(encodedMessage.getBits(89, 116)) / 600000f;
+		 Float courseOverGround = DecoderImpl.convertToUnsignedFloat(encodedMessage.getBits(116, 128)) / 10f;
 		 Integer second = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(128, 134));
 		 String regionalReserved = DecoderImpl.convertToBitString(encodedMessage.getBits(134, 142));
 		 Boolean dataTerminalReady = DecoderImpl.convertToBoolean(encodedMessage.getBits(142, 143));

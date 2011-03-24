@@ -93,8 +93,8 @@ public class UTCAndDateResponse extends DecodedAISMessage {
 		Integer minute = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(66, 72));
 		Integer second = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(72, 78));
 		Boolean positionAccurate = DecoderImpl.convertToBoolean(encodedMessage.getBits(78, 79));
-		Float longitude = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(79, 107)) / 10000f);
-		Float latitude = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(107, 134)) / 10000f);
+		Float longitude = DecoderImpl.convertToFloat(encodedMessage.getBits(79, 107)) / 600000f;
+		Float latitude = DecoderImpl.convertToFloat(encodedMessage.getBits(107, 134)) / 600000f;
 		PositionFixingDevice positionFixingDevice = PositionFixingDevice.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(134, 138)));
 		Boolean raimFlag = DecoderImpl.convertToBoolean(encodedMessage.getBits(148, 149));
 

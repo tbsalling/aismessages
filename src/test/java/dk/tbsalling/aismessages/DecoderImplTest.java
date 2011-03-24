@@ -22,7 +22,6 @@ import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.BeforeClass;
-import org.junit.Ignore;
 import org.junit.Test;
 
 import dk.tbsalling.aismessages.decoder.Decoder;
@@ -57,8 +56,17 @@ public class DecoderImplTest {
 	}
 	
 	@Test
-	@Ignore
 	public void canConvertToUnsignedInteger() {
+		// 1011100101011100011011001111 -> -123.450533333333
+		
+		assertEquals(Float.valueOf(0), Float.valueOf(DecoderImpl.convertToFloat("0000000000000000000000000000")));
+		assertEquals(Float.valueOf(1), Float.valueOf(DecoderImpl.convertToFloat("0000000000000000000000000001")));
+		assertEquals(Float.valueOf(0), Float.valueOf(DecoderImpl.convertToFloat("1111111111111111111111111111")));
+		System.err.println("---");
+//		assertEquals(Float.valueOf(-123.450533333333f), Float.valueOf(DecoderImpl.convertToFloat("1100011010100011100100110000") / 600000f));// 74070320
+		assertEquals(Float.valueOf(-123.450533333333f), Float.valueOf(DecoderImpl.convertToFloat("1011100101011100011011001111") / 600000f));// 74070320
+		System.err.println("---");
+		assertEquals(Float.valueOf(37.21113f),          Float.valueOf(DecoderImpl.convertToFloat("001010101001010110110010100") / 600000f));
 		// 181 degrees (0x6791AC0 hex)
 		// Decoder.convertToUnsignedInteger(bitString)
 		// 91 degrees (0x3412140 hex)
@@ -83,9 +91,9 @@ public class DecoderImplTest {
 		assertEquals((Integer) 0, message.getRateOfTurn());
 		assertEquals((Float) 10.0f, message.getSpeedOverGround());
 		assertTrue(message.getPositionAccurate());
-		assertEquals(Float.valueOf(2215.412f), message.getLatitude());
-		assertEquals(Float.valueOf(-5987.778f), message.getLongitude());
-		assertEquals(Float.valueOf(-124.3f), message.getCourseOverGround());
+		assertEquals(Float.valueOf(36.923534f), message.getLatitude());
+		assertEquals(Float.valueOf(-123.89992f), message.getLongitude());
+		assertEquals(Float.valueOf(329f), message.getCourseOverGround());
 		assertEquals((Integer) 28, message.getSecond());
 		assertEquals((Integer) 328, message.getTrueHeading());
 		assertEquals(ManeuverIndicator.NotAvailable, message.getManeuverIndicator());
@@ -99,6 +107,32 @@ public class DecoderImplTest {
 	@Test
 	public void canDecodePositionReportClassAAssignedSchedule() {
 		// !AIVDM,1,1,,A,24RjBV0028o:pnNEBeU<pJF>0PT@,0*3F
+		
+		/*
+		User ID	304911000	
+		Navigation Status	0	Under way using engine
+		Rate of Turn (ROT)	0	Turning right at up to 708 degrees per minute or higher
+		Speed Over Ground (SOG)	13.6	
+		Position Accuracy	1	A DGPS-quality fix with an accuracy of < 10 ms
+		Longitude	-123.450533333333	West
+		Latitude	37.2111266666667	North
+		Course Over Ground (COG)	329.7	
+		True Heading (HDG)	331	
+		Time Stamp	7	
+		Reserved for regional	0	Not available (default)
+		RAIM flag	0	RAIM not in use (default)
+		Communication State	133392	Sync state: UTC Indirect; Slot Timeout: This was the last transmission in this slot; Slot offset: 2320
+		COMMUNICATION_SYNC_STATE	1	Sync state: UTC Indirect
+		COMMUNICATION_SLOT_TIMEOUT	0	Slot Timeout: This was the last transmission in this slot
+		COMMUNICATION_SUB_MESSAGE	2320	
+		COMMUNICATION_UTC_HOUR	No value	
+		COMMUNICATION_UTC_MINUTE	No value	
+		COMMUNICATION_TIME_STAMP	No value	
+		COMMUNICATION_SLOT_NUMBER	No value	
+		COMMUNICATION_RECEIVED_STATIONS	No value	
+		COMMUNICATION_SLOT_OFFSET	2320	
+		*/
+		
 		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("24RjBV0028o:pnNEBeU<pJF>0PT@", 0);
 		DecodedAISMessage decodedAISMessage = decoder.decode(encodedAISMessage);
 		System.out.println(decodedAISMessage.toString());
@@ -111,9 +145,9 @@ public class DecoderImplTest {
 		assertEquals((Integer) 0, message.getRateOfTurn());
 		assertEquals((Float) 13.6f, message.getSpeedOverGround());
 		assertTrue(message.getPositionAccurate());
-		assertEquals(Float.valueOf(2232.6675f), message.getLatitude());
-		assertEquals(Float.valueOf(-6014.7407f), message.getLongitude());
-		assertEquals(Float.valueOf(-125.0f), message.getCourseOverGround());
+		assertEquals(Float.valueOf(37.21113f), message.getLatitude());
+		assertEquals(Float.valueOf(-123.45053f), message.getLongitude());
+		assertEquals(Float.valueOf(329.7f), message.getCourseOverGround());
 		assertEquals((Integer) 331, message.getTrueHeading());
 		assertEquals((Integer) 7, message.getSecond());
 		assertEquals(ManeuverIndicator.NotAvailable, message.getManeuverIndicator());
@@ -139,9 +173,9 @@ public class DecoderImplTest {
 		assertEquals((Integer) 0, message.getRateOfTurn());
 		assertEquals((Float) 13.6f, message.getSpeedOverGround());
 		assertTrue(message.getPositionAccurate());
-		assertEquals(Float.valueOf(2232.6675f), message.getLatitude());
-		assertEquals(Float.valueOf(-6014.7407f), message.getLongitude());
-		assertEquals(Float.valueOf(-125.0f), message.getCourseOverGround());
+		assertEquals(Float.valueOf(37.21113f), message.getLatitude());
+		assertEquals(Float.valueOf(-123.45053f), message.getLongitude());
+		assertEquals(Float.valueOf(329.7f), message.getCourseOverGround());
 		assertEquals((Integer) 331, message.getTrueHeading());
 		assertEquals((Integer) 7, message.getSecond());
 		assertEquals(ManeuverIndicator.NotAvailable, message.getManeuverIndicator());
@@ -171,8 +205,8 @@ public class DecoderImplTest {
 		assertEquals((Integer) 25, message.getMinute());
 		assertEquals((Integer) 9, message.getSecond());
 		assertTrue(message.getPositionAccurate());
-		assertEquals(Float.valueOf(2275.397f), message.getLatitude());
-		assertEquals(Float.valueOf(-6065.87f), message.getLongitude());
+		assertEquals(Float.valueOf(37.923283f), message.getLatitude());
+		assertEquals(Float.valueOf(-122.59837f), message.getLongitude());
 		assertEquals(PositionFixingDevice.Surveyed, message.getPositionFixingDevice());
 		assertFalse(message.getRaimFlag());
 	}
@@ -339,8 +373,8 @@ public class DecoderImplTest {
 		assertEquals("00000000", message.getRegionalReserved1());
 		assertEquals((Float) 0.0f, message.getSpeedOverGround());
 		assertFalse(message.getPositionAccurate());
-		assertEquals(Float.valueOf(2267.102f), message.getLatitude());
-		assertEquals(Float.valueOf(-6085.7334f), message.getLongitude());
+		assertEquals(Float.valueOf(37.785034f), message.getLatitude());
+		assertEquals(Float.valueOf(-122.26732f), message.getLongitude());
 		assertEquals(Float.valueOf(0.0f), message.getCourseOverGround());
 		assertEquals((Integer) 511, message.getTrueHeading());
 		assertEquals((Integer) 55, message.getSecond());

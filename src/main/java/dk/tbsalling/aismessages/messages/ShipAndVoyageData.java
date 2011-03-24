@@ -145,7 +145,7 @@ public class ShipAndVoyageData extends DecodedAISMessage {
 		Integer toStarboard = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(264, 270));
 		PositionFixingDevice positionFixingDevice = PositionFixingDevice.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(270, 274)));
 		String eta = DecoderImpl.convertToTime(encodedMessage.getBits(274, 294));
-		Float draught = (float) DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(294, 302)) / (float) 10.0;
+		Float draught = DecoderImpl.convertToUnsignedFloat(encodedMessage.getBits(294, 302)) / 10f;
 		String destination = DecoderImpl.convertToString(encodedMessage.getBits(302, 422));
 		Boolean dataTerminalReady = DecoderImpl.convertToBoolean(encodedMessage.getBits(422, 423));
 		

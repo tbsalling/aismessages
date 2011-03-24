@@ -140,8 +140,8 @@ public class AidToNavigationReport extends DecodedAISMessage {
 		AidType aidType = AidType.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(38, 43)));
 		String name = DecoderImpl.convertToString(encodedMessage.getBits(43, 163));
 		Boolean positionAccurate = DecoderImpl.convertToBoolean(encodedMessage.getBits(163, 164));
-		Float longitude = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(164, 192)) / 10000f);
-		Float latitude = (float) (DecoderImpl.convertToSignedInteger(encodedMessage.getBits(192, 219)) / 10000f);
+		Float longitude = DecoderImpl.convertToFloat(encodedMessage.getBits(164, 192)) / 600000f;
+		Float latitude = DecoderImpl.convertToFloat(encodedMessage.getBits(192, 219)) / 600000f;
 		Integer toBow = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(219, 228));
 		Integer toStern = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(228, 237));
 		Integer toPort = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(237, 243));
