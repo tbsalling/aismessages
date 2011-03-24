@@ -62,10 +62,7 @@ public class DecoderImplTest {
 		assertEquals(Float.valueOf(0), Float.valueOf(DecoderImpl.convertToFloat("0000000000000000000000000000")));
 		assertEquals(Float.valueOf(1), Float.valueOf(DecoderImpl.convertToFloat("0000000000000000000000000001")));
 		assertEquals(Float.valueOf(0), Float.valueOf(DecoderImpl.convertToFloat("1111111111111111111111111111")));
-		System.err.println("---");
-//		assertEquals(Float.valueOf(-123.450533333333f), Float.valueOf(DecoderImpl.convertToFloat("1100011010100011100100110000") / 600000f));// 74070320
 		assertEquals(Float.valueOf(-123.450533333333f), Float.valueOf(DecoderImpl.convertToFloat("1011100101011100011011001111") / 600000f));// 74070320
-		System.err.println("---");
 		assertEquals(Float.valueOf(37.21113f),          Float.valueOf(DecoderImpl.convertToFloat("001010101001010110110010100") / 600000f));
 		// 181 degrees (0x6791AC0 hex)
 		// Decoder.convertToUnsignedInteger(bitString)

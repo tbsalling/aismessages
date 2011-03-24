@@ -46,10 +46,6 @@ public class PositionReportClassAAssignedSchedule extends PositionReport {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.PositionReportClassAAssignedSchedule))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 			
-		System.err.println(encodedMessage.getBits());
-		System.err.println(encodedMessage.getBits(61, 89));
-		System.err.println(encodedMessage.getBits(89, 116));
-		
 		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
 		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 
