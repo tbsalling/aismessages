@@ -71,7 +71,7 @@ public class NMEAMessageReceiver {
 			EncodedAISMessage encodedAISMessage = new EncodedAISMessage(payload, fillBits);
 			DecodedAISMessage decodedAISMessage = decoder.decode(encodedAISMessage);
 			messageFragments.clear();
-			metadata.setProcessedIn((System.nanoTime() - startTime)/1000);
+			metadata.setProcessedIn(Short.valueOf((short) ((System.nanoTime() - startTime)/1000)));
 			decodedAISMessage.setMetadata(metadata);
 			aisMessageHandler.handleMessageReceived(decodedAISMessage);
 		} else {

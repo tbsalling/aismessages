@@ -15,11 +15,11 @@ public class Metadata {
 		this.processedAt = processedAt;
 	}
 
-	public Long getProcessedIn() {
+	public Short getProcessedIn() {
 		return processedIn;
 	}
 
-	public void setProcessedIn(Long processedIn) {
+	public void setProcessedIn(Short processedIn) {
 		this.processedIn = processedIn;
 	}
 
@@ -35,8 +35,13 @@ public class Metadata {
 		return category;
 	}
 
-	private String category = "AIS";
+	public String getDecoderVersion() {
+		return decoderVersion;
+	}
+
+	private final static String decoderVersion = "1.0";
+	private final static String category = "AIS";
 	private Date processedAt;
-	private Long processedIn;
+	private Short processedIn;
 	private String source;
 }
