@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.AddressedBinaryMessage;
 import dk.tbsalling.aismessages.messages.AddressedSafetyRelatedMessage;
@@ -78,6 +79,9 @@ public class DecoderImpl implements Decoder {
 	public DecodedAISMessage decode(EncodedAISMessage encodedMessage) {
 		long startTime = System.nanoTime();
 
+		if (! encodedMessage.isValid())
+			throw new InvalidEncodedMessage(encodedMessage);
+		
 		DecodedAISMessage decodedMessage;
 		AISMessageType messageType = encodedMessage.getMessageType();
 		log.log(Level.FINER, "Attempting to decode message of type " + messageType);

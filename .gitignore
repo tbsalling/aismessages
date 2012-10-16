@@ -32,3 +32,12 @@
 ehthumbs.db
 Icon?
 Thumbs.db
+
+#
+######################
+target/
+data/sfbay/
+.classpath
+.project
+.metadata/
+.settings/

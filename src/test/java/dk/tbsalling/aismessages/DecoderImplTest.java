@@ -26,6 +26,7 @@ import org.junit.Test;
 
 import dk.tbsalling.aismessages.decoder.Decoder;
 import dk.tbsalling.aismessages.decoder.DecoderImpl;
+import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.messages.BaseStationReport;
 import dk.tbsalling.aismessages.messages.BinaryBroadcastMessage;
 import dk.tbsalling.aismessages.messages.ClassBCSStaticDataReport;
@@ -68,6 +69,16 @@ public class DecoderImplTest {
 		// Decoder.convertToUnsignedInteger(bitString)
 		// 91 degrees (0x3412140 hex)
 		// Course over ground will be 3600 (0xE10)
+	}
+
+	//
+	// Invalid message #1
+	// 
+
+	@Test(expected=InvalidEncodedMessage.class)
+	public void handlesInvalidMessageCorrectly() {
+		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("00", 0);
+		decoder.decode(encodedAISMessage);
 	}
 
 	//
@@ -264,7 +275,35 @@ public class DecoderImplTest {
 		assertEquals("SFO 70              ", message.getDestination());
 		assertFalse(message.getDataTerminalReady());
 	}
-	                   
+
+@Test
+	public void canDecodeShipAndVoyageData3() {
+		// !AIVDM,2,1,0,B,539S:k40000000c3G04PPh63<00000000080000o1PVG2uGD:00000000000,0*34
+		// !AIVDM,2,2,0,B,00000000000,2*27
+
+		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("539S:k40000000c3G04PPh63<00000000080000o1PVG2uGD:0000000000000000000000", 2);
+		DecodedAISMessage decodedAISMessage = decoder.decode(encodedAISMessage);
+		System.out.println(decodedAISMessage.toString());
+
+		assertEquals(AISMessageType.ShipAndVoyageRelatedData, decodedAISMessage.getMessageType());
+		ShipAndVoyageData message = (ShipAndVoyageData) decodedAISMessage;
+		assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
+		assertEquals(MMSI.valueOf(211339980L), message.getSourceMmsi());
+		assertEquals(IMO.valueOf(0L), message.getImo());
+		assertEquals("@@J050A", message.getCallsign());
+		assertEquals("HHLA 3@@@@@@@@@B@@@@", message.getShipName());
+		assertEquals(ShipType.LawEnforcement, message.getShipType());
+		assertEquals(Integer.valueOf(12), message.getToBow());
+		assertEquals(Integer.valueOf(38), message.getToStern());
+		assertEquals(Integer.valueOf(2), message.getToStarboard());
+		assertEquals(Integer.valueOf(23), message.getToPort());
+		assertNull(message.getPositionFixingDevice());
+		assertEquals(Float.valueOf("0"), message.getDraught());
+		assertEquals("14-05 20:10", message.getEta());
+		assertEquals("@@@@@@@@@@@@@@@@@@@@", message.getDestination());
+		assertFalse(message.getDataTerminalReady());
+	}
+
 	//
 	// Message type 6
 	// 
