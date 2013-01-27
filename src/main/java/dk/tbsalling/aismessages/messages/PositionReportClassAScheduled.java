@@ -19,6 +19,8 @@
  */
 package dk.tbsalling.aismessages.messages;
 
+import java.io.Serializable;
+
 import dk.tbsalling.aismessages.decoder.DecoderImpl;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;

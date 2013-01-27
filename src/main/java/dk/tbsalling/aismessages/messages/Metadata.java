@@ -1,8 +1,10 @@
 package dk.tbsalling.aismessages.messages;
 
+import java.io.Serializable;
 import java.util.Date;
 
-public class Metadata {
+@SuppressWarnings("serial")
+public class Metadata implements Serializable {
 
 	public Metadata() {
 	}
