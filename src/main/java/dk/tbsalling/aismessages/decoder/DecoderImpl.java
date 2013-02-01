@@ -57,6 +57,8 @@ public class DecoderImpl implements Decoder {
 
     private static final Logger log = Logger.getLogger(DecoderImpl.class.getName());
 	
+    private static final Boolean stripAlphaSigns = true;
+    
 	static {
 		StringBuffer sb = new StringBuffer();
 		sb.append("\n");
@@ -225,16 +227,20 @@ public class DecoderImpl implements Decoder {
 	}
 
 	public static String convertToString(String bits) {
-		StringBuffer string = new StringBuffer();
+		StringBuffer stringBuffer = new StringBuffer();
 		String remainingBits = new String(bits);
 		while (remainingBits.length() >= 6) {
 			String b = remainingBits.substring(0, 6);
 			remainingBits = remainingBits.substring(6);
 			Integer i = convertToUnsignedInteger(b);
 			String c = sixBitAscii.get(i);
-			string.append(c);
+			stringBuffer.append(c);
 		}
-		return string.toString();
+		String string = stringBuffer.toString();
+		if (stripAlphaSigns) {
+			string = string.replaceAll("@", " ").trim();
+		}
+		return string;
 	}
 	
 	public static String convertToBitString(String bits) {

@@ -235,7 +235,7 @@ public class DecoderImplTest {
 		assertEquals(MMSI.valueOf(366998830L), message.getSourceMmsi());
 		assertEquals(IMO.valueOf(643765L), message.getImo());
 		assertEquals("WCW8912", message.getCallsign());
-		assertEquals("ROYAL MELBOURNE@@@@@", message.getShipName());
+		assertEquals("ROYAL MELBOURNE", message.getShipName());
 		assertEquals(ShipType.Tug, message.getShipType());
 		assertEquals(Integer.valueOf(10), message.getToBow());
 		assertEquals(Integer.valueOf(20), message.getToStern());
@@ -244,7 +244,7 @@ public class DecoderImplTest {
 		assertEquals(PositionFixingDevice.Gps, message.getPositionFixingDevice());
 		assertEquals(Float.valueOf("3.0"), message.getDraught());
 		assertEquals("14-03 20:30", message.getEta());
-		assertEquals(">US SFO 9@@@@@@@@@@@", message.getDestination());
+		assertEquals(">US SFO 9", message.getDestination());
 		assertFalse(message.getDataTerminalReady());
 	}
 	
@@ -263,7 +263,7 @@ public class DecoderImplTest {
 		assertEquals(MMSI.valueOf(366962000L), message.getSourceMmsi());
 		assertEquals(IMO.valueOf(9131369L), message.getImo());
 		assertEquals("WDD7294", message.getCallsign());
-		assertEquals("MISSISSIPPI VOYAGER ", message.getShipName());
+		assertEquals("MISSISSIPPI VOYAGER", message.getShipName());
 		assertEquals(ShipType.TankerHazardousD, message.getShipType());
 		assertEquals(Integer.valueOf(154), message.getToBow());
 		assertEquals(Integer.valueOf(36), message.getToStern());
@@ -272,7 +272,7 @@ public class DecoderImplTest {
 		assertEquals(PositionFixingDevice.Gps, message.getPositionFixingDevice());
 		assertEquals(Float.valueOf("8.3"), message.getDraught());
 		assertEquals("06-03 19:00", message.getEta());
-		assertEquals("SFO 70              ", message.getDestination());
+		assertEquals("SFO 70", message.getDestination());
 		assertFalse(message.getDataTerminalReady());
 	}
 
@@ -290,8 +290,8 @@ public class DecoderImplTest {
 		assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
 		assertEquals(MMSI.valueOf(211339980L), message.getSourceMmsi());
 		assertEquals(IMO.valueOf(0L), message.getImo());
-		assertEquals("@@J050A", message.getCallsign());
-		assertEquals("HHLA 3@@@@@@@@@B@@@@", message.getShipName());
+		assertEquals("J050A", message.getCallsign());
+		assertEquals("HHLA 3         B", message.getShipName());
 		assertEquals(ShipType.LawEnforcement, message.getShipType());
 		assertEquals(Integer.valueOf(12), message.getToBow());
 		assertEquals(Integer.valueOf(38), message.getToStern());
@@ -300,7 +300,7 @@ public class DecoderImplTest {
 		assertNull(message.getPositionFixingDevice());
 		assertEquals(Float.valueOf("0"), message.getDraught());
 		assertEquals("14-05 20:10", message.getEta());
-		assertEquals("@@@@@@@@@@@@@@@@@@@@", message.getDestination());
+		assertEquals("", message.getDestination());
 		assertFalse(message.getDataTerminalReady());
 	}
 
