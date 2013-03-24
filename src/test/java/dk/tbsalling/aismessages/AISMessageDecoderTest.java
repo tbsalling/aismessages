@@ -17,10 +17,14 @@
 package dk.tbsalling.aismessages;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.util.ArrayList;
 
 import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
+import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -35,12 +39,12 @@ public class AISMessageDecoderTest {
     private final static Mockery context = new JUnit4Mockery();
 
     private static DecodedAISMessageHandler aisMessageHandler;
-	private static NMEAMessageReceiver aisMessageDecoder;
+	private static NMEAMessageReceiver aisMessageReceiver;
 
 	@BeforeClass
 	public static void setUp() {
 		aisMessageHandler = context.mock(DecodedAISMessageHandler.class);
-		aisMessageDecoder = new NMEAMessageReceiver("TEST", aisMessageHandler);
+		aisMessageReceiver = new NMEAMessageReceiver("TEST", aisMessageHandler);
 	}
 	
 	@Test
@@ -53,7 +57,7 @@ public class AISMessageDecoderTest {
 			one(aisMessageHandler).handleMessageReceived(with(decodedAISMessage.getMatcher()));
         }});
 		
-		aisMessageDecoder.handleMessageReceived(unfragmentedNMEAMessage);
+		aisMessageReceiver.handleMessageReceived(unfragmentedNMEAMessage);
 
 		assertEquals(AISMessageType.PositionReportClassAScheduled, decodedAISMessage.getCapturedObject().getMessageType());
 	}
@@ -69,9 +73,53 @@ public class AISMessageDecoderTest {
 			one(aisMessageHandler).handleMessageReceived(with(decodedAISMessage.getMatcher()));
         }});
 		
-		aisMessageDecoder.handleMessageReceived(fragmentedNMEAMessage1);
-		aisMessageDecoder.handleMessageReceived(fragmentedNMEAMessage2);
+		aisMessageReceiver.handleMessageReceived(fragmentedNMEAMessage1);
+		aisMessageReceiver.handleMessageReceived(fragmentedNMEAMessage2);
 
 		assertEquals(AISMessageType.ShipAndVoyageRelatedData, decodedAISMessage.getCapturedObject().getMessageType());
+	}
+
+	@Test
+	public void canFlushEmpty() {
+		NMEAMessage unfragmentedNMEAMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A");
+		NMEAMessage fragmentedNMEAMessage1 = NMEAMessage.fromString("!AIVDM,2,1,3,B,55DA><02=6wpPuID000qTf059@DlU<00000000171lMDD4q20LmDp3hB,0*27");
+		NMEAMessage fragmentedNMEAMessage2 = NMEAMessage.fromString("!AIVDM,2,2,3,B,p=Mh00000000000,2*4C");
+
+		final ArgumentCaptor<DecodedAISMessage> decodedAISMessage = new ArgumentCaptor<DecodedAISMessage>();
+
+		context.checking(new Expectations() {{
+			exactly(3).of(aisMessageHandler).handleMessageReceived(with(decodedAISMessage.getMatcher()));
+        }});
+		
+		aisMessageReceiver.handleMessageReceived(unfragmentedNMEAMessage);
+		aisMessageReceiver.handleMessageReceived(fragmentedNMEAMessage1);
+		aisMessageReceiver.handleMessageReceived(fragmentedNMEAMessage2);
+
+		ArrayList<NMEAMessage> flush = aisMessageReceiver.flush();
+
+		assertNotNull(flush);
+		assertEquals(0, flush.size());
+	}
+
+	@Test
+	public void canFlushUnhanled() {
+		NMEAMessage unfragmentedNMEAMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A");
+		NMEAMessage fragmentedNMEAMessage1 = NMEAMessage.fromString("!AIVDM,2,1,3,B,55DA><02=6wpPuID000qTf059@DlU<00000000171lMDD4q20LmDp3hB,0*27");
+
+		final ArgumentCaptor<DecodedAISMessage> decodedAISMessage = new ArgumentCaptor<DecodedAISMessage>();
+
+		context.checking(new Expectations() {{
+			exactly(2).of(aisMessageHandler).handleMessageReceived(with(decodedAISMessage.getMatcher()));
+        }});
+		
+		aisMessageReceiver.handleMessageReceived(unfragmentedNMEAMessage);
+		aisMessageReceiver.handleMessageReceived(fragmentedNMEAMessage1);
+
+		ArrayList<NMEAMessage> flush = aisMessageReceiver.flush();
+
+		assertNotNull(flush);
+		assertEquals(1, flush.size());
+		assertEquals(fragmentedNMEAMessage1, flush.get(0));
+
 	}
 }

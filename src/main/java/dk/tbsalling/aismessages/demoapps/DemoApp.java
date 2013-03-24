@@ -16,6 +16,8 @@
 
 package dk.tbsalling.aismessages.demoapps;
 
+import java.util.ArrayList;
+
 import dk.tbsalling.aismessages.DecodedAISMessageHandler;
 import dk.tbsalling.aismessages.NMEAMessageReceiver;
 import dk.tbsalling.aismessages.messages.DecodedAISMessage;
@@ -119,6 +121,8 @@ public class DemoApp implements DecodedAISMessageHandler {
 			nmeaMessageHandler.handleMessageReceived(NMEAMessage.fromString(demoNmeaString));
 		}
 		
+		ArrayList<NMEAMessage> unhandled = nmeaMessageHandler.flush();
+		
 		long endTime = System.nanoTime();
 
 		float secs = (endTime-startTime)/1000000000f;
@@ -126,6 +130,7 @@ public class DemoApp implements DecodedAISMessageHandler {
 		int msgsPerSec = (int) (msgs/secs);
 		
 		System.out.println("DemoApp processed " + msgs + " NMEA AIVDM messages in " + secs + " secs (" + msgsPerSec + " messages per second).");
+		System.out.println(unhandled.size() + " messages were not processed. Probably they were in incomplete sets.");
 	}
 
 	public static void main(String[] args) {

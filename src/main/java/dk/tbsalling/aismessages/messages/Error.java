@@ -14,30 +14,31 @@
  * 
  */
 
-package dk.tbsalling.aismessages.nmea.exceptions;
+package dk.tbsalling.aismessages.messages;
 
+import dk.tbsalling.aismessages.messages.types.AISMessageType;
+
+/**
+ * Identification and location message to be emitted by aids to navigation such as buoys and lighthouses.
+ * @author tbsalling
+ *
+ */
 @SuppressWarnings("serial")
-public class NMEAParseException extends RuntimeException {
+public class Error extends DecodedAISMessage {
 
-	public NMEAParseException(String rawMessage, String errorDescription) {
+	public Error(String rawMessage, String errorDescription) {
+		super(AISMessageType.Error, null, null);
 		this.rawMessage = rawMessage;
 		this.errorDescription = errorDescription;
-	}
-	
-	@Override
-	public String getMessage() {
-		return this.errorDescription + ": " + rawMessage;
 	}
 
 	public final String getRawMessage() {
 		return rawMessage;
 	}
-
 	public final String getErrorDescription() {
 		return errorDescription;
 	}
 
-	final String rawMessage;
-	final String errorDescription;
-	
+	private final String rawMessage;
+	private final String errorDescription;
 }

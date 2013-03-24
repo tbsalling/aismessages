@@ -43,7 +43,8 @@ public enum AISMessageType {
 	GroupAssignmentCommand(23), 
 	ClassBCSStaticDataReport(24), 
 	BinaryMessageSingleSlot(25), 
-	BinaryMessageMultipleSlot(26);
+	BinaryMessageMultipleSlot(26),
+	Error(-1);
 
 	AISMessageType(Integer code) {
 		this.code = code;

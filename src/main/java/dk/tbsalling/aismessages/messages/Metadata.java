@@ -41,6 +41,8 @@ public class Metadata implements Serializable {
 		return decoderVersion;
 	}
 
+	// TODO Add decoder version from maven
+	// TODO Add decode status and error descriptions
 	private final static String decoderVersion = "1.0";
 	private final static String category = "AIS";
 	private Date processedAt;

@@ -96,12 +96,14 @@ public class NMEAMessage {
 	private NMEAMessage(String rawMessage) {
 		// !AIVDM,1,1,,B,15MvlfPOh2G?nwbEdVDsnSTR00S?,0*41
 		
-		if (! rawMessage.matches("^!.*\\*[0-9A-Fa-f]{2}$"))
-			throw new NMEAParseException();
+		final String nmeaMessageRegExp = "^!.*\\*[0-9A-Fa-f]{2}$";
+		
+		if (! rawMessage.matches(nmeaMessageRegExp))
+			throw new NMEAParseException(rawMessage, "Message does not comply with regexp \"" + nmeaMessageRegExp + "\"");
 
 		String[] msg = rawMessage.split(",");
 		if (msg.length != 7)
-			throw new NMEAParseException();
+			throw new NMEAParseException(rawMessage, "Expected 7 fields separated by commas; got " + msg.length);
 
 		this.rawMessage = new String(rawMessage);
 		this.messageType = isBlank(msg[0]) ? null : msg[0].replace("!", "");
@@ -113,7 +115,7 @@ public class NMEAMessage {
 		
 		String msg1[] = msg[6].split("\\*");
 		if (msg1.length != 2)
-			throw new NMEAParseException();
+			throw new NMEAParseException(rawMessage, "Expected checksum fields to start with *");
 		
 		this.fillBits = isBlank(msg1[0]) ? null : Integer.valueOf(msg1[0]);
 		this.checksum = isBlank(msg1[1]) ? null : Integer.valueOf(msg1[1], 16);
