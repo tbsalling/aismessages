@@ -39,7 +39,7 @@ public class AidToNavigationReport extends DecodedAISMessage {
 			Integer toStarboard, Integer toPort,
 			PositionFixingDevice positionFixingDevice, Integer second,
 			Boolean offPosition, String regionalUse, Boolean raimFlag,
-			Boolean virtualAid, Boolean assignedMode, String nameExtension) {
+			Boolean virtualAid, Boolean assignedMode, int spare1, String nameExtension, int spare2) {
 		super(AISMessageType.AidToNavigationReport, repeatIndicator, sourceMmsi);
 		this.aidType = aidType;
 		this.name = name;
@@ -57,7 +57,9 @@ public class AidToNavigationReport extends DecodedAISMessage {
 		this.raimFlag = raimFlag;
 		this.virtualAid = virtualAid;
 		this.assignedMode = assignedMode;
+		this.spare1 = spare1;
 		this.nameExtension = nameExtension;
+		this.spare2 = spare2;
 	}
 
 	public final AidType getAidType() {
@@ -124,8 +126,16 @@ public class AidToNavigationReport extends DecodedAISMessage {
 		return assignedMode;
 	}
 
+	public final int getSpare1() {
+		return spare1;
+	}
+	
 	public final String getNameExtension() {
 		return nameExtension;
+	}
+	
+	public final int getSpare2() {
+		return spare2;
 	}
 
 	public static AidToNavigationReport fromEncodedMessage(EncodedAISMessage encodedMessage) {
@@ -153,12 +163,22 @@ public class AidToNavigationReport extends DecodedAISMessage {
 		Boolean raimFlag = DecoderImpl.convertToBoolean(encodedMessage.getBits(268, 269));
 		Boolean virtualAid = DecoderImpl.convertToBoolean(encodedMessage.getBits(269, 270));
 		Boolean assignedMode = DecoderImpl.convertToBoolean(encodedMessage.getBits(270, 271));
-		String nameExtension = DecoderImpl.convertToString(encodedMessage.getBits(272, 361));
+		int spare1 = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(271, 272));
+		String nameExtension = null;
+		int spare2 = 0;
+		if(encodedMessage.getNumberOfBits() > 272) {
+			int extraBits = encodedMessage.getNumberOfBits() - 272;
+			int extraChars = extraBits / 6;
+			int extraBitsOfChars = extraChars * 6;
+			
+			nameExtension = DecoderImpl.convertToString(encodedMessage.getBits(272, 272 + extraBitsOfChars));
+			spare2 = (extraBits == extraBitsOfChars) ? 0 : DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(272 + extraBitsOfChars, encodedMessage.getNumberOfBits()));
+		}
 
 		return new AidToNavigationReport(repeatIndicator, sourceMmsi, aidType,
 				name, positionAccurate, latitude, longitude, toBow, toStern,
 				toStarboard, toPort, positionFixingDevice, second, offPosition,
-				regionalUse, raimFlag, virtualAid, assignedMode, nameExtension);
+				regionalUse, raimFlag, virtualAid, assignedMode, spare1, nameExtension, spare2);
 	}
 	
 	private final AidType aidType;
@@ -168,8 +188,8 @@ public class AidToNavigationReport extends DecodedAISMessage {
 	private final Float longitude;
 	private final Integer toBow;
 	private final Integer toStern;
-	private final Integer toStarboard;
 	private final Integer toPort;
+	private final Integer toStarboard;
 	private final PositionFixingDevice positionFixingDevice;
 	private final Integer second;
 	private final Boolean offPosition;
@@ -177,5 +197,7 @@ public class AidToNavigationReport extends DecodedAISMessage {
 	private final Boolean raimFlag;
 	private final Boolean virtualAid;
 	private final Boolean assignedMode;
+	private final int spare1;
 	private final String nameExtension;
+	private final int spare2;
 }

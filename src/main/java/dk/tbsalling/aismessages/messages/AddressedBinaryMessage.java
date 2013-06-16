@@ -36,12 +36,13 @@ public class AddressedBinaryMessage extends DecodedAISMessage {
 
 	public AddressedBinaryMessage(
 			Integer repeatIndicator, MMSI sourceMmsi, Integer sequenceNumber,
-			MMSI destinationMmsi, Boolean retransmit,
+			MMSI destinationMmsi, Boolean retransmit, int spare,
 			Integer designatedAreaCode, Integer functionalId, String binaryData) {
 		super(AISMessageType.AddressedBinaryMessage, repeatIndicator, sourceMmsi);
 		this.sequenceNumber = sequenceNumber;
 		this.destinationMmsi = destinationMmsi;
 		this.retransmit = retransmit;
+		this.spare = spare;
 		this.designatedAreaCode = designatedAreaCode;
 		this.functionalId = functionalId;
 		this.binaryData = binaryData;
@@ -57,6 +58,10 @@ public class AddressedBinaryMessage extends DecodedAISMessage {
 
 	public final Boolean getRetransmit() {
 		return retransmit;
+	}
+	
+	public final int getSpare() {
+		return spare;
 	}
 
 	public final Integer getDesignatedAreaCode() {
@@ -83,18 +88,21 @@ public class AddressedBinaryMessage extends DecodedAISMessage {
 		Integer sequenceNumber = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(38, 40));
 		MMSI destinationMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
 		Boolean retransmit = DecoderImpl.convertToBoolean(encodedMessage.getBits(70, 71));
+		int spare = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(71, 72));
 		Integer designatedAreaCode = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(72, 82));
 		Integer functionalId = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(82, 88));
-		String binaryData = DecoderImpl.convertToBitString(encodedMessage.getBits(88, 1009));
+		
+		String binaryData = DecoderImpl.convertToBitString(encodedMessage.getBits(88, encodedMessage.getNumberOfBits()));
 
 		return new AddressedBinaryMessage(repeatIndicator, sourceMmsi,
-				sequenceNumber, destinationMmsi, retransmit,
+				sequenceNumber, destinationMmsi, retransmit, spare,
 				designatedAreaCode, functionalId, binaryData);
 	}
 	
 	private final Integer sequenceNumber;
 	private final MMSI destinationMmsi;
 	private final Boolean retransmit;
+	private final int spare;
 	private final Integer designatedAreaCode;
 	private final Integer functionalId;
 	private final String binaryData;
