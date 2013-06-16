@@ -41,6 +41,7 @@ import dk.tbsalling.aismessages.messages.ExtendedClassBEquipmentPositionReport;
 import dk.tbsalling.aismessages.messages.GNSSBinaryBroadcastMessage;
 import dk.tbsalling.aismessages.messages.GroupAssignmentCommand;
 import dk.tbsalling.aismessages.messages.Interrogation;
+import dk.tbsalling.aismessages.messages.LongRangeBroadcastMessage;
 import dk.tbsalling.aismessages.messages.PositionReportClassAAssignedSchedule;
 import dk.tbsalling.aismessages.messages.PositionReportClassAResponseToInterrogation;
 import dk.tbsalling.aismessages.messages.PositionReportClassAScheduled;
@@ -166,6 +167,9 @@ public class DecoderImpl implements Decoder {
 			break;
 		case BinaryMessageMultipleSlot:
 			decodedMessage = BinaryMessageMultipleSlot.fromEncodedMessage(encodedMessage);
+			break;
+		case LongRangeBroadcastMessage:
+			decodedMessage = LongRangeBroadcastMessage.fromEncodedMessage(encodedMessage);
 			break;
 		default:
 			throw new UnsupportedMessageType(messageType.getCode());
