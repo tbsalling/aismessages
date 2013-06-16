@@ -42,6 +42,13 @@ public class NMEAMessage {
 	}
 
 	public final boolean isValid() {
+		if(messageType == null || messageType.length() != 5) return false;
+		
+		String type = messageType.substring(2);
+		if (! ("VDM".equals(type) || "VDO".equals(type))) {
+			return false;
+		}
+		
 		return true;
 	}
 
@@ -124,7 +131,7 @@ public class NMEAMessage {
 	}
 
 	private void validate() {
-		if (! ("AIVDM".equals(messageType) || "AIVDO".equals(messageType))) {
+		if(!isValid()) {
 			throw new UnsupportedMessageType(messageType);
 		}
 	}

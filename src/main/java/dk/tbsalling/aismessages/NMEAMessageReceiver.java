@@ -59,8 +59,13 @@ public class NMEAMessageReceiver {
 			return;
 		}
 		
-		if (! ("AIVDM".equals(nmeaMessage.getMessageType()) || ("AIVDO".equals(nmeaMessage.getMessageType())))) {
-			log.warning("NMEA messages of type " + nmeaMessage + " cannot be treated by " + this.getClass().getSimpleName());
+//		if (! ("AIVDM".equals(nmeaMessage.getMessageType()) || ("AIVDO".equals(nmeaMessage.getMessageType())))) {
+//			log.warning("NMEA messages of type " + nmeaMessage + " cannot be treated by " + this.getClass().getSimpleName());
+//			return;
+//		}
+		
+		if(!nmeaMessage.isValid()) {
+			log.warning("NMEA messages of type " + nmeaMessage.getMessageType() + " cannot be treated by " + this.getClass().getSimpleName());
 			return;
 		}
 		
