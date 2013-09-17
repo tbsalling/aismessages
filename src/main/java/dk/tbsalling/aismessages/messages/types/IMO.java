@@ -16,7 +16,9 @@
 
 package dk.tbsalling.aismessages.messages.types;
 
-public class IMO {
+import java.io.Serializable;
+
+public class IMO implements Serializable {
 
 	public IMO(Long mmsi) {
 		this.imo = mmsi;

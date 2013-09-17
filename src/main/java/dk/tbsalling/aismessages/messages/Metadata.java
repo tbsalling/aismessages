@@ -10,11 +10,11 @@ public class Metadata implements Serializable {
 	}
 
 	public Date getProcessedAt() {
-		return processedAt;
+		return new Date(processedAt.getTime());
 	}
 
 	public void setProcessedAt(Date processedAt) {
-		this.processedAt = processedAt;
+		this.processedAt = new Date(processedAt.getTime());
 	}
 
 	public Short getProcessedIn() {

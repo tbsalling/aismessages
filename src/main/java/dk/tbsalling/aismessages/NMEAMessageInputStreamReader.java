@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.nio.charset.Charset;
 import java.util.logging.Logger;
 
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
@@ -42,7 +43,7 @@ public class NMEAMessageInputStreamReader {
 	public void run() throws IOException {
 	    log.info("NMEAMessageInputStreamReader running.");
 
-		InputStreamReader reader = new InputStreamReader(inputStream);
+		InputStreamReader reader = new InputStreamReader(inputStream, Charset.defaultCharset());
 		BufferedReader bufferedReader = new BufferedReader(reader);
 		String string;
 		while ((string = bufferedReader.readLine()) != null && !stopRequested()) {

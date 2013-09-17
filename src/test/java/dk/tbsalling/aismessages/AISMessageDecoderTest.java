@@ -54,7 +54,7 @@ public class AISMessageDecoderTest {
 		final ArgumentCaptor<DecodedAISMessage> decodedAISMessage = new ArgumentCaptor<DecodedAISMessage>();
 
 		context.checking(new Expectations() {{
-			one(aisMessageHandler).handleMessageReceived(with(decodedAISMessage.getMatcher()));
+			oneOf(aisMessageHandler).handleMessageReceived(with(decodedAISMessage.getMatcher()));
         }});
 		
 		aisMessageReceiver.handleMessageReceived(unfragmentedNMEAMessage);
@@ -70,7 +70,7 @@ public class AISMessageDecoderTest {
 		final ArgumentCaptor<DecodedAISMessage> decodedAISMessage = new ArgumentCaptor<DecodedAISMessage>();
 
 		context.checking(new Expectations() {{
-			one(aisMessageHandler).handleMessageReceived(with(decodedAISMessage.getMatcher()));
+			oneOf(aisMessageHandler).handleMessageReceived(with(decodedAISMessage.getMatcher()));
         }});
 		
 		aisMessageReceiver.handleMessageReceived(fragmentedNMEAMessage1);
@@ -102,7 +102,7 @@ public class AISMessageDecoderTest {
 	}
 
 	@Test
-	public void canFlushUnhanled() {
+	public void canFlushUnhandled() {
 		NMEAMessage unfragmentedNMEAMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A");
 		NMEAMessage fragmentedNMEAMessage1 = NMEAMessage.fromString("!AIVDM,2,1,3,B,55DA><02=6wpPuID000qTf059@DlU<00000000171lMDD4q20LmDp3hB,0*27");
 

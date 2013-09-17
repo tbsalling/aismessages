@@ -105,7 +105,7 @@ public class NMEAMessage {
 		if (msg.length != 7)
 			throw new NMEAParseException(rawMessage, "Expected 7 fields separated by commas; got " + msg.length);
 
-		this.rawMessage = new String(rawMessage);
+		this.rawMessage = rawMessage;
 		this.messageType = isBlank(msg[0]) ? null : msg[0].replace("!", "");
 		this.numberOfFragments = isBlank(msg[1]) ? null : Integer.valueOf(msg[1]);
 		this.fragmentNumber = isBlank(msg[2]) ? null : Integer.valueOf(msg[2]);

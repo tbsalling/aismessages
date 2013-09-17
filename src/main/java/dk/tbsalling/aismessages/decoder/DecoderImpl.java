@@ -228,7 +228,7 @@ public class DecoderImpl implements Decoder {
 
 	public static String convertToString(String bits) {
 		StringBuffer stringBuffer = new StringBuffer();
-		String remainingBits = new String(bits);
+		String remainingBits = bits;
 		while (remainingBits.length() >= 6) {
 			String b = remainingBits.substring(0, 6);
 			remainingBits = remainingBits.substring(6);
