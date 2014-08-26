@@ -25,9 +25,14 @@ import dk.tbsalling.aismessages.messages.types.MMSI;
 @SuppressWarnings("serial")
 public class SafetyRelatedBroadcastMessage extends DecodedAISMessage {
 	
-	public SafetyRelatedBroadcastMessage(Integer repeatIndicator, MMSI sourceMmsi, String text) {
+	public SafetyRelatedBroadcastMessage(Integer repeatIndicator, MMSI sourceMmsi, int spare, String text) {
 		super(AISMessageType.SafetyRelatedBroadcastMessage, repeatIndicator, sourceMmsi);
+		this.spare = spare;
 		this.text = text;
+	}
+	
+	public final int getSpare() {
+		return spare;
 	}
 
 	public final String getText() {
@@ -42,10 +47,14 @@ public class SafetyRelatedBroadcastMessage extends DecodedAISMessage {
 			
 		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
 		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
-		String text = DecoderImpl.convertToString(encodedMessage.getBits(40, 1049));
+		
+		int spare = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(38, 40));
+		int extraBitsOfChars = ((encodedMessage.getNumberOfBits() - 40) / 6) * 6;
+		String text = DecoderImpl.convertToString(encodedMessage.getBits(40, 40 + extraBitsOfChars));
 
-		return new SafetyRelatedBroadcastMessage(repeatIndicator, sourceMmsi, text);
+		return new SafetyRelatedBroadcastMessage(repeatIndicator, sourceMmsi, spare, text);
 	}
 
+	private final int spare;
 	private final String text;
 }

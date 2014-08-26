@@ -44,6 +44,7 @@ public enum AISMessageType {
 	ClassBCSStaticDataReport(24), 
 	BinaryMessageSingleSlot(25), 
 	BinaryMessageMultipleSlot(26),
+	LongRangeBroadcastMessage(27),
 	Error(-1);
 
 	AISMessageType(Integer code) {

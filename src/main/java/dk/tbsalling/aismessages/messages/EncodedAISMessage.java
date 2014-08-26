@@ -147,6 +147,8 @@ public class EncodedAISMessage {
 			break;
 		case 26: 
 			break;
+		case 27:
+			break;
 		default: 
 			return Boolean.FALSE;
 		}

@@ -27,11 +27,12 @@ public class AddressedSafetyRelatedMessage extends DecodedAISMessage {
 
 	public AddressedSafetyRelatedMessage(
 			Integer repeatIndicator, MMSI sourceMmsi, Integer sequenceNumber,
-			MMSI destinationMmsi, Boolean retransmit, String text) {
+			MMSI destinationMmsi, Boolean retransmit, int spare, String text) {
 		super(AISMessageType.AddressedSafetyRelatedMessage, repeatIndicator, sourceMmsi);
 		this.sequenceNumber = sequenceNumber;
 		this.destinationMmsi = destinationMmsi;
 		this.retransmit = retransmit;
+		this.spare = spare;
 		this.text = text;
 	}
 
@@ -45,6 +46,10 @@ public class AddressedSafetyRelatedMessage extends DecodedAISMessage {
 
 	public final Boolean getRetransmit() {
 		return retransmit;
+	}
+	
+	public final int getSpare() {
+		return spare;
 	}
 
 	public final String getText() {
@@ -62,13 +67,16 @@ public class AddressedSafetyRelatedMessage extends DecodedAISMessage {
 		Integer sequenceNumber = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(38, 40));
 		MMSI destinationMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
 		Boolean retransmit = DecoderImpl.convertToBoolean(encodedMessage.getBits(70, 71));
-		String text = DecoderImpl.convertToString(encodedMessage.getBits(70, 1009));
+		int spare = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(71, 72));
+		int extraBitsOfChars = ((encodedMessage.getNumberOfBits() - 72) / 6) * 6;
+		String text = DecoderImpl.convertToString(encodedMessage.getBits(72, 72 + extraBitsOfChars));
 
-		return new AddressedSafetyRelatedMessage(repeatIndicator, sourceMmsi, sequenceNumber, destinationMmsi, retransmit, text);
+		return new AddressedSafetyRelatedMessage(repeatIndicator, sourceMmsi, sequenceNumber, destinationMmsi, retransmit, spare, text);
 	}
 
 	private final Integer sequenceNumber;
 	private final MMSI destinationMmsi;
 	private final Boolean retransmit;
+	private final int spare;
 	private final String text;
 }
