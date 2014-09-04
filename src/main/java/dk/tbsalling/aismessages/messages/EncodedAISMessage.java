@@ -30,12 +30,17 @@ public class EncodedAISMessage {
 	 * A container class for ITU 1371 encoded AIS messages.
 	 * 
 	 * Example: Two related NMEA strings like these:
-	 * !AIVDM,2,1,4,A,55NGH8P2?qMiL@GKOO04lE8T<62222222222220l20>574U:h=?UDp4P,0*7D
+     * {@literal
+	 * !AIVDM,2,1,4,A,55NGH8P2?qMiL@GKOO04lE8T\<62222222222220l20\>574U:h=?UDp4P,0*7D
 	 * !AIVDM,2,2,4,A,j80Dlm888888880,2*07
-	 * - will have their encoded payloads concatenated and the EncodedAISMessage objects is then constructed like this:
-	 * EncodedAISMessage encodedMessage = new EncodedAISMessage("55NGH8P2?qMiL@GKOO04lE8T<62222222222220l20>574U:h=?UDp4Pj80Dlm888888880", 2);
-	 * @param encodedPayload
-	 * @param paddingBits
+     * }
+     * will have their encoded payloads concatenated and the EncodedAISMessage objects is then constructed like this:
+     * {@code
+	 * EncodedAISMessage encodedMessage = new EncodedAISMessage("55NGH8P2?qMiL@GKOO04lE8T\<62222222222220l20\>574U:h=?UDp4Pj80Dlm888888880", 2);
+	 * }
+     *
+     * @param encodedPayload the encoded payload of one or more NMEA amoured AIS messages.
+	 * @param paddingBits the number of padding bits.
 	 */
 	public EncodedAISMessage(String encodedPayload, Integer paddingBits) {
 		this.encodedString = encodedPayload;

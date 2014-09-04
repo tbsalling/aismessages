@@ -28,8 +28,6 @@ import dk.tbsalling.aismessages.messages.types.MMSI;
  * corrections.
  * 
  * @author tbsalling
- * @copyright S-Consult ApS, Denmark. All rights reserved. See license.txt file.	
- * 
  */
 @SuppressWarnings("serial")
 public class GNSSBinaryBroadcastMessage extends DecodedAISMessage {

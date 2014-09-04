@@ -44,7 +44,7 @@ public class NMEAMessageReceiver {
     
     /**
      * Receive a single NMEA amoured AIS string
-     * @param nmeaMessage
+     * @param nmeaMessage the NMEAMessage to handle.
      */
 	public void handleMessageReceived(NMEAMessage nmeaMessage) {
 		Metadata metadata = new Metadata();
@@ -130,6 +130,7 @@ public class NMEAMessageReceiver {
 
 	/**
 	 * Empty buffer of unhandled messages and return those not handled.
+     * @return List of unhandled NMEAMessages.
 	 */
 	@SuppressWarnings("unchecked")
 	public ArrayList<NMEAMessage> flush() {
