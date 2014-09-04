@@ -16,7 +16,7 @@
 
 package dk.tbsalling.aismessages.messages;
 
-import dk.tbsalling.aismessages.decoder.DecoderImpl;
+import dk.tbsalling.aismessages.decoder.Decoder;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
@@ -46,20 +46,20 @@ public class PositionReportClassAAssignedSchedule extends PositionReport {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.PositionReportClassAAssignedSchedule))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 			
-		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 
-		NavigationStatus navigationStatus = NavigationStatus.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(38, 42)));
-		Integer rateOfTurn = DecoderImpl.convertToSignedInteger(encodedMessage.getBits(42, 50));
-		Float speedOverGround = DecoderImpl.convertToUnsignedFloat(encodedMessage.getBits(50, 60)) / 10f;
-		Boolean positionAccurate = DecoderImpl.convertToBoolean(encodedMessage.getBits(60, 61));
-		Float longitude = DecoderImpl.convertToFloat(encodedMessage.getBits(61, 89)) / 600000f;
-		Float latitude = DecoderImpl.convertToFloat(encodedMessage.getBits(89, 116)) / 600000f;
-		Float courseOverGround = DecoderImpl.convertToUnsignedFloat(encodedMessage.getBits(116, 128)) / 10f;
-		Integer trueHeading = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(128, 137));
-		Integer second = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(137, 143));
-		ManeuverIndicator maneuverIndicator = ManeuverIndicator.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(143, 145)));
-		Boolean raimFlag = DecoderImpl.convertToBoolean(encodedMessage.getBits(148, 149));
+		NavigationStatus navigationStatus = NavigationStatus.fromInteger(Decoder.convertToUnsignedInteger(encodedMessage.getBits(38, 42)));
+		Integer rateOfTurn = Decoder.convertToSignedInteger(encodedMessage.getBits(42, 50));
+		Float speedOverGround = Decoder.convertToUnsignedFloat(encodedMessage.getBits(50, 60)) / 10f;
+		Boolean positionAccurate = Decoder.convertToBoolean(encodedMessage.getBits(60, 61));
+		Float longitude = Decoder.convertToFloat(encodedMessage.getBits(61, 89)) / 600000f;
+		Float latitude = Decoder.convertToFloat(encodedMessage.getBits(89, 116)) / 600000f;
+		Float courseOverGround = Decoder.convertToUnsignedFloat(encodedMessage.getBits(116, 128)) / 10f;
+		Integer trueHeading = Decoder.convertToUnsignedInteger(encodedMessage.getBits(128, 137));
+		Integer second = Decoder.convertToUnsignedInteger(encodedMessage.getBits(137, 143));
+		ManeuverIndicator maneuverIndicator = ManeuverIndicator.fromInteger(Decoder.convertToUnsignedInteger(encodedMessage.getBits(143, 145)));
+		Boolean raimFlag = Decoder.convertToBoolean(encodedMessage.getBits(148, 149));
 		
 		return new PositionReportClassAAssignedSchedule(AISMessageType.PositionReportClassAAssignedSchedule, repeatIndicator,
 				sourceMmsi, navigationStatus, rateOfTurn, speedOverGround,

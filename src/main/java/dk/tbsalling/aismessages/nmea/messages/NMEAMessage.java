@@ -52,54 +52,51 @@ public class NMEAMessage {
 		return true;
 	}
 
+    @SuppressWarnings("unused")
 	public final String getMessageType() {
 		return messageType;
 	}
 
-	public final Integer getNumberOfFragments() {
+    @SuppressWarnings("unused")
+    public final Integer getNumberOfFragments() {
 		return numberOfFragments;
 	}
 
-	public final Integer getFragmentNumber() {
+    @SuppressWarnings("unused")
+    public final Integer getFragmentNumber() {
 		return fragmentNumber;
 	}
 
-	public final Integer getSequenceNumber() {
+    @SuppressWarnings("unused")
+    public final Integer getSequenceNumber() {
 		return sequenceNumber;
 	}
 
-	public final String getRadioChannelCode() {
+    @SuppressWarnings("unused")
+    public final String getRadioChannelCode() {
 		return radioChannelCode;
 	}
 
-	public final String getEncodedPayload() {
+    @SuppressWarnings("unused")
+    public final String getEncodedPayload() {
 		return encodedPayload;
 	}
 
-	public final Integer getFillBits() {
+    @SuppressWarnings("unused")
+    public final Integer getFillBits() {
 		return fillBits;
 	}
 
-	public final Integer getChecksum() {
+    @SuppressWarnings("unused")
+    public final Integer getChecksum() {
 		return checksum;
 	}
 
-	public final String getRawMessage() {
+    @SuppressWarnings("unused")
+    public final String getRawMessage() {
 		return rawMessage;
 	}
 
-	private NMEAMessage() {
-		this.messageType = null;
-		this.numberOfFragments = null;
-		this.fragmentNumber = null;
-		this.sequenceNumber = null;
-		this.radioChannelCode = null;
-		this.encodedPayload = null;
-		this.fillBits = null;
-		this.checksum = null;
-		this.rawMessage = null;
-	}
-	
 	private NMEAMessage(String rawMessage) {
 		// !AIVDM,1,1,,B,15MvlfPOh2G?nwbEdVDsnSTR00S?,0*41
 		
@@ -136,7 +133,7 @@ public class NMEAMessage {
 		}
 	}
 	
-	private final static boolean isBlank(String s) {
+	private static boolean isBlank(String s) {
 		return s == null || s.trim().length() == 0;
 	}
 	

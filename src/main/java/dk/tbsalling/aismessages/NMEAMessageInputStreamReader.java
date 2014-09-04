@@ -16,23 +16,25 @@
 
 package dk.tbsalling.aismessages;
 
+import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
+import dk.tbsalling.aismessages.messages.DecodedAISMessage;
+import dk.tbsalling.aismessages.nmea.exceptions.NMEAParseException;
+import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
-
-import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
-import dk.tbsalling.aismessages.nmea.exceptions.NMEAParseException;
-import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 public class NMEAMessageInputStreamReader {
 
 	private static final Logger log = Logger.getLogger(NMEAMessageInputStreamReader.class.getName());
 
-	public NMEAMessageInputStreamReader(String source, InputStream inputStream, DecodedAISMessageHandler decodedAISMessageHandler) {
-		this.messageReceiver = new NMEAMessageReceiver(source, decodedAISMessageHandler);
+	public NMEAMessageInputStreamReader(String source, InputStream inputStream, Consumer<? super DecodedAISMessage> decodedAISMessageConsumer) {
+		this.messageReceiver = new NMEAMessageReceiver(source, decodedAISMessageConsumer);
 		this.inputStream = inputStream;
 	}
 
@@ -49,7 +51,7 @@ public class NMEAMessageInputStreamReader {
 		while ((string = bufferedReader.readLine()) != null && !stopRequested()) {
 			try {
 				NMEAMessage nmea = NMEAMessage.fromString(string);
-				messageReceiver.handleMessageReceived(nmea);
+				messageReceiver.accept(nmea);
 				log.fine("Received: " + nmea.toString());
 			} catch (InvalidEncodedMessage invalidEncodedMessageException) {
 				log.warning("Invalid encoded message: \"" + invalidEncodedMessageException.getMessage() + "\"");
@@ -61,7 +63,7 @@ public class NMEAMessageInputStreamReader {
 		log.info("NMEAMessageInputStreamReader stopping.");
 	}
 
-	private final synchronized Boolean stopRequested() {
+	private synchronized Boolean stopRequested() {
 		return this.stopRequested;
 	}
 

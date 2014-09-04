@@ -16,7 +16,7 @@
 
 package dk.tbsalling.aismessages.messages;
 
-import dk.tbsalling.aismessages.decoder.DecoderImpl;
+import dk.tbsalling.aismessages.decoder.Decoder;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
@@ -58,54 +58,67 @@ public class ShipAndVoyageData extends DecodedAISMessage {
 		this.dataTerminalReady = dataTerminalReady;
 	}
 
+    @SuppressWarnings("unused")
 	public final IMO getImo() {
 		return imo;
 	}
 
+    @SuppressWarnings("unused")
 	public final String getCallsign() {
 		return callsign;
 	}
 
+    @SuppressWarnings("unused")
 	public final String getShipName() {
 		return shipName;
 	}
 
+    @SuppressWarnings("unused")
 	public final ShipType getShipType() {
 		return shipType;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getToBow() {
 		return toBow;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getToStern() {
 		return toStern;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getToStarboard() {
 		return toStarboard;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getToPort() {
 		return toPort;
 	}
 
+    @SuppressWarnings("unused")
 	public final PositionFixingDevice getPositionFixingDevice() {
 		return positionFixingDevice;
 	}
 
+    @SuppressWarnings("unused")
 	public final String getEta() {
 		return eta;
 	}
 
+    @SuppressWarnings("unused")
 	public final Float getDraught() {
 		return draught;
 	}
 
+    @SuppressWarnings("unused")
 	public final String getDestination() {
 		return destination;
 	}
 
+    @SuppressWarnings("unused")
 	public final Boolean getDataTerminalReady() {
 		return dataTerminalReady;
 	}
@@ -133,21 +146,21 @@ public class ShipAndVoyageData extends DecodedAISMessage {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.ShipAndVoyageRelatedData))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 			
-		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
-		IMO imo = IMO.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
-		String callsign = DecoderImpl.convertToString(encodedMessage.getBits(70, 112));
-		String shipName = DecoderImpl.convertToString(encodedMessage.getBits(112, 232));
-		ShipType shipType = ShipType.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(232, 240)));
-		Integer toBow = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(240, 249));
-		Integer toStern = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(249, 258));
-		Integer toPort = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(258, 264));
-		Integer toStarboard = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(264, 270));
-		PositionFixingDevice positionFixingDevice = PositionFixingDevice.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(270, 274)));
-		String eta = DecoderImpl.convertToTime(encodedMessage.getBits(274, 294));
-		Float draught = DecoderImpl.convertToUnsignedFloat(encodedMessage.getBits(294, 302)) / 10f;
-		String destination = DecoderImpl.convertToString(encodedMessage.getBits(302, 422));
-		Boolean dataTerminalReady = DecoderImpl.convertToBoolean(encodedMessage.getBits(422, 423));
+		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		IMO imo = IMO.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
+		String callsign = Decoder.convertToString(encodedMessage.getBits(70, 112));
+		String shipName = Decoder.convertToString(encodedMessage.getBits(112, 232));
+		ShipType shipType = ShipType.fromInteger(Decoder.convertToUnsignedInteger(encodedMessage.getBits(232, 240)));
+		Integer toBow = Decoder.convertToUnsignedInteger(encodedMessage.getBits(240, 249));
+		Integer toStern = Decoder.convertToUnsignedInteger(encodedMessage.getBits(249, 258));
+		Integer toPort = Decoder.convertToUnsignedInteger(encodedMessage.getBits(258, 264));
+		Integer toStarboard = Decoder.convertToUnsignedInteger(encodedMessage.getBits(264, 270));
+		PositionFixingDevice positionFixingDevice = PositionFixingDevice.fromInteger(Decoder.convertToUnsignedInteger(encodedMessage.getBits(270, 274)));
+		String eta = Decoder.convertToTime(encodedMessage.getBits(274, 294));
+		Float draught = Decoder.convertToUnsignedFloat(encodedMessage.getBits(294, 302)) / 10f;
+		String destination = Decoder.convertToString(encodedMessage.getBits(302, 422));
+		Boolean dataTerminalReady = Decoder.convertToBoolean(encodedMessage.getBits(422, 423));
 		
 		return new ShipAndVoyageData(repeatIndicator, sourceMmsi, imo, callsign, shipName, shipType, toBow, toStern, toStarboard, toPort, positionFixingDevice, eta, draught, destination, dataTerminalReady);
 	}

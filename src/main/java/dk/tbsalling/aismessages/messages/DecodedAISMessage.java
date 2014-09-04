@@ -16,10 +16,10 @@
 
 package dk.tbsalling.aismessages.messages;
 
-import java.io.Serializable;
-
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.messages.types.MMSI;
+
+import java.io.Serializable;
 
 @SuppressWarnings("serial")
 public abstract class DecodedAISMessage implements Serializable {
@@ -30,22 +30,27 @@ public abstract class DecodedAISMessage implements Serializable {
 		this.sourceMmsi = sourceMmsi;
 	}
 
+    @SuppressWarnings("unused")
 	public final Metadata getMetadata() {
 		return metadata;
 	}
-	
+
+    @SuppressWarnings("unused")
 	public final void setMetadata(Metadata metadata) {
 		this.metadata = metadata;
 	}
 
+    @SuppressWarnings("unused")
 	public final AISMessageType getMessageType() {
 		return messageType;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getRepeatIndicator() {
 		return repeatIndicator;
 	}
 
+    @SuppressWarnings("unused")
 	public final MMSI getSourceMmsi() {
 		return sourceMmsi;
 	}

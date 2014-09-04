@@ -16,7 +16,7 @@
 
 package dk.tbsalling.aismessages.messages;
 
-import dk.tbsalling.aismessages.decoder.DecoderImpl;
+import dk.tbsalling.aismessages.decoder.Decoder;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
@@ -36,22 +36,27 @@ public class AddressedSafetyRelatedMessage extends DecodedAISMessage {
 		this.text = text;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getSequenceNumber() {
 		return sequenceNumber;
 	}
 
+    @SuppressWarnings("unused")
 	public final MMSI getDestinationMmsi() {
 		return destinationMmsi;
 	}
 
+    @SuppressWarnings("unused")
 	public final Boolean getRetransmit() {
 		return retransmit;
 	}
-	
+
+    @SuppressWarnings("unused")
 	public final int getSpare() {
 		return spare;
 	}
 
+    @SuppressWarnings("unused")
 	public final String getText() {
 		return text;
 	}
@@ -62,14 +67,14 @@ public class AddressedSafetyRelatedMessage extends DecodedAISMessage {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.AddressedSafetyRelatedMessage))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 			
-		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
-		Integer sequenceNumber = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(38, 40));
-		MMSI destinationMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
-		Boolean retransmit = DecoderImpl.convertToBoolean(encodedMessage.getBits(70, 71));
-		int spare = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(71, 72));
+		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		Integer sequenceNumber = Decoder.convertToUnsignedInteger(encodedMessage.getBits(38, 40));
+		MMSI destinationMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
+		Boolean retransmit = Decoder.convertToBoolean(encodedMessage.getBits(70, 71));
+		int spare = Decoder.convertToUnsignedInteger(encodedMessage.getBits(71, 72));
 		int extraBitsOfChars = ((encodedMessage.getNumberOfBits() - 72) / 6) * 6;
-		String text = DecoderImpl.convertToString(encodedMessage.getBits(72, 72 + extraBitsOfChars));
+		String text = Decoder.convertToString(encodedMessage.getBits(72, 72 + extraBitsOfChars));
 
 		return new AddressedSafetyRelatedMessage(repeatIndicator, sourceMmsi, sequenceNumber, destinationMmsi, retransmit, spare, text);
 	}

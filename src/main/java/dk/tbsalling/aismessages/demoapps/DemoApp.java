@@ -16,20 +16,21 @@
 
 package dk.tbsalling.aismessages.demoapps;
 
-import java.util.ArrayList;
-
-import dk.tbsalling.aismessages.DecodedAISMessageHandler;
 import dk.tbsalling.aismessages.NMEAMessageReceiver;
 import dk.tbsalling.aismessages.messages.DecodedAISMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
-public class DemoApp implements DecodedAISMessageHandler {
+import java.util.ArrayList;
+import java.util.function.Consumer;
 
-	public void handleMessageReceived(DecodedAISMessage message) {
-		System.out.println("Received AIS message: " + message);
-	}
+public class DemoApp implements Consumer<DecodedAISMessage> {
 
-	public void runDemo() {
+    @Override
+    public void accept(DecodedAISMessage decodedAISMessage) {
+        System.out.println("Received AIS message: " + decodedAISMessage);
+    }
+
+    public void runDemo() {
 		String[] demoNmeaStrings = new String[] {
 				"!AIVDM,1,1,,A,18UG;P0012G?Uq4EdHa=c;7@051@,0*53",
 				"!AIVDM,1,1,,A,15NIrB0001G?endE`CpIgQSN08K6,0*02",
@@ -118,7 +119,7 @@ public class DemoApp implements DecodedAISMessageHandler {
 		long startTime = System.nanoTime();
 		
 		for (String demoNmeaString : demoNmeaStrings) {
-			nmeaMessageHandler.handleMessageReceived(NMEAMessage.fromString(demoNmeaString));
+			nmeaMessageHandler.accept(NMEAMessage.fromString(demoNmeaString));
 		}
 		
 		ArrayList<NMEAMessage> unhandled = nmeaMessageHandler.flush();
@@ -137,5 +138,5 @@ public class DemoApp implements DecodedAISMessageHandler {
 		DemoApp demoApp = new DemoApp();
 		demoApp.runDemo();
 	}
-	
+
 }

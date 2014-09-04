@@ -16,34 +16,31 @@
 
 package dk.tbsalling.aismessages;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.util.ArrayList;
-
-import org.jmock.Expectations;
-import org.jmock.Mockery;
-import org.jmock.integration.junit4.JUnit4Mockery;
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
-import dk.tbsalling.aismessages.NMEAMessageReceiver;
-import dk.tbsalling.aismessages.DecodedAISMessageHandler;
 import dk.tbsalling.aismessages.messages.DecodedAISMessage;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.test.helpers.ArgumentCaptor;
+import org.jmock.Expectations;
+import org.jmock.Mockery;
+import org.jmock.integration.junit4.JUnit4Mockery;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class AISMessageDecoderTest {
     private final static Mockery context = new JUnit4Mockery();
 
-    private static DecodedAISMessageHandler aisMessageHandler;
+    private static Consumer<DecodedAISMessage> aisMessageHandler;
 	private static NMEAMessageReceiver aisMessageReceiver;
 
 	@BeforeClass
 	public static void setUp() {
-		aisMessageHandler = context.mock(DecodedAISMessageHandler.class);
+		aisMessageHandler = (Consumer<DecodedAISMessage>) context.mock(Consumer.class);
 		aisMessageReceiver = new NMEAMessageReceiver("TEST", aisMessageHandler);
 	}
 	
@@ -51,13 +48,13 @@ public class AISMessageDecoderTest {
 	public void canHandleUnfragmentedMessageReceived() {
 		NMEAMessage unfragmentedNMEAMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A");
 		
-		final ArgumentCaptor<DecodedAISMessage> decodedAISMessage = new ArgumentCaptor<DecodedAISMessage>();
+		final ArgumentCaptor<DecodedAISMessage> decodedAISMessage = new ArgumentCaptor<>();
 
 		context.checking(new Expectations() {{
-			oneOf(aisMessageHandler).handleMessageReceived(with(decodedAISMessage.getMatcher()));
+			oneOf(aisMessageHandler).accept(with(decodedAISMessage.getMatcher()));
         }});
 		
-		aisMessageReceiver.handleMessageReceived(unfragmentedNMEAMessage);
+		aisMessageReceiver.accept(unfragmentedNMEAMessage);
 
 		assertEquals(AISMessageType.PositionReportClassAScheduled, decodedAISMessage.getCapturedObject().getMessageType());
 	}
@@ -67,14 +64,14 @@ public class AISMessageDecoderTest {
 		NMEAMessage fragmentedNMEAMessage1 = NMEAMessage.fromString("!AIVDM,2,1,3,B,55DA><02=6wpPuID000qTf059@DlU<00000000171lMDD4q20LmDp3hB,0*27");
 		NMEAMessage fragmentedNMEAMessage2 = NMEAMessage.fromString("!AIVDM,2,2,3,B,p=Mh00000000000,2*4C");
 		
-		final ArgumentCaptor<DecodedAISMessage> decodedAISMessage = new ArgumentCaptor<DecodedAISMessage>();
+		final ArgumentCaptor<DecodedAISMessage> decodedAISMessage = new ArgumentCaptor<>();
 
 		context.checking(new Expectations() {{
-			oneOf(aisMessageHandler).handleMessageReceived(with(decodedAISMessage.getMatcher()));
+			oneOf(aisMessageHandler).accept(with(decodedAISMessage.getMatcher()));
         }});
 		
-		aisMessageReceiver.handleMessageReceived(fragmentedNMEAMessage1);
-		aisMessageReceiver.handleMessageReceived(fragmentedNMEAMessage2);
+		aisMessageReceiver.accept(fragmentedNMEAMessage1);
+		aisMessageReceiver.accept(fragmentedNMEAMessage2);
 
 		assertEquals(AISMessageType.ShipAndVoyageRelatedData, decodedAISMessage.getCapturedObject().getMessageType());
 	}
@@ -85,15 +82,15 @@ public class AISMessageDecoderTest {
 		NMEAMessage fragmentedNMEAMessage1 = NMEAMessage.fromString("!AIVDM,2,1,3,B,55DA><02=6wpPuID000qTf059@DlU<00000000171lMDD4q20LmDp3hB,0*27");
 		NMEAMessage fragmentedNMEAMessage2 = NMEAMessage.fromString("!AIVDM,2,2,3,B,p=Mh00000000000,2*4C");
 
-		final ArgumentCaptor<DecodedAISMessage> decodedAISMessage = new ArgumentCaptor<DecodedAISMessage>();
+		final ArgumentCaptor<DecodedAISMessage> decodedAISMessage = new ArgumentCaptor<>();
 
 		context.checking(new Expectations() {{
-			exactly(3).of(aisMessageHandler).handleMessageReceived(with(decodedAISMessage.getMatcher()));
+			exactly(3).of(aisMessageHandler).accept(with(decodedAISMessage.getMatcher()));
         }});
 		
-		aisMessageReceiver.handleMessageReceived(unfragmentedNMEAMessage);
-		aisMessageReceiver.handleMessageReceived(fragmentedNMEAMessage1);
-		aisMessageReceiver.handleMessageReceived(fragmentedNMEAMessage2);
+		aisMessageReceiver.accept(unfragmentedNMEAMessage);
+		aisMessageReceiver.accept(fragmentedNMEAMessage1);
+		aisMessageReceiver.accept(fragmentedNMEAMessage2);
 
 		ArrayList<NMEAMessage> flush = aisMessageReceiver.flush();
 
@@ -106,14 +103,14 @@ public class AISMessageDecoderTest {
 		NMEAMessage unfragmentedNMEAMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A");
 		NMEAMessage fragmentedNMEAMessage1 = NMEAMessage.fromString("!AIVDM,2,1,3,B,55DA><02=6wpPuID000qTf059@DlU<00000000171lMDD4q20LmDp3hB,0*27");
 
-		final ArgumentCaptor<DecodedAISMessage> decodedAISMessage = new ArgumentCaptor<DecodedAISMessage>();
+		final ArgumentCaptor<DecodedAISMessage> decodedAISMessage = new ArgumentCaptor<>();
 
 		context.checking(new Expectations() {{
-			exactly(2).of(aisMessageHandler).handleMessageReceived(with(decodedAISMessage.getMatcher()));
+			exactly(2).of(aisMessageHandler).accept(with(decodedAISMessage.getMatcher()));
         }});
 		
-		aisMessageReceiver.handleMessageReceived(unfragmentedNMEAMessage);
-		aisMessageReceiver.handleMessageReceived(fragmentedNMEAMessage1);
+		aisMessageReceiver.accept(unfragmentedNMEAMessage);
+		aisMessageReceiver.accept(fragmentedNMEAMessage1);
 
 		ArrayList<NMEAMessage> flush = aisMessageReceiver.flush();
 

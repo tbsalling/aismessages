@@ -16,7 +16,7 @@
 
 package dk.tbsalling.aismessages.messages;
 
-import dk.tbsalling.aismessages.decoder.DecoderImpl;
+import dk.tbsalling.aismessages.decoder.Decoder;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
@@ -53,30 +53,48 @@ public class GroupAssignmentCommand extends DecodedAISMessage {
 		this.reportingInterval = reportingInterval;
 		this.quietTime = quietTime;
 	}
+
+    @SuppressWarnings("unused")
 	public final Float getNorthEastLatitude() {
 		return northEastLatitude;
 	}
+
+    @SuppressWarnings("unused")
 	public final Float getNorthEastLongitude() {
 		return northEastLongitude;
 	}
+
+    @SuppressWarnings("unused")
 	public final Float getSouthWestLatitude() {
 		return southWestLatitude;
 	}
+
+    @SuppressWarnings("unused")
 	public final Float getSouthWestLongitude() {
 		return southWestLongitude;
 	}
+
+    @SuppressWarnings("unused")
 	public final StationType getStationType() {
 		return stationType;
 	}
+
+    @SuppressWarnings("unused")
 	public final ShipType getShipType() {
 		return shipType;
 	}
+
+    @SuppressWarnings("unused")
 	public final TxRxMode getTransmitReceiveMode() {
 		return transmitReceiveMode;
 	}
+
+    @SuppressWarnings("unused")
 	public final ReportingInterval getReportingInterval() {
 		return reportingInterval;
 	}
+
+    @SuppressWarnings("unused")
 	public final Integer getQuietTime() {
 		return quietTime;
 	}
@@ -87,18 +105,18 @@ public class GroupAssignmentCommand extends DecodedAISMessage {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.GroupAssignmentCommand))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 			
-		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 		
-		Float northEastLatitude = DecoderImpl.convertToFloat(encodedMessage.getBits(61, 89)) / 10f;
-		Float northEastLongitude = DecoderImpl.convertToFloat(encodedMessage.getBits(61, 89)) / 10f;
-		Float southWestLatitude = DecoderImpl.convertToFloat(encodedMessage.getBits(61, 89)) / 10f;
-		Float southWestLongitude = DecoderImpl.convertToFloat(encodedMessage.getBits(61, 89)) / 10f;
-		StationType stationType = StationType.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(143, 145)));
-		ShipType shipType = ShipType.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(143, 145)));
-		TxRxMode transmitReceiveMode = TxRxMode.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(128, 137)));
-		ReportingInterval reportingInterval = ReportingInterval.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(143, 145)));
-		Integer quietTime = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(128, 137));
+		Float northEastLatitude = Decoder.convertToFloat(encodedMessage.getBits(61, 89)) / 10f;
+		Float northEastLongitude = Decoder.convertToFloat(encodedMessage.getBits(61, 89)) / 10f;
+		Float southWestLatitude = Decoder.convertToFloat(encodedMessage.getBits(61, 89)) / 10f;
+		Float southWestLongitude = Decoder.convertToFloat(encodedMessage.getBits(61, 89)) / 10f;
+		StationType stationType = StationType.fromInteger(Decoder.convertToUnsignedInteger(encodedMessage.getBits(143, 145)));
+		ShipType shipType = ShipType.fromInteger(Decoder.convertToUnsignedInteger(encodedMessage.getBits(143, 145)));
+		TxRxMode transmitReceiveMode = TxRxMode.fromInteger(Decoder.convertToUnsignedInteger(encodedMessage.getBits(128, 137)));
+		ReportingInterval reportingInterval = ReportingInterval.fromInteger(Decoder.convertToUnsignedInteger(encodedMessage.getBits(143, 145)));
+		Integer quietTime = Decoder.convertToUnsignedInteger(encodedMessage.getBits(128, 137));
 		
 		return new GroupAssignmentCommand(repeatIndicator, sourceMmsi, northEastLatitude, northEastLongitude, southWestLatitude, southWestLongitude, stationType, shipType, transmitReceiveMode, reportingInterval, quietTime);
 	}

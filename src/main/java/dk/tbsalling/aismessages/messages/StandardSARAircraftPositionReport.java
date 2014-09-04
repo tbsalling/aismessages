@@ -16,7 +16,7 @@
 
 package dk.tbsalling.aismessages.messages;
 
-import dk.tbsalling.aismessages.decoder.DecoderImpl;
+import dk.tbsalling.aismessages.decoder.Decoder;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
@@ -46,50 +46,62 @@ public class StandardSARAircraftPositionReport extends DecodedAISMessage {
 		this.radioStatus = radioStatus;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getAltitude() {
 		return altitude;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getSpeed() {
 		return speed;
 	}
 
+    @SuppressWarnings("unused")
 	public final Boolean getPositionAccurate() {
 		return positionAccurate;
 	}
 
+    @SuppressWarnings("unused")
 	public final Float getLatitude() {
 		return latitude;
 	}
 
+    @SuppressWarnings("unused")
 	public final Float getLongitude() {
 		return longitude;
 	}
 
+    @SuppressWarnings("unused")
 	public final Float getCourseOverGround() {
 		return courseOverGround;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getSecond() {
 		return second;
 	}
 
+    @SuppressWarnings("unused")
 	public final String getRegionalReserved() {
 		return regionalReserved;
 	}
 
+    @SuppressWarnings("unused")
 	public final Boolean getDataTerminalReady() {
 		return dataTerminalReady;
 	}
 
+    @SuppressWarnings("unused")
 	public final Boolean getAssigned() {
 		return assigned;
 	}
 
+    @SuppressWarnings("unused")
 	public final Boolean getRaimFlag() {
 		return raimFlag;
 	}
 
+    @SuppressWarnings("unused")
 	public final String getRadioStatus() {
 		return radioStatus;
 	}
@@ -100,21 +112,21 @@ public class StandardSARAircraftPositionReport extends DecodedAISMessage {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.StandardSARAircraftPositionReport))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 			
-		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 
-		 Integer altitude = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(38, 50));
-		 Integer speed = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(50, 60));
-		 Boolean positionAccurate = DecoderImpl.convertToBoolean(encodedMessage.getBits(60, 61));
-		 Float longitude = DecoderImpl.convertToFloat(encodedMessage.getBits(61, 89)) / 600000f;
-		 Float latitude = DecoderImpl.convertToFloat(encodedMessage.getBits(89, 116)) / 600000f;
-		 Float courseOverGround = DecoderImpl.convertToUnsignedFloat(encodedMessage.getBits(116, 128)) / 10f;
-		 Integer second = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(128, 134));
-		 String regionalReserved = DecoderImpl.convertToBitString(encodedMessage.getBits(134, 142));
-		 Boolean dataTerminalReady = DecoderImpl.convertToBoolean(encodedMessage.getBits(142, 143));
-		 Boolean assigned = DecoderImpl.convertToBoolean(encodedMessage.getBits(146, 147));
-		 Boolean raimFlag = DecoderImpl.convertToBoolean(encodedMessage.getBits(147, 148));
-		 String radioStatus = DecoderImpl.convertToBitString(encodedMessage.getBits(148, 168));
+		 Integer altitude = Decoder.convertToUnsignedInteger(encodedMessage.getBits(38, 50));
+		 Integer speed = Decoder.convertToUnsignedInteger(encodedMessage.getBits(50, 60));
+		 Boolean positionAccurate = Decoder.convertToBoolean(encodedMessage.getBits(60, 61));
+		 Float longitude = Decoder.convertToFloat(encodedMessage.getBits(61, 89)) / 600000f;
+		 Float latitude = Decoder.convertToFloat(encodedMessage.getBits(89, 116)) / 600000f;
+		 Float courseOverGround = Decoder.convertToUnsignedFloat(encodedMessage.getBits(116, 128)) / 10f;
+		 Integer second = Decoder.convertToUnsignedInteger(encodedMessage.getBits(128, 134));
+		 String regionalReserved = Decoder.convertToBitString(encodedMessage.getBits(134, 142));
+		 Boolean dataTerminalReady = Decoder.convertToBoolean(encodedMessage.getBits(142, 143));
+		 Boolean assigned = Decoder.convertToBoolean(encodedMessage.getBits(146, 147));
+		 Boolean raimFlag = Decoder.convertToBoolean(encodedMessage.getBits(147, 148));
+		 String radioStatus = Decoder.convertToBitString(encodedMessage.getBits(148, 168));
 		
 		return new StandardSARAircraftPositionReport(repeatIndicator,
 				sourceMmsi, altitude, speed, positionAccurate, latitude,

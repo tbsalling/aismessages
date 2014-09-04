@@ -16,7 +16,7 @@
 
 package dk.tbsalling.aismessages.messages;
 
-import dk.tbsalling.aismessages.decoder.DecoderImpl;
+import dk.tbsalling.aismessages.decoder.Decoder;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
@@ -49,42 +49,52 @@ public class BinaryAcknowledge extends DecodedAISMessage {
 		this.numOfAcks = numOfAcks;
 	}
 
+    @SuppressWarnings("unused")
 	public final int getSpare() {
 		return spare;
 	}
-	
+
+    @SuppressWarnings("unused")
 	public final MMSI getMmsi1() {
 		return mmsi1;
 	}
 
+    @SuppressWarnings("unused")
 	public final int getSequence1() {
 		return sequence1;
 	}
-	
+
+    @SuppressWarnings("unused")
 	public final MMSI getMmsi2() {
 		return mmsi2;
 	}
-	
+
+    @SuppressWarnings("unused")
 	public final int getSequence2() {
 		return sequence2;
 	}
-	
+
+    @SuppressWarnings("unused")
 	public final MMSI getMmsi3() {
 		return mmsi3;
 	}
 
+    @SuppressWarnings("unused")
 	public final int getSequence3() {
 		return sequence3;
 	}
-	
+
+    @SuppressWarnings("unused")
 	public final MMSI getMmsi4() {
 		return mmsi4;
 	}
 
+    @SuppressWarnings("unused")
 	public final int getSequence4() {
 		return sequence4;
 	}
-	
+
+    @SuppressWarnings("unused")
 	public final int getNumOfAcks() {
 		return numOfAcks;
 	}
@@ -95,34 +105,34 @@ public class BinaryAcknowledge extends DecodedAISMessage {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.BinaryAcknowledge))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 			
-		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
-		int spare = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(38, 40));
-		MMSI mmsi1 = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
-		int sequence1 = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(70, 72));
+		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		int spare = Decoder.convertToUnsignedInteger(encodedMessage.getBits(38, 40));
+		MMSI mmsi1 = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
+		int sequence1 = Decoder.convertToUnsignedInteger(encodedMessage.getBits(70, 72));
 		int numOfAcks = 1;
 		
 		MMSI mmsi2 = null;
 		int sequence2 = 0;
 		if(encodedMessage.getNumberOfBits() > 72) {
-			mmsi2 = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(72, 102)));
-			sequence2 = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(102, 104));
+			mmsi2 = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(72, 102)));
+			sequence2 = Decoder.convertToUnsignedInteger(encodedMessage.getBits(102, 104));
 			numOfAcks ++;
 		}
 		
 		MMSI mmsi3 = null;
 		int sequence3 = 0;
 		if(encodedMessage.getNumberOfBits() > 104) {
-			mmsi3 = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(104, 134)));
-			sequence3 = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(134, 136));
+			mmsi3 = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(104, 134)));
+			sequence3 = Decoder.convertToUnsignedInteger(encodedMessage.getBits(134, 136));
 			numOfAcks ++;
 		}
 		
 		MMSI mmsi4 = null;
 		int sequence4 = 0;
 		if(encodedMessage.getNumberOfBits() > 136) {
-			mmsi4 = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(136, 166)));
-			sequence4 = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(166, 168));
+			mmsi4 = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(136, 166)));
+			sequence4 = Decoder.convertToUnsignedInteger(encodedMessage.getBits(166, 168));
 			numOfAcks ++;
 		}
 

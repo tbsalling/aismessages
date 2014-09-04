@@ -16,6 +16,8 @@
 
 package dk.tbsalling.aismessages;
 
+import dk.tbsalling.aismessages.messages.DecodedAISMessage;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
@@ -23,6 +25,7 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
+import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 public class NMEAMessageSocketClient {
@@ -36,13 +39,14 @@ public class NMEAMessageSocketClient {
 		this.decodedMessageHandler = null;
 	}
 
-	public NMEAMessageSocketClient(String source, String host, Integer port, DecodedAISMessageHandler decodedMessageHandler) throws UnknownHostException {
+	public NMEAMessageSocketClient(String source, String host, Integer port, Consumer<? super DecodedAISMessage> decodedMessageConsumer) throws UnknownHostException {
 		this.source = source;
 		InetAddress inetAddress = InetAddress.getByName(host);
 		this.socketAddress = new InetSocketAddress(inetAddress, port);
-		this.decodedMessageHandler = decodedMessageHandler;
+		this.decodedMessageHandler = decodedMessageConsumer;
 	}
 
+    @SuppressWarnings("unused")
 	public void requestStop() {
 		if (streamReader != null)
 			streamReader.requestStop();
@@ -63,5 +67,5 @@ public class NMEAMessageSocketClient {
 	private NMEAMessageInputStreamReader streamReader;
 	private final String source;
 	private final SocketAddress socketAddress;
-	private final DecodedAISMessageHandler decodedMessageHandler;
+	private final Consumer<? super DecodedAISMessage> decodedMessageHandler;
 }

@@ -16,7 +16,7 @@
 
 package dk.tbsalling.aismessages.messages;
 
-import dk.tbsalling.aismessages.decoder.DecoderImpl;
+import dk.tbsalling.aismessages.decoder.Decoder;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
@@ -35,15 +35,23 @@ public class BinaryMessageSingleSlot extends DecodedAISMessage {
 		this.destinationMMSI = destinationMMSI;
 		this.binaryData = binaryData;
 	}
+
+    @SuppressWarnings("unused")
 	public final Boolean getDestinationIndicator() {
 		return destinationIndicator;
 	}
+
+    @SuppressWarnings("unused")
 	public final Boolean getBinaryDataFlag() {
 		return binaryDataFlag;
 	}
+
+    @SuppressWarnings("unused")
 	public final MMSI getDestinationMMSI() {
 		return destinationMMSI;
 	}
+
+    @SuppressWarnings("unused")
 	public final String getBinaryData() {
 		return binaryData;
 	}
@@ -54,13 +62,13 @@ public class BinaryMessageSingleSlot extends DecodedAISMessage {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.BinaryMessageSingleSlot))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 			
-		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 
-		Boolean destinationIndicator = DecoderImpl.convertToBoolean(encodedMessage.getBits(38, 39));
-		Boolean binaryDataFlag = DecoderImpl.convertToBoolean(encodedMessage.getBits(39, 40));
-		MMSI destinationMMSI = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
-		String binaryData = DecoderImpl.convertToBitString(encodedMessage.getBits(40, 168));
+		Boolean destinationIndicator = Decoder.convertToBoolean(encodedMessage.getBits(38, 39));
+		Boolean binaryDataFlag = Decoder.convertToBoolean(encodedMessage.getBits(39, 40));
+		MMSI destinationMMSI = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
+		String binaryData = Decoder.convertToBitString(encodedMessage.getBits(40, 168));
 
 		return new BinaryMessageSingleSlot(repeatIndicator, sourceMmsi,
 				destinationIndicator, binaryDataFlag, destinationMMSI,

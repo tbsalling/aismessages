@@ -16,18 +16,19 @@
 
 package dk.tbsalling.aismessages.demoapps;
 
-import java.io.IOException;
-import java.net.UnknownHostException;
-
-import dk.tbsalling.aismessages.DecodedAISMessageHandler;
 import dk.tbsalling.aismessages.NMEAMessageSocketClient;
 import dk.tbsalling.aismessages.messages.DecodedAISMessage;
 
-public class SocketDemoApp implements DecodedAISMessageHandler {
+import java.io.IOException;
+import java.net.UnknownHostException;
+import java.util.function.Consumer;
 
-	public void handleMessageReceived(DecodedAISMessage message) {
-		System.out.println("AIS: " + message);
-	}
+public class SocketDemoApp implements Consumer<DecodedAISMessage> {
+
+    @Override
+    public void accept(DecodedAISMessage decodedAISMessage) {
+        System.out.println("AIS: " + decodedAISMessage);
+    }
 
 	public void runDemo() {
 		System.out.println("AISMessages Demo App");
@@ -47,5 +48,5 @@ public class SocketDemoApp implements DecodedAISMessageHandler {
 		SocketDemoApp demoApp = new SocketDemoApp();
 		demoApp.runDemo();
 	}
-	
+
 }

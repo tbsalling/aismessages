@@ -32,9 +32,12 @@ public class Error extends DecodedAISMessage {
 		this.errorDescription = errorDescription;
 	}
 
+    @SuppressWarnings("unused")
 	public final String getRawMessage() {
 		return rawMessage;
 	}
+
+    @SuppressWarnings("unused")
 	public final String getErrorDescription() {
 		return errorDescription;
 	}

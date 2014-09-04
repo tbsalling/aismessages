@@ -16,7 +16,7 @@
 
 package dk.tbsalling.aismessages.messages;
 
-import dk.tbsalling.aismessages.decoder.DecoderImpl;
+import dk.tbsalling.aismessages.decoder.Decoder;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
@@ -48,30 +48,37 @@ public class AddressedBinaryMessage extends DecodedAISMessage {
 		this.binaryData = binaryData;
 	}
 
-	public final Integer getSequenceNumber() {
+    @SuppressWarnings("unused")
+    public final Integer getSequenceNumber() {
 		return sequenceNumber;
 	}
 
+    @SuppressWarnings("unused")
 	public final MMSI getDestinationMmsi() {
 		return destinationMmsi;
 	}
 
+    @SuppressWarnings("unused")
 	public final Boolean getRetransmit() {
 		return retransmit;
 	}
-	
+
+    @SuppressWarnings("unused")
 	public final int getSpare() {
 		return spare;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getDesignatedAreaCode() {
 		return designatedAreaCode;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getFunctionalId() {
 		return functionalId;
 	}
 
+    @SuppressWarnings("unused")
 	public final String getBinaryData() {
 		return binaryData;
 	}
@@ -82,17 +89,17 @@ public class AddressedBinaryMessage extends DecodedAISMessage {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.AddressedBinaryMessage))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 			
-		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 
-		Integer sequenceNumber = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(38, 40));
-		MMSI destinationMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
-		Boolean retransmit = DecoderImpl.convertToBoolean(encodedMessage.getBits(70, 71));
-		int spare = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(71, 72));
-		Integer designatedAreaCode = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(72, 82));
-		Integer functionalId = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(82, 88));
+		Integer sequenceNumber = Decoder.convertToUnsignedInteger(encodedMessage.getBits(38, 40));
+		MMSI destinationMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
+		Boolean retransmit = Decoder.convertToBoolean(encodedMessage.getBits(70, 71));
+		int spare = Decoder.convertToUnsignedInteger(encodedMessage.getBits(71, 72));
+		Integer designatedAreaCode = Decoder.convertToUnsignedInteger(encodedMessage.getBits(72, 82));
+		Integer functionalId = Decoder.convertToUnsignedInteger(encodedMessage.getBits(82, 88));
 		
-		String binaryData = DecoderImpl.convertToBitString(encodedMessage.getBits(88, encodedMessage.getNumberOfBits()));
+		String binaryData = Decoder.convertToBitString(encodedMessage.getBits(88, encodedMessage.getNumberOfBits()));
 
 		return new AddressedBinaryMessage(repeatIndicator, sourceMmsi,
 				sequenceNumber, destinationMmsi, retransmit, spare,

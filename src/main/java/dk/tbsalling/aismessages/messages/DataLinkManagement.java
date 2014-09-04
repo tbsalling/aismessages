@@ -16,13 +16,13 @@
 
 package dk.tbsalling.aismessages.messages;
 
-import java.util.logging.Logger;
-
-import dk.tbsalling.aismessages.decoder.DecoderImpl;
+import dk.tbsalling.aismessages.decoder.Decoder;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.messages.types.MMSI;
+
+import java.util.logging.Logger;
 
 /**
  * This message is used to pre-allocate TDMA slots within an AIS base station
@@ -63,66 +63,82 @@ public class DataLinkManagement extends DecodedAISMessage {
 		this.increment4 = increment4;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getOffsetNumber1() {
 		return offsetNumber1;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getReservedSlots1() {
 		return reservedSlots1;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getTimeout1() {
 		return timeout1;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getIncrement1() {
 		return increment1;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getOffsetNumber2() {
 		return offsetNumber2;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getReservedSlots2() {
 		return reservedSlots2;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getTimeout2() {
 		return timeout2;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getIncrement2() {
 		return increment2;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getOffsetNumber3() {
 		return offsetNumber3;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getReservedSlots3() {
 		return reservedSlots3;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getTimeout3() {
 		return timeout3;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getIncrement3() {
 		return increment3;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getOffsetNumber4() {
 		return offsetNumber4;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getReservedSlots4() {
 		return reservedSlots4;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getTimeout4() {
 		return timeout4;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getIncrement4() {
 		return increment4;
 	}
@@ -154,28 +170,28 @@ public class DataLinkManagement extends DecodedAISMessage {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.DataLinkManagement))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 			
-		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 
 		final int n = encodedMessage.getNumberOfBits();
 		log.finest("n: " + n);
 		
-		Integer offsetNumber1 = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(40, 52));
-		Integer reservedSlots1 = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(52, 56));
-		Integer timeout1 = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(56, 59));
-		Integer increment1 = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(59, 70));
-		Integer offsetNumber2 = n >= 100 ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(70, 82)) : null;
-		Integer reservedSlots2 = n >= 100 ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(82, 86)) : null;
-		Integer timeout2 = n >= 100 ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(86, 89)) : null;
-		Integer increment2 = n >= 100 ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(89, 100)) : null;
-		Integer offsetNumber3 = n >= 130 ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(100, 112)) : null;
-		Integer reservedSlots3 = n >= 130 ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(112,116)) : null;
-		Integer timeout3 = n >= 130 ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(116, 119)) : null;
-		Integer increment3 = n >= 130 ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(119, 130)) : null;
-		Integer offsetNumber4 = n >= 160 ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(130, 142)) : null;
-		Integer reservedSlots4 = n >= 160 ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(142, 146)) : null;
-		Integer timeout4 = n >= 160 ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(146, 149)) : null;
-		Integer increment4 = n >= 160 ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(149, 160)) : null;
+		Integer offsetNumber1 = Decoder.convertToUnsignedInteger(encodedMessage.getBits(40, 52));
+		Integer reservedSlots1 = Decoder.convertToUnsignedInteger(encodedMessage.getBits(52, 56));
+		Integer timeout1 = Decoder.convertToUnsignedInteger(encodedMessage.getBits(56, 59));
+		Integer increment1 = Decoder.convertToUnsignedInteger(encodedMessage.getBits(59, 70));
+		Integer offsetNumber2 = n >= 100 ? Decoder.convertToUnsignedInteger(encodedMessage.getBits(70, 82)) : null;
+		Integer reservedSlots2 = n >= 100 ? Decoder.convertToUnsignedInteger(encodedMessage.getBits(82, 86)) : null;
+		Integer timeout2 = n >= 100 ? Decoder.convertToUnsignedInteger(encodedMessage.getBits(86, 89)) : null;
+		Integer increment2 = n >= 100 ? Decoder.convertToUnsignedInteger(encodedMessage.getBits(89, 100)) : null;
+		Integer offsetNumber3 = n >= 130 ? Decoder.convertToUnsignedInteger(encodedMessage.getBits(100, 112)) : null;
+		Integer reservedSlots3 = n >= 130 ? Decoder.convertToUnsignedInteger(encodedMessage.getBits(112, 116)) : null;
+		Integer timeout3 = n >= 130 ? Decoder.convertToUnsignedInteger(encodedMessage.getBits(116, 119)) : null;
+		Integer increment3 = n >= 130 ? Decoder.convertToUnsignedInteger(encodedMessage.getBits(119, 130)) : null;
+		Integer offsetNumber4 = n >= 160 ? Decoder.convertToUnsignedInteger(encodedMessage.getBits(130, 142)) : null;
+		Integer reservedSlots4 = n >= 160 ? Decoder.convertToUnsignedInteger(encodedMessage.getBits(142, 146)) : null;
+		Integer timeout4 = n >= 160 ? Decoder.convertToUnsignedInteger(encodedMessage.getBits(146, 149)) : null;
+		Integer increment4 = n >= 160 ? Decoder.convertToUnsignedInteger(encodedMessage.getBits(149, 160)) : null;
 
 		return new DataLinkManagement(repeatIndicator, sourceMmsi,
 				offsetNumber1, reservedSlots1, timeout1, increment1,

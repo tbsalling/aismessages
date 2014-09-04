@@ -16,21 +16,20 @@
 
 package dk.tbsalling.aismessages;
 
-import static org.junit.Assert.assertTrue;
-
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-
-import org.junit.Before;
-import org.junit.BeforeClass;
-import org.junit.Test;
-
 import dk.tbsalling.aismessages.messages.PositionReportClassAScheduled;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.messages.types.MMSI;
 import dk.tbsalling.aismessages.messages.types.ManeuverIndicator;
 import dk.tbsalling.aismessages.messages.types.NavigationStatus;
+import org.junit.Before;
+import org.junit.BeforeClass;
+import org.junit.Test;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+
+import static org.junit.Assert.assertTrue;
 
 public class PositionReportClassAScheduledTest {
 	
@@ -66,7 +65,7 @@ public class PositionReportClassAScheduledTest {
 
 	private boolean isSerializable(Object object) {
 		ByteArrayOutputStream stream = new ByteArrayOutputStream();
-		ObjectOutputStream oos = null;
+		ObjectOutputStream oos;
 		try {
 			oos = new ObjectOutputStream(stream);
 			oos.writeObject(object);

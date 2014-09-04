@@ -16,7 +16,7 @@
 
 package dk.tbsalling.aismessages.messages;
 
-import dk.tbsalling.aismessages.decoder.DecoderImpl;
+import dk.tbsalling.aismessages.decoder.Decoder;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
@@ -47,30 +47,36 @@ public class AssignedModeCommand extends DecodedAISMessage {
 		this.incrementB = incrementB;
 	}
 
+    @SuppressWarnings("unused")
 	public final MMSI getDestinationMmsiA() {
 		return destinationMmsiA;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getOffsetA() {
 		return offsetA;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getIncrementA() {
 		return incrementA;
 	}
 
+    @SuppressWarnings("unused")
 	public final MMSI getDestinationMmsiB() {
 		return destinationMmsiB;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getOffsetB() {
 		return offsetB;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getIncrementB() {
 		return incrementB;
 	}
-	
+
 	public static AssignedModeCommand fromEncodedMessage(EncodedAISMessage encodedMessage) {
 		if (! encodedMessage.isValid())
 			throw new InvalidEncodedMessage(encodedMessage);
@@ -78,16 +84,16 @@ public class AssignedModeCommand extends DecodedAISMessage {
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 		
 		int messageLength = encodedMessage.getNumberOfBits();
-		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 
-		MMSI destinationMmsiA = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
-		Integer offsetA = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(70, 82));
-		Integer incrementA = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(82, 92));
+		MMSI destinationMmsiA = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
+		Integer offsetA = Decoder.convertToUnsignedInteger(encodedMessage.getBits(70, 82));
+		Integer incrementA = Decoder.convertToUnsignedInteger(encodedMessage.getBits(82, 92));
 		
-		MMSI destinationMmsiB = messageLength >= 144 ? MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(92, 122))) : null;
-		Integer offsetB = messageLength >= 144 ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(122, 134)) : null;
-		Integer incrementB = messageLength >= 144 ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(134, 144)) : null;
+		MMSI destinationMmsiB = messageLength >= 144 ? MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(92, 122))) : null;
+		Integer offsetB = messageLength >= 144 ? Decoder.convertToUnsignedInteger(encodedMessage.getBits(122, 134)) : null;
+		Integer incrementB = messageLength >= 144 ? Decoder.convertToUnsignedInteger(encodedMessage.getBits(134, 144)) : null;
 		
 		return new AssignedModeCommand(repeatIndicator, sourceMmsi, destinationMmsiA, offsetA, incrementA, destinationMmsiB, offsetB, incrementB);
 	}

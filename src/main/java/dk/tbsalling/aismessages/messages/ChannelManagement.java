@@ -16,7 +16,7 @@
 
 package dk.tbsalling.aismessages.messages;
 
-import dk.tbsalling.aismessages.decoder.DecoderImpl;
+import dk.tbsalling.aismessages.decoder.Decoder;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
@@ -50,58 +50,72 @@ public class ChannelManagement extends DecodedAISMessage {
 		this.zoneSize = zoneSize;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getChannelA() {
 		return channelA;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getChannelB() {
 		return channelB;
 	}
 
+    @SuppressWarnings("unused")
 	public final TxRxMode getTransmitReceiveMode() {
 		return transmitReceiveMode;
 	}
 
+    @SuppressWarnings("unused")
 	public final Boolean getPower() {
 		return power;
 	}
 
+    @SuppressWarnings("unused")
 	public final Float getNorthEastLongitude() {
 		return northEastLongitude;
 	}
 
+    @SuppressWarnings("unused")
 	public final Float getNorthEastLatitude() {
 		return northEastLatitude;
 	}
 
+    @SuppressWarnings("unused")
 	public final Float getSouthWestLongitude() {
 		return southWestLongitude;
 	}
 
+    @SuppressWarnings("unused")
 	public final Float getSouthWestLatitude() {
 		return southWestLatitude;
 	}
 
+    @SuppressWarnings("unused")
 	public final MMSI getDestinationMmsi1() {
 		return destinationMmsi1;
 	}
 
+    @SuppressWarnings("unused")
 	public final MMSI getDestinationMmsi2() {
 		return destinationMmsi2;
 	}
 
+    @SuppressWarnings("unused")
 	public final Boolean getAddressed() {
 		return addressed;
 	}
 
+    @SuppressWarnings("unused")
 	public final Boolean getBandA() {
 		return bandA;
 	}
 
+    @SuppressWarnings("unused")
 	public final Boolean getBandB() {
 		return bandB;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getZoneSize() {
 		return zoneSize;
 	}
@@ -112,23 +126,23 @@ public class ChannelManagement extends DecodedAISMessage {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.ChannelManagement))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 			
-		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 		
-		Integer channelA = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(40, 52));
-		Integer channelB = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(52, 64));
-		TxRxMode transmitReceiveMode = TxRxMode.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(64, 68)));
-		Boolean power = DecoderImpl.convertToBoolean(encodedMessage.getBits(68, 69));
-		Boolean addressed = DecoderImpl.convertToBoolean(encodedMessage.getBits(139, 140));
-		Boolean bandA = DecoderImpl.convertToBoolean(encodedMessage.getBits(140, 141));
-		Boolean bandB = DecoderImpl.convertToBoolean(encodedMessage.getBits(141, 142));
-		Integer zoneSize = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(142, 145));
-		MMSI destinationMmsi1 = !addressed ? null : MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(69, 99)));
-		MMSI destinationMmsi2 = !addressed ? null : MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(104, 134)));
-		Float northEastLatitude = addressed ? null : DecoderImpl.convertToFloat(encodedMessage.getBits(87, 104)) / 10f;
-		Float northEastLongitude = addressed ? null : DecoderImpl.convertToFloat(encodedMessage.getBits(69, 87)) / 10f;
-		Float southWestLatitude = addressed ? null : DecoderImpl.convertToFloat(encodedMessage.getBits(122, 138)) / 10f;
-		Float southWestLongitude = addressed ? null : DecoderImpl.convertToFloat(encodedMessage.getBits(104, 122)) / 10f;
+		Integer channelA = Decoder.convertToUnsignedInteger(encodedMessage.getBits(40, 52));
+		Integer channelB = Decoder.convertToUnsignedInteger(encodedMessage.getBits(52, 64));
+		TxRxMode transmitReceiveMode = TxRxMode.fromInteger(Decoder.convertToUnsignedInteger(encodedMessage.getBits(64, 68)));
+		Boolean power = Decoder.convertToBoolean(encodedMessage.getBits(68, 69));
+		Boolean addressed = Decoder.convertToBoolean(encodedMessage.getBits(139, 140));
+		Boolean bandA = Decoder.convertToBoolean(encodedMessage.getBits(140, 141));
+		Boolean bandB = Decoder.convertToBoolean(encodedMessage.getBits(141, 142));
+		Integer zoneSize = Decoder.convertToUnsignedInteger(encodedMessage.getBits(142, 145));
+		MMSI destinationMmsi1 = !addressed ? null : MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(69, 99)));
+		MMSI destinationMmsi2 = !addressed ? null : MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(104, 134)));
+		Float northEastLatitude = addressed ? null : Decoder.convertToFloat(encodedMessage.getBits(87, 104)) / 10f;
+		Float northEastLongitude = addressed ? null : Decoder.convertToFloat(encodedMessage.getBits(69, 87)) / 10f;
+		Float southWestLatitude = addressed ? null : Decoder.convertToFloat(encodedMessage.getBits(122, 138)) / 10f;
+		Float southWestLongitude = addressed ? null : Decoder.convertToFloat(encodedMessage.getBits(104, 122)) / 10f;
 
 		return new ChannelManagement(repeatIndicator, sourceMmsi, channelA,
 				channelB, transmitReceiveMode, power, northEastLongitude,

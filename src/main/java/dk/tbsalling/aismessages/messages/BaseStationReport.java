@@ -16,7 +16,7 @@
 
 package dk.tbsalling.aismessages.messages;
 
-import dk.tbsalling.aismessages.decoder.DecoderImpl;
+import dk.tbsalling.aismessages.decoder.Decoder;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
@@ -50,36 +50,57 @@ public class BaseStationReport extends DecodedAISMessage {
 		this.positionFixingDevice = positionFixingDevice;
 		this.raimFlag = raimFlag;
 	}
+    @SuppressWarnings("unused")
 	public final Integer getYear() {
 		return year;
 	}
+
+    @SuppressWarnings("unused")
 	public final Integer getMonth() {
 		return month;
 	}
+
+    @SuppressWarnings("unused")
 	public final Integer getDay() {
 		return day;
 	}
+
+    @SuppressWarnings("unused")
 	public final Integer getHour() {
 		return hour;
 	}
+
+    @SuppressWarnings("unused")
 	public final Integer getMinute() {
 		return minute;
 	}
+
+    @SuppressWarnings("unused")
 	public final Integer getSecond() {
 		return second;
 	}
+
+    @SuppressWarnings("unused")
 	public final Boolean getPositionAccurate() {
 		return positionAccurate;
 	}
+
+    @SuppressWarnings("unused")
 	public final Float getLatitude() {
 		return latitude;
 	}
+
+    @SuppressWarnings("unused")
 	public final Float getLongitude() {
 		return longitude;
 	}
+
+    @SuppressWarnings("unused")
 	public final PositionFixingDevice getPositionFixingDevice() {
 		return positionFixingDevice;
 	}
+
+    @SuppressWarnings("unused")
 	public final Boolean getRaimFlag() {
 		return raimFlag;
 	}
@@ -88,14 +109,14 @@ public class BaseStationReport extends DecodedAISMessage {
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
 		builder.append("BaseStationReport [year=").append(year)
-				.append(", month=").append(month).append(", day=").append(day)
-				.append(", hour=").append(hour).append(", minute=")
-				.append(minute).append(", second=").append(second)
-				.append(", positionAccurate=").append(positionAccurate)
-				.append(", latitude=").append(latitude).append(", longitude=")
-				.append(longitude).append(", positionFixingDevice=")
-				.append(positionFixingDevice).append(", raimFlag=")
-				.append(raimFlag).append("]");
+            .append(", month=").append(month).append(", day=").append(day)
+            .append(", hour=").append(hour).append(", minute=")
+            .append(minute).append(", second=").append(second)
+            .append(", positionAccurate=").append(positionAccurate)
+            .append(", latitude=").append(latitude).append(", longitude=")
+            .append(longitude).append(", positionFixingDevice=")
+            .append(positionFixingDevice).append(", raimFlag=")
+            .append(raimFlag).append("]");
 		return builder.toString();
 	}
 
@@ -105,19 +126,19 @@ public class BaseStationReport extends DecodedAISMessage {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.BaseStationReport))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 			
-		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
-		Integer year = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(38, 52));
-		Integer month = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(52, 56));
-		Integer day = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(56, 61));
-		Integer hour  = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(61, 66));
-		Integer minute = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(66, 72));
-		Integer second = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(72, 78));
-		Boolean positionAccurate = DecoderImpl.convertToBoolean(encodedMessage.getBits(78, 79));
-		Float longitude = DecoderImpl.convertToFloat(encodedMessage.getBits(79, 107)) / 600000f;
-		Float latitude = DecoderImpl.convertToFloat(encodedMessage.getBits(107, 134)) / 600000f;
-		PositionFixingDevice positionFixingDevice = PositionFixingDevice.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(134, 138)));
-		Boolean raimFlag = DecoderImpl.convertToBoolean(encodedMessage.getBits(148, 149));
+		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		Integer year = Decoder.convertToUnsignedInteger(encodedMessage.getBits(38, 52));
+		Integer month = Decoder.convertToUnsignedInteger(encodedMessage.getBits(52, 56));
+		Integer day = Decoder.convertToUnsignedInteger(encodedMessage.getBits(56, 61));
+		Integer hour  = Decoder.convertToUnsignedInteger(encodedMessage.getBits(61, 66));
+		Integer minute = Decoder.convertToUnsignedInteger(encodedMessage.getBits(66, 72));
+		Integer second = Decoder.convertToUnsignedInteger(encodedMessage.getBits(72, 78));
+		Boolean positionAccurate = Decoder.convertToBoolean(encodedMessage.getBits(78, 79));
+		Float longitude = Decoder.convertToFloat(encodedMessage.getBits(79, 107)) / 600000f;
+		Float latitude = Decoder.convertToFloat(encodedMessage.getBits(107, 134)) / 600000f;
+		PositionFixingDevice positionFixingDevice = PositionFixingDevice.fromInteger(Decoder.convertToUnsignedInteger(encodedMessage.getBits(134, 138)));
+		Boolean raimFlag = Decoder.convertToBoolean(encodedMessage.getBits(148, 149));
 
 		return new BaseStationReport(repeatIndicator, sourceMmsi, year, month,
 				day, hour, minute, second, positionAccurate, latitude,

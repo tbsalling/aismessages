@@ -16,7 +16,7 @@
 
 package dk.tbsalling.aismessages.messages;
 
-import dk.tbsalling.aismessages.decoder.DecoderImpl;
+import dk.tbsalling.aismessages.decoder.Decoder;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
@@ -30,11 +30,13 @@ public class SafetyRelatedBroadcastMessage extends DecodedAISMessage {
 		this.spare = spare;
 		this.text = text;
 	}
-	
+
+    @SuppressWarnings("unused")
 	public final int getSpare() {
 		return spare;
 	}
 
+    @SuppressWarnings("unused")
 	public final String getText() {
 		return text;
 	}
@@ -45,12 +47,12 @@ public class SafetyRelatedBroadcastMessage extends DecodedAISMessage {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.SafetyRelatedBroadcastMessage))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 			
-		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 		
-		int spare = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(38, 40));
+		int spare = Decoder.convertToUnsignedInteger(encodedMessage.getBits(38, 40));
 		int extraBitsOfChars = ((encodedMessage.getNumberOfBits() - 40) / 6) * 6;
-		String text = DecoderImpl.convertToString(encodedMessage.getBits(40, 40 + extraBitsOfChars));
+		String text = Decoder.convertToString(encodedMessage.getBits(40, 40 + extraBitsOfChars));
 
 		return new SafetyRelatedBroadcastMessage(repeatIndicator, sourceMmsi, spare, text);
 	}

@@ -16,11 +16,11 @@
 
 package dk.tbsalling.aismessages.messages;
 
+import dk.tbsalling.aismessages.messages.types.AISMessageType;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Logger;
-
-import dk.tbsalling.aismessages.messages.types.AISMessageType;
 
 public class EncodedAISMessage {
 

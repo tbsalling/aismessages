@@ -16,7 +16,7 @@
 
 package dk.tbsalling.aismessages.messages;
 
-import dk.tbsalling.aismessages.decoder.DecoderImpl;
+import dk.tbsalling.aismessages.decoder.Decoder;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
@@ -37,22 +37,33 @@ public class BinaryMessageMultipleSlot extends DecodedAISMessage {
 		this.data = data;
 		this.radioStatus = radioStatus;
 	}
-	
+
+    @SuppressWarnings("unused")
 	public final Boolean getAddressed() {
 		return addressed;
 	}
+
+    @SuppressWarnings("unused")
 	public final Boolean getStructured() {
 		return structured;
 	}
+
+    @SuppressWarnings("unused")
 	public final MMSI getDestinationMmsi() {
 		return destinationMmsi;
 	}
+
+    @SuppressWarnings("unused")
 	public final Integer getApplicationId() {
 		return applicationId;
 	}
+
+    @SuppressWarnings("unused")
 	public final String getData() {
 		return data;
 	}
+
+    @SuppressWarnings("unused")
 	public final String getRadioStatus() {
 		return radioStatus;
 	}
@@ -63,14 +74,14 @@ public class BinaryMessageMultipleSlot extends DecodedAISMessage {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.BinaryMessageMultipleSlot))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 			
-		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 
-		Boolean addressed = DecoderImpl.convertToBoolean(encodedMessage.getBits(38, 39));
-		Boolean structured = DecoderImpl.convertToBoolean(encodedMessage.getBits(39, 40));
-		MMSI destinationMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
-		Integer applicationId = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(70, 86));
-		String data = DecoderImpl.convertToBitString(encodedMessage.getBits(86, 86+1004+1));
+		Boolean addressed = Decoder.convertToBoolean(encodedMessage.getBits(38, 39));
+		Boolean structured = Decoder.convertToBoolean(encodedMessage.getBits(39, 40));
+		MMSI destinationMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
+		Integer applicationId = Decoder.convertToUnsignedInteger(encodedMessage.getBits(70, 86));
+		String data = Decoder.convertToBitString(encodedMessage.getBits(86, 86 + 1004 + 1));
 		String radioStatus = null; // Decoder.convertToBinaryString(encodedMessage.getBits(6, 8));
 
 		return new BinaryMessageMultipleSlot(repeatIndicator, sourceMmsi,

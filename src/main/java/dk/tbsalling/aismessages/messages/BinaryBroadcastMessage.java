@@ -16,7 +16,7 @@
 
 package dk.tbsalling.aismessages.messages;
 
-import dk.tbsalling.aismessages.decoder.DecoderImpl;
+import dk.tbsalling.aismessages.decoder.Decoder;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
@@ -43,14 +43,17 @@ public class BinaryBroadcastMessage extends DecodedAISMessage {
 		this.binaryData = binaryData;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getDesignatedAreaCode() {
 		return designatedAreaCode;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getFunctionalId() {
 		return functionalId;
 	}
 
+    @SuppressWarnings("unused")
 	public final String getBinaryData() {
 		return binaryData;
 	}
@@ -71,12 +74,12 @@ public class BinaryBroadcastMessage extends DecodedAISMessage {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.BinaryBroadcastMessage))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 			
-		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 
-		Integer designatedAreaCode = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(38, 52));
-		Integer functionalId = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(52, 56));
-		String binaryData = DecoderImpl.convertToBitString(encodedMessage.getBits(52, 56));
+		Integer designatedAreaCode = Decoder.convertToUnsignedInteger(encodedMessage.getBits(38, 52));
+		Integer functionalId = Decoder.convertToUnsignedInteger(encodedMessage.getBits(52, 56));
+		String binaryData = Decoder.convertToBitString(encodedMessage.getBits(52, 56));
 		
 		return new BinaryBroadcastMessage(repeatIndicator, sourceMmsi, designatedAreaCode, functionalId, binaryData);
 	}

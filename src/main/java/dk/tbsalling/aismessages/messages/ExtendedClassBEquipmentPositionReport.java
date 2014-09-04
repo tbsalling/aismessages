@@ -16,7 +16,7 @@
 
 package dk.tbsalling.aismessages.messages;
 
-import dk.tbsalling.aismessages.decoder.DecoderImpl;
+import dk.tbsalling.aismessages.decoder.Decoder;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
@@ -58,78 +58,97 @@ public class ExtendedClassBEquipmentPositionReport extends DecodedAISMessage {
 		this.assigned = assigned;
 	}
 
+    @SuppressWarnings("unused")
 	public final String getRegionalReserved1() {
 		return regionalReserved1;
 	}
 
+    @SuppressWarnings("unused")
 	public final Float getSpeedOverGround() {
 		return speedOverGround;
 	}
 
+    @SuppressWarnings("unused")
 	public final Boolean getPositionAccurate() {
 		return positionAccurate;
 	}
 
+    @SuppressWarnings("unused")
 	public final Float getLatitude() {
 		return latitude;
 	}
 
+    @SuppressWarnings("unused")
 	public final Float getLongitude() {
 		return longitude;
 	}
 
+    @SuppressWarnings("unused")
 	public final Float getCourseOverGround() {
 		return courseOverGround;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getTrueHeading() {
 		return trueHeading;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getSecond() {
 		return second;
 	}
 
+    @SuppressWarnings("unused")
 	public final String getRegionalReserved2() {
 		return regionalReserved2;
 	}
 
+    @SuppressWarnings("unused")
 	public final String getShipName() {
 		return shipName;
 	}
 
+    @SuppressWarnings("unused")
 	public final ShipType getShipType() {
 		return shipType;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getToBow() {
 		return toBow;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getToStern() {
 		return toStern;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getToStarboard() {
 		return toStarboard;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getToPort() {
 		return toPort;
 	}
 
+    @SuppressWarnings("unused")
 	public final PositionFixingDevice getPositionFixingDevice() {
 		return positionFixingDevice;
 	}
 
+    @SuppressWarnings("unused")
 	public final Boolean getRaimFlag() {
 		return raimFlag;
 	}
 
+    @SuppressWarnings("unused")
 	public final Boolean getDataTerminalReady() {
 		return dataTerminalReady;
 	}
 
+    @SuppressWarnings("unused")
 	public final Boolean getAssigned() {
 		return assigned;
 	}
@@ -164,28 +183,28 @@ public class ExtendedClassBEquipmentPositionReport extends DecodedAISMessage {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.ExtendedClassBEquipmentPositionReport))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 			
-		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 
-		String regionalReserved1 = DecoderImpl.convertToBitString(encodedMessage.getBits(38, 46));
-		Float speedOverGround = DecoderImpl.convertToUnsignedFloat(encodedMessage.getBits(46, 55)) / 10f;
-		Boolean positionAccurate = DecoderImpl.convertToBoolean(encodedMessage.getBits(56, 57));
-		Float longitude = DecoderImpl.convertToFloat(encodedMessage.getBits(57, 85)) / 600000f;
-		Float latitude = DecoderImpl.convertToFloat(encodedMessage.getBits(85, 112)) / 600000f;
-		Float courseOverGround = DecoderImpl.convertToUnsignedFloat(encodedMessage.getBits(112, 124)) / 10f;
-		Integer trueHeading = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(124, 133));
-		Integer second = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(133, 139));
-		String regionalReserved2 = DecoderImpl.convertToBitString(encodedMessage.getBits(139, 143));
-		String shipName = DecoderImpl.convertToString(encodedMessage.getBits(143, 263));
-		ShipType shipType = ShipType.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(263, 271)));
-		Integer toBow = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(271, 280));
-		Integer toStern = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(280, 289));
-		Integer toPort = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(289, 295));
-		Integer toStarboard = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(295, 301));
-		PositionFixingDevice positionFixingDevice = PositionFixingDevice.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(301, 305)));
-		Boolean raimFlag = DecoderImpl.convertToBoolean(encodedMessage.getBits(305, 306));
-		Boolean dataTerminalReady = DecoderImpl.convertToBoolean(encodedMessage.getBits(306, 307));
-		Boolean assigned = DecoderImpl.convertToBoolean(encodedMessage.getBits(307, 308));
+		String regionalReserved1 = Decoder.convertToBitString(encodedMessage.getBits(38, 46));
+		Float speedOverGround = Decoder.convertToUnsignedFloat(encodedMessage.getBits(46, 55)) / 10f;
+		Boolean positionAccurate = Decoder.convertToBoolean(encodedMessage.getBits(56, 57));
+		Float longitude = Decoder.convertToFloat(encodedMessage.getBits(57, 85)) / 600000f;
+		Float latitude = Decoder.convertToFloat(encodedMessage.getBits(85, 112)) / 600000f;
+		Float courseOverGround = Decoder.convertToUnsignedFloat(encodedMessage.getBits(112, 124)) / 10f;
+		Integer trueHeading = Decoder.convertToUnsignedInteger(encodedMessage.getBits(124, 133));
+		Integer second = Decoder.convertToUnsignedInteger(encodedMessage.getBits(133, 139));
+		String regionalReserved2 = Decoder.convertToBitString(encodedMessage.getBits(139, 143));
+		String shipName = Decoder.convertToString(encodedMessage.getBits(143, 263));
+		ShipType shipType = ShipType.fromInteger(Decoder.convertToUnsignedInteger(encodedMessage.getBits(263, 271)));
+		Integer toBow = Decoder.convertToUnsignedInteger(encodedMessage.getBits(271, 280));
+		Integer toStern = Decoder.convertToUnsignedInteger(encodedMessage.getBits(280, 289));
+		Integer toPort = Decoder.convertToUnsignedInteger(encodedMessage.getBits(289, 295));
+		Integer toStarboard = Decoder.convertToUnsignedInteger(encodedMessage.getBits(295, 301));
+		PositionFixingDevice positionFixingDevice = PositionFixingDevice.fromInteger(Decoder.convertToUnsignedInteger(encodedMessage.getBits(301, 305)));
+		Boolean raimFlag = Decoder.convertToBoolean(encodedMessage.getBits(305, 306));
+		Boolean dataTerminalReady = Decoder.convertToBoolean(encodedMessage.getBits(306, 307));
+		Boolean assigned = Decoder.convertToBoolean(encodedMessage.getBits(307, 308));
 		
 		return new ExtendedClassBEquipmentPositionReport(repeatIndicator,
 				sourceMmsi, regionalReserved1, speedOverGround,

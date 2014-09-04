@@ -52,52 +52,62 @@ public abstract class PositionReport extends DecodedAISMessage {
 		this.maneuverIndicator = maneuverIndicator;
 		this.raimFlag = raimFlag;
 	}
-		
+
+    @SuppressWarnings("unused")
 	public final NavigationStatus getNavigationStatus() {
 		return navigationStatus;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getRateOfTurn() {
 		return rateOfTurn;
 	}
 
+    @SuppressWarnings("unused")
 	public final Float getSpeedOverGround() {
 		return speedOverGround;
 	}
 
+    @SuppressWarnings("unused")
 	public final Boolean getPositionAccurate() {
 		return positionAccurate;
 	}
 
+    @SuppressWarnings("unused")
 	public final Float getLatitude() {
 		return latitude;
 	}
 
+    @SuppressWarnings("unused")
 	public final Float getLongitude() {
 		return longitude;
 	}
 
+    @SuppressWarnings("unused")
 	public final Float getCourseOverGround() {
 		return courseOverGround;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getTrueHeading() {
 		return trueHeading;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getSecond() {
 		return second;
 	}
 
+    @SuppressWarnings("unused")
 	public final ManeuverIndicator getManeuverIndicator() {
 		return maneuverIndicator;
 	}
 
+    @SuppressWarnings("unused")
 	public final Boolean getRaimFlag() {
 		return raimFlag;
 	}
 
-	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();

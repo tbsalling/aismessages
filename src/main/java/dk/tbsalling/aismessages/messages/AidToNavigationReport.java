@@ -16,7 +16,7 @@
 
 package dk.tbsalling.aismessages.messages;
 
-import dk.tbsalling.aismessages.decoder.DecoderImpl;
+import dk.tbsalling.aismessages.decoder.Decoder;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
@@ -62,78 +62,97 @@ public class AidToNavigationReport extends DecodedAISMessage {
 		this.spare2 = spare2;
 	}
 
+    @SuppressWarnings("unused")
 	public final AidType getAidType() {
 		return aidType;
 	}
 
+    @SuppressWarnings("unused")
 	public final String getName() {
 		return name;
 	}
 
+    @SuppressWarnings("unused")
 	public final Boolean getPositionAccurate() {
 		return positionAccurate;
 	}
 
+    @SuppressWarnings("unused")
 	public final Float getLatitude() {
 		return latitude;
 	}
 
+    @SuppressWarnings("unused")
 	public final Float getLongitude() {
 		return longitude;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getToBow() {
 		return toBow;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getToStern() {
 		return toStern;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getToStarboard() {
 		return toStarboard;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getToPort() {
 		return toPort;
 	}
 
+    @SuppressWarnings("unused")
 	public final PositionFixingDevice getPositionFixingDevice() {
 		return positionFixingDevice;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getSecond() {
 		return second;
 	}
 
+    @SuppressWarnings("unused")
 	public final Boolean getOffPosition() {
 		return offPosition;
 	}
 
+    @SuppressWarnings("unused")
 	public final String getRegionalUse() {
 		return regionalUse;
 	}
 
+    @SuppressWarnings("unused")
 	public final Boolean getRaimFlag() {
 		return raimFlag;
 	}
 
+    @SuppressWarnings("unused")
 	public final Boolean getVirtualAid() {
 		return virtualAid;
 	}
 
+    @SuppressWarnings("unused")
 	public final Boolean getAssignedMode() {
 		return assignedMode;
 	}
 
+    @SuppressWarnings("unused")
 	public final int getSpare1() {
 		return spare1;
 	}
-	
+
+    @SuppressWarnings("unused")
 	public final String getNameExtension() {
 		return nameExtension;
 	}
-	
+
+    @SuppressWarnings("unused")
 	public final int getSpare2() {
 		return spare2;
 	}
@@ -144,26 +163,26 @@ public class AidToNavigationReport extends DecodedAISMessage {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.AidToNavigationReport))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 		
-		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 
-		AidType aidType = AidType.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(38, 43)));
-		String name = DecoderImpl.convertToString(encodedMessage.getBits(43, 163));
-		Boolean positionAccurate = DecoderImpl.convertToBoolean(encodedMessage.getBits(163, 164));
-		Float longitude = DecoderImpl.convertToFloat(encodedMessage.getBits(164, 192)) / 600000f;
-		Float latitude = DecoderImpl.convertToFloat(encodedMessage.getBits(192, 219)) / 600000f;
-		Integer toBow = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(219, 228));
-		Integer toStern = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(228, 237));
-		Integer toPort = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(237, 243));
-		Integer toStarboard = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(243, 249));
-		PositionFixingDevice positionFixingDevice = PositionFixingDevice.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(249, 253)));
-		Integer second = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(253, 259));
-		Boolean offPosition = DecoderImpl.convertToBoolean(encodedMessage.getBits(259, 260));
-		String regionalUse = DecoderImpl.convertToBitString(encodedMessage.getBits(260,268));
-		Boolean raimFlag = DecoderImpl.convertToBoolean(encodedMessage.getBits(268, 269));
-		Boolean virtualAid = DecoderImpl.convertToBoolean(encodedMessage.getBits(269, 270));
-		Boolean assignedMode = DecoderImpl.convertToBoolean(encodedMessage.getBits(270, 271));
-		int spare1 = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(271, 272));
+		AidType aidType = AidType.fromInteger(Decoder.convertToUnsignedInteger(encodedMessage.getBits(38, 43)));
+		String name = Decoder.convertToString(encodedMessage.getBits(43, 163));
+		Boolean positionAccurate = Decoder.convertToBoolean(encodedMessage.getBits(163, 164));
+		Float longitude = Decoder.convertToFloat(encodedMessage.getBits(164, 192)) / 600000f;
+		Float latitude = Decoder.convertToFloat(encodedMessage.getBits(192, 219)) / 600000f;
+		Integer toBow = Decoder.convertToUnsignedInteger(encodedMessage.getBits(219, 228));
+		Integer toStern = Decoder.convertToUnsignedInteger(encodedMessage.getBits(228, 237));
+		Integer toPort = Decoder.convertToUnsignedInteger(encodedMessage.getBits(237, 243));
+		Integer toStarboard = Decoder.convertToUnsignedInteger(encodedMessage.getBits(243, 249));
+		PositionFixingDevice positionFixingDevice = PositionFixingDevice.fromInteger(Decoder.convertToUnsignedInteger(encodedMessage.getBits(249, 253)));
+		Integer second = Decoder.convertToUnsignedInteger(encodedMessage.getBits(253, 259));
+		Boolean offPosition = Decoder.convertToBoolean(encodedMessage.getBits(259, 260));
+		String regionalUse = Decoder.convertToBitString(encodedMessage.getBits(260, 268));
+		Boolean raimFlag = Decoder.convertToBoolean(encodedMessage.getBits(268, 269));
+		Boolean virtualAid = Decoder.convertToBoolean(encodedMessage.getBits(269, 270));
+		Boolean assignedMode = Decoder.convertToBoolean(encodedMessage.getBits(270, 271));
+		int spare1 = Decoder.convertToUnsignedInteger(encodedMessage.getBits(271, 272));
 		String nameExtension = null;
 		int spare2 = 0;
 		if(encodedMessage.getNumberOfBits() > 272) {
@@ -171,8 +190,8 @@ public class AidToNavigationReport extends DecodedAISMessage {
 			int extraChars = extraBits / 6;
 			int extraBitsOfChars = extraChars * 6;
 			
-			nameExtension = DecoderImpl.convertToString(encodedMessage.getBits(272, 272 + extraBitsOfChars));
-			spare2 = (extraBits == extraBitsOfChars) ? 0 : DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(272 + extraBitsOfChars, encodedMessage.getNumberOfBits()));
+			nameExtension = Decoder.convertToString(encodedMessage.getBits(272, 272 + extraBitsOfChars));
+			spare2 = (extraBits == extraBitsOfChars) ? 0 : Decoder.convertToUnsignedInteger(encodedMessage.getBits(272 + extraBitsOfChars, encodedMessage.getNumberOfBits()));
 		}
 
 		return new AidToNavigationReport(repeatIndicator, sourceMmsi, aidType,

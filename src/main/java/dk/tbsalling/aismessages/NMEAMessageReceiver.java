@@ -16,37 +16,38 @@
 
 package dk.tbsalling.aismessages;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.Iterator;
-import java.util.logging.Logger;
-
 import dk.tbsalling.aismessages.decoder.Decoder;
-import dk.tbsalling.aismessages.decoder.DecoderImpl;
 import dk.tbsalling.aismessages.messages.DecodedAISMessage;
 import dk.tbsalling.aismessages.messages.EncodedAISMessage;
 import dk.tbsalling.aismessages.messages.Metadata;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
-public class NMEAMessageReceiver {
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
+import java.util.function.Consumer;
+import java.util.logging.Logger;
+
+public class NMEAMessageReceiver implements Consumer<NMEAMessage> {
 
     private static final Logger log = Logger.getLogger(NMEAMessageReceiver.class.getName());
 
-    private final Decoder decoder = new DecoderImpl();
-    private final DecodedAISMessageHandler aisMessageHandler;
+    private final Decoder decoder = new Decoder();
+    private final Consumer<? super DecodedAISMessage> decodedAISMessageConsumer;
     private final String source;
-    private final ArrayList<NMEAMessage> messageFragments = new ArrayList<NMEAMessage>();
+    private final ArrayList<NMEAMessage> messageFragments = new ArrayList<>();
     
-    public NMEAMessageReceiver(String source, DecodedAISMessageHandler aisMessageHandler) {
+    public NMEAMessageReceiver(String source, Consumer<? super DecodedAISMessage> decodedAISMessageConsumer) {
     	this.source = source;
-    	this.aisMessageHandler = aisMessageHandler;
+    	this.decodedAISMessageConsumer = decodedAISMessageConsumer;
     }
     
     /**
      * Receive a single NMEA amoured AIS string
      * @param nmeaMessage the NMEAMessage to handle.
      */
-	public void handleMessageReceived(NMEAMessage nmeaMessage) {
+    @Override
+    public void accept(NMEAMessage nmeaMessage) {
 		Metadata metadata = new Metadata();
 		metadata.setSource(source);
 		metadata.setProcessedAt(new Date());
@@ -59,16 +60,6 @@ public class NMEAMessageReceiver {
 			return;
 		}
 		
-//		if (! ("AIVDM".equals(nmeaMessage.getMessageType()) || ("AIVDO".equals(nmeaMessage.getMessageType())))) {
-//			log.warning("NMEA messages of type " + nmeaMessage + " cannot be treated by " + this.getClass().getSimpleName());
-//			return;
-//		}
-		
-		if(!nmeaMessage.isValid()) {
-			log.warning("NMEA messages of type " + nmeaMessage.getMessageType() + " cannot be treated by " + this.getClass().getSimpleName());
-			return;
-		}
-		
 		int numberOfFragments = nmeaMessage.getNumberOfFragments();
 		if (numberOfFragments <= 0) {
 			log.warning("NMEA message is invalid: " + nmeaMessage.toString());
@@ -78,11 +69,11 @@ public class NMEAMessageReceiver {
 			String payload = nmeaMessage.getEncodedPayload();
 			int fillBits = nmeaMessage.getFillBits();
 			EncodedAISMessage encodedAISMessage = new EncodedAISMessage(payload, fillBits);
-			DecodedAISMessage decodedAISMessage = decoder.decode(encodedAISMessage);
+			DecodedAISMessage decodedAISMessage = decoder.apply(encodedAISMessage);
 			messageFragments.clear();
 			metadata.setProcessedIn(Short.valueOf((short) ((System.nanoTime() - startTime)/1000)));
 			decodedAISMessage.setMetadata(metadata);
-			aisMessageHandler.handleMessageReceived(decodedAISMessage);
+            decodedAISMessageConsumer.accept(decodedAISMessage);
 		} else {
 			int fragmentNumber = nmeaMessage.getFragmentNumber();
 
@@ -117,10 +108,10 @@ public class NMEAMessageReceiver {
 							}
 						}
 						EncodedAISMessage encodedAISMessage = new EncodedAISMessage(payload.toString(), fillBits);
-						DecodedAISMessage decodedAISMessage = decoder.decode(encodedAISMessage);
+						DecodedAISMessage decodedAISMessage = decoder.apply(encodedAISMessage);
 						messageFragments.clear();
 						decodedAISMessage.setMetadata(metadata);
-						aisMessageHandler.handleMessageReceived(decodedAISMessage);
+                        decodedAISMessageConsumer.accept(decodedAISMessage);
 					} else
 						log.finest("Fragmented message not yet complete; missing " + (nmeaMessage.getNumberOfFragments() - messageFragments.size()) + " fragment(s).");
 				}
@@ -138,4 +129,5 @@ public class NMEAMessageReceiver {
 		messageFragments.clear();
 		return unhandled;
 	}
+
 }

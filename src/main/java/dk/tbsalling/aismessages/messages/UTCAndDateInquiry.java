@@ -16,7 +16,7 @@
 
 package dk.tbsalling.aismessages.messages;
 
-import dk.tbsalling.aismessages.decoder.DecoderImpl;
+import dk.tbsalling.aismessages.decoder.Decoder;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
@@ -31,6 +31,7 @@ public class UTCAndDateInquiry extends DecodedAISMessage {
 		this.destinationMmsi = destinationMmsi;
 	}
 
+    @SuppressWarnings("unused")
 	public final MMSI getDestinationMmsi() {
 		return destinationMmsi;
 	}
@@ -41,9 +42,9 @@ public class UTCAndDateInquiry extends DecodedAISMessage {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.UTCAndDateInquiry))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 			
-		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
-		MMSI destinationMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
+		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		MMSI destinationMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
 
 		return new UTCAndDateInquiry(repeatIndicator, sourceMmsi, destinationMmsi);
 	}

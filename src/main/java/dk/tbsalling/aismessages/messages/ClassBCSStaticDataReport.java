@@ -16,7 +16,7 @@
 
 package dk.tbsalling.aismessages.messages;
 
-import dk.tbsalling.aismessages.decoder.DecoderImpl;
+import dk.tbsalling.aismessages.decoder.Decoder;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
@@ -44,42 +44,52 @@ public class ClassBCSStaticDataReport extends DecodedAISMessage {
 		this.mothershipMmsi = mothershipMmsi;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getPartNumber() {
 		return partNumber;
 	}
 
+    @SuppressWarnings("unused")
 	public final String getShipName() {
 		return shipName;
 	}
 
+    @SuppressWarnings("unused")
 	public final ShipType getShipType() {
 		return shipType;
 	}
 
+    @SuppressWarnings("unused")
 	public final String getVendorId() {
 		return vendorId;
 	}
 
+    @SuppressWarnings("unused")
 	public final String getCallsign() {
 		return callsign;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getToBow() {
 		return toBow;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getToStern() {
 		return toStern;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getToStarboard() {
 		return toStarboard;
 	}
 
+    @SuppressWarnings("unused")
 	public final Integer getToPort() {
 		return toPort;
 	}
 
+    @SuppressWarnings("unused")
 	public final MMSI getMothershipMmsi() {
 		return mothershipMmsi;
 	}
@@ -104,20 +114,20 @@ public class ClassBCSStaticDataReport extends DecodedAISMessage {
 		if (! encodedMessage.getMessageType().equals(AISMessageType.ClassBCSStaticDataReport))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 			
-		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 
-		Integer partNumber = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(38, 40));
+		Integer partNumber = Decoder.convertToUnsignedInteger(encodedMessage.getBits(38, 40));
 
-		String shipName = partNumber == 1 ? null : DecoderImpl.convertToString(encodedMessage.getBits(40, 160));
-		ShipType shipType = partNumber == 0 ? null : ShipType.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(40, 48)));
-		String vendorId = partNumber == 0 ? null : DecoderImpl.convertToString(encodedMessage.getBits(48, 90));
-		String callsign = partNumber == 0 ? null : DecoderImpl.convertToString(encodedMessage.getBits(90, 132));
-		Integer toBow = partNumber == 0 ? null : DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(132, 141));
-		Integer toStern = partNumber == 0 ? null : DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(141, 150));
-		Integer toPort = partNumber == 0 ? null : DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(150, 156));
-		Integer toStarboard = partNumber == 0 ? null : DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(156, 162));
-		MMSI mothershipMmsi = partNumber == 0 ? null : MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(132, 162)));
+		String shipName = partNumber == 1 ? null : Decoder.convertToString(encodedMessage.getBits(40, 160));
+		ShipType shipType = partNumber == 0 ? null : ShipType.fromInteger(Decoder.convertToUnsignedInteger(encodedMessage.getBits(40, 48)));
+		String vendorId = partNumber == 0 ? null : Decoder.convertToString(encodedMessage.getBits(48, 90));
+		String callsign = partNumber == 0 ? null : Decoder.convertToString(encodedMessage.getBits(90, 132));
+		Integer toBow = partNumber == 0 ? null : Decoder.convertToUnsignedInteger(encodedMessage.getBits(132, 141));
+		Integer toStern = partNumber == 0 ? null : Decoder.convertToUnsignedInteger(encodedMessage.getBits(141, 150));
+		Integer toPort = partNumber == 0 ? null : Decoder.convertToUnsignedInteger(encodedMessage.getBits(150, 156));
+		Integer toStarboard = partNumber == 0 ? null : Decoder.convertToUnsignedInteger(encodedMessage.getBits(156, 162));
+		MMSI mothershipMmsi = partNumber == 0 ? null : MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(132, 162)));
 		
 		return new ClassBCSStaticDataReport(repeatIndicator, sourceMmsi, partNumber, shipName, shipType, vendorId, callsign, toBow, toStern, toStarboard, toPort, mothershipMmsi);
 	}

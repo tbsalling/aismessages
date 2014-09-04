@@ -16,7 +16,7 @@
 
 package dk.tbsalling.aismessages.messages;
 
-import dk.tbsalling.aismessages.decoder.DecoderImpl;
+import dk.tbsalling.aismessages.decoder.Decoder;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
@@ -48,64 +48,75 @@ public class GNSSBinaryBroadcastMessage extends DecodedAISMessage {
 		this.health = health;
 		this.binaryData = binaryData;
 	}
-	
+
+    @SuppressWarnings("unused")
 	public final int getSpare1() {
 		return spare1;
 	}
 
+    @SuppressWarnings("unused")
 	public final Float getLatitude() {
 		return latitude;
 	}
 
+    @SuppressWarnings("unused")
 	public final Float getLongitude() {
 		return longitude;
 	}
-	
+
+    @SuppressWarnings("unused")
 	public final int getSpare2() {
 		return spare2;
 	}
-	
+
+    @SuppressWarnings("unused")
 	public final int getMType() {
 		return mType;
 	}
-	
+
+    @SuppressWarnings("unused")
 	public final int getStationId() {
 		return stationId;
 	}
-	
+
+    @SuppressWarnings("unused")
 	public final int getZCount() {
 		return zCount;
 	}
-	
+
+    @SuppressWarnings("unused")
 	public final int getSequenceNumber() {
 		return sequenceNumber;
 	}
-	
+
+    @SuppressWarnings("unused")
 	public final int getNumOfWords() {
 		return numOfWords;
 	}
-	
+
+    @SuppressWarnings("unused")
 	public final int getHealth() {
 		return health;
 	}
 
+    @SuppressWarnings("unused")
 	public final String getBinaryData() {
 		return binaryData;
 	}
-	
+
 	public static GNSSBinaryBroadcastMessage fromEncodedMessage(EncodedAISMessage encodedMessage) {
 		if (! encodedMessage.isValid())
 			throw new InvalidEncodedMessage(encodedMessage);
 		if (! encodedMessage.getMessageType().equals(AISMessageType.GNSSBinaryBroadcastMessage))
 			throw new UnsupportedMessageType(encodedMessage.getMessageType().getCode());
 			
-		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
-		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		Integer repeatIndicator = Decoder.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
+		MMSI sourceMmsi = MMSI.valueOf(Decoder.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 
-		int spare1 = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(38, 40));
-		Float longitude = DecoderImpl.convertToFloat(encodedMessage.getBits(40, 58)) / 10f;
-		Float latitude = DecoderImpl.convertToFloat(encodedMessage.getBits(58, 75)) / 10f;
-		int spare2 = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(75, 80));
+		int spare1 = Decoder.convertToUnsignedInteger(encodedMessage.getBits(38, 40));
+		Float longitude = Decoder.convertToFloat(encodedMessage.getBits(40, 58)) / 10f;
+		Float latitude = Decoder.convertToFloat(encodedMessage.getBits(58, 75)) / 10f;
+		int spare2 = Decoder.convertToUnsignedInteger(encodedMessage.getBits(75, 80));
 		
 		int mType = 0;
 		int stationId = 0;
@@ -114,14 +125,14 @@ public class GNSSBinaryBroadcastMessage extends DecodedAISMessage {
 		int numOfWords = 0;
 		int health = 0;
 		if(encodedMessage.getNumberOfBits() > 80) {
-			mType = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(80, 86));
-			stationId = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(86, 96));
-			zCount = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(96, 109));
-			sequenceNumber = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(109, 112));
-			numOfWords = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(112, 117));
-			health = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(117, 120));
+			mType = Decoder.convertToUnsignedInteger(encodedMessage.getBits(80, 86));
+			stationId = Decoder.convertToUnsignedInteger(encodedMessage.getBits(86, 96));
+			zCount = Decoder.convertToUnsignedInteger(encodedMessage.getBits(96, 109));
+			sequenceNumber = Decoder.convertToUnsignedInteger(encodedMessage.getBits(109, 112));
+			numOfWords = Decoder.convertToUnsignedInteger(encodedMessage.getBits(112, 117));
+			health = Decoder.convertToUnsignedInteger(encodedMessage.getBits(117, 120));
 		}
-		String binaryData = DecoderImpl.convertToBitString(encodedMessage.getBits(80, encodedMessage.getNumberOfBits()));
+		String binaryData = Decoder.convertToBitString(encodedMessage.getBits(80, encodedMessage.getNumberOfBits()));
 
 		return new GNSSBinaryBroadcastMessage(repeatIndicator, sourceMmsi, spare1, latitude, longitude, spare2, mType, stationId, 
 				zCount, sequenceNumber, numOfWords, health, binaryData);
