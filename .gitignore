@@ -1,3 +1,8 @@
+# IDEA #
+########
+.idea/
+*.iml
+
 # Compiled source #
 ###################
 *.com
