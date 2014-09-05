@@ -6,7 +6,7 @@
 	<packaging>jar</packaging>
 	<version>2.0.0-SNAPSHOT</version>
 	<name>aismessages</name>
-	<description>AISMessages is a software library for decoding AIS messages related to maritime navigation and safety.</description>
+	<description>AISMessages is a light-weight and high-performing software library for decoding AIS messages related to maritime navigation and safety.</description>
 	<url>http://tbsalling.dk</url>
 	<parent>
 	    <groupId>org.sonatype.oss</groupId>
