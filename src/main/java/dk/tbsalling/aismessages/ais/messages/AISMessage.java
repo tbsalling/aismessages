@@ -16,10 +16,10 @@
 
 package dk.tbsalling.aismessages.ais.messages;
 
-import dk.tbsalling.aismessages.ais.Decoders;
 import dk.tbsalling.aismessages.ais.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
+import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import java.io.Serializable;
@@ -71,13 +71,13 @@ public abstract class AISMessage implements Serializable {
     /** The NMEA messages which represent this AIS message */
     private NMEAMessage[] nmeaMessages;
 
+    private Metadata metadata;
+
     /** Payload expanded to string of 0's and 1's. Use weak reference to allow GC anytime. */
     private transient WeakReference<String> bitString = new WeakReference<>(null);
 
     /** Length of bitString */
     private transient int numberOfBits = -1;
-
-    private Metadata metadata;
 
     private transient Integer repeatIndicator;
     private transient MMSI sourceMmsi;
@@ -92,6 +92,9 @@ public abstract class AISMessage implements Serializable {
         AISMessageType nmeaMessageType = decodeMessageType();
         if (getMessageType() != nmeaMessageType) {
             throw new UnsupportedMessageType(nmeaMessageType.getCode());
+        }
+        if (!isValid()) {
+             throw new InvalidMessage("Invalid AIS message");
         }
         checkAISMessage();
     }
