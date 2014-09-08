@@ -23,6 +23,7 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import java.io.Serializable;
+import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
@@ -51,7 +52,7 @@ public abstract class AISMessage implements Serializable {
     public transient static final String VERSION = "2.0.0-SNAPSHOT";
 
     static {
-        StringBuffer sb = new StringBuffer();
+        StringBuilder sb = new StringBuilder();
         sb.append("\n");
         sb.append("AISMessages v");
         sb.append(VERSION);
@@ -70,8 +71,8 @@ public abstract class AISMessage implements Serializable {
     /** The NMEA messages which represent this AIS message */
     private NMEAMessage[] nmeaMessages;
 
-    /** Payload expanded to string of 0's and 1's */
-    private transient String bitString;
+    /** Payload expanded to string of 0's and 1's. Use weak reference to allow GC anytime. */
+    private transient WeakReference<String> bitString = new WeakReference<>(null);
 
     /** Length of bitString */
     private transient int numberOfBits = -1;
@@ -80,8 +81,6 @@ public abstract class AISMessage implements Serializable {
 
     private transient Integer repeatIndicator;
     private transient MMSI sourceMmsi;
-
-    private static final transient Decoders DECODERS = new Decoders();
 
     protected AISMessage() {
     }
@@ -101,7 +100,7 @@ public abstract class AISMessage implements Serializable {
         nonNull(nmeaMessages);
         check(nmeaMessages);
         this.nmeaMessages = nmeaMessages;
-        this.bitString = bitString;
+        this.bitString = new WeakReference<>(bitString);
         AISMessageType nmeaMessageType = decodeMessageType();
         if (getMessageType() != nmeaMessageType) {
             throw new UnsupportedMessageType(nmeaMessageType.getCode());
@@ -158,10 +157,12 @@ public abstract class AISMessage implements Serializable {
     }
 
     protected String getBitString() {
-        if (bitString == null) {
-            bitString = decodePayloadToBitString(nmeaMessages);
+        String b = bitString.get();
+        if (b == null) {
+            b = decodePayloadToBitString(nmeaMessages);
+            bitString = new WeakReference<>(b);
         }
-        return bitString;
+        return b;
     }
 
     protected String getBits(Integer beginIndex, Integer endIndex) {
@@ -176,7 +177,7 @@ public abstract class AISMessage implements Serializable {
     }
 
     protected static String decodePayloadToBitString(NMEAMessage... nmeaMessages) {
-        StringBuffer sixBitEncodedPayload = new StringBuffer();
+        StringBuilder sixBitEncodedPayload = new StringBuilder();
         int fillBits = -1;
         for (int i = 0; i < nmeaMessages.length; i++) {
             NMEAMessage m = nmeaMessages[i];
@@ -290,7 +291,9 @@ public abstract class AISMessage implements Serializable {
         return aisMessageConstructor.apply(nmeaMessages, bitString);
     }
 
-    public Boolean isValid() {
+    public boolean isValid() {
+        final String bitString = getBitString();
+
         if (bitString.length() < 6) {
             LOG.warning("Message is too short: " + bitString.length() + " bits.");
             return Boolean.FALSE;
@@ -385,7 +388,7 @@ public abstract class AISMessage implements Serializable {
 
     /** Decode an encoded six-bit string into a binary string of 0's and 1's */
     private static String toBitString(String encodedString, Integer paddingBits) {
-        StringBuffer bitString = new StringBuffer();
+        StringBuilder bitString = new StringBuilder();
         int n = encodedString.length();
         for (int i=0; i<n; i++) {
             String c = encodedString.substring(i, i+1);
@@ -394,7 +397,7 @@ public abstract class AISMessage implements Serializable {
         return bitString.substring(0, bitString.length() - paddingBits);
     }
 
-    private final static Map<String, String> charToSixBit = new TreeMap<String, String>();
+    private final static Map<String, String> charToSixBit = new TreeMap<>();
     static {
         charToSixBit.put("0", "000000"); // 0
         charToSixBit.put("1", "000001"); // 1
