@@ -17,6 +17,7 @@
 package dk.tbsalling.aismessages.demo;
 
 import dk.tbsalling.aismessages.ais.messages.AISMessage;
+import dk.tbsalling.aismessages.ais.messages.PositionReport;
 import dk.tbsalling.aismessages.nmea.NMEAMessageHandler;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
@@ -27,6 +28,9 @@ public class SimpleDemoApp implements Consumer<AISMessage> {
 
     @Override
     public void accept(AISMessage aisMessage) {
+        //if (aisMessage instanceof PositionReport)
+        //    ((PositionReport) aisMessage).getCourseOverGround();
+        //aisMessage.toString(); // This decodes all fields.
         System.out.println("Received AIS message: " + aisMessage);
     }
 
@@ -117,22 +121,25 @@ public class SimpleDemoApp implements Consumer<AISMessage> {
 		System.out.println("--------------------");
 
 		NMEAMessageHandler nmeaMessageHandler = new NMEAMessageHandler("DEMO1", this);
-		
+
+        long numNMEAStrings = 0;
 		long startTime = System.nanoTime();
-		
-		for (String demoNmeaString : demoNmeaStrings) {
-			nmeaMessageHandler.accept(NMEAMessage.fromString(demoNmeaString));
-		}
+
+        for (int i=0; i<1000; i++) {
+            for (String demoNmeaString : demoNmeaStrings) {
+                nmeaMessageHandler.accept(NMEAMessage.fromString(demoNmeaString));
+                numNMEAStrings++;
+            }
+        }
 		
 		ArrayList<NMEAMessage> unhandled = nmeaMessageHandler.flush();
 		
 		long endTime = System.nanoTime();
 
 		float secs = (endTime-startTime)/1000000000f;
-		float msgs = demoNmeaStrings.length;
-		int msgsPerSec = (int) (msgs/secs);
+		int msgsPerSec = (int) (numNMEAStrings/secs);
 		
-		System.out.println("DemoApp processed " + msgs + " NMEA AIVDM messages in " + secs + " secs (" + msgsPerSec + " messages per second).");
+		System.out.println("DemoApp processed " + numNMEAStrings + " NMEA AIVDM messages in " + secs + " secs (" + msgsPerSec + " messages per second).");
 		System.out.println(unhandled.size() + " messages were not processed. Probably they were in incomplete sets.");
 	}
 
