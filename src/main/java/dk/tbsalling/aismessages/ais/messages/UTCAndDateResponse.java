@@ -44,90 +44,57 @@ public class UTCAndDateResponse extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Integer getYear() {
-        if (year == null) {
-            year = UNSIGNED_INTEGER_DECODER.apply(getBits(38, 52));
-        }
-		return year;
+        return getDecodedValue(() -> year, value -> year = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 52)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getMonth() {
-        if (month == null) {
-            month = UNSIGNED_INTEGER_DECODER.apply(getBits(52, 56));
-        }
-        return month;
+        return getDecodedValue(() -> month, value -> month = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(52, 56)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getDay() {
-        if (day == null) {
-            day = UNSIGNED_INTEGER_DECODER.apply(getBits(56, 61));
-        }
-        return day;
+        return getDecodedValue(() -> day, value -> day = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(56, 61)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getHour() {
-        if (hour == null) {
-            hour = UNSIGNED_INTEGER_DECODER.apply(getBits(61, 66));
-        }
-        return hour;
+        return getDecodedValue(() -> hour, value -> hour = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(61, 66)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getMinute() {
-        if (minute == null) {
-            minute = UNSIGNED_INTEGER_DECODER.apply(getBits(66, 72));
-        }
-        return minute;
+        return getDecodedValue(() -> minute, value -> minute = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(66, 72)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getSecond() {
-        if (second == null) {
-            second = UNSIGNED_INTEGER_DECODER.apply(getBits(72, 78));
-        }
-		return second;
+        return getDecodedValue(() -> second, value -> second = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(72, 78)));
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getPositionAccurate() {
-        if (positionAccurate == null) {
-            positionAccurate = BOOLEAN_DECODER.apply(getBits(78, 79));
-        }
-		return positionAccurate;
+        return getDecodedValue(() -> positionAccurate, value -> positionAccurate = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(78, 79)));
 	}
 
     @SuppressWarnings("unused")
 	public Float getLatitude() {
-        if (latitude == null) {
-            latitude = FLOAT_DECODER.apply(getBits(107, 134)) / 600000f;
-        }
-		return latitude;
+        return getDecodedValue(() -> latitude, value -> latitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(107, 134)) / 600000f);
 	}
 
     @SuppressWarnings("unused")
 	public Float getLongitude() {
-        if (longitude == null) {
-            longitude = FLOAT_DECODER.apply(getBits(79, 107)) / 600000f;
-        }
-		return longitude;
+        return getDecodedValue(() -> longitude, value -> longitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(79, 107)) / 600000f);
 	}
 
     @SuppressWarnings("unused")
 	public PositionFixingDevice getPositionFixingDevice() {
-        if (positionFixingDevice == null) {
-            positionFixingDevice = PositionFixingDevice.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(134, 138)));
-        }
-		return positionFixingDevice;
+        return getDecodedValue(() -> positionFixingDevice, value -> positionFixingDevice = value, () -> Boolean.TRUE, () -> PositionFixingDevice.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(134, 138))));
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getRaimFlag() {
-        if (raimFlag == null) {
-            raimFlag = BOOLEAN_DECODER.apply(getBits(148, 149));
-        }
-		return raimFlag;
+        return getDecodedValue(() -> raimFlag, value -> raimFlag = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(148, 149)));
 	}
 
     @Override

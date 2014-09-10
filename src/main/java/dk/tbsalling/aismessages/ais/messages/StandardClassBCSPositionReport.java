@@ -52,138 +52,87 @@ public class StandardClassBCSPositionReport extends AISMessage {
 
     @SuppressWarnings("unused")
 	public String getRegionalReserved1() {
-        if (regionalReserved1 == null) {
-            regionalReserved1 = BIT_DECODER.apply(getBits(38, 46));
-        }
-		return regionalReserved1;
+        return getDecodedValue(() -> regionalReserved1, value -> regionalReserved1 = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(38, 46)));
 	}
 
     @SuppressWarnings("unused")
 	public Float getSpeedOverGround() {
-        if (speedOverGround == null) {
-            speedOverGround = UNSIGNED_FLOAT_DECODER.apply(getBits(46, 55)) / 10f;
-        }
-		return speedOverGround;
+        return getDecodedValue(() -> speedOverGround, value -> speedOverGround = value, () -> Boolean.TRUE, () -> UNSIGNED_FLOAT_DECODER.apply(getBits(46, 55)) / 10f);
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getPositionAccurate() {
-        if (positionAccurate == null) {
-            positionAccurate = BOOLEAN_DECODER.apply(getBits(56, 57));
-        }
-		return positionAccurate;
+        return getDecodedValue(() -> positionAccurate, value -> positionAccurate = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(56, 57)));
 	}
 
     @SuppressWarnings("unused")
 	public Float getLatitude() {
-        if (latitude == null) {
-            latitude = FLOAT_DECODER.apply(getBits(85, 112)) / 600000f;
-        }
-		return latitude;
+        return getDecodedValue(() -> latitude, value -> latitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(85, 112)) / 600000f);
 	}
 
     @SuppressWarnings("unused")
 	public Float getLongitude() {
-        if (longitude == null) {
-            longitude = FLOAT_DECODER.apply(getBits(57, 85)) / 600000f;
-        }
-		return longitude;
+        return getDecodedValue(() -> longitude, value -> longitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(57, 85)) / 600000f);
 	}
 
     @SuppressWarnings("unused")
 	public Float getCourseOverGround() {
-        if (courseOverGround == null) {
-            courseOverGround = UNSIGNED_FLOAT_DECODER.apply(getBits(112, 124)) / 10f;
-        }
-		return courseOverGround;
+        return getDecodedValue(() -> courseOverGround, value -> courseOverGround = value, () -> Boolean.TRUE, () -> UNSIGNED_FLOAT_DECODER.apply(getBits(112, 124)) / 10f);
 	}
 
     @SuppressWarnings("unused")
 	public Integer getTrueHeading() {
-        if (trueHeading == null) {
-            trueHeading = UNSIGNED_INTEGER_DECODER.apply(getBits(124, 133));
-        }
-		return trueHeading;
+        return getDecodedValue(() -> trueHeading, value -> trueHeading = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(124, 133)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getSecond() {
-        if (second == null) {
-            second = UNSIGNED_INTEGER_DECODER.apply(getBits(133, 139));
-        }
-		return second;
+        return getDecodedValue(() -> second, value -> second = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(133, 139)));
 	}
 
     @SuppressWarnings("unused")
 	public String getRegionalReserved2() {
-        if (regionalReserved2 == null) {
-            regionalReserved2 = BIT_DECODER.apply(getBits(139, 141));
-        }
-		return regionalReserved2;
+        return getDecodedValue(() -> regionalReserved2, value -> regionalReserved2 = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(139, 141)));
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getCsUnit() {
-        if (csUnit == null) {
-            csUnit = BOOLEAN_DECODER.apply(getBits(141, 142));
-        }
-		return csUnit;
+        return getDecodedValue(() -> csUnit, value -> csUnit = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(141, 142)));
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getDisplay() {
-        if (display == null) {
-            display = BOOLEAN_DECODER.apply(getBits(142, 143));
-        }
-		return display;
+        return getDecodedValue(() -> display, value -> display = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(142, 143)));
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getDsc() {
-        if (dsc == null) {
-            dsc = BOOLEAN_DECODER.apply(getBits(143, 144));
-        }
-		return dsc;
+        return getDecodedValue(() -> dsc, value -> dsc = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(143, 144)));
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getBand() {
-        if (band == null) {
-            band = BOOLEAN_DECODER.apply(getBits(144, 145));
-        }
-		return band;
+        return getDecodedValue(() -> band, value -> band = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(144, 145)));
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getMessage22() {
-        if (message22 == null) {
-            message22 = BOOLEAN_DECODER.apply(getBits(145, 146));
-        }
-		return message22;
+        return getDecodedValue(() -> message22, value -> message22 = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(145, 146)));
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getAssigned() {
-        if (assigned == null) {
-            assigned = BOOLEAN_DECODER.apply(getBits(146, 147));
-        }
-		return assigned;
+        return getDecodedValue(() -> assigned, value -> assigned = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(146, 147)));
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getRaimFlag() {
-        if (raimFlag == null) {
-            raimFlag = BOOLEAN_DECODER.apply(getBits(147, 148));
-        }
-		return raimFlag;
+        return getDecodedValue(() -> raimFlag, value -> raimFlag = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(147, 148)));
 	}
 
     @SuppressWarnings("unused")
 	public String getRadioStatus() {
-        if (radioStatus == null) {
-            radioStatus = BIT_DECODER.apply(getBits(148, 168));
-        }
-		return radioStatus;
+        return getDecodedValue(() -> radioStatus, value -> radioStatus = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(148, 168)));
 	}
 
     @Override

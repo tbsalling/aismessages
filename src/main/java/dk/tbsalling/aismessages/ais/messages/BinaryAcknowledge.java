@@ -51,74 +51,47 @@ public class BinaryAcknowledge extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Integer getSpare() {
-        if (spare == null) {
-            spare = UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40));
-        }
-        return spare;
+        return getDecodedValue(() -> spare, value -> spare = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40)));
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getMmsi1() {
-        if (mmsi1 == null) {
-            mmsi1 = MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70)));
-        }
-        return mmsi1;
+        return getDecodedValue(() -> mmsi1, value -> mmsi1 = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70))));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getSequence1() {
-        if (sequence1 == null) {
-            sequence1 = UNSIGNED_INTEGER_DECODER.apply(getBits(70, 72));
-        }
-        return sequence1;
+        return getDecodedValue(() -> sequence1, value -> sequence1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(70, 72)));
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getMmsi2() {
-        if (getNumberOfBits() > 72 && mmsi2 == null) {
-            mmsi2 = MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(72, 102)));
-        }
-        return mmsi2;
+        return getDecodedValue(() -> mmsi2, value -> mmsi2 = value, () -> getNumberOfBits() > 72, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(72, 102))));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getSequence2() {
-        if (getNumberOfBits() > 72 && sequence2 == null) {
-            sequence2 = UNSIGNED_INTEGER_DECODER.apply(getBits(102, 104));
-        }
-        return sequence2;
+        return getDecodedValue(() -> sequence2, value -> sequence2 = value, () -> getNumberOfBits() > 72, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(102, 104)));
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getMmsi3() {
-        if (getNumberOfBits() > 104 && mmsi3 == null) {
-            mmsi3 = MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(104, 134)));
-        }
-        return mmsi3;
+        return getDecodedValue(() -> mmsi3, value -> mmsi3 = value, () -> getNumberOfBits() > 104, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(104, 134))));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getSequence3() {
-        if (getNumberOfBits() > 104 && sequence3 == null) {
-            sequence3 = UNSIGNED_INTEGER_DECODER.apply(getBits(134, 136));
-        }
-        return sequence3;
+        return getDecodedValue(() -> sequence3, value -> sequence3 = value, () -> getNumberOfBits() > 104, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(134, 136)));
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getMmsi4() {
-        if (getNumberOfBits() > 136 && mmsi4 == null) {
-            mmsi4 = MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(136, 166)));
-        }
-        return mmsi4;
+        return getDecodedValue(() -> mmsi4, value -> mmsi4 = value, () -> getNumberOfBits() > 136, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(136, 166))));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getSequence4() {
-        if (getNumberOfBits() > 136 && sequence4 == null) {
-            sequence4 = UNSIGNED_INTEGER_DECODER.apply(getBits(166, 168));
-        }
-        return sequence4;
+        return getDecodedValue(() -> sequence4, value -> sequence4 = value, () -> getNumberOfBits() > 136, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(166, 168)));
 	}
 
     @SuppressWarnings("unused")

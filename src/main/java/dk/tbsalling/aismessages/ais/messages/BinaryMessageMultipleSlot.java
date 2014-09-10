@@ -45,42 +45,27 @@ public class BinaryMessageMultipleSlot extends AISMessage {
 
     @SuppressWarnings("unused")
     public Boolean getAddressed() {
-        if (addressed == null) {
-            addressed = BOOLEAN_DECODER.apply(getBits(38, 39));
-        }
-        return addressed;
+        return getDecodedValue(() -> addressed, value -> addressed = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(38, 39)));
     }
 
     @SuppressWarnings("unused")
     public Boolean getStructured() {
-        if (structured == null) {
-            structured = BOOLEAN_DECODER.apply(getBits(39, 40));
-        }
-        return structured;
+        return getDecodedValue(() -> structured, value -> structured = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(39, 40)));
     }
 
     @SuppressWarnings("unused")
     public MMSI getDestinationMmsi() {
-        if (destinationMmsi == null) {
-            destinationMmsi = MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70)));
-        }
-        return destinationMmsi;
+        return getDecodedValue(() -> destinationMmsi, value -> destinationMmsi = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70))));
     }
 
     @SuppressWarnings("unused")
     public Integer getApplicationId() {
-        if (applicationId == null) {
-            applicationId = UNSIGNED_INTEGER_DECODER.apply(getBits(70, 86));
-        }
-        return applicationId;
+        return getDecodedValue(() -> applicationId, value -> applicationId = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(70, 86)));
     }
 
     @SuppressWarnings("unused")
     public String getData() {
-        if (data == null) {
-            data = BIT_DECODER.apply(getBits(86, 86 + 1004 + 1));
-        }
-        return data;
+        return getDecodedValue(() -> data, value -> data = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(86, 86 + 1004 + 1)));
     }
 
     @SuppressWarnings("unused")

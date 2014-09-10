@@ -27,74 +27,47 @@ public class LongRangeBroadcastMessage extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Boolean getAccuracy() {
-        if (accuracy == null) {
-            accuracy = BOOLEAN_DECODER.apply(getBits(38, 39));
-        }
-        return accuracy;
+        return getDecodedValue(() -> accuracy, value -> accuracy = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(38, 39)));
 	}
 
     @SuppressWarnings("unused")
     public Boolean getRaim() {
-        if (raim == null) {
-            raim = BOOLEAN_DECODER.apply(getBits(39, 40));
-        }
-		return raim;
+        return getDecodedValue(() -> raim, value -> raim = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(39, 40)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getStatus() {
-        if (status == null) {
-            status = UNSIGNED_INTEGER_DECODER.apply(getBits(40, 44));
-        }
-		return status;
+        return getDecodedValue(() -> status, value -> status = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(40, 44)));
 	}
 
     @SuppressWarnings("unused")
 	public Float getLongitude() {
-        if (longitude == null) {
-            longitude = FLOAT_DECODER.apply(getBits(44, 62)) / 600f;
-        }
-		return longitude;
+        return getDecodedValue(() -> longitude, value -> longitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(44, 62)) / 600f);
 	}
 
     @SuppressWarnings("unused")
 	public Float getLatitude() {
-        if (latitude == null) {
-            latitude = FLOAT_DECODER.apply(getBits(62, 79)) / 600f;
-        }
-		return latitude;
+        return getDecodedValue(() -> latitude, value -> latitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(62, 79)) / 600f);
 	}
 
     @SuppressWarnings("unused")
 	public Integer getSpeed() {
-        if (speed == null) {
-            speed = UNSIGNED_INTEGER_DECODER.apply(getBits(79, 85));
-        }
-		return speed;
+        return getDecodedValue(() -> speed, value -> speed = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(79, 85)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getCourse() {
-        if (course == null) {
-            course = UNSIGNED_INTEGER_DECODER.apply(getBits(85, 94));
-        }
-		return course;
+        return getDecodedValue(() -> course, value -> course = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(85, 94)));
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getGnss() {
-        if (gnss == null) {
-            gnss = BOOLEAN_DECODER.apply(getBits(94, 95));
-        }
-		return gnss;
+        return getDecodedValue(() -> gnss, value -> gnss = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(94, 95)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getSpare() {
-        if (spare == null) {
-            spare = UNSIGNED_INTEGER_DECODER.apply(getBits(95, 96));
-        }
-		return spare;
+        return getDecodedValue(() -> spare, value -> spare = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(95, 96)));
 	}
 
     @Override

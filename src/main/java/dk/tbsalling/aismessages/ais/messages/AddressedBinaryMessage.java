@@ -20,6 +20,8 @@ import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
+import java.lang.ref.WeakReference;
+
 import static dk.tbsalling.aismessages.ais.Decoders.BIT_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.BOOLEAN_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
@@ -54,58 +56,37 @@ public class AddressedBinaryMessage extends AISMessage {
 
     @SuppressWarnings("unused")
     public Integer getSequenceNumber() {
-        if (sequenceNumber == null) {
-            sequenceNumber = UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40));
-        }
-		return sequenceNumber;
+        return getDecodedValueByWeakReference(() -> sequenceNumber, ref -> sequenceNumber = ref, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40)));
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getDestinationMmsi() {
-        if (destinationMmsi == null) {
-            destinationMmsi = MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70)));
-        }
-		return destinationMmsi;
+        return getDecodedValueByWeakReference(() -> destinationMmsi, ref -> destinationMmsi = ref, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70))));
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getRetransmit() {
-        if (retransmit == null) {
-            retransmit = BOOLEAN_DECODER.apply(getBits(70, 71));
-        }
-        return retransmit;
+        return getDecodedValueByWeakReference(() -> retransmit, ref -> retransmit = ref, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(70, 71)));
 	}
 
     @SuppressWarnings("unused")
 	public int getSpare() {
-        if (spare == null) {
-            spare = UNSIGNED_INTEGER_DECODER.apply(getBits(71, 72));
-        }
-        return spare;
+        return getDecodedValueByWeakReference(() -> spare, ref -> spare = ref, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(71, 72)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getDesignatedAreaCode() {
-        if (designatedAreaCode == null) {
-            designatedAreaCode = UNSIGNED_INTEGER_DECODER.apply(getBits(72, 82));
-        }
-        return designatedAreaCode;
+        return getDecodedValueByWeakReference(() -> designatedAreaCode, ref -> designatedAreaCode = ref, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(72, 82)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getFunctionalId() {
-        if (functionalId == null) {
-            functionalId = UNSIGNED_INTEGER_DECODER.apply(getBits(82, 88));
-        }
-        return functionalId;
+        return getDecodedValueByWeakReference(() -> functionalId, ref -> functionalId = ref, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(82, 88)));
 	}
 
     @SuppressWarnings("unused")
 	public String getBinaryData() {
-        if (binaryData == null) {
-            binaryData = BIT_DECODER.apply(getBits(88, getNumberOfBits()));
-        }
-        return binaryData;
+        return getDecodedValueByWeakReference(() -> binaryData, ref -> binaryData = ref, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(88, getNumberOfBits())));
 	}
 
     @Override
@@ -122,11 +103,11 @@ public class AddressedBinaryMessage extends AISMessage {
                 "} " + super.toString();
     }
 
-    private transient Integer sequenceNumber;
-    private transient MMSI destinationMmsi;
-    private transient Boolean retransmit;
-    private transient Integer spare;
-    private transient Integer designatedAreaCode;
-    private transient Integer functionalId;
-    private transient String binaryData;
+    private transient WeakReference<Integer> sequenceNumber;
+    private transient WeakReference<MMSI> destinationMmsi;
+    private transient WeakReference<Boolean> retransmit;
+    private transient WeakReference<Integer> spare;
+    private transient WeakReference<Integer> designatedAreaCode;
+    private transient WeakReference<Integer> functionalId;
+    private transient WeakReference<String> binaryData;
 }

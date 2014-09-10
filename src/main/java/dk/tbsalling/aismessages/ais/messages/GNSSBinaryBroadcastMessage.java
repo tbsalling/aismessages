@@ -50,90 +50,57 @@ public class GNSSBinaryBroadcastMessage extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Integer getSpare1() {
-        if (spare1 == null) {
-            spare1 = UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40));
-        }
-        return spare1;
+        return getDecodedValue(() -> spare1, value -> spare1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40)));
 	}
 
     @SuppressWarnings("unused")
 	public Float getLatitude() {
-        if (latitude == null) {
-            latitude = FLOAT_DECODER.apply(getBits(58, 75)) / 10f;
-        }
-        return latitude;
+        return getDecodedValue(() -> latitude, value -> latitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(58, 75)) / 10f);
 	}
 
     @SuppressWarnings("unused")
 	public Float getLongitude() {
-        if (longitude == null) {
-            longitude = FLOAT_DECODER.apply(getBits(40, 58)) / 10f;
-        }
-        return longitude;
+        return getDecodedValue(() -> longitude, value -> longitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(40, 58)) / 10f);
 	}
 
     @SuppressWarnings("unused")
 	public Integer getSpare2() {
-        if (spare2 == null) {
-            spare2 = UNSIGNED_INTEGER_DECODER.apply(getBits(75, 80));
-        }
-        return spare2;
+        return getDecodedValue(() -> spare2, value -> spare2 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(75, 80)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getMType() {
-        if (getNumberOfBits() > 80 && mType == null) {
-            mType = UNSIGNED_INTEGER_DECODER.apply(getBits(80, 86));
-        }
-        return mType;
+        return getDecodedValue(() -> mType, value -> mType = value, () -> getNumberOfBits() > 80, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(80, 86)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getStationId() {
-        if (getNumberOfBits() > 80 && stationId == null) {
-            stationId = UNSIGNED_INTEGER_DECODER.apply(getBits(86, 96));
-        }
-        return stationId;
+        return getDecodedValue(() -> stationId, value -> stationId = value, () -> getNumberOfBits() > 80, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(86, 96)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getZCount() {
-        if (getNumberOfBits() > 80 && zCount == null) {
-            zCount = UNSIGNED_INTEGER_DECODER.apply(getBits(96, 109));
-        }
-        return zCount;
+        return getDecodedValue(() -> zCount, value -> zCount = value, () -> getNumberOfBits() > 80, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(96, 109)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getSequenceNumber() {
-        if (getNumberOfBits() > 80 && sequenceNumber == null) {
-            sequenceNumber = UNSIGNED_INTEGER_DECODER.apply(getBits(109, 112));
-        }
-        return sequenceNumber;
+        return getDecodedValue(() -> sequenceNumber, value -> sequenceNumber = value, () -> getNumberOfBits() > 80, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(109, 112)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getNumOfWords() {
-        if (getNumberOfBits() > 80 && numOfWords == null) {
-            numOfWords = UNSIGNED_INTEGER_DECODER.apply(getBits(112, 117));
-        }
-        return numOfWords;
+        return getDecodedValue(() -> numOfWords, value -> numOfWords = value, () -> getNumberOfBits() > 80, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(112, 117)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getHealth() {
-        if (getNumberOfBits() > 80 && health == null) {
-            health = UNSIGNED_INTEGER_DECODER.apply(getBits(117, 120));
-        }
-        return health;
+        return getDecodedValue(() -> health, value -> health = value, () -> getNumberOfBits() > 80, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(117, 120)));
 	}
 
     @SuppressWarnings("unused")
 	public String getBinaryData() {
-        if (getNumberOfBits() > 80 && binaryData == null) {
-            binaryData = BIT_DECODER.apply(getBits(80, getNumberOfBits()));
-        }
-        return binaryData;
+        return getDecodedValue(() -> binaryData, value -> binaryData = value, () -> getNumberOfBits() > 80, () -> BIT_DECODER.apply(getBits(80, getNumberOfBits())));
 	}
 
     @Override

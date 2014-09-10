@@ -28,11 +28,17 @@ import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_LONG_DECODER;
  * AIS informational messages from subordinate stations, either as a frequency
  * per 10-minute interval or by specifying the TDMA slot(s) offset on which
  * those messages should be transmitted.
- * 
+ *
  * @author tbsalling
- * 
  */
 public class AssignedModeCommand extends AISMessage {
+
+    private transient MMSI destinationMmsiA;
+    private transient Integer offsetA;
+    private transient Integer incrementA;
+    private transient MMSI destinationMmsiB;
+    private transient Integer offsetB;
+    private transient Integer incrementB;
 
     public AssignedModeCommand(NMEAMessage[] nmeaMessages) {
         super(nmeaMessages);
@@ -50,52 +56,34 @@ public class AssignedModeCommand extends AISMessage {
     }
 
     @SuppressWarnings("unused")
-	public MMSI getDestinationMmsiA() {
-		if (destinationMmsiA == null) {
-            destinationMmsiA = MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70)));
-        }
-        return destinationMmsiA;
-	}
+    public MMSI getDestinationMmsiA() {
+        return getDecodedValue(() -> destinationMmsiA, value -> destinationMmsiA = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70))));
+    }
 
     @SuppressWarnings("unused")
-	public Integer getOffsetA() {
-        if (offsetA == null) {
-            offsetA = UNSIGNED_INTEGER_DECODER.apply(getBits(70, 82));
-        }
-        return offsetA;
-	}
+    public Integer getOffsetA() {
+        return getDecodedValue(() -> offsetA, value -> offsetA = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(70, 82)));
+    }
 
     @SuppressWarnings("unused")
-	public Integer getIncrementA() {
-        if (incrementA == null) {
-            incrementA = UNSIGNED_INTEGER_DECODER.apply(getBits(82, 92));
-        }
-        return incrementA;
-	}
+    public Integer getIncrementA() {
+        return getDecodedValue(() -> incrementA, value -> incrementA = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(82, 92)));
+    }
 
     @SuppressWarnings("unused")
-	public MMSI getDestinationMmsiB() {
-        if (getNumberOfBits() >= 144 && destinationMmsiB == null) {
-            destinationMmsiB = MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(92, 122)));
-        }
-        return destinationMmsiB;
-	}
+    public MMSI getDestinationMmsiB() {
+        return getDecodedValue(() -> destinationMmsiB, value -> destinationMmsiB = value, () -> getNumberOfBits() >= 144, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(92, 122))));
+    }
 
     @SuppressWarnings("unused")
-	public Integer getOffsetB() {
-        if (getNumberOfBits() >= 144 && offsetB == null) {
-            offsetB = UNSIGNED_INTEGER_DECODER.apply(getBits(122, 134));
-        }
-        return offsetB;
-	}
+    public Integer getOffsetB() {
+        return getDecodedValue(() -> offsetB, value -> offsetB = value, () -> getNumberOfBits() >= 144, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(122, 134)));
+    }
 
     @SuppressWarnings("unused")
-	public Integer getIncrementB() {
-        if (getNumberOfBits() >= 144 && incrementB == null) {
-            incrementB = UNSIGNED_INTEGER_DECODER.apply(getBits(134, 144));
-        }
-        return incrementB;
-	}
+    public Integer getIncrementB() {
+        return getDecodedValue(() -> incrementB, value -> incrementB = value, () -> getNumberOfBits() >= 144, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(134, 144)));
+    }
 
     @Override
     public String toString() {
@@ -109,11 +97,4 @@ public class AssignedModeCommand extends AISMessage {
                 ", incrementB=" + getIncrementB() +
                 "} " + super.toString();
     }
-
-    private transient MMSI destinationMmsiA;
-    private transient Integer offsetA;
-    private transient Integer incrementA;
-    private transient MMSI destinationMmsiB;
-    private transient Integer offsetB;
-    private transient Integer incrementB;
 }

@@ -42,19 +42,15 @@ public class SafetyRelatedBroadcastMessage extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Integer getSpare() {
-        if (spare == null) {
-            spare = UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40));
-        }
-		return spare;
+        return getDecodedValue(() -> spare, value -> spare = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40)));
 	}
 
     @SuppressWarnings("unused")
 	public final String getText() {
-        if (text == null) {
+        return getDecodedValue(() -> text, value -> text = value, () -> Boolean.TRUE, () -> {
             int extraBitsOfChars = ((getNumberOfBits() - 40) / 6) * 6;
-            text = STRING_DECODER.apply(getBits(40, 40 + extraBitsOfChars));
-        }
-		return text;
+            return STRING_DECODER.apply(getBits(40, 40 + extraBitsOfChars));
+        });
 	}
 
     @Override

@@ -46,114 +46,72 @@ public class ChannelManagement extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Integer getChannelA() {
-        if (channelA == null) {
-            channelA = UNSIGNED_INTEGER_DECODER.apply(getBits(40, 52));
-        }
-        return channelA;
+        return getDecodedValue(() -> channelA, value -> channelA = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(40, 52)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getChannelB() {
-        if (channelB == null) {
-            channelB = UNSIGNED_INTEGER_DECODER.apply(getBits(52, 64));
-        }
-        return channelB;
+        return getDecodedValue(() -> channelB, value -> channelB = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(52, 64)));
 	}
 
     @SuppressWarnings("unused")
 	public TxRxMode getTransmitReceiveMode() {
-        if (transmitReceiveMode == null) {
-            transmitReceiveMode = TxRxMode.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(64, 68)));
-        }
-        return transmitReceiveMode;
+        return getDecodedValue(() -> transmitReceiveMode, value -> transmitReceiveMode = value, () -> Boolean.TRUE, () -> TxRxMode.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(64, 68))));
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getPower() {
-        if (power == null) {
-            power = BOOLEAN_DECODER.apply(getBits(68, 69));
-        }
-        return power;
+        return getDecodedValue(() -> power, value -> power = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(68, 69)));
 	}
 
     @SuppressWarnings("unused")
 	public Float getNorthEastLongitude() {
-        if (!getAddressed() && northEastLongitude == null) {
-            northEastLongitude = FLOAT_DECODER.apply(getBits(69, 87)) / 10f;
-        }
-        return northEastLongitude;
+        return getDecodedValue(() -> northEastLongitude, value -> northEastLongitude = value, () -> !getAddressed(), () -> FLOAT_DECODER.apply(getBits(69, 87)) / 10f);
 	}
 
     @SuppressWarnings("unused")
 	public Float getNorthEastLatitude() {
-        if (!getAddressed() && northEastLatitude == null) {
-            northEastLatitude = FLOAT_DECODER.apply(getBits(87, 104)) / 10f;
-        }
-        return northEastLatitude;
+        return getDecodedValue(() -> northEastLatitude, value -> northEastLatitude = value, () -> !getAddressed(), () -> FLOAT_DECODER.apply(getBits(87, 104)) / 10f);
 	}
 
     @SuppressWarnings("unused")
 	public Float getSouthWestLongitude() {
-        if (!getAddressed() && southWestLongitude == null) {
-            southWestLongitude = FLOAT_DECODER.apply(getBits(104, 122)) / 10f;
-        }
-        return southWestLongitude;
+        return getDecodedValue(() -> southWestLongitude, value -> southWestLongitude = value, () -> !getAddressed(), () -> FLOAT_DECODER.apply(getBits(104, 122)) / 10f);
 	}
 
     @SuppressWarnings("unused")
 	public Float getSouthWestLatitude() {
-        if (!getAddressed() && southWestLatitude == null) {
-            southWestLatitude = FLOAT_DECODER.apply(getBits(122, 138)) / 10f;
-        }
-        return southWestLatitude;
+        return getDecodedValue(() -> southWestLatitude, value -> southWestLatitude = value, () -> !getAddressed(), () -> FLOAT_DECODER.apply(getBits(122, 138)) / 10f);
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getDestinationMmsi1() {
-        if (getAddressed() && destinationMmsi1 == null) {
-            destinationMmsi1 = MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(69, 99)));
-        }
-        return destinationMmsi1;
+        return getDecodedValue(() -> destinationMmsi1, value -> destinationMmsi1 = value, () -> getAddressed(), () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(69, 99))));
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getDestinationMmsi2() {
-        if (getAddressed() && destinationMmsi2 == null) {
-            destinationMmsi2 = MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(104, 134)));
-        }
-        return destinationMmsi2;
+        return getDecodedValue(() -> destinationMmsi2, value -> destinationMmsi2 = value, () -> getAddressed(), () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(104, 134))));
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getAddressed() {
-        if (addressed == null) {
-            addressed = BOOLEAN_DECODER.apply(getBits(139, 140));
-        }
-        return addressed;
+        return getDecodedValue(() -> addressed, value -> addressed = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(139, 140)));
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getBandA() {
-        if (bandA == null) {
-            bandA = BOOLEAN_DECODER.apply(getBits(140, 141));
-        }
-        return bandA;
+        return getDecodedValue(() -> bandA, value -> bandA = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(140, 141)));
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getBandB() {
-        if (bandB == null) {
-            bandB = BOOLEAN_DECODER.apply(getBits(141, 142));
-        }
-        return bandB;
+        return getDecodedValue(() -> bandB, value -> bandB = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(141, 142)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getZoneSize() {
-        if (zoneSize == null) {
-            zoneSize = UNSIGNED_INTEGER_DECODER.apply(getBits(142, 145));
-        }
-        return zoneSize;
+        return getDecodedValue(() -> zoneSize, value -> zoneSize = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(142, 145)));
 	}
 
     @Override

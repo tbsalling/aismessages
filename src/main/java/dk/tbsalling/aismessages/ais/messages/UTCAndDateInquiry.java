@@ -42,10 +42,7 @@ public class UTCAndDateInquiry extends AISMessage {
 
     @SuppressWarnings("unused")
 	public MMSI getDestinationMmsi() {
-        if (destinationMmsi == null) {
-            destinationMmsi = MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70)));
-        }
-        return destinationMmsi;
+        return getDecodedValue(() -> destinationMmsi, value -> destinationMmsi = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70))));
 	}
 
     @Override

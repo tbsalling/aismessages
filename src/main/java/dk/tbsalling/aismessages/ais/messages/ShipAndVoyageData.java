@@ -68,106 +68,67 @@ public class ShipAndVoyageData extends AISMessage {
 
     @SuppressWarnings("unused")
 	public IMO getImo() {
-        if (imo == null) {
-            imo = IMO.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70)));
-        }
-        return imo;
+        return getDecodedValue(() -> imo, value -> imo = value, () -> Boolean.TRUE, () -> IMO.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70))));
 	}
 
     @SuppressWarnings("unused")
 	public String getCallsign() {
-        if (callsign == null) {
-            callsign = STRING_DECODER.apply(getBits(70, 112));
-        }
-        return callsign;
+        return getDecodedValue(() -> callsign, value -> callsign = value, () -> Boolean.TRUE, () -> STRING_DECODER.apply(getBits(70, 112)));
 	}
 
     @SuppressWarnings("unused")
 	public String getShipName() {
-        if (shipName == null) {
-            shipName = STRING_DECODER.apply(getBits(112, 232));
-        }
-        return shipName;
+        return getDecodedValue(() -> shipName, value -> shipName = value, () -> Boolean.TRUE, () -> STRING_DECODER.apply(getBits(112, 232)));
 	}
 
     @SuppressWarnings("unused")
 	public ShipType getShipType() {
-        if (shipType == null) {
-            shipType = ShipType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(232, 240)));
-        }
-        return shipType;
+        return getDecodedValue(() -> shipType, value -> shipType = value, () -> Boolean.TRUE, () -> ShipType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(232, 240))));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getToBow() {
-        if (toBow == null) {
-            toBow = UNSIGNED_INTEGER_DECODER.apply(getBits(240, 249));
-        }
-        return toBow;
+        return getDecodedValue(() -> toBow, value -> toBow = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(240, 249)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getToStern() {
-        if (toStern == null) {
-            toStern = UNSIGNED_INTEGER_DECODER.apply(getBits(249, 258));
-        }
-        return toStern;
+        return getDecodedValue(() -> toStern, value -> toStern = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(249, 258)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getToStarboard() {
-        if (toStarboard == null) {
-            toStarboard = UNSIGNED_INTEGER_DECODER.apply(getBits(264, 270));
-        }
-        return toStarboard;
+        return getDecodedValue(() -> toStarboard, value -> toStarboard = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(264, 270)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getToPort() {
-        if (toPort == null) {
-            toPort = UNSIGNED_INTEGER_DECODER.apply(getBits(258, 264));
-        }
-        return toPort;
+        return getDecodedValue(() -> toPort, value -> toPort = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(258, 264)));
 	}
 
     @SuppressWarnings("unused")
 	public PositionFixingDevice getPositionFixingDevice() {
-        if (positionFixingDevice == null) {
-            positionFixingDevice = PositionFixingDevice.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(270, 274)));
-        }
-        return positionFixingDevice;
+        return getDecodedValue(() -> positionFixingDevice, value -> positionFixingDevice = value, () -> Boolean.TRUE, () -> PositionFixingDevice.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(270, 274))));
 	}
 
     @SuppressWarnings("unused")
 	public String getEta() {
-        if (eta == null) {
-            eta = TIME_DECODER.apply(getBits(274, 294));
-        }
-        return eta;
+        return getDecodedValue(() -> eta, value -> eta = value, () -> Boolean.TRUE, () -> TIME_DECODER.apply(getBits(274, 294)));
 	}
 
     @SuppressWarnings("unused")
 	public Float getDraught() {
-        if (draught == null) {
-            draught = UNSIGNED_FLOAT_DECODER.apply(getBits(294, 302)) / 10f;
-        }
-        return draught;
+        return getDecodedValue(() -> draught, value -> draught = value, () -> Boolean.TRUE, () -> UNSIGNED_FLOAT_DECODER.apply(getBits(294, 302)) / 10f);
 	}
 
     @SuppressWarnings("unused")
 	public String getDestination() {
-        if (destination == null) {
-            destination = STRING_DECODER.apply(getBits(302, 422));
-        }
-        return destination;
+        return getDecodedValue(() -> destination, value -> destination = value, () -> Boolean.TRUE, () -> STRING_DECODER.apply(getBits(302, 422)));
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getDataTerminalReady() {
-        if (dataTerminalReady == null) {
-            dataTerminalReady = BOOLEAN_DECODER.apply(getBits(422, 423));
-        }
-        return dataTerminalReady;
+        return getDecodedValue(() -> dataTerminalReady, value -> dataTerminalReady = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(422, 423)));
 	}
 
     @Override

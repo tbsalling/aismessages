@@ -44,34 +44,22 @@ public class BinaryMessageSingleSlot extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Boolean getDestinationIndicator() {
-        if (destinationIndicator == null) {
-            destinationIndicator = BOOLEAN_DECODER.apply(getBits(38, 39));
-        }
-        return destinationIndicator;
+        return getDecodedValue(() -> destinationIndicator, value -> destinationIndicator = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(38, 39)));
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getBinaryDataFlag() {
-        if (binaryDataFlag == null) {
-            binaryDataFlag = BOOLEAN_DECODER.apply(getBits(39, 40));
-        }
-        return binaryDataFlag;
+        return getDecodedValue(() -> binaryDataFlag, value -> binaryDataFlag = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(39, 40)));
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getDestinationMMSI() {
-        if (destinationMMSI == null) {
-            destinationMMSI = MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70)));
-        }
-        return destinationMMSI;
+        return getDecodedValue(() -> destinationMMSI, value -> destinationMMSI = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70))));
 	}
 
     @SuppressWarnings("unused")
 	public String getBinaryData() {
-        if (binaryData == null) {
-            binaryData = BIT_DECODER.apply(getBits(40, 168));
-        }
-        return binaryData;
+        return getDecodedValue(() -> binaryData, value -> binaryData = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(40, 168)));
 	}
 
     @Override

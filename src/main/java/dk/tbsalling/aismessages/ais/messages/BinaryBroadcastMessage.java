@@ -51,26 +51,17 @@ public class BinaryBroadcastMessage extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Integer getDesignatedAreaCode() {
-        if (designatedAreaCode == null) {
-            designatedAreaCode = UNSIGNED_INTEGER_DECODER.apply(getBits(38, 52));
-        }
-        return designatedAreaCode;
+        return getDecodedValue(() -> designatedAreaCode, value -> designatedAreaCode = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 52)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getFunctionalId() {
-        if (functionalId == null) {
-            functionalId = UNSIGNED_INTEGER_DECODER.apply(getBits(52, 56));
-        }
-        return functionalId;
+        return getDecodedValue(() -> functionalId, value -> functionalId = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(52, 56)));
 	}
 
     @SuppressWarnings("unused")
 	public String getBinaryData() {
-        if (binaryData == null) {
-            binaryData = BIT_DECODER.apply(getBits(52, 56));
-        }
-        return binaryData;
+        return getDecodedValue(() -> binaryData, value -> binaryData = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(52, 56)));
 	}
 
     @Override

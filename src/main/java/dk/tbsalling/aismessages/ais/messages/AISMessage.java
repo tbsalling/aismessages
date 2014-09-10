@@ -28,6 +28,8 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.BiFunction;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
@@ -111,6 +113,49 @@ public abstract class AISMessage implements Serializable {
         checkAISMessage();
     }
 
+    /**
+     * Decode a value and cache it for faster future calls. Use weak references for the caching to
+     * allow the garbage collector to free up memory. The value can just be decoded again.
+     *
+     * @param refGetter A getter which gets the weak reference to be used as cache
+     * @param refSetter A setter to set the weak reference caching the decoded value.
+     * @param decoder A supplier which can extract the decoded value from a bit string.
+     * @param <T> The return type.
+     * @return The decoded (and now cached) value.
+     */
+    protected <T> T getDecodedValueByWeakReference(Supplier<WeakReference<T>> refGetter, Consumer<WeakReference<T>> refSetter, Supplier<Boolean> condition, Supplier<T> decoder) {
+        T decodedValue = null;
+        if (condition.get()) {
+            WeakReference<T> ref = refGetter.get();
+            if (ref != null) {
+                decodedValue = ref.get();
+            }
+            if (decodedValue == null) {
+                decodedValue = decoder.get();
+                refSetter.accept(new WeakReference<>(decodedValue));
+            }
+        }
+        return decodedValue;
+    }
+
+    /**
+     * Decode a value and cache it for faster future calls.
+     *
+     * @param getter A getter which gets previously decoded values of this property.
+     * @param setter A setter which stores or caches the decoded value
+     * @param decoder A supplier which can extract the decoded value from a bit string.
+     * @param <T> The return type.
+     * @return The decoded value.
+     */
+    protected <T> T getDecodedValue(Supplier<T> getter, Consumer<T> setter, Supplier<Boolean> condition, Supplier<T> decoder) {
+        T decodedValue = getter.get();
+        if (condition.get() && decodedValue == null) {
+            decodedValue = decoder.get();
+            setter.accept(decodedValue);
+        }
+        return decodedValue;
+    }
+
     private static void check(NMEAMessage[] nmeaMessages) {
         // TODO sanity check NMEA messages
     }
@@ -135,18 +180,12 @@ public abstract class AISMessage implements Serializable {
 
     @SuppressWarnings("unused")
 	public final Integer getRepeatIndicator() {
-        if (repeatIndicator == null) {
-            repeatIndicator = UNSIGNED_INTEGER_DECODER.apply(getBits(6, 8));
-        }
-        return repeatIndicator;
+        return getDecodedValue(() -> repeatIndicator, value -> repeatIndicator = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(6, 8)));
 	}
 
     @SuppressWarnings("unused")
 	public final MMSI getSourceMmsi() {
-        if (sourceMmsi == null) {
-            sourceMmsi = MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(8, 38)));
-        }
-        return sourceMmsi;
+        return getDecodedValue(() -> sourceMmsi, value -> sourceMmsi = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(8, 38))));
 	}
 
     @Override

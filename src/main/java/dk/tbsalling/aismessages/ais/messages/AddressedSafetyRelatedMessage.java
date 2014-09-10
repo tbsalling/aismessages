@@ -45,43 +45,30 @@ public class AddressedSafetyRelatedMessage extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Integer getSequenceNumber() {
-        if (sequenceNumber == null) {
-            sequenceNumber = UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40));
-        }
-		return sequenceNumber;
+        return getDecodedValue(() -> sequenceNumber, value -> sequenceNumber=value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40)));
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getDestinationMmsi() {
-        if (destinationMmsi == null) {
-            destinationMmsi = MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(38, 40)));
-        }
-        return destinationMmsi;
+        return getDecodedValue(() -> destinationMmsi, value -> destinationMmsi = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70))));
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getRetransmit() {
-        if (retransmit == null) {
-            retransmit = BOOLEAN_DECODER.apply(getBits(70, 71));
-        }
-        return retransmit;
+        return getDecodedValue(() -> retransmit, value -> retransmit = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(70, 71)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getSpare() {
-        if (spare == null) {
-            spare = UNSIGNED_INTEGER_DECODER.apply(getBits(71, 72));
-        }
-        return spare;
+        return getDecodedValue(() -> spare, value -> spare = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(71, 72)));
 	}
 
     @SuppressWarnings("unused")
 	public String getText() {
-        if (text == null) {
-            int extraBitsOfChars = ((getNumberOfBits() - 72) / 6) * 6;
-            text = STRING_DECODER.apply(getBits(72, 72 + extraBitsOfChars));
-        }
-        return text;
+        return getDecodedValue(() -> text, value -> text = value, () -> Boolean.TRUE, () -> {
+            int extraBitsOfChars = ((getNumberOfBits() - 72)/6)*6;
+            return STRING_DECODER.apply(getBits(72, 72 + extraBitsOfChars));
+        });
 	}
 
     @Override

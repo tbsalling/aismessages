@@ -55,130 +55,82 @@ public class DataLinkManagement extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Integer getOffsetNumber1() {
-        if (offsetNumber1 == null) {
-            offsetNumber1 = UNSIGNED_INTEGER_DECODER.apply(getBits(40, 52));
-        }
-        return offsetNumber1;
+        return getDecodedValue(() -> offsetNumber1, value -> offsetNumber1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(40, 52)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getReservedSlots1() {
-        if (reservedSlots1 == null) {
-            reservedSlots1 = UNSIGNED_INTEGER_DECODER.apply(getBits(52, 56));
-        }
-        return reservedSlots1;
+        return getDecodedValue(() -> reservedSlots1, value -> reservedSlots1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(52, 56)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getTimeout1() {
-        if (timeout1 == null) {
-            timeout1 = UNSIGNED_INTEGER_DECODER.apply(getBits(56, 59));
-        }
-        return timeout1;
+        return getDecodedValue(() -> timeout1, value -> timeout1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(56, 59)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getIncrement1() {
-        if (increment1 == null) {
-            increment1 = UNSIGNED_INTEGER_DECODER.apply(getBits(59, 70));
-        }
-        return increment1;
+        return getDecodedValue(() -> increment1, value -> increment1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(59, 70)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getOffsetNumber2() {
-        if (getNumberOfBits() >= 100 && offsetNumber2 == null) {
-            offsetNumber2 = UNSIGNED_INTEGER_DECODER.apply(getBits(70, 82));
-        }
-        return offsetNumber2;
+        return getDecodedValue(() -> offsetNumber2, value -> offsetNumber2 = value, () -> getNumberOfBits() >= 100, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(70, 82)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getReservedSlots2() {
-        if (getNumberOfBits() >= 100 && reservedSlots2 == null) {
-            reservedSlots2 = UNSIGNED_INTEGER_DECODER.apply(getBits(82, 86));
-        }
-        return reservedSlots2;
+        return getDecodedValue(() -> reservedSlots2, value -> reservedSlots2 = value, () -> getNumberOfBits() >= 100, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(82, 86)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getTimeout2() {
-        if (getNumberOfBits() >= 100 && timeout2 == null) {
-            timeout2 = UNSIGNED_INTEGER_DECODER.apply(getBits(86, 89));
-        }
-        return timeout2;
+        return getDecodedValue(() -> timeout2, value -> timeout2 = value, () -> getNumberOfBits() >= 100, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(86, 89)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getIncrement2() {
-        if (getNumberOfBits() >= 100 && increment2 == null) {
-            increment2 = UNSIGNED_INTEGER_DECODER.apply(getBits(89, 100));
-        }
-        return increment2;
+        return getDecodedValue(() -> increment2, value -> increment2 = value, () -> getNumberOfBits() >= 100, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(89, 100)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getOffsetNumber3() {
-        if (getNumberOfBits() >= 130 && offsetNumber3 == null) {
-            offsetNumber3 = UNSIGNED_INTEGER_DECODER.apply(getBits(100, 112));
-        }
-        return offsetNumber3;
+        return getDecodedValue(() -> offsetNumber3, value -> offsetNumber3 = value, () -> getNumberOfBits() >= 130, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(100, 112)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getReservedSlots3() {
-        if (getNumberOfBits() >= 130 && reservedSlots3 == null) {
-            reservedSlots3 = UNSIGNED_INTEGER_DECODER.apply(getBits(112, 116));
-        }
-        return reservedSlots3;
+        return getDecodedValue(() -> reservedSlots3, value -> reservedSlots3 = value, () -> getNumberOfBits() >= 130, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(112, 116)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getTimeout3() {
-        if (getNumberOfBits() >= 130 && timeout3 == null) {
-            timeout3 = UNSIGNED_INTEGER_DECODER.apply(getBits(116, 119));
-        }
-        return timeout3;
+        return getDecodedValue(() -> timeout3, value -> timeout3 = value, () -> getNumberOfBits() >= 130, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(116, 119)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getIncrement3() {
-        if (getNumberOfBits() >= 130 && increment3 == null) {
-            increment3 = UNSIGNED_INTEGER_DECODER.apply(getBits(119, 130));
-        }
-        return increment3;
+        return getDecodedValue(() -> increment3, value -> increment3 = value, () -> getNumberOfBits() >= 130, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(119, 130)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getOffsetNumber4() {
-        if (getNumberOfBits() >= 160 && offsetNumber4 == null) {
-            offsetNumber4 = UNSIGNED_INTEGER_DECODER.apply(getBits(130, 142));
-        }
-        return offsetNumber4;
+        return getDecodedValue(() -> offsetNumber4, value -> offsetNumber4 = value, () -> getNumberOfBits() >= 160, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(130, 142)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getReservedSlots4() {
-        if (getNumberOfBits() >= 160 && reservedSlots4 == null) {
-            reservedSlots4 = UNSIGNED_INTEGER_DECODER.apply(getBits(142, 146));
-        }
-        return reservedSlots4;
+        return getDecodedValue(() -> reservedSlots4, value -> reservedSlots4 = value, () -> getNumberOfBits() >= 160, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(142, 146)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getTimeout4() {
-        if (getNumberOfBits() >= 160 && timeout4 == null) {
-            timeout4 = UNSIGNED_INTEGER_DECODER.apply(getBits(146, 149));
-        }
-        return timeout4;
+        return getDecodedValue(() -> timeout4, value -> timeout4 = value, () -> getNumberOfBits() >= 160, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(146, 149)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getIncrement4() {
-        if (getNumberOfBits() >= 160 && increment4 == null) {
-            increment4 = UNSIGNED_INTEGER_DECODER.apply(getBits(149, 160));
-        }
-        return increment4;
+        return getDecodedValue(() -> increment4, value -> increment4 = value, () -> getNumberOfBits() >= 160, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(149, 160)));
 	}
 
     @Override

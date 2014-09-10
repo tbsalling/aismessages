@@ -29,8 +29,8 @@ import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
 
 /**
  * Identification and location message to be emitted by aids to navigation such as buoys and lighthouses.
- * @author tbsalling
  *
+ * @author tbsalling
  */
 @SuppressWarnings("serial")
 public class AidToNavigationReport extends AISMessage {
@@ -51,162 +51,111 @@ public class AidToNavigationReport extends AISMessage {
     }
 
     @SuppressWarnings("unused")
-	public AidType getAidType() {
-        if (aidType == null) {
-            aidType = AidType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(38, 43)));
-        }
-        return aidType;
-	}
+    public AidType getAidType() {
+        return getDecodedValue(() -> aidType, value -> aidType = value, () -> Boolean.TRUE, () -> AidType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(38, 43))));
+    }
 
     @SuppressWarnings("unused")
-	public String getName() {
-        if (name == null) {
-            name = STRING_DECODER.apply(getBits(43, 163));
-        }
-        return name;
-	}
+    public String getName() {
+        return getDecodedValue(() -> name, value -> name = value, () -> Boolean.TRUE, () -> STRING_DECODER.apply(getBits(43, 163)));
+    }
 
     @SuppressWarnings("unused")
-	public Boolean getPositionAccurate() {
-        if (positionAccurate == null) {
-            positionAccurate = BOOLEAN_DECODER.apply(getBits(163, 164));
-        }
-        return positionAccurate;
-	}
+    public Boolean getPositionAccurate() {
+        return getDecodedValue(() -> positionAccurate, value -> positionAccurate = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(163, 164)));
+    }
 
     @SuppressWarnings("unused")
-	public Float getLatitude() {
-        if (latitude == null) {
-            latitude = FLOAT_DECODER.apply(getBits(192, 219)) / 600000f;
-        }
-        return latitude;
-	}
+    public Float getLatitude() {
+        return getDecodedValue(() -> latitude, value -> latitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(192, 219))/600000f);
+    }
 
     @SuppressWarnings("unused")
-	public Float getLongitude() {
-        if (longitude == null) {
-            longitude = FLOAT_DECODER.apply(getBits(164, 192)) / 600000f;
-        }
-        return longitude;
-	}
+    public Float getLongitude() {
+        return getDecodedValue(() -> longitude, value -> longitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(164, 192))/600000f);
+    }
 
     @SuppressWarnings("unused")
-	public Integer getToBow() {
-        if (toBow == null) {
-            toBow = UNSIGNED_INTEGER_DECODER.apply(getBits(219, 228));
-        }
-        return toBow;
-	}
+    public Integer getToBow() {
+        return getDecodedValue(() -> toBow, value -> toBow = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(219, 228)));
+    }
 
     @SuppressWarnings("unused")
-	public Integer getToStern() {
-        if (toStern == null) {
-            toStern = UNSIGNED_INTEGER_DECODER.apply(getBits(228, 237));
-        }
-        return toStern;
-	}
+    public Integer getToStern() {
+        return getDecodedValue(() -> toStern, value -> toStern = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(228, 237)));
+    }
 
     @SuppressWarnings("unused")
-	public Integer getToStarboard() {
-        if (toStarboard == null) {
-            toStarboard = UNSIGNED_INTEGER_DECODER.apply(getBits(243, 249));
-        }
-        return toStarboard;
-	}
+    public Integer getToStarboard() {
+        return getDecodedValue(() -> toStarboard, value -> toStarboard = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(243, 249)));
+    }
 
     @SuppressWarnings("unused")
-	public Integer getToPort() {
-        if (toPort == null) {
-            toPort = UNSIGNED_INTEGER_DECODER.apply(getBits(237, 243));
-        }
-        return toPort;
-	}
+    public Integer getToPort() {
+        return getDecodedValue(() -> toPort, value -> toPort = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(237, 243)));
+    }
 
     @SuppressWarnings("unused")
-	public PositionFixingDevice getPositionFixingDevice() {
-        if (positionFixingDevice == null) {
-            positionFixingDevice = PositionFixingDevice.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(249, 253)));
-        }
-        return positionFixingDevice;
-	}
+    public PositionFixingDevice getPositionFixingDevice() {
+        return getDecodedValue(() -> positionFixingDevice, value -> positionFixingDevice = value, () -> Boolean.TRUE, () -> PositionFixingDevice.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(249, 253))));
+    }
 
     @SuppressWarnings("unused")
-	public Integer getSecond() {
-        if (second == null) {
-            second = UNSIGNED_INTEGER_DECODER.apply(getBits(253, 259));
-        }
-        return second;
-	}
+    public Integer getSecond() {
+        return getDecodedValue(() -> second, value -> second = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(253, 259)));
+    }
 
     @SuppressWarnings("unused")
-	public Boolean getOffPosition() {
-        if (offPosition == null) {
-            offPosition = BOOLEAN_DECODER.apply(getBits(259, 260));
-        }
-        return offPosition;
-	}
+    public Boolean getOffPosition() {
+        return getDecodedValue(() -> offPosition, value -> offPosition = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(259, 260)));
+    }
 
     @SuppressWarnings("unused")
-	public String getRegionalUse() {
-        if (regionalUse == null) {
-            regionalUse = BIT_DECODER.apply(getBits(260, 268));
-        }
-        return regionalUse;
-	}
+    public String getRegionalUse() {
+        return getDecodedValue(() -> regionalUse, value -> regionalUse = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(260, 268)));
+    }
 
     @SuppressWarnings("unused")
-	public Boolean getRaimFlag() {
-        if (raimFlag == null) {
-            raimFlag = BOOLEAN_DECODER.apply(getBits(268, 269));
-        }
-        return raimFlag;
-	}
+    public Boolean getRaimFlag() {
+        return getDecodedValue(() -> raimFlag, value -> raimFlag = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(268, 269)));
+    }
 
     @SuppressWarnings("unused")
-	public Boolean getVirtualAid() {
-        if (virtualAid == null) {
-            virtualAid = BOOLEAN_DECODER.apply(getBits(269, 270));
-        }
-        return virtualAid;
-	}
+    public Boolean getVirtualAid() {
+        return getDecodedValue(() -> virtualAid, value -> virtualAid = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(269, 270)));
+    }
 
     @SuppressWarnings("unused")
-	public Boolean getAssignedMode() {
-        if (assignedMode == null) {
-            assignedMode = BOOLEAN_DECODER.apply(getBits(270, 271));
-        }
-        return assignedMode;
-	}
+    public Boolean getAssignedMode() {
+        return getDecodedValue(() -> assignedMode, value -> assignedMode = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(270, 271)));
+    }
 
     @SuppressWarnings("unused")
-	public int getSpare1() {
-        if (spare1 == null) {
-            spare1 = UNSIGNED_INTEGER_DECODER.apply(getBits(271, 272));
-        }
-        return spare1;
-	}
+    public int getSpare1() {
+        return getDecodedValue(() -> spare1, value -> spare1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(271, 272)));
+    }
 
     @SuppressWarnings("unused")
-	public String getNameExtension() {
-        if(nameExtension == null && getNumberOfBits() > 272) {
+    public String getNameExtension() {
+        getDecodedValue(() -> nameExtension, value -> nameExtension = value, () -> getNumberOfBits() > 272, () -> {
             int extraBits = getNumberOfBits() - 272;
-            int extraChars = extraBits / 6;
-            int extraBitsOfChars = extraChars * 6;
-            nameExtension = STRING_DECODER.apply(getBits(272, 272 + extraBitsOfChars));
-        }
+            int extraChars = extraBits/6;
+            int extraBitsOfChars = extraChars*6;
+            return STRING_DECODER.apply(getBits(272, 272 + extraBitsOfChars));
+        });
         return nameExtension;
-	}
+    }
 
     @SuppressWarnings("unused")
-	public int getSpare2() {
-        if(spare2 == null && getNumberOfBits() > 272) {
+    public int getSpare2() {
+        getDecodedValue(() -> spare2, value -> spare2 = value, () -> getNumberOfBits() > 272, () -> {
             int extraBits = getNumberOfBits() - 272;
-            int extraChars = extraBits / 6;
-            int extraBitsOfChars = extraChars * 6;
-            spare2 = (extraBits == extraBitsOfChars) ? 0 : UNSIGNED_INTEGER_DECODER.apply(getBits(272 + extraBitsOfChars, getNumberOfBits()));
-        }
+            int extraChars = extraBits/6;
+            int extraBitsOfChars = extraChars*6;
+            return (extraBits == extraBitsOfChars) ? 0 : UNSIGNED_INTEGER_DECODER.apply(getBits(272 + extraBitsOfChars, getNumberOfBits()));
+        });
         return spare2;
-	}
+    }
 
     @Override
     public String toString() {

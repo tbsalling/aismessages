@@ -48,66 +48,42 @@ public class Interrogation extends AISMessage {
 
     @SuppressWarnings("unused")
 	public final MMSI getInterrogatedMmsi1() {
-        if (interrogatedMmsi1 == null) {
-            interrogatedMmsi1 = MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70)));
-        }
-        return interrogatedMmsi1;
+        return getDecodedValue(() -> interrogatedMmsi1, value -> interrogatedMmsi1 = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70))));
 	}
 
     @SuppressWarnings("unused")
 	public final Integer getType1_1() {
-        if (type1_1 == null) {
-            type1_1 = UNSIGNED_INTEGER_DECODER.apply(getBits(70, 76));
-        }
-        return type1_1;
+        return getDecodedValue(() -> type1_1, value -> type1_1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(70, 76)));
 	}
 
     @SuppressWarnings("unused")
 	public final Integer getOffset1_1() {
-        if (offset1_1 == null) {
-            offset1_1 = UNSIGNED_INTEGER_DECODER.apply(getBits(76, 88));
-        }
-        return offset1_1;
+        return getDecodedValue(() -> offset1_1, value -> offset1_1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(76, 88)));
 	}
 
     @SuppressWarnings("unused")
 	public final Integer getType1_2() {
-        if (getNumberOfBits() > 88 && type1_2 == null) {
-            type1_2 = UNSIGNED_INTEGER_DECODER.apply(getBits(90, 96));
-        }
-        return type1_2;
+        return getDecodedValue(() -> type1_2, value -> type1_2 = value, () -> getNumberOfBits() > 88, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(90, 96)));
 	}
 
     @SuppressWarnings("unused")
 	public final Integer getOffset1_2() {
-        if (getNumberOfBits() > 88 && offset1_2 == null) {
-            offset1_2 = UNSIGNED_INTEGER_DECODER.apply(getBits(96, 108));
-        }
-        return offset1_2;
+        return getDecodedValue(() -> offset1_2, value -> offset1_2 = value, () -> getNumberOfBits() > 88, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(96, 108)));
 	}
 
     @SuppressWarnings("unused")
 	public final MMSI getInterrogatedMmsi2() {
-        if (getNumberOfBits() > 160 && interrogatedMmsi2 == null) {
-            interrogatedMmsi2 = MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(110, 140)));
-        }
-        return interrogatedMmsi2;
+        return getDecodedValue(() -> interrogatedMmsi2, value -> interrogatedMmsi2 = value, () -> getNumberOfBits() >= 110, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(110, 140))));
 	}
 
     @SuppressWarnings("unused")
 	public final Integer getType2_1() {
-        if (getNumberOfBits() > 160 && type2_1 == null) {
-            type2_1 = UNSIGNED_INTEGER_DECODER.apply(getBits(140, 146));
-        }
-        return type2_1;
+        return getDecodedValue(() -> type2_1, value -> type2_1 = value, () -> getNumberOfBits() >= 110, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(140, 146)));
 	}
 
     @SuppressWarnings("unused")
 	public final Integer getOffset2_1() {
-        if (getNumberOfBits() > 160 && offset2_1 == null) {
-            offset2_1 = UNSIGNED_INTEGER_DECODER.apply(getBits(146, 158));
-        }
-        return offset2_1;
+        return getDecodedValue(() -> offset2_1, value -> offset2_1 = value, () -> getNumberOfBits() >= 110, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(146, 158)));
 	}
 
     @Override

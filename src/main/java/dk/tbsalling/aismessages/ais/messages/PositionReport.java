@@ -49,90 +49,57 @@ public abstract class PositionReport extends AISMessage {
 
     @SuppressWarnings("unused")
 	public NavigationStatus getNavigationStatus() {
-        if (navigationStatus == null) {
-            navigationStatus = NavigationStatus.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(38, 42)));
-        }
-		return navigationStatus;
+        return getDecodedValue(() -> navigationStatus, value -> navigationStatus = value, () -> Boolean.TRUE, () -> NavigationStatus.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(38, 42))));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getRateOfTurn() {
-        if (rateOfTurn == null) {
-            rateOfTurn = INTEGER_DECODER.apply(getBits(42, 50));
-        }
-		return rateOfTurn;
+        return getDecodedValue(() -> rateOfTurn, value -> rateOfTurn = value, () -> Boolean.TRUE, () -> INTEGER_DECODER.apply(getBits(42, 50)));
 	}
 
     @SuppressWarnings("unused")
 	public Float getSpeedOverGround() {
-        if (speedOverGround == null) {
-            speedOverGround = UNSIGNED_FLOAT_DECODER.apply(getBits(50, 60)) / 10f;
-        }
-		return speedOverGround;
+        return getDecodedValue(() -> speedOverGround, value -> speedOverGround = value, () -> Boolean.TRUE, () -> UNSIGNED_FLOAT_DECODER.apply(getBits(50, 60)) / 10f);
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getPositionAccurate() {
-        if (positionAccurate == null) {
-            positionAccurate = BOOLEAN_DECODER.apply(getBits(60, 61));
-        }
-		return positionAccurate;
+        return getDecodedValue(() -> positionAccurate, value -> positionAccurate = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(60, 61)));
 	}
 
     @SuppressWarnings("unused")
 	public Float getLatitude() {
-        if (latitude == null) {
-            latitude = FLOAT_DECODER.apply(getBits(89, 116)) / 600000f;
-        }
-		return latitude;
+        return getDecodedValue(() -> latitude, value -> latitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(89, 116)) / 600000f);
 	}
 
     @SuppressWarnings("unused")
 	public Float getLongitude() {
-        if (longitude == null) {
-            longitude = FLOAT_DECODER.apply(getBits(61, 89)) / 600000f;
-        }
-		return longitude;
+        return getDecodedValue(() -> longitude, value -> longitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(61, 89)) / 600000f);
 	}
 
     @SuppressWarnings("unused")
 	public Float getCourseOverGround() {
-        if (courseOverGround == null) {
-            courseOverGround = UNSIGNED_FLOAT_DECODER.apply(getBits(116, 128)) / 10f;
-        }
-		return courseOverGround;
+        return getDecodedValue(() -> courseOverGround, value -> courseOverGround = value, () -> Boolean.TRUE, () -> UNSIGNED_FLOAT_DECODER.apply(getBits(116, 128)) / 10f);
 	}
 
     @SuppressWarnings("unused")
 	public Integer getTrueHeading() {
-        if (trueHeading == null) {
-            trueHeading = UNSIGNED_INTEGER_DECODER.apply(getBits(128, 137));
-        }
-		return trueHeading;
+        return getDecodedValue(() -> trueHeading, value -> trueHeading = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(128, 137)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getSecond() {
-        if (second == null) {
-            second = UNSIGNED_INTEGER_DECODER.apply(getBits(137, 143));
-        }
-		return second;
+        return getDecodedValue(() -> second, value -> second = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(137, 143)));
 	}
 
     @SuppressWarnings("unused")
 	public ManeuverIndicator getManeuverIndicator() {
-        if (maneuverIndicator == null) {
-            maneuverIndicator = ManeuverIndicator.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(143, 145)));
-        }
-		return maneuverIndicator;
+        return getDecodedValue(() -> maneuverIndicator, value -> maneuverIndicator = value, () -> Boolean.TRUE, () -> ManeuverIndicator.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(143, 145))));
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getRaimFlag() {
-        if (raimFlag == null) {
-            raimFlag = BOOLEAN_DECODER.apply(getBits(148, 149));
-        }
-		return raimFlag;
+        return getDecodedValue(() -> raimFlag, value -> raimFlag = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(148, 149)));
 	}
 
     @Override

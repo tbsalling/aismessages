@@ -54,90 +54,57 @@ public class GroupAssignmentCommand extends AISMessage {
 
     @SuppressWarnings("unused")
     public String getSpare1() {
-        if (spare1 == null) {
-            spare1 = STRING_DECODER.apply(getBits(38, 40));
-        }
-        return spare1;
+        return getDecodedValue(() -> spare1, value -> spare1 = value, () -> Boolean.TRUE, () -> STRING_DECODER.apply(getBits(38, 40)));
     }
 
     @SuppressWarnings("unused")
     public Float getNorthEastLongitude() {
-        if (northEastLongitude == null) {
-            northEastLongitude = FLOAT_DECODER.apply(getBits(40, 58)) / 10f;
-        }
-        return northEastLongitude;
+        return getDecodedValue(() -> northEastLongitude, value -> northEastLongitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(40, 58)) / 10f);
     }
 
     @SuppressWarnings("unused")
 	public Float getNorthEastLatitude() {
-        if (northEastLatitude == null) {
-            northEastLatitude = FLOAT_DECODER.apply(getBits(58, 75)) / 10f;
-        }
-        return northEastLatitude;
+        return getDecodedValue(() -> northEastLatitude, value -> northEastLatitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(58, 75)) / 10f);
 	}
 
     @SuppressWarnings("unused")
 	public Float getSouthWestLongitude() {
-        if (southWestLongitude == null) {
-            southWestLongitude = FLOAT_DECODER.apply(getBits(75, 93)) / 10f;
-        }
-        return southWestLongitude;
+        return getDecodedValue(() -> southWestLongitude, value -> southWestLongitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(75, 93)) / 10f);
 	}
 
     @SuppressWarnings("unused")
     public Float getSouthWestLatitude() {
-        if (southWestLatitude == null) {
-            southWestLatitude = FLOAT_DECODER.apply(getBits(93, 110)) / 10f;
-        }
-        return southWestLatitude;
+        return getDecodedValue(() -> southWestLatitude, value -> southWestLatitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(93, 110)) / 10f);
     }
 
     @SuppressWarnings("unused")
 	public StationType getStationType() {
-        if (stationType == null) {
-            stationType = StationType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(110, 114)));
-        }
-		return stationType;
+        return getDecodedValue(() -> stationType, value -> stationType = value, () -> Boolean.TRUE, () -> StationType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(110, 114))));
 	}
 
     @SuppressWarnings("unused")
 	public ShipType getShipType() {
-        if (shipType == null) {
-            shipType = ShipType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(114, 122)));
-        }
-        return shipType;
+        return getDecodedValue(() -> shipType, value -> shipType = value, () -> Boolean.TRUE, () -> ShipType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(114, 122))));
 	}
 
     @SuppressWarnings("unused")
     public String getSpare2() {
-        if (spare2 == null) {
-            spare2 = STRING_DECODER.apply(getBits(122, 166));
-        }
-        return spare2;
+        return getDecodedValue(() -> spare2, value -> spare2 = value, () -> Boolean.TRUE, () -> STRING_DECODER.apply(getBits(122, 166)));
     }
 
     @SuppressWarnings("unused")
 	public TxRxMode getTransmitReceiveMode() {
-        if (transmitReceiveMode == null) {
-            transmitReceiveMode = TxRxMode.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(166, 168)));
-        }
-        return transmitReceiveMode;
+        return getDecodedValue(() -> transmitReceiveMode, value -> transmitReceiveMode = value, () -> Boolean.TRUE, () -> TxRxMode.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(166, 168))));
 	}
 
     @SuppressWarnings("unused")
 	public ReportingInterval getReportingInterval() {
-        if (reportingInterval == null) {
-            reportingInterval = ReportingInterval.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(168, 172)));
-        }
-        return reportingInterval;
+        return getDecodedValue(() -> reportingInterval, value -> reportingInterval = value, () -> Boolean.TRUE, () -> ReportingInterval.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(168, 172))));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getQuietTime() {
-        if (quietTime == null) {
-            quietTime = UNSIGNED_INTEGER_DECODER.apply(getBits(172, 176));
-        }
-        return quietTime;
+        return getDecodedValue(() -> quietTime, value -> quietTime = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(172, 176)));
 	}
 
     @Override

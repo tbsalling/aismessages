@@ -45,82 +45,52 @@ public class ClassBCSStaticDataReport extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Integer getPartNumber() {
-        if (partNumber == null) {
-            partNumber = UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40));
-        }
-        return partNumber;
+        return getDecodedValue(() -> partNumber, value -> partNumber = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40)));
 	}
 
     @SuppressWarnings("unused")
 	public String getShipName() {
-        if (getPartNumber() == 0 && shipName == null) {
-            shipName = STRING_DECODER.apply(getBits(40, 160));
-        }
-        return shipName;
+        return getDecodedValue(() -> shipName, value -> shipName = value, () -> getPartNumber() == 0, () -> STRING_DECODER.apply(getBits(40, 160)));
 	}
 
     @SuppressWarnings("unused")
 	public ShipType getShipType() {
-        if (getPartNumber() != 0 && shipType == null) {
-            shipType = ShipType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 48)));
-        }
-        return shipType;
+        return getDecodedValue(() -> shipType, value -> shipType = value, () -> getPartNumber() == 1, () -> ShipType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 48))));
 	}
 
     @SuppressWarnings("unused")
 	public String getVendorId() {
-        if (getPartNumber() != 0 && vendorId == null) {
-            vendorId = STRING_DECODER.apply(getBits(48, 90));
-        }
-        return vendorId;
+        return getDecodedValue(() -> vendorId, value -> vendorId = value, () -> getPartNumber() == 1, () -> STRING_DECODER.apply(getBits(48, 90)));
 	}
 
     @SuppressWarnings("unused")
 	public String getCallsign() {
-        if (getPartNumber() != 0 && callsign == null) {
-            callsign = STRING_DECODER.apply(getBits(90, 132));
-        }
-        return callsign;
+        return getDecodedValue(() -> callsign, value -> callsign = value, () -> getPartNumber() == 1, () -> STRING_DECODER.apply(getBits(90, 132)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getToBow() {
-        if (getPartNumber() != 0 && toBow == null) {
-            toBow = UNSIGNED_INTEGER_DECODER.apply(getBits(132, 141));
-        }
-        return toBow;
+        return getDecodedValue(() -> toBow, value -> toBow = value, () -> getPartNumber() == 1, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(132, 141)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getToStern() {
-        if (getPartNumber() != 0 && toStern == null) {
-            toStern = UNSIGNED_INTEGER_DECODER.apply(getBits(141, 150));
-        }
-        return toStern;
+        return getDecodedValue(() -> toStern, value -> toStern = value, () -> getPartNumber() == 1, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(141, 150)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getToStarboard() {
-        if (getPartNumber() != 0 && toStarboard == null) {
-            toStarboard = UNSIGNED_INTEGER_DECODER.apply(getBits(156, 162));
-        }
-        return toStarboard;
+        return getDecodedValue(() -> toStarboard, value -> toStarboard = value, () -> getPartNumber() == 1, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(156, 162)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getToPort() {
-        if (getPartNumber() != 0 && toPort == null) {
-            toPort = UNSIGNED_INTEGER_DECODER.apply(getBits(150, 156));
-        }
-        return toPort;
+        return getDecodedValue(() -> toPort, value -> toPort = value, () -> getPartNumber() == 1, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(150, 156)));
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getMothershipMmsi() {
-        if (getPartNumber() != 0 && mothershipMmsi == null) {
-            mothershipMmsi = MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(132, 162)));
-        }
-        return mothershipMmsi;
+        return getDecodedValue(() -> mothershipMmsi, value -> mothershipMmsi = value, () -> getPartNumber() == 1, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(132, 162))));
 	}
 
     @Override
