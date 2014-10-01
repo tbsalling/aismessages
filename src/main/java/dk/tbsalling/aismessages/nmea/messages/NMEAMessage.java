@@ -22,6 +22,8 @@ import java.util.regex.Pattern;
 import dk.tbsalling.aismessages.nmea.exceptions.NMEAParseException;
 import dk.tbsalling.aismessages.nmea.exceptions.UnsupportedMessageType;
 
+import java.io.Serializable;
+
 /*
  * AISMessages
  * - a java-based library for decoding of AIS messages from digital VHF radio traffic related
@@ -38,49 +40,78 @@ import dk.tbsalling.aismessages.nmea.exceptions.UnsupportedMessageType;
  * 
  */
 
-public class NMEAMessage {
+// TODO optimize getters
+public class NMEAMessage implements Serializable {
 
 	public static NMEAMessage fromString(String nmeaString) {
 		return new NMEAMessage(nmeaString);
 	}
 
 	public final boolean isValid() {
+        String messageType = getMessageType();
+
+        if(messageType == null || messageType.length() != 5) return false;
+		
+		String type = messageType.substring(2);
+		if (! ("VDM".equals(type) || "VDO".equals(type))) {
+			return false;
+		}
+		
 		return true;
 	}
 
-	public final String getMessageType() {
-		return messageType;
+    @SuppressWarnings("unused")
+	public String getMessageType() {
+        String[] msg = rawMessage.split(",");
+		return isBlank(msg[0]) ? null : msg[0].replace("!", "");
 	}
 
-	public final Integer getNumberOfFragments() {
-		return numberOfFragments;
+    @SuppressWarnings("unused")
+    public Integer getNumberOfFragments() {
+        String[] msg = rawMessage.split(",");
+        return isBlank(msg[1]) ? null : Integer.valueOf(msg[1]);
 	}
 
-	public final Integer getFragmentNumber() {
-		return fragmentNumber;
+    @SuppressWarnings("unused")
+    public Integer getFragmentNumber() {
+        String[] msg = rawMessage.split(",");
+        return isBlank(msg[2]) ? null : Integer.valueOf(msg[2]);
 	}
 
-	public final Integer getSequenceNumber() {
-		return sequenceNumber;
+    @SuppressWarnings("unused")
+    public Integer getSequenceNumber() {
+        String[] msg = rawMessage.split(",");
+        return isBlank(msg[3]) ? null : Integer.valueOf(msg[3]);
 	}
 
-	public final String getRadioChannelCode() {
-		return radioChannelCode;
+    @SuppressWarnings("unused")
+    public String getRadioChannelCode() {
+        String[] msg = rawMessage.split(",");
+        return isBlank(msg[4]) ? null : msg[4];
 	}
 
-	public final String getEncodedPayload() {
-		return encodedPayload;
+    @SuppressWarnings("unused")
+    public String getEncodedPayload() {
+        String[] msg = rawMessage.split(",");
+        return isBlank(msg[5]) ? null : msg[5];
 	}
 
-	public final Integer getFillBits() {
-		return fillBits;
+    @SuppressWarnings("unused")
+    public Integer getFillBits() {
+        String[] msg = rawMessage.split(",");
+        String msg1[] = msg[6].split("\\*");
+        return isBlank(msg1[0]) ? null : Integer.valueOf(msg1[0]);
 	}
 
-	public final Integer getChecksum() {
-		return checksum;
+    @SuppressWarnings("unused")
+    public Integer getChecksum() {
+        String[] msg = rawMessage.split(",");
+        String msg1[] = msg[6].split("\\*");
+		return isBlank(msg1[1]) ? null : Integer.valueOf(msg1[1], 16);
 	}
 
-	public final String getRawMessage() {
+    @SuppressWarnings("unused")
+    public String getRawMessage() {
 		return rawMessage;
 	}
 	
@@ -88,23 +119,9 @@ public class NMEAMessage {
 		return tagBlock;
 	}
 
-
-	private NMEAMessage() {
-		this.messageType = null;
-		this.numberOfFragments = null;
-		this.fragmentNumber = null;
-		this.sequenceNumber = null;
-		this.radioChannelCode = null;
-		this.encodedPayload = null;
-		this.fillBits = null;
-		this.checksum = null;
-		this.rawMessage = null;
 		this.tagBlock = null;
 	}
-	
-	private NMEAMessage(String rawMessage) {
-		// !AIVDM,1,1,,B,15MvlfPOh2G?nwbEdVDsnSTR00S?,0*41
-		
+
 		final String nmeaTagBlockRegEx = "^\\\\.*\\*[0-9A-Fa-f]{2}\\\\";
 		final String nmeaMessageRegExp = "^!.*\\*[0-9A-Fa-f]{2}$";
 
@@ -122,46 +139,38 @@ public class NMEAMessage {
 		if (!rawMessage.matches(nmeaMessageRegExp))
 			throw new NMEAParseException(rawMessage, "Message does not comply with regexp \"" + nmeaMessageRegExp + "\"");
 
-		String[] msg = rawMessage.split(",");
-		if (msg.length != 7)
-			throw new NMEAParseException(rawMessage, "Expected 7 fields separated by commas; got " + msg.length);
-
-		this.rawMessage = rawMessage;
-		this.messageType = isBlank(msg[0]) ? null : msg[0].replace("!", "");
-		this.numberOfFragments = isBlank(msg[1]) ? null : Integer.valueOf(msg[1]);
-		this.fragmentNumber = isBlank(msg[2]) ? null : Integer.valueOf(msg[2]);
-		this.sequenceNumber = isBlank(msg[3]) ? null : Integer.valueOf(msg[3]);
-		this.radioChannelCode = isBlank(msg[4]) ? null : msg[4];
-		this.encodedPayload = isBlank(msg[5]) ? null : msg[5];
-		
-		String msg1[] = msg[6].split("\\*");
-		if (msg1.length != 2)
-			throw new NMEAParseException(rawMessage, "Expected checksum fields to start with *");
-		
-		this.fillBits = isBlank(msg1[0]) ? null : Integer.valueOf(msg1[0]);
-		this.checksum = isBlank(msg1[1]) ? null : Integer.valueOf(msg1[1], 16);
-
-		validate();
-	}
-
 	private void validate() {
-		if (! ("AIVDM".equals(messageType) || "AIVDO".equals(messageType))) {
-			throw new UnsupportedMessageType(messageType);
+        // !AIVDM,1,1,,B,15MvlfPOh2G?nwbEdVDsnSTR00S?,0*41
+
+		if(!isValid()) {
+			throw new UnsupportedMessageType(getMessageType());
 		}
-	}
-	
-	private final static boolean isBlank(String s) {
+
+        final String nmeaMessageRegExp = "^!.*\\*[0-9A-Fa-f]{2}$";
+
+        if (! rawMessage.matches(nmeaMessageRegExp))
+            throw new NMEAParseException(rawMessage, "Message does not comply with regexp \"" + nmeaMessageRegExp + "\"");
+
+        String[] msg = rawMessage.split(",");
+        if (msg.length != 7)
+            throw new NMEAParseException(rawMessage, "Expected 7 fields separated by commas; got " + msg.length);
+
+        String msg1[] = msg[6].split("\\*");
+        if (msg1.length != 2)
+            throw new NMEAParseException(rawMessage, "Expected checksum fields to start with *");
+    }
+
+    @Override
+    public String toString() {
+        return "NMEAMessage{" +
+                "rawMessage='" + rawMessage + '\'' +
+                '}';
+    }
+
+    private static boolean isBlank(String s) {
 		return s == null || s.trim().length() == 0;
 	}
-	
-	private final String messageType;
-	private final Integer numberOfFragments;
-	private final Integer fragmentNumber;
-	private final Integer sequenceNumber;
-	private final String radioChannelCode;
-	private final String encodedPayload;
-	private final Integer fillBits;
-	private final Integer checksum;
+
 	private final String rawMessage;
 	private final NMEATagBlock tagBlock;
 }
