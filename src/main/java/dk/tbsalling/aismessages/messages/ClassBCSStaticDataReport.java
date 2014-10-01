@@ -16,22 +16,44 @@
 
 package dk.tbsalling.aismessages.messages;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import dk.tbsalling.aismessages.decoder.DecoderImpl;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.messages.types.MMSI;
+import dk.tbsalling.aismessages.messages.types.MMSIType;
+import dk.tbsalling.aismessages.messages.types.PartNumberType;
+import dk.tbsalling.aismessages.messages.types.PositionFixingDevice;
 import dk.tbsalling.aismessages.messages.types.ShipType;
+import dk.tbsalling.aismessages.nmea.messages.NMEATagBlock;
 
 @SuppressWarnings("serial")
 public class ClassBCSStaticDataReport extends DecodedAISMessage {
 
 	public ClassBCSStaticDataReport(
-			Integer repeatIndicator, MMSI sourceMmsi, Integer partNumber,
-			String shipName, ShipType shipType, String vendorId,
-			String callsign, Integer toBow, Integer toStern,
-			Integer toStarboard, Integer toPort, MMSI mothershipMmsi) {
-		super(AISMessageType.ClassBCSStaticDataReport, repeatIndicator, sourceMmsi);
+			Integer repeatIndicator, 
+			MMSI sourceMmsi, 
+			PartNumberType partNumber,
+			String shipName,
+			ShipType shipType,
+			String vendorId,
+			String callsign,
+			Integer toBow, 
+			Integer toStern,
+			Integer toStarboard,
+			Integer toPort,
+			MMSI mothership,
+			PositionFixingDevice positionFixingDevice, 
+			NMEATagBlock nmeaTagBlock
+			) {
+		super(
+				AISMessageType.ClassBCSStaticDataReport, 
+				repeatIndicator,
+				sourceMmsi,
+				nmeaTagBlock
+				);
 		this.partNumber = partNumber;
 		this.shipName = shipName;
 		this.shipType = shipType;
@@ -41,10 +63,11 @@ public class ClassBCSStaticDataReport extends DecodedAISMessage {
 		this.toStern = toStern;
 		this.toStarboard = toStarboard;
 		this.toPort = toPort;
-		this.mothershipMmsi = mothershipMmsi;
+		this.mothership = mothership;
+		this.positionFixingDevice = positionFixingDevice;
 	}
 
-	public final Integer getPartNumber() {
+	public final PartNumberType getPartNumber() {
 		return partNumber;
 	}
 
@@ -79,22 +102,37 @@ public class ClassBCSStaticDataReport extends DecodedAISMessage {
 	public final Integer getToPort() {
 		return toPort;
 	}
+	
+	public final MMSI getMothership() {
+		return mothership;
+	}
 
-	public final MMSI getMothershipMmsi() {
-		return mothershipMmsi;
+	public final PositionFixingDevice getPositionFixingDevice() {
+		return positionFixingDevice;
 	}
 	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("ClassBCSStaticDataReport [partNumber=")
-				.append(partNumber).append(", shipName=").append(shipName)
-				.append(", shipType=").append(shipType).append(", vendorId=")
-				.append(vendorId).append(", callsign=").append(callsign)
-				.append(", toBow=").append(toBow).append(", toStern=")
-				.append(toStern).append(", toStarboard=").append(toStarboard)
-				.append(", toPort=").append(toPort).append(", mothershipMmsi=")
-				.append(mothershipMmsi).append("]");
+		builder.append("{")
+		.append("\"messageId\"").append(":").append(getMessageType().getCode()).append(",")
+		.append("\"repeat\"").append(":").append(getRepeatIndicator()).append(",")
+		.append("\"mmsi\"").append(":").append(String.format("\"%s\"", getSourceMmsi().getMMSI())).append(",")
+		.append("\"part\"").append(":").append(String.format("\"%s\"", partNumber.name())).append(",")
+		.append("\"name\"").append(":").append(shipName == null ? null : String.format("\"%s\"", StringEscapeUtils.escapeJson(shipName))).append(",")
+		.append("\"cargo\"").append(":").append(shipType == null ? null : String.format("\"%s\"", shipType)).append(",")
+		.append("\"vendor\"").append(":").append(vendorId == null ? null : String.format("\"%s\"", StringEscapeUtils.escapeJson(vendorId))).append(",")
+		.append("\"callsign\"").append(":").append(callsign == null ? null : String.format("\"%s\"", StringEscapeUtils.escapeJson(callsign))).append(",")
+		.append("\"bow\"").append(":").append(toBow).append(",")
+		.append("\"stern\"").append(":").append(toStern).append(",")
+		.append("\"port\"").append(":").append(toPort).append(",")
+		.append("\"starboard\"").append(":").append(toStarboard).append(",")
+		.append("\"mothership\"").append(":").append(mothership == null ? null : String.format("\"%s\"", mothership.getMMSI())).append(",")
+		.append("\"device\"").append(":").append(positionFixingDevice == null ? null : String.format("\"%s\"", positionFixingDevice.name()));
+		if (this.getNMEATagBlock() != null) {
+			builder.append(",").append(this.getNMEATagBlock().toString());
+		}
+		builder.append("}");
 		return builder.toString();
 	}
 
@@ -107,22 +145,50 @@ public class ClassBCSStaticDataReport extends DecodedAISMessage {
 		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
 		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 
-		Integer partNumber = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(38, 40));
+		PartNumberType partNumber = PartNumberType.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(38, 40)));
 
-		String shipName = partNumber == 1 ? null : DecoderImpl.convertToString(encodedMessage.getBits(40, 160));
-		ShipType shipType = partNumber == 0 ? null : ShipType.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(40, 48)));
-		String vendorId = partNumber == 0 ? null : DecoderImpl.convertToString(encodedMessage.getBits(48, 90));
-		String callsign = partNumber == 0 ? null : DecoderImpl.convertToString(encodedMessage.getBits(90, 132));
-		Integer toBow = partNumber == 0 ? null : DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(132, 141));
-		Integer toStern = partNumber == 0 ? null : DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(141, 150));
-		Integer toPort = partNumber == 0 ? null : DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(150, 156));
-		Integer toStarboard = partNumber == 0 ? null : DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(156, 162));
-		MMSI mothershipMmsi = partNumber == 0 ? null : MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(132, 162)));
+		// Sometimes part numbers get mixed up. Size has already been checked as valid.
+		if (partNumber == PartNumberType.A && encodedMessage.getNumberOfBits() == 168)			
+			partNumber = PartNumberType.B;
+		if (partNumber == PartNumberType.B && encodedMessage.getNumberOfBits() == 160)			
+			partNumber = PartNumberType.A;
+
+		String shipName = partNumber == PartNumberType.A ? DecoderImpl.convertToString(encodedMessage.getBits(40, 160)) : null;
+		ShipType shipType = partNumber == PartNumberType.B ? ShipType.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(40, 48))) : null;
+		String vendorId = partNumber == PartNumberType.B ? DecoderImpl.convertToString(encodedMessage.getBits(48, 90)) : null;
+		String callsign = partNumber == PartNumberType.B ? DecoderImpl.convertToString(encodedMessage.getBits(90, 132)) : null;
+		Integer toBow = partNumber == PartNumberType.B ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(132, 141)) : null;
+		Integer toStern = partNumber == PartNumberType.B ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(141, 150)) : null;
+		Integer toPort = partNumber == PartNumberType.B ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(150, 156)) : null;
+		Integer toStarboard = partNumber == PartNumberType.B ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(156, 162)) : null;
+		MMSI mothership = null; // Not in ITU-R M.1371-5 spec. Kept in for backwards compatibility 
+		if (partNumber == PartNumberType.B) {
+			if (MMSIType.fromMMSI(sourceMmsi) == MMSIType.Auxiliary) {
+				mothership = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(132, 162)));
+			}
+		}		
+		PositionFixingDevice positionFixingDevice = partNumber == PartNumberType.B ? PositionFixingDevice.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(162, 166))) : null;
+		NMEATagBlock nmeaTagBlock = encodedMessage.getNMEATagBlock();
 		
-		return new ClassBCSStaticDataReport(repeatIndicator, sourceMmsi, partNumber, shipName, shipType, vendorId, callsign, toBow, toStern, toStarboard, toPort, mothershipMmsi);
+		return new ClassBCSStaticDataReport(
+				repeatIndicator, 
+				sourceMmsi, 
+				partNumber, 
+				shipName, 
+				shipType,
+				vendorId, 
+				callsign, 
+				toBow, 
+				toStern, 
+				toStarboard,
+				toPort,
+				mothership,
+				positionFixingDevice, 
+				nmeaTagBlock
+				);
 	}
 	
-	private final Integer partNumber;
+	private final PartNumberType partNumber;
 	private final String shipName;
 	private final ShipType shipType;
 	private final String vendorId;
@@ -131,5 +197,6 @@ public class ClassBCSStaticDataReport extends DecodedAISMessage {
 	private final Integer toStern;
 	private final Integer toStarboard;
 	private final Integer toPort;
-	private final MMSI mothershipMmsi;
+	private final MMSI mothership;
+	private final PositionFixingDevice positionFixingDevice;
 }

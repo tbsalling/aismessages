@@ -16,6 +16,8 @@
 
 package dk.tbsalling.aismessages.messages;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import dk.tbsalling.aismessages.decoder.DecoderImpl;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
@@ -23,20 +25,41 @@ import dk.tbsalling.aismessages.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.messages.types.MMSI;
 import dk.tbsalling.aismessages.messages.types.PositionFixingDevice;
 import dk.tbsalling.aismessages.messages.types.ShipType;
+import dk.tbsalling.aismessages.nmea.messages.NMEATagBlock;
 
 @SuppressWarnings("serial")
 public class ExtendedClassBEquipmentPositionReport extends DecodedAISMessage {
 
 	public ExtendedClassBEquipmentPositionReport(
-			Integer repeatIndicator, MMSI sourceMmsi, String regionalReserved1,
-			Float speedOverGround, Boolean positionAccurate, Float latitude,
-			Float longitude, Float courseOverGround, Integer trueHeading,
-			Integer second, String regionalReserved2, String shipName,
-			ShipType shipType, Integer toBow, Integer toStern,
-			Integer toStarboard, Integer toPort,
-			PositionFixingDevice positionFixingDevice, Boolean raimFlag,
-			Boolean dataTerminalReady, Boolean assigned) {
-		super(AISMessageType.ExtendedClassBEquipmentPositionReport, repeatIndicator, sourceMmsi);
+			Integer repeatIndicator,
+			MMSI sourceMmsi, 
+			String regionalReserved1,
+			Float speedOverGround,
+			Boolean positionAccurate,
+			Float latitude,
+			Float longitude,
+			Float courseOverGround,
+			Integer trueHeading,
+			Integer second,
+			String regionalReserved2, 
+			String shipName,
+			ShipType shipType,
+			Integer toBow, 
+			Integer toStern,
+			Integer toStarboard,
+			Integer toPort,
+			PositionFixingDevice positionFixingDevice, 
+			Boolean raimFlag,
+			Boolean dataTerminalReady, 
+			Boolean assigned, 
+			NMEATagBlock nmeaTagBlock
+			) {
+		super(
+				AISMessageType.ExtendedClassBEquipmentPositionReport, 
+				repeatIndicator, 
+				sourceMmsi, 
+				nmeaTagBlock
+				);
 		this.regionalReserved1 = regionalReserved1;
 		this.speedOverGround = speedOverGround;
 		this.positionAccurate = positionAccurate;
@@ -137,24 +160,41 @@ public class ExtendedClassBEquipmentPositionReport extends DecodedAISMessage {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append(
-				"ExtendedClassBEquipmentPositionReport [regionalReserved1=")
-				.append(regionalReserved1).append(", speedOverGround=")
-				.append(speedOverGround).append(", positionAccurate=")
-				.append(positionAccurate).append(", latitude=")
-				.append(latitude).append(", longitude=").append(longitude)
-				.append(", courseOverGround=").append(courseOverGround)
-				.append(", trueHeading=").append(trueHeading)
-				.append(", second=").append(second)
-				.append(", regionalReserved2=").append(regionalReserved2)
-				.append(", shipName=").append(shipName).append(", shipType=")
-				.append(shipType).append(", toBow=").append(toBow)
-				.append(", toStern=").append(toStern).append(", toStarboard=")
-				.append(toStarboard).append(", toPort=").append(toPort)
-				.append(", positionFixingDevice=").append(positionFixingDevice)
-				.append(", raimFlag=").append(raimFlag)
-				.append(", dataTerminalReady=").append(dataTerminalReady)
-				.append(", assigned=").append(assigned).append("]");
+		builder.append("{")
+			.append("\"messageId\"").append(":").append(getMessageType().getCode()).append(",")
+			.append("\"repeat\"").append(":").append(getRepeatIndicator()).append(",")
+			.append("\"mmsi\"").append(":").append(String.format("\"%s\"", getSourceMmsi().getMMSI())).append(",")
+			.append("\"sog\"").append(":").append(speedOverGround).append(",")
+			.append("\"accuracy\"").append(":").append(positionAccurate.booleanValue() ? "1" : "0").append(",")
+			.append("\"loc\"").append(":");
+			if (longitude <= 180.0f && longitude >= -180.0f && latitude <= 90.0f && latitude >= -80.0) {
+				builder.append("{")
+				.append("\"type\"").append(":").append("\"Point\"").append(",")
+			    .append("\"coordinates\"").append(":").append("[")
+				.append(longitude).append(",")
+				.append(latitude).append("]").append("}");
+			} else {
+				Float nullFloat = null;				
+				builder.append(nullFloat);
+			}
+			builder.append(",")
+			.append("\"cog\"").append(":").append(courseOverGround).append(",")
+			.append("\"heading\"").append(":").append(trueHeading).append(",")
+			.append("\"second\"").append(":").append(second).append(",")
+			.append("\"name\"").append(":").append(String.format("\"%s\"", StringEscapeUtils.escapeJson(shipName))).append(",")
+			.append("\"cargo\"").append(":").append(String.format("\"%s\"", shipType)).append(",")
+			.append("\"bow\"").append(":").append(toBow).append(",")
+			.append("\"stern\"").append(":").append(toStern).append(",")
+			.append("\"port\"").append(":").append(toPort).append(",")
+			.append("\"starboard\"").append(":").append(toStarboard).append(",")
+			.append("\"device\"").append(":").append(String.format("\"%s\"", positionFixingDevice)).append(",")
+			.append("\"raim\"").append(":").append(raimFlag.booleanValue() ? "1" : "0").append(",")
+			.append("\"dte\"").append(":").append(dataTerminalReady.booleanValue() ? "1" : "0").append(",")
+			.append("\"mode\"").append(":").append(assigned.booleanValue() ? "1" : "0");
+			if (this.getNMEATagBlock() != null) {
+				builder.append(",").append(this.getNMEATagBlock().toString());
+			}
+			builder.append("}");
 		return builder.toString();
 	}
 
@@ -186,13 +226,31 @@ public class ExtendedClassBEquipmentPositionReport extends DecodedAISMessage {
 		Boolean raimFlag = DecoderImpl.convertToBoolean(encodedMessage.getBits(305, 306));
 		Boolean dataTerminalReady = DecoderImpl.convertToBoolean(encodedMessage.getBits(306, 307));
 		Boolean assigned = DecoderImpl.convertToBoolean(encodedMessage.getBits(307, 308));
+		NMEATagBlock nmeaTagBlock = encodedMessage.getNMEATagBlock();
 		
-		return new ExtendedClassBEquipmentPositionReport(repeatIndicator,
-				sourceMmsi, regionalReserved1, speedOverGround,
-				positionAccurate, latitude, longitude, courseOverGround,
-				trueHeading, second, regionalReserved2, shipName, shipType,
-				toBow, toStern, toStarboard, toPort, positionFixingDevice,
-				raimFlag, dataTerminalReady, assigned);
+		return new ExtendedClassBEquipmentPositionReport(
+				repeatIndicator,
+				sourceMmsi, 
+				regionalReserved1,
+				speedOverGround,
+				positionAccurate,
+				latitude,
+				longitude, 
+				courseOverGround,
+				trueHeading, 
+				second, 
+				regionalReserved2,
+				shipName, 
+				shipType,
+				toBow,
+				toStern, 
+				toStarboard,
+				toPort, 
+				positionFixingDevice,
+				raimFlag,
+				dataTerminalReady,
+				assigned, 
+				nmeaTagBlock);
 	}
 	
 	private final String regionalReserved1;

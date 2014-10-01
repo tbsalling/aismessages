@@ -20,8 +20,11 @@ import dk.tbsalling.aismessages.decoder.DecoderImpl;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.messages.types.CommunicationState;
 import dk.tbsalling.aismessages.messages.types.MMSI;
 import dk.tbsalling.aismessages.messages.types.PositionFixingDevice;
+import dk.tbsalling.aismessages.messages.types.SOTDMA;
+import dk.tbsalling.aismessages.nmea.messages.NMEATagBlock;
 
 /**
  * This message is to be used by fixed-location base stations to periodically report a position and time reference.
@@ -32,12 +35,24 @@ import dk.tbsalling.aismessages.messages.types.PositionFixingDevice;
 public class BaseStationReport extends DecodedAISMessage {
 	
 	public BaseStationReport(
-			Integer repeatIndicator, MMSI sourceMmsi, Integer year,
-			Integer month, Integer day, Integer hour, Integer minute,
-			Integer second, Boolean positionAccurate, Float latitude,
-			Float longitude, PositionFixingDevice positionFixingDevice,
-			Boolean raimFlag) {
-		super(AISMessageType.BaseStationReport, repeatIndicator, sourceMmsi);
+			Integer repeatIndicator,
+			MMSI sourceMmsi,
+			Integer year,
+			Integer month,
+			Integer day,
+			Integer hour,
+			Integer minute,
+			Integer second,
+			Boolean positionAccurate,
+			Float latitude,
+			Float longitude,
+			PositionFixingDevice positionFixingDevice,
+			Boolean transmission,
+			Boolean raimFlag,
+			CommunicationState communicationState,
+			NMEATagBlock nmeaTagBlock
+			) {
+		super(AISMessageType.BaseStationReport, repeatIndicator, sourceMmsi, nmeaTagBlock);
 		this.year = year;
 		this.month = month;
 		this.day = day;
@@ -48,7 +63,9 @@ public class BaseStationReport extends DecodedAISMessage {
 		this.latitude = latitude;
 		this.longitude = longitude;
 		this.positionFixingDevice = positionFixingDevice;
+		this.transmission = transmission;
 		this.raimFlag = raimFlag;
+		this.communicationState = communicationState;
 	}
 	public final Integer getYear() {
 		return year;
@@ -80,23 +97,51 @@ public class BaseStationReport extends DecodedAISMessage {
 	public final PositionFixingDevice getPositionFixingDevice() {
 		return positionFixingDevice;
 	}
+	public final Boolean getTransmissionControl() {
+		return transmission;
+	}
 	public final Boolean getRaimFlag() {
 		return raimFlag;
+	}
+	public final CommunicationState getCommunicationState() {
+		return communicationState;
 	}
 	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("BaseStationReport [year=").append(year)
-				.append(", month=").append(month).append(", day=").append(day)
-				.append(", hour=").append(hour).append(", minute=")
-				.append(minute).append(", second=").append(second)
-				.append(", positionAccurate=").append(positionAccurate)
-				.append(", latitude=").append(latitude).append(", longitude=")
-				.append(longitude).append(", positionFixingDevice=")
-				.append(positionFixingDevice).append(", raimFlag=")
-				.append(raimFlag).append("]");
-		return builder.toString();
+		builder.append("{")
+		.append("\"messageId\"").append(":").append(getMessageType().getCode()).append(",")
+		.append("\"repeat\"").append(":").append(getRepeatIndicator()).append(",")
+		.append("\"mmsi\"").append(":").append(String.format("\"%s\"", getSourceMmsi().getMMSI())).append(",")
+		.append("\"year\"").append(":").append(year).append(",")
+		.append("\"month\"").append(":").append(month).append(",")
+		.append("\"day\"").append(":").append(day).append(",")
+		.append("\"hour\"").append(":").append(hour).append(",")
+		.append("\"minute\"").append(":").append(minute).append(",")
+		.append("\"second\"").append(":").append(second).append(",")
+		.append("\"accuracy\"").append(":").append(positionAccurate.booleanValue() ? "1" : "0").append(",")
+		.append("\"loc\"").append(":");
+		if (longitude <= 180.0f && longitude >= -180.0f && latitude <= 90.0f && latitude >= -80.0) {
+			builder.append("{")
+			.append("\"type\"").append(":").append("\"Point\"").append(",")
+		    .append("\"coordinates\"").append(":").append("[")
+			.append(longitude).append(",")
+			.append(latitude).append("]").append("}");
+		} else {
+			Float nullFloat = null;				
+			builder.append(nullFloat);
+		}
+		builder.append(",")
+		.append("\"device\"").append(":").append(String.format("\"%s\"", positionFixingDevice)).append(",")
+		.append("\"transmission\"").append(":").append(transmission.booleanValue() ? "1" : "0").append(",")
+		.append("\"raim\"").append(":").append(raimFlag.booleanValue() ? "1" : "0").append(",")
+		.append("\"communication\"").append(":").append(communicationState);
+		if (this.getNMEATagBlock() != null) {
+			builder.append(",").append(this.getNMEATagBlock().toString());
+		}
+		builder.append("}");
+		return builder.toString();		
 	}
 
 	public static BaseStationReport fromEncodedMessage(EncodedAISMessage encodedMessage) {
@@ -117,11 +162,29 @@ public class BaseStationReport extends DecodedAISMessage {
 		Float longitude = DecoderImpl.convertToFloat(encodedMessage.getBits(79, 107)) / 600000f;
 		Float latitude = DecoderImpl.convertToFloat(encodedMessage.getBits(107, 134)) / 600000f;
 		PositionFixingDevice positionFixingDevice = PositionFixingDevice.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(134, 138)));
+		Boolean transmission = DecoderImpl.convertToBoolean(encodedMessage.getBits(138, 139));
 		Boolean raimFlag = DecoderImpl.convertToBoolean(encodedMessage.getBits(148, 149));
-
-		return new BaseStationReport(repeatIndicator, sourceMmsi, year, month,
-				day, hour, minute, second, positionAccurate, latitude,
-				longitude, positionFixingDevice, raimFlag);
+		CommunicationState communicationState = SOTDMA.fromEncodedString(encodedMessage.getBits(149, 168));
+		NMEATagBlock nmeaTagBlock = encodedMessage.getNMEATagBlock();
+		
+		return new BaseStationReport(
+				repeatIndicator,
+				sourceMmsi,
+				year,
+				month,
+				day,
+				hour,
+				minute,
+				second,
+				positionAccurate,
+				latitude,
+				longitude,
+				positionFixingDevice,
+				transmission,
+				raimFlag,
+				communicationState,
+				nmeaTagBlock
+				);
 	}
 
 	private final Integer year;
@@ -134,6 +197,7 @@ public class BaseStationReport extends DecodedAISMessage {
 	private final Float latitude;
 	private final Float longitude;
 	private final PositionFixingDevice positionFixingDevice;
+	private final Boolean transmission;
 	private final Boolean raimFlag;
-	//radio
+	private final CommunicationState communicationState;
 }

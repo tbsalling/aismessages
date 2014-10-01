@@ -16,6 +16,8 @@
 
 package dk.tbsalling.aismessages.messages;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import dk.tbsalling.aismessages.decoder.DecoderImpl;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
@@ -23,6 +25,7 @@ import dk.tbsalling.aismessages.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.messages.types.AidType;
 import dk.tbsalling.aismessages.messages.types.MMSI;
 import dk.tbsalling.aismessages.messages.types.PositionFixingDevice;
+import dk.tbsalling.aismessages.nmea.messages.NMEATagBlock;
 
 /**
  * Identification and location message to be emitted by aids to navigation such as buoys and lighthouses.
@@ -33,14 +36,33 @@ import dk.tbsalling.aismessages.messages.types.PositionFixingDevice;
 public class AidToNavigationReport extends DecodedAISMessage {
 
 	public AidToNavigationReport(
-			Integer repeatIndicator, MMSI sourceMmsi, AidType aidType,
-			String name, Boolean positionAccurate, Float latitude,
-			Float longitude, Integer toBow, Integer toStern,
-			Integer toStarboard, Integer toPort,
-			PositionFixingDevice positionFixingDevice, Integer second,
-			Boolean offPosition, String regionalUse, Boolean raimFlag,
-			Boolean virtualAid, Boolean assignedMode, String nameExtension) {
-		super(AISMessageType.AidToNavigationReport, repeatIndicator, sourceMmsi);
+			Integer repeatIndicator,
+			MMSI sourceMmsi,
+			AidType aidType,
+			String name,
+			Boolean positionAccurate,
+			Float latitude,
+			Float longitude, 
+			Integer toBow,
+			Integer toStern,
+			Integer toStarboard,
+			Integer toPort,
+			PositionFixingDevice positionFixingDevice,
+			Integer second,
+			Boolean offPosition,
+			Integer regionalUse,
+			Boolean raimFlag,
+			Boolean virtualAid,
+			Boolean assignedMode,
+			String nameExtension,
+			NMEATagBlock nmeaTagBlock
+			) {
+		super(
+				AISMessageType.AidToNavigationReport, 
+				repeatIndicator,
+				sourceMmsi, 
+				nmeaTagBlock
+				);
 		this.aidType = aidType;
 		this.name = name;
 		this.positionAccurate = positionAccurate;
@@ -108,7 +130,7 @@ public class AidToNavigationReport extends DecodedAISMessage {
 		return offPosition;
 	}
 
-	public final String getRegionalUse() {
+	public final Integer getRegionalUse() {
 		return regionalUse;
 	}
 
@@ -126,6 +148,47 @@ public class AidToNavigationReport extends DecodedAISMessage {
 
 	public final String getNameExtension() {
 		return nameExtension;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("{")
+			.append("\"messageId\"").append(":").append(getMessageType().getCode()).append(",")
+			.append("\"repeat\"").append(":").append(getRepeatIndicator()).append(",")
+			.append("\"mmsi\"").append(":").append(String.format("\"%s\"", getSourceMmsi().getMMSI())).append(",")
+			.append("\"aid\"").append(":").append(String.format("\"%s\"", aidType.name())).append(",")
+			.append("\"name\"").append(":").append(String.format("\"%s\"", StringEscapeUtils.escapeJson(name))).append(",")
+			.append("\"accuracy\"").append(":").append(positionAccurate.booleanValue() ? "1" : "0").append(",")
+			.append("\"loc\"").append(":");
+			if (longitude <= 180.0f && longitude >= -180.0f && latitude <= 90.0f && latitude >= -80.0) {
+				builder.append("{")
+				.append("\"type\"").append(":").append("\"Point\"").append(",")
+			    .append("\"coordinates\"").append(":").append("[")
+				.append(longitude).append(",")
+				.append(latitude).append("]").append("}");
+			} else {
+				Float nullFloat = null;				
+				builder.append(nullFloat);
+			}
+			builder.append(",")
+			.append("\"bow\"").append(":").append(toBow).append(",")
+			.append("\"stern\"").append(":").append(toStern).append(",")
+			.append("\"port\"").append(":").append(toPort).append(",")
+			.append("\"starboard\"").append(":").append(toStarboard).append(",")
+			.append("\"device\"").append(":").append(String.format("\"%s\"", positionFixingDevice.name())).append(",")
+			.append("\"second\"").append(":").append(second).append(",")
+			.append("\"off\"").append(":").append(offPosition.booleanValue() ? "1" : "0").append(",")
+			.append("\"regional\"").append(":").append(regionalUse).append(",")
+			.append("\"raim\"").append(":").append(raimFlag.booleanValue() ? "1" : "0").append(",")
+			.append("\"virtual\"").append(":").append(virtualAid.booleanValue() ? "1" : "0").append(",")
+			.append("\"mode\"").append(":").append(assignedMode.booleanValue() ? "1" : "0").append(",")
+			.append("\"extension\"").append(":").append(String.format("\"%s\"", StringEscapeUtils.escapeJson(nameExtension)));		
+			if (this.getNMEATagBlock() != null) {
+				builder.append(",").append(this.getNMEATagBlock().toString());
+			}
+			builder.append("}");
+		return builder.toString();
 	}
 
 	public static AidToNavigationReport fromEncodedMessage(EncodedAISMessage encodedMessage) {
@@ -149,16 +212,35 @@ public class AidToNavigationReport extends DecodedAISMessage {
 		PositionFixingDevice positionFixingDevice = PositionFixingDevice.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(249, 253)));
 		Integer second = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(253, 259));
 		Boolean offPosition = DecoderImpl.convertToBoolean(encodedMessage.getBits(259, 260));
-		String regionalUse = DecoderImpl.convertToBitString(encodedMessage.getBits(260,268));
+		Integer regionalUse = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(260,268));
 		Boolean raimFlag = DecoderImpl.convertToBoolean(encodedMessage.getBits(268, 269));
 		Boolean virtualAid = DecoderImpl.convertToBoolean(encodedMessage.getBits(269, 270));
 		Boolean assignedMode = DecoderImpl.convertToBoolean(encodedMessage.getBits(270, 271));
-		String nameExtension = DecoderImpl.convertToString(encodedMessage.getBits(272, 361));
-
-		return new AidToNavigationReport(repeatIndicator, sourceMmsi, aidType,
-				name, positionAccurate, latitude, longitude, toBow, toStern,
-				toStarboard, toPort, positionFixingDevice, second, offPosition,
-				regionalUse, raimFlag, virtualAid, assignedMode, nameExtension);
+		String nameExtension = DecoderImpl.convertToString(encodedMessage.getBits(272, encodedMessage.getNumberOfBits())); //361
+		NMEATagBlock nmeaTagBlock = encodedMessage.getNMEATagBlock();
+		
+		return new AidToNavigationReport(
+				repeatIndicator,
+				sourceMmsi, 
+				aidType,
+				name, 
+				positionAccurate,
+				latitude,
+				longitude,
+				toBow,
+				toStern,
+				toStarboard,
+				toPort,
+				positionFixingDevice, 
+				second, 
+				offPosition,
+				regionalUse,
+				raimFlag, 
+				virtualAid, 
+				assignedMode, 
+				nameExtension,
+				nmeaTagBlock
+				);
 	}
 	
 	private final AidType aidType;
@@ -173,7 +255,7 @@ public class AidToNavigationReport extends DecodedAISMessage {
 	private final PositionFixingDevice positionFixingDevice;
 	private final Integer second;
 	private final Boolean offPosition;
-	private final String regionalUse;
+	private final Integer regionalUse;
 	private final Boolean raimFlag;
 	private final Boolean virtualAid;
 	private final Boolean assignedMode;

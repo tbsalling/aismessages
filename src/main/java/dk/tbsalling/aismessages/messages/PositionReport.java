@@ -20,9 +20,11 @@
 package dk.tbsalling.aismessages.messages;
 
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.messages.types.CommunicationState;
 import dk.tbsalling.aismessages.messages.types.MMSI;
 import dk.tbsalling.aismessages.messages.types.ManeuverIndicator;
 import dk.tbsalling.aismessages.messages.types.NavigationStatus;
+import dk.tbsalling.aismessages.nmea.messages.NMEATagBlock;
 
 
 /**
@@ -32,14 +34,25 @@ import dk.tbsalling.aismessages.messages.types.NavigationStatus;
 @SuppressWarnings("serial")
 public abstract class PositionReport extends DecodedAISMessage {
 
-	protected PositionReport(AISMessageType messageType,
-			Integer repeatIndicator, MMSI sourceMmsi,
-			NavigationStatus navigationStatus, Integer rateOfTurn,
-			Float speedOverGround, Boolean positionAccurate, Float latitude,
-			Float longitude, Float courseOverGround, Integer trueHeading,
-			Integer second, ManeuverIndicator maneuverIndicator,
-			Boolean raimFlag) {
-		super(messageType, repeatIndicator, sourceMmsi);
+	protected PositionReport(
+			AISMessageType messageType,
+			Integer repeatIndicator,
+			MMSI sourceMmsi,
+			NavigationStatus navigationStatus,
+			Integer rateOfTurn,
+			Float speedOverGround,
+			Boolean positionAccurate,
+			Float latitude,
+			Float longitude,
+			Float courseOverGround,
+			Integer trueHeading,
+			Integer second, 
+			ManeuverIndicator maneuverIndicator,
+			Boolean raimFlag,
+			CommunicationState communicationState,
+			NMEATagBlock nmeaTagBlock
+			) {
+		super(messageType, repeatIndicator, sourceMmsi, nmeaTagBlock);
 		this.navigationStatus = navigationStatus;
 		this.rateOfTurn = rateOfTurn;
 		this.speedOverGround = speedOverGround;
@@ -51,6 +64,7 @@ public abstract class PositionReport extends DecodedAISMessage {
 		this.second = second;
 		this.maneuverIndicator = maneuverIndicator;
 		this.raimFlag = raimFlag;
+		this.communicationState = communicationState;
 	}
 		
 	public final NavigationStatus getNavigationStatus() {
@@ -96,26 +110,44 @@ public abstract class PositionReport extends DecodedAISMessage {
 	public final Boolean getRaimFlag() {
 		return raimFlag;
 	}
-
+	
+	public final CommunicationState getCommunicationState() {
+		return communicationState;
+	}
 	
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("PositionReport [navigationStatus=")
-				.append(navigationStatus).append(", rateOfTurn=")
-				.append(rateOfTurn).append(", speedOverGround=")
-				.append(speedOverGround).append(", positionAccurate=")
-				.append(positionAccurate).append(", latitude=")
-				.append(latitude).append(", longitude=").append(longitude)
-				.append(", courseOverGround=").append(courseOverGround)
-				.append(", trueHeading=").append(trueHeading)
-				.append(", second=").append(second)
-				.append(", maneuverIndicator=").append(maneuverIndicator)
-				.append(", raimFlag=").append(raimFlag)
-				.append(", getMessageType()=").append(getMessageType())
-				.append(", getRepeatIndicator()=").append(getRepeatIndicator())
-				.append(", getSourceMmsi()=").append(getSourceMmsi())
-				.append("]");
+		builder.append("{")
+			.append("\"messageId\"").append(":").append(getMessageType().getCode()).append(",")
+			.append("\"repeat\"").append(":").append(getRepeatIndicator()).append(",")
+			.append("\"mmsi\"").append(":").append(String.format("\"%s\"", getSourceMmsi().getMMSI())).append(",")
+			.append("\"navigation\"").append(":").append(String.format("\"%s\"", navigationStatus.name())).append(",")
+			.append("\"rot\"").append(":").append(rateOfTurn).append(",")
+			.append("\"sog\"").append(":").append(speedOverGround).append(",")
+			.append("\"accuracy\"").append(":").append(positionAccurate.booleanValue() ? "1" : "0").append(",")
+			.append("\"loc\"").append(":");
+			if (longitude <= 180.0f && longitude >= -180.0f && latitude <= 90.0f && latitude >= -80.0) {
+				builder.append("{")
+				.append("\"type\"").append(":").append("\"Point\"").append(",")
+			    .append("\"coordinates\"").append(":").append("[")
+				.append(longitude).append(",")
+				.append(latitude).append("]").append("}");
+			} else {
+				Float nullFloat = null;				
+				builder.append(nullFloat);
+			}
+			builder.append(",")
+			.append("\"cog\"").append(":").append(courseOverGround).append(",")
+			.append("\"heading\"").append(":").append(trueHeading).append(",")
+			.append("\"second\"").append(":").append(second).append(",")
+			.append("\"maneuver\"").append(":").append(String.format("\"%s\"", maneuverIndicator.name())).append(",")
+			.append("\"raim\"").append(":").append(raimFlag.booleanValue() ? "1" : "0").append(",")
+			.append("\"communication\"").append(":").append(communicationState);
+			if (this.getNMEATagBlock() != null) {
+				builder.append(",").append(this.getNMEATagBlock().toString());
+			}
+			builder.append("}");
 		return builder.toString();
 	}
 
@@ -123,32 +155,18 @@ public abstract class PositionReport extends DecodedAISMessage {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime
-				* result
-				+ ((courseOverGround == null) ? 0 : courseOverGround.hashCode());
-		result = prime * result
-				+ ((latitude == null) ? 0 : latitude.hashCode());
-		result = prime * result
-				+ ((longitude == null) ? 0 : longitude.hashCode());
-		result = prime
-				* result
-				+ ((maneuverIndicator == null) ? 0 : maneuverIndicator
-						.hashCode());
-		result = prime
-				* result
-				+ ((navigationStatus == null) ? 0 : navigationStatus.hashCode());
-		result = prime
-				* result
-				+ ((positionAccurate == null) ? 0 : positionAccurate.hashCode());
-		result = prime * result
-				+ ((raimFlag == null) ? 0 : raimFlag.hashCode());
-		result = prime * result
-				+ ((rateOfTurn == null) ? 0 : rateOfTurn.hashCode());
+		result = prime * result	+ ((courseOverGround == null) ? 0 : courseOverGround.hashCode());
+		result = prime * result	+ ((latitude == null) ? 0 : latitude.hashCode());
+		result = prime * result	+ ((longitude == null) ? 0 : longitude.hashCode());
+		result = prime * result	+ ((maneuverIndicator == null) ? 0 : maneuverIndicator.hashCode());
+		result = prime * result	+ ((navigationStatus == null) ? 0 : navigationStatus.hashCode());
+		result = prime * result	+ ((positionAccurate == null) ? 0 : positionAccurate.hashCode());
+		result = prime * result	+ ((raimFlag == null) ? 0 : raimFlag.hashCode());
+		result = prime * result	+ ((rateOfTurn == null) ? 0 : rateOfTurn.hashCode());
 		result = prime * result + ((second == null) ? 0 : second.hashCode());
-		result = prime * result
-				+ ((speedOverGround == null) ? 0 : speedOverGround.hashCode());
-		result = prime * result
-				+ ((trueHeading == null) ? 0 : trueHeading.hashCode());
+		result = prime * result	+ ((speedOverGround == null) ? 0 : speedOverGround.hashCode());
+		result = prime * result	+ ((trueHeading == null) ? 0 : trueHeading.hashCode());
+		result = prime * result	+ ((communicationState == null) ? 0 : communicationState.hashCode());
 		return result;
 	}
 
@@ -210,6 +228,11 @@ public abstract class PositionReport extends DecodedAISMessage {
 				return false;
 		} else if (!trueHeading.equals(other.trueHeading))
 			return false;
+		if (communicationState == null) {
+			if (other.communicationState != null)
+				return false;
+		} else if (!communicationState.equals(other.communicationState))
+			return false;
 		return true;
 	}
 
@@ -224,4 +247,5 @@ public abstract class PositionReport extends DecodedAISMessage {
 	private final Integer second;
 	private final ManeuverIndicator maneuverIndicator;
 	private final Boolean raimFlag;
+	private final CommunicationState communicationState;
 }

@@ -46,19 +46,31 @@ public class NMEAMessageInputStreamReader {
 		InputStreamReader reader = new InputStreamReader(inputStream, Charset.defaultCharset());
 		BufferedReader bufferedReader = new BufferedReader(reader);
 		String string;
+		int messageDecodedCount = 0;
+		int messageNotDecodedCount = 0;
 		while ((string = bufferedReader.readLine()) != null && !stopRequested()) {
 			try {
 				NMEAMessage nmea = NMEAMessage.fromString(string);
 				messageReceiver.handleMessageReceived(nmea);
+				messageDecodedCount++;
 				log.fine("Received: " + nmea.toString());
 			} catch (InvalidEncodedMessage invalidEncodedMessageException) {
-				log.warning("Invalid encoded message: \"" + invalidEncodedMessageException.getMessage() + "\"");
+				log.warning("Invalid encoded message: \"" + invalidEncodedMessageException.getMessage() + "\"" + " from \"" + string + "\"" );
+				log.fine("Failed: " + string);
+				messageNotDecodedCount++;
 			} catch (NMEAParseException parseException) {
 				log.warning("Received non-compliant string: \"" + string + "\"");
+				log.fine("Failed: " + string);
+				messageNotDecodedCount++;
+			} catch (Exception e) {
+				System.out.println(string);
+				log.fine("Failed: " + string);
 			}
+			
 		}
 
 		log.info("NMEAMessageInputStreamReader stopping.");
+		log.info(String.format("Decoded [%s] messages. [%s] messages not decoded. Total messages: [%s]", messageDecodedCount, messageNotDecodedCount, messageDecodedCount + messageNotDecodedCount));
 	}
 
 	private final synchronized Boolean stopRequested() {

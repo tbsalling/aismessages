@@ -41,6 +41,7 @@ import dk.tbsalling.aismessages.messages.ExtendedClassBEquipmentPositionReport;
 import dk.tbsalling.aismessages.messages.GNSSBinaryBroadcastMessage;
 import dk.tbsalling.aismessages.messages.GroupAssignmentCommand;
 import dk.tbsalling.aismessages.messages.Interrogation;
+import dk.tbsalling.aismessages.messages.LongRangeAISBroadcastMessage;
 import dk.tbsalling.aismessages.messages.PositionReportClassAAssignedSchedule;
 import dk.tbsalling.aismessages.messages.PositionReportClassAResponseToInterrogation;
 import dk.tbsalling.aismessages.messages.PositionReportClassAScheduled;
@@ -71,7 +72,7 @@ public class DecoderImpl implements Decoder {
 		sb.append("NOT FOR COMMERCIAL USE!\n");
 		sb.append("Contact sales@s-consult.dk to obtain commercially licensed software.\n");
 		sb.append("\n");
-		System.err.print(sb.toString());
+		//System.err.print(sb.toString());
 		log.info(sb.toString());
 	}
 	
@@ -166,6 +167,9 @@ public class DecoderImpl implements Decoder {
 			break;
 		case BinaryMessageMultipleSlot:
 			decodedMessage = BinaryMessageMultipleSlot.fromEncodedMessage(encodedMessage);
+			break;
+		case LongRangeAISBroadcastMessage:
+			decodedMessage = LongRangeAISBroadcastMessage.fromEncodedMessage(encodedMessage);
 			break;
 		default:
 			throw new UnsupportedMessageType(messageType.getCode());

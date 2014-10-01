@@ -22,18 +22,36 @@ import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.messages.types.MMSI;
 import dk.tbsalling.aismessages.messages.types.TxRxMode;
+import dk.tbsalling.aismessages.nmea.messages.NMEATagBlock;
 
 @SuppressWarnings("serial")
 public class ChannelManagement extends DecodedAISMessage {
 
 	public ChannelManagement(
-			Integer repeatIndicator, MMSI sourceMmsi, Integer channelA,
-			Integer channelB, TxRxMode transmitReceiveMode, Boolean power,
-			Float longitudeNorthEast, Float northEastLatitude,
-			Float southWestLongitude, Float southWestLatitude,
-			MMSI destinationMmsi1, MMSI destinationMmsi2, Boolean addressed,
-			Boolean bandA, Boolean bandB, Integer zoneSize) {
-		super(AISMessageType.ChannelManagement, repeatIndicator, sourceMmsi);
+			Integer repeatIndicator,
+			MMSI sourceMmsi,
+			Integer channelA,
+			Integer channelB,
+			TxRxMode transmitReceiveMode,
+			Boolean power,
+			Float longitudeNorthEast,
+			Float northEastLatitude,
+			Float southWestLongitude,
+			Float southWestLatitude,
+			MMSI destinationMmsi1,
+			MMSI destinationMmsi2,
+			Boolean addressed,
+			Boolean bandA, 
+			Boolean bandB, 
+			Integer zoneSize,
+			NMEATagBlock nmeaTagBlock
+			) {
+		super(
+				AISMessageType.ChannelManagement, 
+				repeatIndicator, 
+				sourceMmsi, 
+				nmeaTagBlock
+				);
 		this.channelA = channelA;
 		this.channelB = channelB;
 		this.transmitReceiveMode = transmitReceiveMode;
@@ -105,6 +123,57 @@ public class ChannelManagement extends DecodedAISMessage {
 	public final Integer getZoneSize() {
 		return zoneSize;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("{")
+		.append("\"messageId\"").append(":").append(getMessageType().getCode()).append(",")
+		.append("\"repeat\"").append(":").append(getRepeatIndicator()).append(",")
+		.append("\"mmsi\"").append(":").append(String.format("\"%s\"", getSourceMmsi().getMMSI())).append(",")
+		.append("\"channelA\"").append(":").append(channelA).append(",")
+		.append("\"channelB\"").append(":").append(channelB).append(",")
+		.append("\"tr\"").append(":").append(String.format("\"%s\"", transmitReceiveMode)).append(",")
+		.append("\"power\"").append(":").append(power).append(",");
+		if (destinationMmsi1 != null && destinationMmsi2 != null) {
+			builder.append("\"destination1\"").append(":").append(String.format("\"%s\"", destinationMmsi1.getMMSI())).append(",")
+		    .append("\"destination2\"").append(":").append(String.format("\"%s\"", destinationMmsi2.getMMSI())).append(",");
+		} else {
+			builder.append("\"loc\"").append(":").append("{")
+			.append("\"type\"").append(":").append("\"Polygon\"").append(",")
+		    .append("\"coordinates\"").append(":").append("[").append("[")
+		    .append("[")
+		    .append(southWestLongitude).append(",")
+		    .append(northEastLatitude)
+		    .append("]").append(",")
+		    .append("[")
+		    .append(northEastLongitude).append(",")
+		    .append(northEastLatitude)
+		    .append("]").append(",")
+		    .append("[")
+		    .append(northEastLongitude).append(",")
+		    .append(southWestLatitude)
+		    .append("]").append(",")
+		    .append("[")
+		    .append(southWestLongitude).append(",")
+		    .append(southWestLatitude)
+		    .append("]").append(",")
+		    .append("[")
+		    .append(southWestLongitude).append(",")
+		    .append(northEastLatitude)
+		    .append("]")
+		    .append("]").append("]").append("}").append(",");
+		}
+		builder.append("\"addressed\"").append(":").append(addressed.booleanValue() ? "1" : "0").append(",")
+		.append("\"bandwidthA\"").append(":").append(bandA.booleanValue() ? "1" : "0").append(",")
+		.append("\"bandwidthB\"").append(":").append(bandB.booleanValue() ? "1" : "0").append(",")
+		.append("\"zone\"").append(":").append(zoneSize);
+		if (this.getNMEATagBlock() != null) {
+			builder.append(",").append(this.getNMEATagBlock().toString());
+		}
+		builder.append("}");
+	return builder.toString();		
+	}
 
 	public static ChannelManagement fromEncodedMessage(EncodedAISMessage encodedMessage) {
 		if (! encodedMessage.isValid())
@@ -125,16 +194,31 @@ public class ChannelManagement extends DecodedAISMessage {
 		Integer zoneSize = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(142, 145));
 		MMSI destinationMmsi1 = !addressed ? null : MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(69, 99)));
 		MMSI destinationMmsi2 = !addressed ? null : MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(104, 134)));
-		Float northEastLatitude = addressed ? null : DecoderImpl.convertToFloat(encodedMessage.getBits(87, 104)) / 10f;
-		Float northEastLongitude = addressed ? null : DecoderImpl.convertToFloat(encodedMessage.getBits(69, 87)) / 10f;
-		Float southWestLatitude = addressed ? null : DecoderImpl.convertToFloat(encodedMessage.getBits(122, 138)) / 10f;
-		Float southWestLongitude = addressed ? null : DecoderImpl.convertToFloat(encodedMessage.getBits(104, 122)) / 10f;
-
-		return new ChannelManagement(repeatIndicator, sourceMmsi, channelA,
-				channelB, transmitReceiveMode, power, northEastLongitude,
-				northEastLatitude, southWestLongitude, southWestLatitude,
-				destinationMmsi1, destinationMmsi2, addressed, bandA, bandB,
-				zoneSize);
+		Float northEastLatitude = addressed ? null : DecoderImpl.convertToFloat(encodedMessage.getBits(87, 104)) / 600.0f; // 1/10000 min; divide by 600000.0
+		Float northEastLongitude = addressed ? null : DecoderImpl.convertToFloat(encodedMessage.getBits(69, 87)) / 600.0f; // 1/10 min; divide by 600.0
+		Float southWestLatitude = addressed ? null : DecoderImpl.convertToFloat(encodedMessage.getBits(122, 139)) / 600.0f;
+		Float southWestLongitude = addressed ? null : DecoderImpl.convertToFloat(encodedMessage.getBits(104, 122)) / 600.0f;
+		NMEATagBlock nmeaTagBlock = encodedMessage.getNMEATagBlock();
+		
+		return new ChannelManagement(
+				repeatIndicator, 
+				sourceMmsi, 
+				channelA,
+				channelB, 
+				transmitReceiveMode, 
+				power, 
+				northEastLongitude,
+				northEastLatitude,
+				southWestLongitude,
+				southWestLatitude,
+				destinationMmsi1,
+				destinationMmsi2, 
+				addressed,
+				bandA,
+				bandB,
+				zoneSize,
+				nmeaTagBlock
+				);
 	}
 		
 	private final Integer channelA;

@@ -20,7 +20,9 @@ import dk.tbsalling.aismessages.decoder.DecoderImpl;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.messages.types.ApplicationIdentifier;
 import dk.tbsalling.aismessages.messages.types.MMSI;
+import dk.tbsalling.aismessages.nmea.messages.NMEATagBlock;
 
 /**
  * broadcast message with unspecified binary payload. The St. Lawrence Seaway
@@ -34,22 +36,36 @@ import dk.tbsalling.aismessages.messages.types.MMSI;
 @SuppressWarnings("serial")
 public class BinaryBroadcastMessage extends DecodedAISMessage {
 
-	public BinaryBroadcastMessage(Integer repeatIndicator, MMSI sourceMmsi,
-			Integer designatedAreaCode, Integer functionalId, String binaryData) {
-		super(AISMessageType.BinaryBroadcastMessage, repeatIndicator,
-				sourceMmsi);
-		this.designatedAreaCode = designatedAreaCode;
-		this.functionalId = functionalId;
+	public BinaryBroadcastMessage(
+			Integer repeatIndicator, 
+			MMSI sourceMmsi,
+			ApplicationIdentifier applicationIdentifier,
+			String binaryData,
+			NMEATagBlock nmeaTagBlock
+			) {
+		super(
+				AISMessageType.BinaryBroadcastMessage,
+				repeatIndicator, 
+				sourceMmsi,
+				nmeaTagBlock
+				);
+		this.applicationIdentifier = applicationIdentifier;
 		this.binaryData = binaryData;
 	}
 
+	public final ApplicationIdentifier getApplicationIdentifier() {
+		return applicationIdentifier;
+	}
+	
 	public final Integer getDesignatedAreaCode() {
-		return designatedAreaCode;
+		return applicationIdentifier.getDesignatedAreaCode();
 	}
 
-	public final Integer getFunctionalId() {
-		return functionalId;
+	
+	public final Integer getFunctionalIdentifier() {
+		return applicationIdentifier.getFunctionalIdentifier();
 	}
+
 
 	public final String getBinaryData() {
 		return binaryData;
@@ -58,10 +74,16 @@ public class BinaryBroadcastMessage extends DecodedAISMessage {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("BinaryBroadcastMessage [designatedAreaCode=")
-				.append(designatedAreaCode).append(", functionalId=")
-				.append(functionalId).append(", binaryData=")
-				.append(binaryData).append("]");
+		builder.append("{")
+			.append("\"messageId\"").append(":").append(getMessageType().getCode()).append(",")
+			.append("\"repeat\"").append(":").append(getRepeatIndicator()).append(",")
+			.append("\"mmsi\"").append(":").append(String.format("\"%s\"", getSourceMmsi().getMMSI())).append(",")
+			.append("\"application\"").append(":").append(applicationIdentifier).append(",")
+			.append("\"data\"").append(":").append(String.format("\"%s\"", binaryData));
+			if (this.getNMEATagBlock() != null) {
+				builder.append(",").append(this.getNMEATagBlock().toString());
+			}
+			builder.append("}");
 		return builder.toString();
 	}
 
@@ -73,15 +95,19 @@ public class BinaryBroadcastMessage extends DecodedAISMessage {
 			
 		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
 		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
-
-		Integer designatedAreaCode = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(38, 52));
-		Integer functionalId = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(52, 56));
-		String binaryData = DecoderImpl.convertToBitString(encodedMessage.getBits(52, 56));
+		ApplicationIdentifier applicationIdentifier = ApplicationIdentifier.fromEncodedString(encodedMessage.getBits(40, 56)); // 38, 52
+		String binaryData = DecoderImpl.convertToBitString(encodedMessage.getBits(40, encodedMessage.getNumberOfBits()));
+		NMEATagBlock nmeaTagBlock = encodedMessage.getNMEATagBlock();
 		
-		return new BinaryBroadcastMessage(repeatIndicator, sourceMmsi, designatedAreaCode, functionalId, binaryData);
+		return new BinaryBroadcastMessage(
+				repeatIndicator, 
+				sourceMmsi, 
+				applicationIdentifier,
+				binaryData, 
+				nmeaTagBlock
+				);
 	}
 
-	private final Integer designatedAreaCode;
-	private final Integer functionalId;
+	private final ApplicationIdentifier applicationIdentifier;
 	private final String binaryData;
 }

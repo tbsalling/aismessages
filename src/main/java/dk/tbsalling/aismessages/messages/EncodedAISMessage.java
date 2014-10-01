@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.nmea.messages.NMEATagBlock;
 
 public class EncodedAISMessage {
 
@@ -37,9 +38,10 @@ public class EncodedAISMessage {
 	 * @param encodedPayload
 	 * @param paddingBits
 	 */
-	public EncodedAISMessage(String encodedPayload, Integer paddingBits) {
+	public EncodedAISMessage(String encodedPayload, Integer paddingBits, NMEATagBlock nmeaTagBlock) {
 		this.encodedString = encodedPayload;
 		this.bitString = toBitString(encodedPayload, paddingBits);
+		this.nmeaTagBlock = nmeaTagBlock;
 		log.finest(this.bitString.length() + " bits in encoded bitstring: " + this.bitString);
 	}
 
@@ -63,6 +65,10 @@ public class EncodedAISMessage {
 		return bitString.length();
 	}
 	
+	public final NMEATagBlock getNMEATagBlock() {
+		return this.nmeaTagBlock;
+	}
+	
 	public Boolean isValid() {
 		if (bitString.length() < 6) {
 			log.warning("Message is too short: " + bitString.length() + " bits.");
@@ -70,7 +76,7 @@ public class EncodedAISMessage {
 		}
 		
 		int messageType = Integer.parseInt(bitString.substring(0,6), 2);
-		if (messageType < 1 || messageType > 26) {
+		if (messageType < 1 || messageType > 27) {
 			log.warning("Unsupported message type: " + messageType);
 			return Boolean.FALSE;
 		}
@@ -142,10 +148,16 @@ public class EncodedAISMessage {
 		case 23: 
 			break;
 		case 24: 
+			if (actualMessageLength != 160 && actualMessageLength != 168) {
+				log.warning("Message type 24: Illegal message length: " + bitString.length() + " bits.");
+				return Boolean.FALSE;
+			}
 			break;
 		case 25: 
 			break;
 		case 26: 
+			break;
+		case 27: 
 			break;
 		default: 
 			return Boolean.FALSE;
@@ -156,6 +168,7 @@ public class EncodedAISMessage {
 	
 	private final String bitString;
 	private final String encodedString;
+	private final NMEATagBlock nmeaTagBlock; 
 	
 	private static String toBitString(String encodedString, Integer paddingBits) {
 		StringBuffer bitString = new StringBuffer();

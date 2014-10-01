@@ -31,6 +31,7 @@ import dk.tbsalling.aismessages.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.messages.types.MMSI;
 import dk.tbsalling.aismessages.messages.types.ManeuverIndicator;
 import dk.tbsalling.aismessages.messages.types.NavigationStatus;
+import dk.tbsalling.aismessages.messages.types.SOTDMA;
 
 public class PositionReportClassAScheduledTest {
 	
@@ -56,7 +57,9 @@ public class PositionReportClassAScheduledTest {
 				1,
 				1,
 				ManeuverIndicator.NoSpecialManeuver,
-				Boolean.FALSE);
+				Boolean.FALSE,
+				SOTDMA.fromEncodedString("00000000000000000101110100000100110111111100000101011001111011101010110100000000000011111111111011100101110011100000000000000110"),
+				null);
 	}
 	
 	@Test

@@ -56,11 +56,21 @@ public class MMSI implements Serializable {
 
 	@Override
 	public String toString() {
-		return "MMSI [mmsi=" + mmsi + "]";
+		String mssiString = mmsi.toString();
+		for (int i = mssiString.length(); i < 9; ++i)
+			mssiString = String.format("0%s", mssiString);
+		StringBuilder builder = new StringBuilder();
+		builder.append("{")
+		.append("\"mmsi\"").append(":").append(String.format("\"%s\"", mssiString));
+		builder.append("}");
+		return builder.toString();	
 	}
 
-	public Long getMMSI() {
-	    return mmsi;
+	public String getMMSI() {
+		String mssiString = mmsi.toString();
+		for (int i = mssiString.length(); i < 9; ++i)
+			mssiString = String.format("0%s", mssiString);
+	    return mssiString;
 	}
 
 	private final Long mmsi;

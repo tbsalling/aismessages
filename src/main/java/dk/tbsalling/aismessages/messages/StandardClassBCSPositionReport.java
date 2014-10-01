@@ -18,9 +18,15 @@ package dk.tbsalling.aismessages.messages;
 
 import dk.tbsalling.aismessages.decoder.DecoderImpl;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
+import dk.tbsalling.aismessages.exceptions.UnsupportedCommunicationStateType;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.messages.types.CommunicationState;
+import dk.tbsalling.aismessages.messages.types.CommunicationStateType;
+import dk.tbsalling.aismessages.messages.types.ITDMA;
 import dk.tbsalling.aismessages.messages.types.MMSI;
+import dk.tbsalling.aismessages.messages.types.SOTDMA;
+import dk.tbsalling.aismessages.nmea.messages.NMEATagBlock;
 
 /**
  * A less detailed report than types 1-3 for vessels using Class B transmitters.
@@ -33,13 +39,34 @@ import dk.tbsalling.aismessages.messages.types.MMSI;
 public class StandardClassBCSPositionReport extends DecodedAISMessage {
 
 	public StandardClassBCSPositionReport(
-			Integer repeatIndicator, MMSI sourceMmsi, String regionalReserved1,
-			Float speedOverGround, Boolean positionAccurate, Float latitude,
-			Float longitude, Float courseOverGround, Integer trueHeading,
-			Integer second, String regionalReserved2, Boolean csUnit,
-			Boolean display, Boolean dsc, Boolean band, Boolean message22,
-			Boolean assigned, Boolean raimFlag, String radioStatus) {
-		super(AISMessageType.StandardClassBCSPositionReport, repeatIndicator, sourceMmsi);
+			Integer repeatIndicator,
+			MMSI sourceMmsi,
+			String regionalReserved1,
+			Float speedOverGround, 
+			Boolean positionAccurate, 
+			Float latitude,
+			Float longitude,
+			Float courseOverGround,
+			Integer trueHeading,
+			Integer second,
+			String regionalReserved2,
+			Boolean csUnit,
+			Boolean display, 
+			Boolean dsc, 
+			Boolean band, 
+			Boolean message22,
+			Boolean assigned, 
+			Boolean raimFlag, 
+			CommunicationStateType communicationStateSelector, 
+			CommunicationState communicationState,
+			NMEATagBlock nmeaTagBlock
+			) {
+		super(
+				AISMessageType.StandardClassBCSPositionReport,
+				repeatIndicator, 
+				sourceMmsi, 
+				nmeaTagBlock
+				);
 		this.regionalReserved1 = regionalReserved1;
 		this.speedOverGround = speedOverGround;
 		this.positionAccurate = positionAccurate;
@@ -56,7 +83,8 @@ public class StandardClassBCSPositionReport extends DecodedAISMessage {
 		this.message22 = message22;
 		this.assigned = assigned;
 		this.raimFlag = raimFlag;
-		this.radioStatus = radioStatus;
+		this.communicationStateSelector = communicationStateSelector;
+		this.communicationState = communicationState;
 	}
 
 	public final String getRegionalReserved1() {
@@ -123,31 +151,54 @@ public class StandardClassBCSPositionReport extends DecodedAISMessage {
 		return raimFlag;
 	}
 
-	public final String getRadioStatus() {
-		return radioStatus;
+	public final CommunicationStateType getCommunicationStateSelector() {
+		return communicationStateSelector;
+	}
+	
+	public final CommunicationState getCommunicationState() {
+		return communicationState;
 	}
 
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("StandardClassBCSPositionReport [regionalReserved1=")
-				.append(regionalReserved1).append(", speedOverGround=")
-				.append(speedOverGround).append(", positionAccurate=")
-				.append(positionAccurate).append(", latitude=")
-				.append(latitude).append(", longitude=").append(longitude)
-				.append(", courseOverGround=").append(courseOverGround)
-				.append(", trueHeading=").append(trueHeading)
-				.append(", second=").append(second)
-				.append(", regionalReserved2=").append(regionalReserved2)
-				.append(", csUnit=").append(csUnit).append(", display=")
-				.append(display).append(", dsc=").append(dsc).append(", band=")
-				.append(band).append(", message22=").append(message22)
-				.append(", assigned=").append(assigned).append(", raimFlag=")
-				.append(raimFlag).append(", radioStatus=").append(radioStatus)
-				.append("]");
+		builder.append("{")
+			.append("\"messageId\"").append(":").append(getMessageType().getCode()).append(",")
+			.append("\"repeat\"").append(":").append(getRepeatIndicator()).append(",")
+			.append("\"mmsi\"").append(":").append(String.format("\"%s\"", getSourceMmsi().getMMSI())).append(",")
+			.append("\"sog\"").append(":").append(speedOverGround).append(",")
+			.append("\"accuracy\"").append(":").append(positionAccurate.booleanValue() ? "1" : "0").append(",")
+			.append("\"loc\"").append(":");
+			if (longitude <= 180.0f && longitude >= -180.0f && latitude <= 90.0f && latitude >= -80.0) {
+				builder.append("{")
+				.append("\"type\"").append(":").append("\"Point\"").append(",")
+			    .append("\"coordinates\"").append(":").append("[")
+				.append(longitude).append(",")
+				.append(latitude).append("]").append("}");
+			} else {
+				Float nullFloat = null;				
+				builder.append(nullFloat);
+			}
+			builder.append(",")
+			.append("\"cog\"").append(":").append(courseOverGround).append(",")
+			.append("\"heading\"").append(":").append(trueHeading).append(",")
+			.append("\"second\"").append(":").append(second).append(",")
+			.append("\"unit\"").append(":").append(csUnit.booleanValue() ? "1" : "0").append(",")
+			.append("\"display\"").append(":").append(display.booleanValue() ? "1" : "0").append(",")
+			.append("\"dsc\"").append(":").append(dsc.booleanValue() ? "1" : "0").append(",")
+			.append("\"band\"").append(":").append(band.booleanValue() ? "1" : "0").append(",")
+			.append("\"message22\"").append(":").append(message22.booleanValue() ? "1" : "0").append(",")
+			.append("\"mode\"").append(":").append(assigned.booleanValue() ? "1" : "0").append(",")
+			.append("\"raim\"").append(":").append(raimFlag.booleanValue() ? "1" : "0").append(",")
+			.append("\"selector\"").append(":").append(String.format("\"%s\"", communicationStateSelector)).append(",")
+			.append("\"communication\"").append(":").append(communicationState);
+			if (this.getNMEATagBlock() != null) {
+				builder.append(",").append(this.getNMEATagBlock().toString());
+			}
+			builder.append("}");
 		return builder.toString();
 	}
-
+	
 	public static StandardClassBCSPositionReport fromEncodedMessage(EncodedAISMessage encodedMessage) {
 		if (! encodedMessage.isValid())
 			throw new InvalidEncodedMessage(encodedMessage);
@@ -173,13 +224,43 @@ public class StandardClassBCSPositionReport extends DecodedAISMessage {
 		Boolean message22 = DecoderImpl.convertToBoolean(encodedMessage.getBits(145, 146));
 		Boolean assigned = DecoderImpl.convertToBoolean(encodedMessage.getBits(146, 147));
 		Boolean raimFlag = DecoderImpl.convertToBoolean(encodedMessage.getBits(147, 148));
-		String radioStatus = DecoderImpl.convertToBitString(encodedMessage.getBits(148, 168));
+		CommunicationStateType communicationStateSelector = CommunicationStateType.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(148, 149)));		
+		CommunicationState communicationState = null;
+		switch (communicationStateSelector) {
+		case SOTDMA:
+			communicationState = SOTDMA.fromEncodedString(encodedMessage.getBits(149, 168));
+			break;
+		case ITDMA:
+			communicationState = ITDMA.fromEncodedString(encodedMessage.getBits(149, 168));
+			break;
+		default:
+			throw new UnsupportedCommunicationStateType(communicationStateSelector.getCode());
+		}
+		NMEATagBlock nmeaTagBlock = encodedMessage.getNMEATagBlock();
 
-		return new StandardClassBCSPositionReport(repeatIndicator, sourceMmsi,
-				regionalReserved1, speedOverGround, positionAccurate, latitude,
-				longitude, courseOverGround, trueHeading, second,
-				regionalReserved2, csUnit, display, dsc, band, message22,
-				assigned, raimFlag, radioStatus);
+		return new StandardClassBCSPositionReport(
+				repeatIndicator, 
+				sourceMmsi,
+				regionalReserved1, 
+				speedOverGround,
+				positionAccurate,
+				latitude,
+				longitude,
+				courseOverGround,
+				trueHeading,
+				second,
+				regionalReserved2,
+				csUnit, 
+				display, 
+				dsc, 
+				band, 
+				message22,
+				assigned,
+				raimFlag,
+				communicationStateSelector,
+				communicationState, 
+				nmeaTagBlock
+				);
 	}
 	
 	private final String regionalReserved1;
@@ -198,5 +279,6 @@ public class StandardClassBCSPositionReport extends DecodedAISMessage {
 	private final Boolean message22;
 	private final Boolean assigned;
 	private final Boolean raimFlag;
-	private final String radioStatus;
+	private final CommunicationStateType communicationStateSelector;
+	private final CommunicationState communicationState;
 }

@@ -25,6 +25,7 @@ import dk.tbsalling.aismessages.messages.types.ReportingInterval;
 import dk.tbsalling.aismessages.messages.types.ShipType;
 import dk.tbsalling.aismessages.messages.types.StationType;
 import dk.tbsalling.aismessages.messages.types.TxRxMode;
+import dk.tbsalling.aismessages.nmea.messages.NMEATagBlock;
 
 /**
  * intended to be broadcast by a competent authority (an AIS network-control
@@ -37,12 +38,25 @@ import dk.tbsalling.aismessages.messages.types.TxRxMode;
 public class GroupAssignmentCommand extends DecodedAISMessage {
 	
 	public GroupAssignmentCommand(
-			Integer repeatIndicator, MMSI sourceMmsi, Float northEastLatitude,
-			Float northEastLongitude, Float southWestLatitude,
-			Float southWestLongitude, StationType stationType,
-			ShipType shipType, TxRxMode transmitReceiveMode,
-			ReportingInterval reportingInterval, Integer quietTime) {
-		super(AISMessageType.GroupAssignmentCommand, repeatIndicator, sourceMmsi);
+			Integer repeatIndicator, 
+			MMSI sourceMmsi, 
+			Float northEastLatitude,
+			Float northEastLongitude, 
+			Float southWestLatitude,
+			Float southWestLongitude,
+			StationType stationType,
+			ShipType shipType,
+			TxRxMode transmitReceiveMode,
+			ReportingInterval reportingInterval,
+			Integer quietTime,
+			NMEATagBlock nmeaTagBlock
+			) {
+		super(
+				AISMessageType.GroupAssignmentCommand,
+				repeatIndicator,
+				sourceMmsi,
+				nmeaTagBlock
+				);
 		this.northEastLatitude = northEastLatitude;
 		this.northEastLongitude = northEastLongitude;
 		this.southWestLatitude = southWestLatitude;
@@ -81,6 +95,49 @@ public class GroupAssignmentCommand extends DecodedAISMessage {
 		return quietTime;
 	}
 	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("{")
+		.append("\"messageId\"").append(":").append(getMessageType().getCode()).append(",")
+		.append("\"repeat\"").append(":").append(getRepeatIndicator()).append(",")
+		.append("\"mmsi\"").append(":").append(String.format("\"%s\"", getSourceMmsi().getMMSI())).append(",")
+		.append("\"loc\"").append(":").append("{")
+		.append("\"type\"").append(":").append("\"Polygon\"").append(",")
+	    .append("\"coordinates\"").append(":").append("[").append("[")
+   		 .append("[")
+	    .append(southWestLongitude).append(",")
+	    .append(northEastLatitude)
+	    .append("]").append(",")
+	    .append("[")
+	    .append(northEastLongitude).append(",")
+	    .append(northEastLatitude)
+	    .append("]").append(",")
+	    .append("[")
+	    .append(northEastLongitude).append(",")
+	    .append(southWestLatitude)
+	    .append("]").append(",")
+	    .append("[")
+	    .append(southWestLongitude).append(",")
+	    .append(southWestLatitude)
+	    .append("]").append(",")
+	    .append("[")
+	    .append(southWestLongitude).append(",")
+	    .append(northEastLatitude)
+	    .append("]")
+	    .append("]").append("]").append("}").append(",")
+		.append("\"station\"").append(":").append(String.format("\"%s\"", stationType)).append(",")
+		.append("\"cargo\"").append(":").append(String.format("\"%s\"", shipType)).append(",")
+		.append("\"tr\"").append(":").append(String.format("\"%s\"", transmitReceiveMode)).append(",")
+		.append("\"reporting\"").append(":").append(String.format("\"%s\"", reportingInterval)).append(",")
+		.append("\"quiet\"").append(":").append(quietTime);
+		if (this.getNMEATagBlock() != null) {
+			builder.append(",").append(this.getNMEATagBlock().toString());
+		}
+		builder.append("}");
+	return builder.toString();		
+	}
+	
 	public static GroupAssignmentCommand fromEncodedMessage(EncodedAISMessage encodedMessage) {
 		if (! encodedMessage.isValid())
 			throw new InvalidEncodedMessage(encodedMessage);
@@ -90,17 +147,31 @@ public class GroupAssignmentCommand extends DecodedAISMessage {
 		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
 		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 		
-		Float northEastLatitude = DecoderImpl.convertToFloat(encodedMessage.getBits(61, 89)) / 10f;
-		Float northEastLongitude = DecoderImpl.convertToFloat(encodedMessage.getBits(61, 89)) / 10f;
-		Float southWestLatitude = DecoderImpl.convertToFloat(encodedMessage.getBits(61, 89)) / 10f;
-		Float southWestLongitude = DecoderImpl.convertToFloat(encodedMessage.getBits(61, 89)) / 10f;
-		StationType stationType = StationType.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(143, 145)));
-		ShipType shipType = ShipType.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(143, 145)));
-		TxRxMode transmitReceiveMode = TxRxMode.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(128, 137)));
-		ReportingInterval reportingInterval = ReportingInterval.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(143, 145)));
-		Integer quietTime = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(128, 137));
+		Float northEastLatitude = DecoderImpl.convertToFloat(encodedMessage.getBits(58, 75)) / 600.0f;
+		Float northEastLongitude = DecoderImpl.convertToFloat(encodedMessage.getBits(40, 58)) / 600.0f;
+		Float southWestLatitude = DecoderImpl.convertToFloat(encodedMessage.getBits(93, 110)) / 600.0f;
+		Float southWestLongitude = DecoderImpl.convertToFloat(encodedMessage.getBits(75, 93)) / 600.0f;
+		StationType stationType = StationType.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(110, 114)));
+		ShipType shipType = ShipType.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(114, 122)));
+		TxRxMode transmitReceiveMode = TxRxMode.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(144, 146)));
+		ReportingInterval reportingInterval = ReportingInterval.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(146, 150)));
+		Integer quietTime = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(150, 154));
+		NMEATagBlock nmeaTagBlock = encodedMessage.getNMEATagBlock();
 		
-		return new GroupAssignmentCommand(repeatIndicator, sourceMmsi, northEastLatitude, northEastLongitude, southWestLatitude, southWestLongitude, stationType, shipType, transmitReceiveMode, reportingInterval, quietTime);
+		return new GroupAssignmentCommand(
+				repeatIndicator, 
+				sourceMmsi, 
+				northEastLatitude,
+				northEastLongitude,
+				southWestLatitude,
+				southWestLongitude,
+				stationType, 
+				shipType,
+				transmitReceiveMode,
+				reportingInterval,
+				quietTime,
+				nmeaTagBlock
+				);
 	}
 	
 	private final Float northEastLatitude;

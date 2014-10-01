@@ -21,19 +21,45 @@ import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.messages.types.MMSI;
+import dk.tbsalling.aismessages.nmea.messages.NMEATagBlock;
 
 @SuppressWarnings("serial")
 public class UTCAndDateInquiry extends DecodedAISMessage {
 
 	public UTCAndDateInquiry(
-			Integer repeatIndicator, MMSI sourceMmsi, MMSI destinationMmsi) {
-		super(AISMessageType.UTCAndDateInquiry, repeatIndicator, sourceMmsi);
+			Integer repeatIndicator,
+			MMSI sourceMmsi,
+			MMSI destinationMmsi,
+			NMEATagBlock nmeaTagBlock
+			) {
+		super(
+				AISMessageType.UTCAndDateInquiry,
+				repeatIndicator,
+				sourceMmsi, 
+				nmeaTagBlock
+				);
 		this.destinationMmsi = destinationMmsi;
 	}
 
 	public final MMSI getDestinationMmsi() {
 		return destinationMmsi;
 	}
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("{")
+			.append("\"messageId\"").append(":").append(getMessageType().getCode()).append(",")
+			.append("\"repeat\"").append(":").append(getRepeatIndicator()).append(",")
+			.append("\"mmsi\"").append(":").append(String.format("\"%s\"", getSourceMmsi().getMMSI())).append(",")
+			.append("\"destination\"").append(":").append(String.format("\"%s\"", destinationMmsi.getMMSI()));
+			if (this.getNMEATagBlock() != null) {
+				builder.append(",").append(this.getNMEATagBlock().toString());
+			}
+			builder.append("}");
+		return builder.toString();
+	}
+
 
 	public static UTCAndDateInquiry fromEncodedMessage(EncodedAISMessage encodedMessage) {
 		if (! encodedMessage.isValid())
@@ -44,8 +70,14 @@ public class UTCAndDateInquiry extends DecodedAISMessage {
 		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
 		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
 		MMSI destinationMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
-
-		return new UTCAndDateInquiry(repeatIndicator, sourceMmsi, destinationMmsi);
+		NMEATagBlock nmeaTagBlock = encodedMessage.getNMEATagBlock();
+		
+		return new UTCAndDateInquiry(
+				repeatIndicator,
+				sourceMmsi, 
+				destinationMmsi,
+				nmeaTagBlock
+				);
 	}
 	
 	private MMSI destinationMmsi;

@@ -20,24 +20,53 @@ import dk.tbsalling.aismessages.decoder.DecoderImpl;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.messages.types.CommunicationState;
+import dk.tbsalling.aismessages.messages.types.ITDMA;
 import dk.tbsalling.aismessages.messages.types.MMSI;
 import dk.tbsalling.aismessages.messages.types.ManeuverIndicator;
 import dk.tbsalling.aismessages.messages.types.NavigationStatus;
+import dk.tbsalling.aismessages.messages.types.SOTDMA;
+import dk.tbsalling.aismessages.nmea.messages.NMEATagBlock;
 
 @SuppressWarnings("serial")
 public class PositionReportClassAResponseToInterrogation extends PositionReport {
 	
-	public PositionReportClassAResponseToInterrogation(AISMessageType messageType,
-			Integer repeatIndicator, MMSI sourceMmsi,
-			NavigationStatus navigationStatus, Integer rateOfTurn,
-			Float speedOverGround, Boolean positionAccurate, Float latitude,
-			Float longitude, Float courseOverGround, Integer trueHeading,
-			Integer second, ManeuverIndicator maneuverIndicator,
-			Boolean raimFlag) {
-		super(messageType, repeatIndicator, sourceMmsi, navigationStatus, rateOfTurn,
-				speedOverGround, positionAccurate, latitude, longitude,
-				courseOverGround, trueHeading, second, maneuverIndicator,
-				raimFlag);
+	public PositionReportClassAResponseToInterrogation(
+			AISMessageType messageType,
+			Integer repeatIndicator,
+			MMSI mmsi,
+			NavigationStatus navigationStatus,
+			Integer rateOfTurn,
+			Float speedOverGround,
+			Boolean positionAccurate,
+			Float latitude,
+			Float longitude,
+			Float courseOverGround,
+			Integer trueHeading,
+			Integer second,
+			ManeuverIndicator maneuverIndicator,
+			Boolean raimFlag,
+			CommunicationState communicationState,
+			NMEATagBlock nmeaTagBlock
+			) {
+		super(
+				messageType,
+				repeatIndicator,
+				mmsi,
+				navigationStatus,
+				rateOfTurn,
+				speedOverGround,
+				positionAccurate,
+				latitude,
+				longitude,
+				courseOverGround,
+				trueHeading,
+				second,
+				maneuverIndicator,
+				raimFlag,
+				communicationState,
+				nmeaTagBlock
+				);
 	}
 
 	public static PositionReportClassAResponseToInterrogation fromEncodedMessage(EncodedAISMessage encodedMessage) {
@@ -60,10 +89,25 @@ public class PositionReportClassAResponseToInterrogation extends PositionReport 
 		Integer second = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(137, 143));
 		ManeuverIndicator maneuverIndicator = ManeuverIndicator.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(143, 145)));
 		Boolean raimFlag = DecoderImpl.convertToBoolean(encodedMessage.getBits(148, 149));
+		CommunicationState communicationState = ITDMA.fromEncodedString(encodedMessage.getBits(149, 168));	
+		NMEATagBlock nmeaTagBlock = encodedMessage.getNMEATagBlock();
 		
-		return new PositionReportClassAResponseToInterrogation(AISMessageType.PositionReportClassAResponseToInterrogation, repeatIndicator,
-				sourceMmsi, navigationStatus, rateOfTurn, speedOverGround,
-				positionAccurate, latitude, longitude, courseOverGround,
-				trueHeading, second, maneuverIndicator, raimFlag);
+		return new PositionReportClassAResponseToInterrogation(
+				AISMessageType.PositionReportClassAResponseToInterrogation,
+				repeatIndicator,
+				sourceMmsi,
+				navigationStatus,
+				rateOfTurn,
+				speedOverGround,
+				positionAccurate, 
+				latitude, 
+				longitude, 
+				courseOverGround,
+				trueHeading,
+				second, 
+				maneuverIndicator,
+				raimFlag, 
+				communicationState,
+				nmeaTagBlock);
 	}
 }

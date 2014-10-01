@@ -27,7 +27,7 @@ import dk.tbsalling.aismessages.messages.types.AISMessageType;
 public class Error extends DecodedAISMessage {
 
 	public Error(String rawMessage, String errorDescription) {
-		super(AISMessageType.Error, null, null);
+		super(AISMessageType.Error, null, null, null);
 		this.rawMessage = rawMessage;
 		this.errorDescription = errorDescription;
 	}

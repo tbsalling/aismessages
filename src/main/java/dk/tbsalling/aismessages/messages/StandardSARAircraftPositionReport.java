@@ -18,20 +18,43 @@ package dk.tbsalling.aismessages.messages;
 
 import dk.tbsalling.aismessages.decoder.DecoderImpl;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
+import dk.tbsalling.aismessages.exceptions.UnsupportedCommunicationStateType;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.messages.types.CommunicationState;
+import dk.tbsalling.aismessages.messages.types.CommunicationStateType;
+import dk.tbsalling.aismessages.messages.types.ITDMA;
 import dk.tbsalling.aismessages.messages.types.MMSI;
+import dk.tbsalling.aismessages.messages.types.SOTDMA;
+import dk.tbsalling.aismessages.nmea.messages.NMEATagBlock;
 
 @SuppressWarnings("serial")
 public class StandardSARAircraftPositionReport extends DecodedAISMessage {
 
 	public StandardSARAircraftPositionReport(
-			Integer repeatIndicator, MMSI sourceMmsi, Integer altitude,
-			Integer speed, Boolean positionAccurate, Float latitude,
-			Float longitude, Float courseOverGround, Integer second,
-			String regionalReserved, Boolean dataTerminalReady,
-			Boolean assigned, Boolean raimFlag, String radioStatus) {
-		super(AISMessageType.StandardSARAircraftPositionReport, repeatIndicator, sourceMmsi);
+			Integer repeatIndicator,
+			MMSI sourceMmsi,
+			Integer altitude,
+			Integer speed,
+			Boolean positionAccurate,
+			Float latitude,
+			Float longitude,
+			Float courseOverGround,
+			Integer second,
+			Boolean altitudeSensor,
+			Boolean dataTerminalReady,
+			Boolean assigned,
+			Boolean raimFlag,
+			CommunicationStateType communicationStateSelector,
+			CommunicationState communicationState,
+			NMEATagBlock nmeaTagBlock
+			) {
+		super(
+				AISMessageType.StandardSARAircraftPositionReport, 
+				repeatIndicator, 
+				sourceMmsi, 
+				nmeaTagBlock
+				);
 		this.altitude = altitude;
 		this.speed = speed;
 		this.positionAccurate = positionAccurate;
@@ -39,11 +62,12 @@ public class StandardSARAircraftPositionReport extends DecodedAISMessage {
 		this.longitude = longitude;
 		this.courseOverGround = courseOverGround;
 		this.second = second;
-		this.regionalReserved = regionalReserved;
+		this.altitudeSensor = altitudeSensor;
 		this.dataTerminalReady = dataTerminalReady;
 		this.assigned = assigned;
 		this.raimFlag = raimFlag;
-		this.radioStatus = radioStatus;
+		this.communicationStateSelector = communicationStateSelector;
+		this.communicationState = communicationState;
 	}
 
 	public final Integer getAltitude() {
@@ -74,8 +98,8 @@ public class StandardSARAircraftPositionReport extends DecodedAISMessage {
 		return second;
 	}
 
-	public final String getRegionalReserved() {
-		return regionalReserved;
+	public final Boolean getAltitudeSensor() {
+		return altitudeSensor;
 	}
 
 	public final Boolean getDataTerminalReady() {
@@ -90,8 +114,49 @@ public class StandardSARAircraftPositionReport extends DecodedAISMessage {
 		return raimFlag;
 	}
 
-	public final String getRadioStatus() {
-		return radioStatus;
+	public final CommunicationStateType getCommunicationStateSelector() {
+		return communicationStateSelector;
+	}
+	
+	public final CommunicationState getCommunicationState() {
+		return communicationState;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("{")
+			.append("\"messageId\"").append(":").append(getMessageType().getCode()).append(",")
+			.append("\"repeat\"").append(":").append(getRepeatIndicator()).append(",")
+			.append("\"mmsi\"").append(":").append(String.format("\"%s\"", getSourceMmsi().getMMSI())).append(",")
+			.append("\"altitude\"").append(":").append(altitude).append(",")
+			.append("\"sog\"").append(":").append(speed).append(",")
+			.append("\"accuracy\"").append(":").append(positionAccurate.booleanValue() ? "1" : "0").append(",")
+			.append("\"loc\"").append(":");
+			if (longitude <= 180.0f && longitude >= -180.0f && latitude <= 90.0f && latitude >= -80.0) {
+				builder.append("{")
+				.append("\"type\"").append(":").append("\"Point\"").append(",")
+			    .append("\"coordinates\"").append(":").append("[")
+				.append(longitude).append(",")
+				.append(latitude).append("]").append("}");
+			} else {
+				Float nullFloat = null;				
+				builder.append(nullFloat);
+			}
+			builder.append(",")
+			.append("\"cog\"").append(":").append(courseOverGround).append(",")
+			.append("\"second\"").append(":").append(second).append(",")
+			.append("\"sensor\"").append(":").append(altitudeSensor.booleanValue() ? "1" : "0").append(",")
+			.append("\"dte\"").append(":").append(dataTerminalReady.booleanValue() ? "1" : "0").append(",")
+			.append("\"assigned\"").append(":").append(assigned.booleanValue() ? "1" : "0").append(",")
+			.append("\"raim\"").append(":").append(raimFlag.booleanValue() ? "1" : "0").append(",")
+			.append("\"selector\"").append(":").append(String.format("\"%s\"", communicationStateSelector)).append(",")
+			.append("\"communication\"").append(":").append(communicationState);
+			if (this.getNMEATagBlock() != null) {
+				builder.append(",").append(this.getNMEATagBlock().toString());
+			}
+			builder.append("}");
+		return builder.toString();
 	}
 
 	public static StandardSARAircraftPositionReport fromEncodedMessage(EncodedAISMessage encodedMessage) {
@@ -110,16 +175,28 @@ public class StandardSARAircraftPositionReport extends DecodedAISMessage {
 		 Float latitude = DecoderImpl.convertToFloat(encodedMessage.getBits(89, 116)) / 600000f;
 		 Float courseOverGround = DecoderImpl.convertToUnsignedFloat(encodedMessage.getBits(116, 128)) / 10f;
 		 Integer second = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(128, 134));
-		 String regionalReserved = DecoderImpl.convertToBitString(encodedMessage.getBits(134, 142));
+		 Boolean altitudeSensor = DecoderImpl.convertToBoolean(encodedMessage.getBits(134, 135));
 		 Boolean dataTerminalReady = DecoderImpl.convertToBoolean(encodedMessage.getBits(142, 143));
 		 Boolean assigned = DecoderImpl.convertToBoolean(encodedMessage.getBits(146, 147));
 		 Boolean raimFlag = DecoderImpl.convertToBoolean(encodedMessage.getBits(147, 148));
-		 String radioStatus = DecoderImpl.convertToBitString(encodedMessage.getBits(148, 168));
+		 CommunicationStateType communicationStateSelector = CommunicationStateType.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(148, 149)));		
+			CommunicationState communicationState = null;
+			switch (communicationStateSelector) {
+			case SOTDMA:
+				communicationState = SOTDMA.fromEncodedString(encodedMessage.getBits(149, 168));
+				break;
+			case ITDMA:
+				communicationState = ITDMA.fromEncodedString(encodedMessage.getBits(149, 168));
+				break;
+			default:
+				throw new UnsupportedCommunicationStateType(communicationStateSelector.getCode());
+			}
+		 NMEATagBlock nmeaTagBlock = encodedMessage.getNMEATagBlock();
 		
 		return new StandardSARAircraftPositionReport(repeatIndicator,
 				sourceMmsi, altitude, speed, positionAccurate, latitude,
-				longitude, courseOverGround, second, regionalReserved,
-				dataTerminalReady, assigned, raimFlag, radioStatus);
+				longitude, courseOverGround, second, altitudeSensor,
+				dataTerminalReady, assigned, raimFlag, communicationStateSelector, communicationState, nmeaTagBlock);
 	}
 
 	private final Integer altitude;
@@ -129,9 +206,10 @@ public class StandardSARAircraftPositionReport extends DecodedAISMessage {
 	private final Float longitude;
 	private final Float courseOverGround;
 	private final Integer second;
-	private final String regionalReserved;
+	private final Boolean altitudeSensor;
 	private final Boolean dataTerminalReady;
 	private final Boolean assigned;
 	private final Boolean raimFlag;
-	private final String radioStatus;
+	private final CommunicationStateType communicationStateSelector;
+	private final CommunicationState communicationState;
 }

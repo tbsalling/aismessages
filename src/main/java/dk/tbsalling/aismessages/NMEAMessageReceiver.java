@@ -72,7 +72,7 @@ public class NMEAMessageReceiver {
 			log.finest("Handling unfragmented NMEA message");
 			String payload = nmeaMessage.getEncodedPayload();
 			int fillBits = nmeaMessage.getFillBits();
-			EncodedAISMessage encodedAISMessage = new EncodedAISMessage(payload, fillBits);
+			EncodedAISMessage encodedAISMessage = new EncodedAISMessage(payload, fillBits, nmeaMessage.getTagBlock());
 			DecodedAISMessage decodedAISMessage = decoder.decode(encodedAISMessage);
 			messageFragments.clear();
 			metadata.setProcessedIn(Short.valueOf((short) ((System.nanoTime() - startTime)/1000)));
@@ -111,7 +111,7 @@ public class NMEAMessageReceiver {
 								fillBits = m.getFillBits();
 							}
 						}
-						EncodedAISMessage encodedAISMessage = new EncodedAISMessage(payload.toString(), fillBits);
+						EncodedAISMessage encodedAISMessage = new EncodedAISMessage(payload.toString(), fillBits, nmeaMessage.getTagBlock());
 						DecodedAISMessage decodedAISMessage = decoder.decode(encodedAISMessage);
 						messageFragments.clear();
 						decodedAISMessage.setMetadata(metadata);

@@ -16,19 +16,33 @@
 
 package dk.tbsalling.aismessages.messages;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import dk.tbsalling.aismessages.decoder.DecoderImpl;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.messages.types.MMSI;
+import dk.tbsalling.aismessages.nmea.messages.NMEATagBlock;
 
 @SuppressWarnings("serial")
 public class AddressedSafetyRelatedMessage extends DecodedAISMessage {
 
 	public AddressedSafetyRelatedMessage(
-			Integer repeatIndicator, MMSI sourceMmsi, Integer sequenceNumber,
-			MMSI destinationMmsi, Boolean retransmit, String text) {
-		super(AISMessageType.AddressedSafetyRelatedMessage, repeatIndicator, sourceMmsi);
+			Integer repeatIndicator,
+			MMSI sourceMmsi, 
+			Integer sequenceNumber,
+			MMSI destinationMmsi,
+			Boolean retransmit, 
+			String text,
+			NMEATagBlock nmeaTagBlock
+			) {
+		super(
+				AISMessageType.AddressedSafetyRelatedMessage,
+				repeatIndicator,
+				sourceMmsi,
+				nmeaTagBlock
+				);
 		this.sequenceNumber = sequenceNumber;
 		this.destinationMmsi = destinationMmsi;
 		this.retransmit = retransmit;
@@ -51,6 +65,24 @@ public class AddressedSafetyRelatedMessage extends DecodedAISMessage {
 		return text;
 	}
 	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("{")
+			.append("\"messageId\"").append(":").append(getMessageType().getCode()).append(",")
+			.append("\"repeat\"").append(":").append(getRepeatIndicator()).append(",")
+			.append("\"mmsi\"").append(":").append(String.format("\"%s\"", getSourceMmsi().getMMSI())).append(",")
+			.append("\"sequence\"").append(":").append(sequenceNumber).append(",")
+			.append("\"destination\"").append(":").append(String.format("\"%s\"", destinationMmsi.getMMSI())).append(",")
+			.append("\"retransmit\"").append(":").append(retransmit.booleanValue() ? "1" : "0").append(",")
+			.append("\"text\"").append(":").append((String.format("\"%s\"", StringEscapeUtils.escapeJson(text))));
+			if (this.getNMEATagBlock() != null) {
+				builder.append(",").append(this.getNMEATagBlock().toString());
+			}
+			builder.append("}");
+		return builder.toString();
+	}
+	
 	public static AddressedSafetyRelatedMessage fromEncodedMessage(EncodedAISMessage encodedMessage) {
 		if (! encodedMessage.isValid())
 			throw new InvalidEncodedMessage(encodedMessage);
@@ -62,9 +94,18 @@ public class AddressedSafetyRelatedMessage extends DecodedAISMessage {
 		Integer sequenceNumber = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(38, 40));
 		MMSI destinationMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
 		Boolean retransmit = DecoderImpl.convertToBoolean(encodedMessage.getBits(70, 71));
-		String text = DecoderImpl.convertToString(encodedMessage.getBits(70, 1009));
-
-		return new AddressedSafetyRelatedMessage(repeatIndicator, sourceMmsi, sequenceNumber, destinationMmsi, retransmit, text);
+		String text = DecoderImpl.convertToString(encodedMessage.getBits(72, encodedMessage.getNumberOfBits()));
+		NMEATagBlock nmeaTagBlock = encodedMessage.getNMEATagBlock();
+		
+		return new AddressedSafetyRelatedMessage(
+				repeatIndicator,
+				sourceMmsi, 
+				sequenceNumber, 
+				destinationMmsi, 
+				retransmit,
+				text, 
+				nmeaTagBlock
+				);
 	}
 
 	private final Integer sequenceNumber;

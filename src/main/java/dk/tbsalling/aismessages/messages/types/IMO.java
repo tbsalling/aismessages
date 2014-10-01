@@ -18,10 +18,15 @@ package dk.tbsalling.aismessages.messages.types;
 
 import java.io.Serializable;
 
+@SuppressWarnings("serial")
 public class IMO implements Serializable {
 
 	public IMO(Long mmsi) {
 		this.imo = mmsi;
+	}
+	
+	public Long getIMO() {
+	    return imo;
 	}
 	
 	public static IMO valueOf(Long mmsi) {
@@ -51,15 +56,15 @@ public class IMO implements Serializable {
 		} else if (!imo.equals(other.imo))
 			return false;
 		return true;
-	}
-
+	}   
+	
 	@Override
 	public String toString() {
-		return "IMO [imo=" + imo + "]";
-	}
-
-        public Long getIMO() {
-	    return imo;
+		StringBuilder builder = new StringBuilder();
+		builder.append("{")
+		.append("\"imo\"").append(":").append(imo)
+		.append("}");
+		return builder.toString();	
 	}
 
 	private final Long imo;

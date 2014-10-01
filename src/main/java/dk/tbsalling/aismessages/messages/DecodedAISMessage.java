@@ -20,14 +20,16 @@ import java.io.Serializable;
 
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.messages.types.MMSI;
+import dk.tbsalling.aismessages.nmea.messages.NMEATagBlock;
 
 @SuppressWarnings("serial")
 public abstract class DecodedAISMessage implements Serializable {
 	
-	protected DecodedAISMessage(AISMessageType messageType, Integer repeatIndicator, MMSI sourceMmsi) {
+	protected DecodedAISMessage(AISMessageType messageType, Integer repeatIndicator, MMSI sourceMmsi, NMEATagBlock nmeaTagBlock) {
 		this.messageType = messageType;
 		this.repeatIndicator = repeatIndicator;
 		this.sourceMmsi = sourceMmsi;
+		this.nmeaTagBlock = nmeaTagBlock;
 	}
 
 	public final Metadata getMetadata() {
@@ -48,6 +50,10 @@ public abstract class DecodedAISMessage implements Serializable {
 
 	public final MMSI getSourceMmsi() {
 		return sourceMmsi;
+	}
+	
+	public final NMEATagBlock getNMEATagBlock() {
+		return nmeaTagBlock;
 	}
 
 	@Override
@@ -100,4 +106,5 @@ public abstract class DecodedAISMessage implements Serializable {
 	private final AISMessageType messageType;
 	private final Integer repeatIndicator;
 	private final MMSI sourceMmsi;
+	private final NMEATagBlock nmeaTagBlock;
 }

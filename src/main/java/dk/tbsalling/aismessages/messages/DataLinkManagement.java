@@ -23,6 +23,7 @@ import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.messages.types.MMSI;
+import dk.tbsalling.aismessages.nmea.messages.NMEATagBlock;
 
 /**
  * This message is used to pre-allocate TDMA slots within an AIS base station
@@ -38,13 +39,32 @@ public class DataLinkManagement extends DecodedAISMessage {
     private static final Logger log = Logger.getLogger(DataLinkManagement.class.getName());
 
     public DataLinkManagement(
-			Integer repeatIndicator, MMSI sourceMmsi, Integer offsetNumber1,
-			Integer reservedSlots1, Integer timeout1, Integer increment1,
-			Integer offsetNumber2, Integer reservedSlots2, Integer timeout2,
-			Integer increment2, Integer offsetNumber3, Integer reservedSlots3,
-			Integer timeout3, Integer increment3, Integer offsetNumber4,
-			Integer reservedSlots4, Integer timeout4, Integer increment4) {
-		super(AISMessageType.DataLinkManagement, repeatIndicator, sourceMmsi);
+			Integer repeatIndicator,
+			MMSI sourceMmsi,
+			Integer offsetNumber1,
+			Integer reservedSlots1,
+			Integer timeout1, 
+			Integer increment1,
+			Integer offsetNumber2,
+			Integer reservedSlots2,
+			Integer timeout2,
+			Integer increment2,
+			Integer offsetNumber3,
+			Integer reservedSlots3,
+			Integer timeout3,
+			Integer increment3,
+			Integer offsetNumber4,
+			Integer reservedSlots4,
+			Integer timeout4,
+			Integer increment4,
+			NMEATagBlock nmeaTagBlock
+			) {
+		super(
+				AISMessageType.DataLinkManagement,
+				repeatIndicator,
+				sourceMmsi, 
+				nmeaTagBlock
+				);
 		this.offsetNumber1 = offsetNumber1;
 		this.reservedSlots1 = reservedSlots1;
 		this.timeout1 = timeout1;
@@ -130,24 +150,32 @@ public class DataLinkManagement extends DecodedAISMessage {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("DataLinkManagement [offsetNumber1=")
-				.append(offsetNumber1).append(", reservedSlots1=")
-				.append(reservedSlots1).append(", timeout1=").append(timeout1)
-				.append(", increment1=").append(increment1)
-				.append(", offsetNumber2=").append(offsetNumber2)
-				.append(", reservedSlots2=").append(reservedSlots2)
-				.append(", timeout2=").append(timeout2).append(", increment2=")
-				.append(increment2).append(", offsetNumber3=")
-				.append(offsetNumber3).append(", reservedSlots3=")
-				.append(reservedSlots3).append(", timeout3=").append(timeout3)
-				.append(", increment3=").append(increment3)
-				.append(", offsetNumber4=").append(offsetNumber4)
-				.append(", reservedSlots4=").append(reservedSlots4)
-				.append(", timeout4=").append(timeout4).append(", increment4=")
-				.append(increment4).append("]");
+		builder.append("{")
+			.append("\"messageId\"").append(":").append(getMessageType().getCode()).append(",")
+			.append("\"repeat\"").append(":").append(getRepeatIndicator()).append(",")
+			.append("\"mmsi\"").append(":").append(String.format("\"%s\"", getSourceMmsi().getMMSI())).append(",")
+			.append("\"offset1\"").append(":").append(offsetNumber1).append(",")
+			.append("\"slots1\"").append(":").append(reservedSlots1).append(",")
+			.append("\"timeout1\"").append(":").append(timeout1).append(",")
+			.append("\"increment1\"").append(":").append(increment1).append(",")
+			.append("\"offset2\"").append(":").append(offsetNumber2).append(",")
+			.append("\"slots2\"").append(":").append(reservedSlots2).append(",")
+			.append("\"timeout2\"").append(":").append(timeout2).append(",")
+			.append("\"increment2\"").append(":").append(increment2).append(",")
+			.append("\"offset3\"").append(":").append(offsetNumber3).append(",")
+			.append("\"slots3\"").append(":").append(reservedSlots3).append(",")
+			.append("\"timeout3\"").append(":").append(timeout3).append(",")
+			.append("\"increment3\"").append(":").append(increment3).append(",")
+			.append("\"offset4\"").append(":").append(offsetNumber4).append(",")
+			.append("\"slots4\"").append(":").append(reservedSlots4).append(",")
+			.append("\"timeout4\"").append(":").append(timeout4).append(",")
+			.append("\"increment4\"").append(":").append(increment4);
+			if (this.getNMEATagBlock() != null) {
+				builder.append(",").append(this.getNMEATagBlock().toString());
+			}
+			builder.append("}");
 		return builder.toString();
 	}
-
 	public static DataLinkManagement fromEncodedMessage(EncodedAISMessage encodedMessage) {
 		if (! encodedMessage.isValid())
 			throw new InvalidEncodedMessage(encodedMessage);
@@ -176,12 +204,29 @@ public class DataLinkManagement extends DecodedAISMessage {
 		Integer reservedSlots4 = n >= 160 ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(142, 146)) : null;
 		Integer timeout4 = n >= 160 ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(146, 149)) : null;
 		Integer increment4 = n >= 160 ? DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(149, 160)) : null;
-
-		return new DataLinkManagement(repeatIndicator, sourceMmsi,
-				offsetNumber1, reservedSlots1, timeout1, increment1,
-				offsetNumber2, reservedSlots2, timeout2, increment2,
-				offsetNumber3, reservedSlots3, timeout3, increment3,
-				offsetNumber4, reservedSlots4, timeout4, increment4);
+		NMEATagBlock nmeaTagBlock = encodedMessage.getNMEATagBlock();
+		
+		return new DataLinkManagement(
+				repeatIndicator,
+				sourceMmsi,
+				offsetNumber1,
+				reservedSlots1,
+				timeout1, 
+				increment1,
+				offsetNumber2,
+				reservedSlots2, 
+				timeout2, 
+				increment2,
+				offsetNumber3,
+				reservedSlots3, 
+				timeout3, 
+				increment3,
+				offsetNumber4, 
+				reservedSlots4,
+				timeout4, 
+				increment4,
+				nmeaTagBlock
+				);
 	}
 	
 	private final Integer offsetNumber1;

@@ -16,22 +16,50 @@
 
 package dk.tbsalling.aismessages.messages;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import dk.tbsalling.aismessages.decoder.DecoderImpl;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.messages.types.MMSI;
+import dk.tbsalling.aismessages.nmea.messages.NMEATagBlock;
 
 @SuppressWarnings("serial")
 public class SafetyRelatedBroadcastMessage extends DecodedAISMessage {
 	
-	public SafetyRelatedBroadcastMessage(Integer repeatIndicator, MMSI sourceMmsi, String text) {
-		super(AISMessageType.SafetyRelatedBroadcastMessage, repeatIndicator, sourceMmsi);
+	public SafetyRelatedBroadcastMessage(
+			Integer repeatIndicator,
+			MMSI sourceMmsi,
+			String text, 
+			NMEATagBlock nmeaTagBlock
+			) {
+		super(
+				AISMessageType.SafetyRelatedBroadcastMessage,
+				repeatIndicator, 
+				sourceMmsi, 
+				nmeaTagBlock
+				);
 		this.text = text;
 	}
 
 	public final String getText() {
 		return text;
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder builder = new StringBuilder();
+		builder.append("{")
+			.append("\"messageId\"").append(":").append(getMessageType().getCode()).append(",")
+			.append("\"repeat\"").append(":").append(getRepeatIndicator()).append(",")
+			.append("\"mmsi\"").append(":").append(String.format("\"%s\"", getSourceMmsi().getMMSI())).append(",")
+			.append("\"text\"").append(":").append((String.format("\"%s\"", StringEscapeUtils.escapeJson(text))));
+			if (this.getNMEATagBlock() != null) {
+				builder.append(",").append(this.getNMEATagBlock().toString());
+			}
+			builder.append("}");
+		return builder.toString();
 	}
 
 	public static SafetyRelatedBroadcastMessage fromEncodedMessage(EncodedAISMessage encodedMessage) {
@@ -42,9 +70,15 @@ public class SafetyRelatedBroadcastMessage extends DecodedAISMessage {
 			
 		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
 		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
-		String text = DecoderImpl.convertToString(encodedMessage.getBits(40, 1049));
-
-		return new SafetyRelatedBroadcastMessage(repeatIndicator, sourceMmsi, text);
+		String text = DecoderImpl.convertToString(encodedMessage.getBits(40, encodedMessage.getNumberOfBits()));
+		NMEATagBlock nmeaTagBlock = encodedMessage.getNMEATagBlock();
+		
+		return new SafetyRelatedBroadcastMessage(
+				repeatIndicator,
+				sourceMmsi, 
+				text,
+				nmeaTagBlock
+				);
 	}
 
 	private final String text;

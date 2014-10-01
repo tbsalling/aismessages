@@ -16,14 +16,18 @@
 
 package dk.tbsalling.aismessages.messages;
 
+import org.apache.commons.lang3.StringEscapeUtils;
+
 import dk.tbsalling.aismessages.decoder.DecoderImpl;
 import dk.tbsalling.aismessages.exceptions.InvalidEncodedMessage;
 import dk.tbsalling.aismessages.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.messages.types.AISVersionType;
 import dk.tbsalling.aismessages.messages.types.IMO;
 import dk.tbsalling.aismessages.messages.types.MMSI;
 import dk.tbsalling.aismessages.messages.types.PositionFixingDevice;
 import dk.tbsalling.aismessages.messages.types.ShipType;
+import dk.tbsalling.aismessages.nmea.messages.NMEATagBlock;
 
 /**
  * Message has a total of 424 bits, occupying two AIVDM sentences. In practice,
@@ -36,13 +40,27 @@ import dk.tbsalling.aismessages.messages.types.ShipType;
 @SuppressWarnings("serial")
 public class ShipAndVoyageData extends DecodedAISMessage {
 	
-	private ShipAndVoyageData(Integer repeatIndicator,
-			MMSI mmsi, IMO imo, String callsign, String shipName,
-			ShipType shipType, Integer toBow, Integer toStern,
-			Integer toStarboard, Integer toPort,
-			PositionFixingDevice positionFixingDevice, String eta, Float draught,
-			String destination, Boolean dataTerminalReady) {
-		super(AISMessageType.ShipAndVoyageRelatedData, repeatIndicator, mmsi);
+	private ShipAndVoyageData(
+			Integer repeatIndicator,
+			MMSI mmsi, 
+			AISVersionType version,
+			IMO imo, 
+			String callsign,
+			String shipName,
+			ShipType shipType, 
+			Integer toBow,
+			Integer toStern,
+			Integer toStarboard,
+			Integer toPort,
+			PositionFixingDevice positionFixingDevice,
+			String eta, 
+			Float draught,
+			String destination,
+			Boolean dataTerminalReady,
+			NMEATagBlock nmeaTagBlock
+			) {
+		super(AISMessageType.ShipAndVoyageRelatedData, repeatIndicator, mmsi, nmeaTagBlock);
+		this.version = version;
 		this.imo = imo;
 		this.callsign = callsign;
 		this.shipName = shipName;
@@ -56,6 +74,10 @@ public class ShipAndVoyageData extends DecodedAISMessage {
 		this.draught = draught;
 		this.destination = destination;
 		this.dataTerminalReady = dataTerminalReady;
+	}
+	
+	public final AISVersionType getVersion() {
+		return version;
 	}
 
 	public final IMO getImo() {
@@ -113,17 +135,28 @@ public class ShipAndVoyageData extends DecodedAISMessage {
 	@Override
 	public String toString() {
 		StringBuilder builder = new StringBuilder();
-		builder.append("ShipAndVoyageData [imo=").append(imo)
-				.append(", callsign=").append(callsign).append(", shipName=")
-				.append(shipName).append(", shipType=").append(shipType)
-				.append(", toBow=").append(toBow).append(", toStern=")
-				.append(toStern).append(", toStarboard=").append(toStarboard)
-				.append(", toPort=").append(toPort)
-				.append(", positionFixingDevice=").append(positionFixingDevice)
-				.append(", eta=").append(eta).append(", draught=")
-				.append(draught).append(", destination=").append(destination)
-				.append(", dataTerminalReady=").append(dataTerminalReady)
-				.append("]");
+		builder.append("{")
+		.append("\"messageId\"").append(":").append(getMessageType().getCode()).append(",")
+		.append("\"repeat\"").append(":").append(getRepeatIndicator()).append(",")
+		.append("\"mmsi\"").append(":").append(String.format("\"%s\"", getSourceMmsi().getMMSI())).append(",")
+		.append("\"version\"").append(":").append(String.format("\"%s\"", version)).append(",")
+		.append("\"imo\"").append(":").append(imo.getIMO()).append(",")
+		.append("\"callsign\"").append(":").append(String.format("\"%s\"", StringEscapeUtils.escapeJson(callsign))).append(",")
+		.append("\"name\"").append(":").append(String.format("\"%s\"", StringEscapeUtils.escapeJson(shipName))).append(",")
+		.append("\"cargo\"").append(":").append(String.format("\"%s\"", shipType)).append(",")
+		.append("\"bow\"").append(":").append(toBow).append(",")
+		.append("\"stern\"").append(":").append(toStern).append(",")
+		.append("\"port\"").append(":").append(toPort).append(",")
+		.append("\"starboard\"").append(":").append(toStarboard).append(",")
+		.append("\"device\"").append(":").append(String.format("\"%s\"", positionFixingDevice)).append(",")
+		.append("\"eta\"").append(":").append(String.format("\"%s\"", eta)).append(",")
+		.append("\"draught\"").append(":").append(draught).append(",")
+		.append("\"destination\"").append(":").append(String.format("\"%s\"", StringEscapeUtils.escapeJson(destination))).append(",")
+		.append("\"dte\"").append(":").append(dataTerminalReady.booleanValue() ? "1" : "0");
+		if (this.getNMEATagBlock() != null) {
+			builder.append(",").append(this.getNMEATagBlock().toString());
+		}
+		builder.append("}");
 		return builder.toString();
 	}
 
@@ -135,6 +168,7 @@ public class ShipAndVoyageData extends DecodedAISMessage {
 			
 		Integer repeatIndicator = DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(6, 8));
 		MMSI sourceMmsi = MMSI.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(8, 38)));
+		AISVersionType version = AISVersionType.fromInteger(DecoderImpl.convertToUnsignedInteger(encodedMessage.getBits(38, 40)));
 		IMO imo = IMO.valueOf(DecoderImpl.convertToUnsignedLong(encodedMessage.getBits(40, 70)));
 		String callsign = DecoderImpl.convertToString(encodedMessage.getBits(70, 112));
 		String shipName = DecoderImpl.convertToString(encodedMessage.getBits(112, 232));
@@ -148,10 +182,30 @@ public class ShipAndVoyageData extends DecodedAISMessage {
 		Float draught = DecoderImpl.convertToUnsignedFloat(encodedMessage.getBits(294, 302)) / 10f;
 		String destination = DecoderImpl.convertToString(encodedMessage.getBits(302, 422));
 		Boolean dataTerminalReady = DecoderImpl.convertToBoolean(encodedMessage.getBits(422, 423));
+		NMEATagBlock nmeaTagBlock = encodedMessage.getNMEATagBlock();
 		
-		return new ShipAndVoyageData(repeatIndicator, sourceMmsi, imo, callsign, shipName, shipType, toBow, toStern, toStarboard, toPort, positionFixingDevice, eta, draught, destination, dataTerminalReady);
+		return new ShipAndVoyageData(
+				repeatIndicator,
+				sourceMmsi, 
+				version, 
+				imo, 
+				callsign,
+				shipName, 
+				shipType,
+				toBow, 
+				toStern,
+				toStarboard,
+				toPort, 
+				positionFixingDevice,
+				eta,
+				draught, 
+				destination, 
+				dataTerminalReady,
+				nmeaTagBlock
+				);
 	}
-		
+	
+	private final AISVersionType version;
 	private final IMO imo;
 	private final String callsign;
 	private final String shipName;

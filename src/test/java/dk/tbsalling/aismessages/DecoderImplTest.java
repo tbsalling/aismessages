@@ -40,10 +40,13 @@ import dk.tbsalling.aismessages.messages.PositionReportClassAScheduled;
 import dk.tbsalling.aismessages.messages.ShipAndVoyageData;
 import dk.tbsalling.aismessages.messages.StandardClassBCSPositionReport;
 import dk.tbsalling.aismessages.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.messages.types.CommunicationStateType;
 import dk.tbsalling.aismessages.messages.types.IMO;
+import dk.tbsalling.aismessages.messages.types.ITDMA;
 import dk.tbsalling.aismessages.messages.types.MMSI;
 import dk.tbsalling.aismessages.messages.types.ManeuverIndicator;
 import dk.tbsalling.aismessages.messages.types.NavigationStatus;
+import dk.tbsalling.aismessages.messages.types.PartNumberType;
 import dk.tbsalling.aismessages.messages.types.PositionFixingDevice;
 import dk.tbsalling.aismessages.messages.types.ShipType;
 
@@ -77,7 +80,7 @@ public class DecoderImplTest {
 
 	@Test(expected=InvalidEncodedMessage.class)
 	public void handlesInvalidMessageCorrectly() {
-		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("00", 0);
+		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("00", 0, null);
 		decoder.decode(encodedAISMessage);
 	}
 
@@ -87,7 +90,7 @@ public class DecoderImplTest {
 	
 	@Test
 	public void canDecodePositionReportClassAScheduled() {
-		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("1773mj001To8m<TE8;R<nb@p08@B", 0);
+		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("1773mj001To8m<TE8;R<nb@p08@B", 0, null);
 		DecodedAISMessage decodedAISMessage = decoder.decode(encodedAISMessage);
 		System.out.println(decodedAISMessage.toString());
 
@@ -141,7 +144,7 @@ public class DecoderImplTest {
 		COMMUNICATION_SLOT_OFFSET	2320	
 		*/
 		
-		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("24RjBV0028o:pnNEBeU<pJF>0PT@", 0);
+		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("24RjBV0028o:pnNEBeU<pJF>0PT@", 0, null);
 		DecodedAISMessage decodedAISMessage = decoder.decode(encodedAISMessage);
 		System.out.println(decodedAISMessage.toString());
 
@@ -169,7 +172,7 @@ public class DecoderImplTest {
 	@Test
 	public void canDecodePositionReportClassAResponseToInterrogation() {
 		// !AIVDM,1,1,,A,34RjBV0028o:pnNEBeU<pJF>0PT@,0*3F
-		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("34RjBV0028o:pnNEBeU<pJF>0PT@", 0);
+		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("34RjBV0028o:pnNEBeU<pJF>0PT@", 0, null);
 		DecodedAISMessage decodedAISMessage = decoder.decode(encodedAISMessage);
 		System.out.println(decodedAISMessage.toString());
 		
@@ -198,7 +201,7 @@ public class DecoderImplTest {
 	public void canDecodeBaseStationReport() {
 		// !AIVDM,1,1,,B,4h3Ovk1udp6I9o>jPHEdjdW000S:,0*0C
 		
-		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("4h3Ovk1udp6I9o>jPHEdjdW000S:", 0);
+		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("4h3Ovk1udp6I9o>jPHEdjdW000S:", 0, null);
 		DecodedAISMessage decodedAISMessage = decoder.decode(encodedAISMessage);
 		System.out.println(decodedAISMessage.toString());
 		
@@ -225,7 +228,7 @@ public class DecoderImplTest {
 
 	@Test
 	public void canDecodeShipAndVoyageData1() {
-		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("55Mwm;P09lcEL=OSW798uT4j0lDh8uE8pD00000l1@D274oDN7gUDp4iSp>@00000000000", 2);
+		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("55Mwm;P09lcEL=OSW798uT4j0lDh8uE8pD00000l1@D274oDN7gUDp4iSp>@00000000000", 2, null);
 		DecodedAISMessage decodedAISMessage = decoder.decode(encodedAISMessage);
 		System.out.println(decodedAISMessage.toString());
 
@@ -253,7 +256,7 @@ public class DecoderImplTest {
 		// !AIVDM,2,1,3,A,55MuUD02;EFUL@CO;W@lU=<U=<U10V1HuT4LE:1DC@T>B4kC0DliSp=t,0*14
 		// !AIVDM,2,2,3,A,888888888888880,2*27
 
-		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("55MuUD02;EFUL@CO;W@lU=<U=<U10V1HuT4LE:1DC@T>B4kC0DliSp=t888888888888880", 2);
+		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("55MuUD02;EFUL@CO;W@lU=<U=<U10V1HuT4LE:1DC@T>B4kC0DliSp=t888888888888880", 2, null);
 		DecodedAISMessage decodedAISMessage = decoder.decode(encodedAISMessage);
 		System.out.println(decodedAISMessage.toString());
 
@@ -281,7 +284,7 @@ public class DecoderImplTest {
 		// !AIVDM,2,1,0,B,539S:k40000000c3G04PPh63<00000000080000o1PVG2uGD:00000000000,0*34
 		// !AIVDM,2,2,0,B,00000000000,2*27
 
-		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("539S:k40000000c3G04PPh63<00000000080000o1PVG2uGD:0000000000000000000000", 2);
+		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("539S:k40000000c3G04PPh63<00000000080000o1PVG2uGD:0000000000000000000000", 2, null);
 		DecodedAISMessage decodedAISMessage = decoder.decode(encodedAISMessage);
 		System.out.println(decodedAISMessage.toString());
 
@@ -320,7 +323,7 @@ public class DecoderImplTest {
 	public void canDecodeBinaryBroadcastMessage() {
 		// !AIVDM,1,1,,B,85MwpKiKf:MPiQa:ofV@v2mQTfB26oEtbEVqh4j1QDQPHjhpkNJ3,0*11
 
-		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("85MwpKiKf:MPiQa:ofV@v2mQTfB26oEtbEVqh4j1QDQPHjhpkNJ3", 2);
+		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("85MwpKiKf:MPiQa:ofV@v2mQTfB26oEtbEVqh4j1QDQPHjhpkNJ3", 0, null);
 		DecodedAISMessage decodedAISMessage = decoder.decode(encodedAISMessage);
 		System.out.println(decodedAISMessage.toString());
 
@@ -328,9 +331,9 @@ public class DecoderImplTest {
 		BinaryBroadcastMessage message = (BinaryBroadcastMessage) decodedAISMessage;
 		assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
 		assertEquals(MMSI.valueOf(366999663L), message.getSourceMmsi());
-		assertEquals((Integer) 1467, message.getDesignatedAreaCode());
-		assertEquals((Integer) 8, message.getFunctionalId());
-		assertEquals("1000", message.getBinaryData());
+		assertEquals((Integer) 366, message.getDesignatedAreaCode());
+		assertEquals((Integer) 56, message.getFunctionalIdentifier());
+		assertEquals("01011011101110001010011101100000110001100001101001001010110111101110100110010000111110000010110101100001100100101110010010000010000110110111010101111100101010010101100110111001110000000100110010000001100001010100100001100000011000110010110000111000110011011110011010000011", message.getBinaryData());
 	}
 	
 	//
@@ -365,7 +368,7 @@ public class DecoderImplTest {
 	public void canDecodeInterrogationShortVariant() {
 		// !AIVDM,1,1,,A,?h3Ovk1GOPph000,2*53
 
-		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("?h3Ovk1GOPph000", 2);
+		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("?h3Ovk1GOPph000", 2, null);
 		DecodedAISMessage decodedAISMessage = decoder.decode(encodedAISMessage);
 		System.out.println(decodedAISMessage.toString());
 
@@ -398,7 +401,7 @@ public class DecoderImplTest {
 	@Test
 	public void canDecodeStandardClassBCSPositionReport() {
 		// !AIVDM,1,1,,A,B5NJ;PP005l4ot5Isbl03wsUkP06,0*76
-		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("B5NJ;PP005l4ot5Isbl03wsUkP06", 0);
+		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("B5NJ;PP005l4ot5Isbl03wsUkP06", 0, null);
 		DecodedAISMessage decodedAISMessage = decoder.decode(encodedAISMessage);
 		System.out.println(decodedAISMessage.toString());
 
@@ -422,7 +425,8 @@ public class DecoderImplTest {
 		assertTrue(message.getMessage22());
 		assertFalse(message.getAssigned());
 		assertFalse(message.getRaimFlag());
-		assertEquals("11100000000000000110", message.getRadioStatus());
+		assertEquals(CommunicationStateType.ITDMA, message.getCommunicationStateSelector());
+		assertEquals(Integer.valueOf("393222"), message.getCommunicationState().getValue());
 	}
 
 	//
@@ -436,7 +440,7 @@ public class DecoderImplTest {
 	@Test
 	public void canDecodeDataLinkManagementShortVariant1() {
 		// !AIVDM,1,1,,A,Dh3Ovk1UAN>4,0*0A
-		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("Dh3Ovk1UAN>4", 0);
+		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("Dh3Ovk1UAN>4", 0, null);
 		DecodedAISMessage decodedAISMessage = decoder.decode(encodedAISMessage);
 		System.out.println(decodedAISMessage.toString());
 
@@ -461,7 +465,7 @@ public class DecoderImplTest {
 	@Test
 	public void canDecodeDataLinkManagementShortVariant2() {
 		// !AIVDM,1,1,,B,Dh3Ovk1cEN>4,0*3B
-		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("Dh3Ovk1cEN>4", 0);
+		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("Dh3Ovk1cEN>4", 0, null);
 		DecodedAISMessage decodedAISMessage = decoder.decode(encodedAISMessage);
 		System.out.println(decodedAISMessage.toString());
 
@@ -501,25 +505,25 @@ public class DecoderImplTest {
 
 	@Test
 	public void canDecodeClassBCSStaticDataReportVariant1() {
-		// !AIVDM,1,1,,A,H5NLOjTUG5CD=1BG46mqhj0P7130,0*78
-		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("H5NLOjTUG5CD=1BG46mqhj0P7130", 0);
+		// !AIVDM,1,1,,A,H42O55lti4hhhilD3nink000?050,0*40
+		EncodedAISMessage encodedAISMessage = new EncodedAISMessage("H42O55lti4hhhilD3nink000?050", 0, null);
 		DecodedAISMessage decodedAISMessage = decoder.decode(encodedAISMessage);
 		System.out.println(decodedAISMessage.toString());
 
 		assertEquals(AISMessageType.ClassBCSStaticDataReport, decodedAISMessage.getMessageType());
 		ClassBCSStaticDataReport message = (ClassBCSStaticDataReport) decodedAISMessage;
 		assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
-		assertEquals(MMSI.valueOf(367468490L), message.getSourceMmsi());
-		assertEquals((Integer) 1, message.getPartNumber());
+		assertEquals(MMSI.valueOf(271041815L), message.getSourceMmsi());
+		assertEquals(PartNumberType.B, message.getPartNumber());
 		assertNull(message.getShipName());
-		assertEquals(ShipType.PleasureCraft, message.getShipType());
-		assertEquals("WESTMAR", message.getVendorId());
-		assertEquals("WDF5902", message.getCallsign());
-		assertEquals((Integer) 4, message.getToBow());
-		assertEquals((Integer) 7, message.getToStern());
-		assertEquals((Integer) 3, message.getToStarboard());
-		assertEquals((Integer) 1, message.getToPort());
-		assertEquals(MMSI.valueOf(8417347L), message.getMothershipMmsi());
+		assertEquals(ShipType.Passenger, message.getShipType());
+		assertEquals("1D00014", message.getVendorId());
+		assertEquals("TC6163", message.getCallsign());
+		assertEquals((Integer) 0, message.getToBow());
+		assertEquals((Integer) 15, message.getToStern());
+		assertEquals((Integer) 5, message.getToStarboard());
+		assertEquals((Integer) 0, message.getToPort());
+		assertEquals(PositionFixingDevice.fromInteger(0), message.getPositionFixingDevice());
 	}
 
 	//
