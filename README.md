@@ -1,3 +1,3 @@
-Read the wiki - [https://github.com/tbsalling/aismessages/wiki](https://github.com/tbsalling/aismessages/wiki).
+![Build status](https://travis-ci.org/tbsalling/aismessages.svg?branch=master)
 
-[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/tbsalling/aismessages/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+Read the wiki - [https://github.com/tbsalling/aismessages/wiki](https://github.com/tbsalling/aismessages/wiki).
