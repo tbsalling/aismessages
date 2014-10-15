@@ -3,7 +3,8 @@
 AISmessages is a Java-based light-weight, zero-dependency, and ultra-efficient message decoder for maritime
 navigation and safety messages compliant with ITU 1371 (NMEA armoured AIS messages).
 
-It exhibits lazy decoding and fully decodes tens of thousands of NMEA armoured AIS messages per second per thread on a laptop.
+It exhibits lazy decoding and fully decodes tens of thousands of NMEA armoured AIS messages per second per CPU
+core on an Intel i7-based laptop.
 
 A live demo of AISmessages is available on http://ais.tbsalling.dk.  
  
