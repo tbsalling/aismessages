@@ -56,32 +56,32 @@ public class AddressedBinaryMessage extends AISMessage {
 
     @SuppressWarnings("unused")
     public Integer getSequenceNumber() {
-        return getDecodedValueByWeakReference(() -> sequenceNumber, ref -> sequenceNumber = ref, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40)));
+        return getDecodedValue(() -> sequenceNumber, ref -> sequenceNumber = ref, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40)));
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getDestinationMmsi() {
-        return getDecodedValueByWeakReference(() -> destinationMmsi, ref -> destinationMmsi = ref, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70))));
+        return getDecodedValue(() -> destinationMmsi, ref -> destinationMmsi = ref, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70))));
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getRetransmit() {
-        return getDecodedValueByWeakReference(() -> retransmit, ref -> retransmit = ref, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(70, 71)));
+        return getDecodedValue(() -> retransmit, ref -> retransmit = ref, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(70, 71)));
 	}
 
     @SuppressWarnings("unused")
 	public int getSpare() {
-        return getDecodedValueByWeakReference(() -> spare, ref -> spare = ref, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(71, 72)));
+        return getDecodedValue(() -> spare, ref -> spare = ref, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(71, 72)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getDesignatedAreaCode() {
-        return getDecodedValueByWeakReference(() -> designatedAreaCode, ref -> designatedAreaCode = ref, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(72, 82)));
+        return getDecodedValue(() -> designatedAreaCode, ref -> designatedAreaCode = ref, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(72, 82)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getFunctionalId() {
-        return getDecodedValueByWeakReference(() -> functionalId, ref -> functionalId = ref, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(82, 88)));
+        return getDecodedValue(() -> functionalId, ref -> functionalId = ref, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(82, 88)));
 	}
 
     @SuppressWarnings("unused")
@@ -103,11 +103,11 @@ public class AddressedBinaryMessage extends AISMessage {
                 "} " + super.toString();
     }
 
-    private transient WeakReference<Integer> sequenceNumber;
-    private transient WeakReference<MMSI> destinationMmsi;
-    private transient WeakReference<Boolean> retransmit;
-    private transient WeakReference<Integer> spare;
-    private transient WeakReference<Integer> designatedAreaCode;
-    private transient WeakReference<Integer> functionalId;
+    private transient Integer sequenceNumber;
+    private transient MMSI destinationMmsi;
+    private transient Boolean retransmit;
+    private transient Integer spare;
+    private transient Integer designatedAreaCode;
+    private transient Integer functionalId;
     private transient WeakReference<String> binaryData;
 }
