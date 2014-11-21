@@ -1,6 +1,14 @@
 language: java
-jdk:
-- oraclejdk8
+jdk: oraclejdk8
+
+# As a workaround to JDK-8065315 bug, let's downgrade Oracle JDK 8
+# until Travis VM image provides again a sane JDK version.
+# see also http://stackoverflow.com/questions/27047496/javac-1-8-0-25-has-known-bug-how-to-use-different-version
+before_install:
+  - wget https://launchpad.net/~webupd8team/+archive/ubuntu/java/+files/oracle-java8-installer_8u11%2B8u6arm-1~webupd8~3_all.deb -O oracle-java8-installer.deb
+  - sudo dpkg -i oracle-java8-installer.deb
+  - java -version
+
 deploy:
   provider: releases
   api_key:
