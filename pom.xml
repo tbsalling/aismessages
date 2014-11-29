@@ -38,22 +38,6 @@
 				  <target>1.8</target>
 				</configuration>
 			</plugin>
-            <!--
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-gpg-plugin</artifactId>
-				<version>1.4</version>
-				<executions>
-				  <execution>
-				    <id>sign-artifacts</id>
-				    <phase>verify</phase>
-				    <goals>
-				      <goal>sign</goal>
-				    </goals>
-				  </execution>
-				</executions>
-			</plugin>
-			-->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
@@ -116,6 +100,22 @@
                 <artifactId>findbugs-maven-plugin</artifactId>
                 <version>3.0.0</version>
             </plugin>
+            <plugin>
+			    <groupId>org.apache.maven.plugins</groupId>
+			    <artifactId>maven-javadoc-plugin</artifactId>
+			    <version>2.9</version>
+			    <executions>
+			        <execution>
+			            <id>attach-javadocs</id>
+			            <goals>
+			                <goal>jar</goal>
+			            </goals>
+			            <configuration>
+			                <additionalparam>-Xdoclint:none</additionalparam>
+			            </configuration>
+			        </execution>
+			    </executions>
+			</plugin>
         </plugins>
 	</build>
 	<developers>
@@ -138,6 +138,11 @@
 			<version>2.6.0</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		<version>3.3.2</version>
+	</dependency>
     </dependencies>
 	<scm>
 		<connection>scm:git:https://tbsalling@github.com/tbsalling/aismessages.git</connection>

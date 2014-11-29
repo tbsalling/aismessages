@@ -16,6 +16,9 @@
 
 package dk.tbsalling.aismessages.nmea.messages;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import dk.tbsalling.aismessages.nmea.exceptions.NMEAParseException;
 import dk.tbsalling.aismessages.nmea.exceptions.UnsupportedMessageType;
 
@@ -111,11 +114,30 @@ public class NMEAMessage implements Serializable {
     public String getRawMessage() {
 		return rawMessage;
 	}
-
-	private NMEAMessage(String rawMessage) {
-        this.rawMessage = rawMessage;
-        validate();
+	
+	public final NMEATagBlock getTagBlock() {
+		return tagBlock;
 	}
+
+		this.tagBlock = null;
+	}
+
+		final String nmeaTagBlockRegEx = "^\\\\.*\\*[0-9A-Fa-f]{2}\\\\";
+		final String nmeaMessageRegExp = "^!.*\\*[0-9A-Fa-f]{2}$";
+
+		Pattern pattern = Pattern.compile(nmeaTagBlockRegEx);
+		Matcher matcher = pattern.matcher(rawMessage);
+		if (matcher.lookingAt())  {
+			String nmeaTagBlockString = rawMessage.substring(matcher.start(), matcher.end());
+			this.tagBlock = NMEATagBlock.fromString(nmeaTagBlockString);
+			rawMessage = rawMessage.substring(matcher.end());
+		}
+		else {
+			this.tagBlock = null;
+		}
+		
+		if (!rawMessage.matches(nmeaMessageRegExp))
+			throw new NMEAParseException(rawMessage, "Message does not comply with regexp \"" + nmeaMessageRegExp + "\"");
 
 	private void validate() {
         // !AIVDM,1,1,,B,15MvlfPOh2G?nwbEdVDsnSTR00S?,0*41
@@ -150,4 +172,5 @@ public class NMEAMessage implements Serializable {
 	}
 
 	private final String rawMessage;
+	private final NMEATagBlock tagBlock;
 }

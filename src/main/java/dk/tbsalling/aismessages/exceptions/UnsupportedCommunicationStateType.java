@@ -14,35 +14,12 @@
  * 
  */
 
-package dk.tbsalling.aismessages.ais.messages.types;
+package dk.tbsalling.aismessages.exceptions;
 
-public enum ManeuverIndicator {
-	NotAvailable(0),
-	NoSpecialManeuver(1),
-	SpecialManeuver(2);
+@SuppressWarnings("serial")
+public class UnsupportedCommunicationStateType extends RuntimeException {
 
-	ManeuverIndicator(Integer code) {
-		this.code = code;
-	}
-	
-	public Integer getCode() {
-		return code;
+	public UnsupportedCommunicationStateType(Integer messageType) {
 	}
 
-	public String getValue() {
-	    return toString();
-	}
-
-	private final Integer code;
-
-	public static ManeuverIndicator fromInteger(Integer integer) {
-		if (integer != null) {
-			for (ManeuverIndicator b : ManeuverIndicator.values()) {
-				if (integer.equals(b.code)) {
-					return b;
-				}
-			}
-		}
-		return NotAvailable; // Rather not have a NULL. If it is invalid why not return NotAvailable?
-	}
 }

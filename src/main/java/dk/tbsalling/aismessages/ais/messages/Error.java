@@ -27,6 +27,11 @@ import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 @SuppressWarnings("serial")
 public class Error extends AISMessage {
 
+<<<<<<< HEAD:src/main/java/dk/tbsalling/aismessages/messages/Error.java
+	public Error(String rawMessage, String errorDescription) {
+		super(AISMessageType.Error, null, null, null);
+		this.rawMessage = rawMessage;
+=======
     protected void checkAISMessage() {
     }
 
@@ -36,6 +41,7 @@ public class Error extends AISMessage {
 
     public Error(NMEAMessage[] nmeaMessages, String errorDescription) {
         super(nmeaMessages);
+>>>>>>> 865a52b408daf8101cda114a89e4fce7b588254b:src/main/java/dk/tbsalling/aismessages/ais/messages/Error.java
 		this.errorDescription = errorDescription;
 	}
 

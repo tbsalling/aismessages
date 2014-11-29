@@ -14,27 +14,15 @@
  * 
  */
 
-package dk.tbsalling.aismessages.ais.messages.types;
+package dk.tbsalling.aismessages.messages.types;
 
-public enum StationType {
-	AllTypesOfMobiles (0),
-	ReservedForFutureUse(1),
-	AllTypesOfClassBMobileStations(2),
-	SARAirborneMobileStation(3),
-	AidToNavigationStation(4),
-	ClassBShipborneMobileStation(5),
-	InlandWaterways(6),
-	RegionalUse1(7),
-	RegionalUse2(8),
-	RegionalUse3(9),
-	BaseStationCoverageArea(10),
-	FutureUse1(11),
-	FutureUse2(12),
-	FutureUse3(13),
-	FutureUse4(14),
-	FutureUse5(15);
+public enum PartNumberType {
+	A(0),
+	B(1),
+	Invalid2(2),
+	Invalid3(3);
 	
-	StationType(Integer code) {
+	PartNumberType(Integer code) {
 		this.code = code;
 	}
 	
@@ -48,9 +36,9 @@ public enum StationType {
 
 	private final Integer code;
 
-	public static StationType fromInteger(Integer integer) {
+	public static PartNumberType fromInteger(Integer integer) {
 		if (integer != null) {
-			for (StationType b : StationType.values()) {
+			for (PartNumberType b : PartNumberType.values()) {
 				if (integer.equals(b.code)) {
 					return b;
 				}

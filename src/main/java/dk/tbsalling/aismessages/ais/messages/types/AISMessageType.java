@@ -44,7 +44,11 @@ public enum AISMessageType {
 	ClassBCSStaticDataReport(24), 
 	BinaryMessageSingleSlot(25), 
 	BinaryMessageMultipleSlot(26),
+<<<<<<< HEAD:src/main/java/dk/tbsalling/aismessages/messages/types/AISMessageType.java
+	LongRangeAISBroadcastMessage(27),
+=======
 	LongRangeBroadcastMessage(27),
+>>>>>>> 865a52b408daf8101cda114a89e4fce7b588254b:src/main/java/dk/tbsalling/aismessages/ais/messages/types/AISMessageType.java
 	Error(-1);
 
 	AISMessageType(Integer code) {
