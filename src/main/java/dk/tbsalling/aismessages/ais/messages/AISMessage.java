@@ -34,7 +34,7 @@ import java.util.logging.Logger;
 
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_LONG_DECODER;
-import static java.util.Objects.nonNull;
+import static java.util.Objects.requireNonNull;
 
 /**
  * The AISMessage class models a complete and self-contained AIS message.
@@ -54,20 +54,7 @@ public abstract class AISMessage implements Serializable {
     public transient static final String VERSION = "2.0.0-SNAPSHOT";
 
     static {
-        StringBuilder sb = new StringBuilder();
-        sb.append("\n");
-        sb.append("AISMessages v");
-        sb.append(VERSION);
-        sb.append(" // Copyright (c) 2011- by S-Consult ApS, Denmark, CVR DK31327490. http://s-consult.dk.\n");
-        sb.append("\n");
-        sb.append("This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License. To view a copy of\n");
-        sb.append("this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/ or send a letter to Creative Commons, 171 Second Street,\n");
-        sb.append("Suite 300, San Francisco, California, 94105, USA.\n");
-        sb.append("\n");
-        sb.append("NOT FOR COMMERCIAL USE!\n");
-        sb.append("Contact sales@s-consult.dk to obtain commercially licensed software.\n");
-        sb.append("\n");
-        System.err.print(sb.toString());
+        System.err.print("\n" + "AISMessages v" + VERSION + " // Copyright (c) 2011- by S-Consult ApS, Denmark, CVR DK31327490. http://s-consult.dk.\n" + "\n" + "This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License. To view a copy of\n" + "this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/ or send a letter to Creative Commons, 171 Second Street,\n" + "Suite 300, San Francisco, California, 94105, USA.\n" + "\n" + "NOT FOR COMMERCIAL USE!\n" + "Contact sales@s-consult.dk to obtain commercially licensed software.\n" + "\n");
     }
     
     /** The NMEA messages which represent this AIS message */
@@ -88,7 +75,7 @@ public abstract class AISMessage implements Serializable {
     }
 
     protected AISMessage(NMEAMessage[] nmeaMessages) {
-        nonNull(nmeaMessages);
+        requireNonNull(nmeaMessages);
         check(nmeaMessages);
         this.nmeaMessages = nmeaMessages;
         AISMessageType nmeaMessageType = decodeMessageType();
@@ -102,7 +89,7 @@ public abstract class AISMessage implements Serializable {
     }
 
     protected AISMessage(NMEAMessage[] nmeaMessages, String bitString) {
-        nonNull(nmeaMessages);
+        requireNonNull(nmeaMessages);
         check(nmeaMessages);
         this.nmeaMessages = nmeaMessages;
         this.bitString = new WeakReference<>(bitString);
