@@ -148,7 +148,7 @@ public class AidToNavigationReport extends AISMessage {
 
     @SuppressWarnings("unused")
     public int getSpare2() {
-        getDecodedValue(() -> spare2, value -> spare2 = value, () -> getNumberOfBits() > 272, () -> {
+        getDecodedValue(() -> spare2, value -> spare2 = value, () -> getNumberOfBits() >= 272, () -> {
             int extraBits = getNumberOfBits() - 272;
             int extraChars = extraBits/6;
             int extraBitsOfChars = extraChars*6;
