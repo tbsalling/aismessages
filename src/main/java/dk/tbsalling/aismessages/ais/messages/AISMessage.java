@@ -368,49 +368,127 @@ public abstract class AISMessage implements Serializable {
                 }
                 break;
             case 6:
+                if (actualMessageLength > 1008) {
+                    LOG.warning("Message type 6: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 7:
+                if (actualMessageLength != 72 && actualMessageLength != 104 && actualMessageLength != 136 && actualMessageLength != 168) {
+                    LOG.warning("Message type 7: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 8:
+                if (actualMessageLength > 1008) {
+                    LOG.warning("Message type 8: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 9:
+                if (actualMessageLength != 168) {
+                    LOG.warning("Message type 9: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 10:
+                if (actualMessageLength != 72) {
+                    LOG.warning("Message type 10: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 11:
+            	if (actualMessageLength != 168) return Boolean.FALSE;
                 break;
             case 12:
+                if (actualMessageLength > 1008) {
+                    LOG.warning("Message type 12: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 13:
+                if (actualMessageLength != 72 && actualMessageLength != 104 && actualMessageLength != 136 && actualMessageLength != 168) {
+                    LOG.warning("Message type 13: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 14:
+                if (actualMessageLength > 1008) {
+                    LOG.warning("Message type 14: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 15:
                 if (actualMessageLength != 88 && actualMessageLength != 110 && actualMessageLength != 112 && actualMessageLength != 160) return Boolean.FALSE;
                 break;
             case 16:
+                if (actualMessageLength != 96 && actualMessageLength != 144) {
+                    LOG.warning("Message type 16: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 17:
+                if (actualMessageLength < 80 || actualMessageLength > 816) {
+                    LOG.warning("Message type 17: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 18:
+                if (actualMessageLength != 168) {
+                    LOG.warning("Message type 18: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 19:
+                if (actualMessageLength != 312) {
+                    LOG.warning("Message type 19: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 20:
+                if (actualMessageLength < 72 || actualMessageLength > 160) {
+                    LOG.warning("Message type 20: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 21:
+                if (actualMessageLength < 272  || actualMessageLength > 360) {
+                    LOG.warning("Message type 21: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 22:
+                if (actualMessageLength != 168) {
+                    LOG.warning("Message type 22: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 23:
+                if (actualMessageLength != 160) {
+                    LOG.warning("Message type 23: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 24:
+                if (actualMessageLength != 160 && actualMessageLength != 168) {
+                    LOG.warning("Message type 24: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 25:
+                if (actualMessageLength > 168) {
+                    LOG.warning("Message type 25: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 26:
+            	// ??
                 break;
             case 27:
+                if (actualMessageLength != 96 && actualMessageLength != 168) {
+                    LOG.warning("Message type 27: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             default:
                 return Boolean.FALSE;
