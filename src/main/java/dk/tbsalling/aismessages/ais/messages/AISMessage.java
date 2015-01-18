@@ -97,6 +97,9 @@ public abstract class AISMessage implements Serializable {
         if (getMessageType() != nmeaMessageType) {
             throw new UnsupportedMessageType(nmeaMessageType.getCode());
         }
+        if (!isValid()) {
+            throw new InvalidMessage("Invalid AIS message");
+        }
         checkAISMessage();
     }
 
@@ -202,7 +205,7 @@ public abstract class AISMessage implements Serializable {
         return getBitString().substring(beginIndex, endIndex);
     }
 
-    protected int getNumberOfBits() {
+    protected int getNumberOfBits() {	
         if (numberOfBits < 0) {
             numberOfBits = getBitString().length();
         }
