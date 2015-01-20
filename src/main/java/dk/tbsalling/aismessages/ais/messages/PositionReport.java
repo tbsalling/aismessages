@@ -19,9 +19,14 @@
  */
 package dk.tbsalling.aismessages.ais.messages;
 
+import dk.tbsalling.aismessages.ais.messages.types.CommunicationState;
+import dk.tbsalling.aismessages.ais.messages.types.ITDMACommunicationState;
 import dk.tbsalling.aismessages.ais.messages.types.ManeuverIndicator;
 import dk.tbsalling.aismessages.ais.messages.types.NavigationStatus;
+import dk.tbsalling.aismessages.ais.messages.types.SOTDMACommunicationState;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+
+import java.lang.ref.WeakReference;
 
 import static dk.tbsalling.aismessages.ais.Decoders.BOOLEAN_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.FLOAT_DECODER;
@@ -54,6 +59,7 @@ public abstract class PositionReport extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Integer getRateOfTurn() {
+        // TODO Square-root
         return getDecodedValue(() -> rateOfTurn, value -> rateOfTurn = value, () -> Boolean.TRUE, () -> INTEGER_DECODER.apply(getBits(42, 50)));
 	}
 
@@ -63,8 +69,8 @@ public abstract class PositionReport extends AISMessage {
 	}
 
     @SuppressWarnings("unused")
-	public Boolean getPositionAccurate() {
-        return getDecodedValue(() -> positionAccurate, value -> positionAccurate = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(60, 61)));
+	public Boolean getPositionAccuracy() {
+        return getDecodedValue(() -> positionAccuracy, value -> positionAccuracy = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(60, 61)));
 	}
 
     @SuppressWarnings("unused")
@@ -93,8 +99,8 @@ public abstract class PositionReport extends AISMessage {
 	}
 
     @SuppressWarnings("unused")
-	public ManeuverIndicator getManeuverIndicator() {
-        return getDecodedValue(() -> maneuverIndicator, value -> maneuverIndicator = value, () -> Boolean.TRUE, () -> ManeuverIndicator.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(143, 145))));
+	public ManeuverIndicator getSpecialManeuverIndicator() {
+        return getDecodedValue(() -> specialManeuverIndicator, value -> specialManeuverIndicator = value, () -> Boolean.TRUE, () -> ManeuverIndicator.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(143, 145))));
 	}
 
     @SuppressWarnings("unused")
@@ -102,19 +108,29 @@ public abstract class PositionReport extends AISMessage {
         return getDecodedValue(() -> raimFlag, value -> raimFlag = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(148, 149)));
 	}
 
+    @SuppressWarnings("unused")
+    public CommunicationState getCommunicationState() {
+        if (this instanceof PositionReportClassAScheduled || this instanceof PositionReportClassAAssignedSchedule)
+            return getDecodedValueByWeakReference(() -> communicationState, value -> communicationState = value, () -> Boolean.TRUE, () -> SOTDMACommunicationState.fromBitString(getBits(149, 168)));
+        else if (this instanceof PositionReportClassAResponseToInterrogation)
+            return getDecodedValueByWeakReference(() -> communicationState, value -> communicationState = value, () -> Boolean.TRUE, () -> ITDMACommunicationState.fromBitString(getBits(149, 168)));
+        else
+            return null;
+    }
+
     @Override
     public String toString() {
         return "PositionReport{" +
                 "navigationStatus=" + getNavigationStatus() +
                 ", rateOfTurn=" + getRateOfTurn() +
                 ", speedOverGround=" + getSpeedOverGround() +
-                ", positionAccurate=" + getPositionAccurate() +
+                ", positionAccuracy=" + getPositionAccuracy() +
                 ", latitude=" + getLatitude() +
                 ", longitude=" + getLongitude() +
                 ", courseOverGround=" + getCourseOverGround() +
                 ", trueHeading=" + getTrueHeading() +
                 ", second=" + getSecond() +
-                ", maneuverIndicator=" + getManeuverIndicator() +
+                ", specialManeuverIndicator=" + getSpecialManeuverIndicator() +
                 ", raimFlag=" + getRaimFlag() +
                 "} " + super.toString();
     }
@@ -122,12 +138,13 @@ public abstract class PositionReport extends AISMessage {
     private transient NavigationStatus navigationStatus;
 	private transient Integer rateOfTurn;
 	private transient Float speedOverGround;
-	private transient Boolean positionAccurate;
+	private transient Boolean positionAccuracy;
 	private transient Float latitude;
 	private transient Float longitude;
 	private transient Float courseOverGround;
 	private transient Integer trueHeading;
 	private transient Integer second;
-	private transient ManeuverIndicator maneuverIndicator;
+	private transient ManeuverIndicator specialManeuverIndicator;
 	private transient Boolean raimFlag;
+	private transient WeakReference<CommunicationState> communicationState;
 }

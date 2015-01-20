@@ -18,7 +18,10 @@ package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
+import dk.tbsalling.aismessages.ais.messages.types.SOTDMACommunicationState;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+
+import java.lang.ref.WeakReference;
 
 import static dk.tbsalling.aismessages.ais.Decoders.BOOLEAN_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.FLOAT_DECODER;
@@ -102,6 +105,11 @@ public class BaseStationReport extends AISMessage {
         return getDecodedValue(() -> raimFlag, value -> raimFlag = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(148, 149)));
 	}
 
+    @SuppressWarnings("unused")
+    public SOTDMACommunicationState getCommunicationState() {
+        return getDecodedValueByWeakReference(() -> communicationState, value -> communicationState = value, () -> Boolean.TRUE, () -> SOTDMACommunicationState.fromBitString(getBits(149, 168)));
+    }
+
     @Override
     public String toString() {
         return "BaseStationReport{" +
@@ -117,6 +125,7 @@ public class BaseStationReport extends AISMessage {
                 ", longitude=" + getLongitude() +
                 ", positionFixingDevice=" + getPositionFixingDevice() +
                 ", raimFlag=" + getRaimFlag() +
+                ", communicationState=" + getCommunicationState() +
                 "} " + super.toString();
     }
 
@@ -131,4 +140,5 @@ public class BaseStationReport extends AISMessage {
     private transient Float longitude;
     private transient PositionFixingDevice positionFixingDevice;
     private transient Boolean raimFlag;
+    private transient WeakReference<SOTDMACommunicationState> communicationState;
 }
