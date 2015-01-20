@@ -20,12 +20,12 @@ import java.io.Serializable;
 
 public class IMO implements Serializable {
 
-	public IMO(Long mmsi) {
-		this.imo = mmsi;
+	public IMO(Long imo) {
+		this.imo = imo;
 	}
 	
-	public static IMO valueOf(Long mmsi) {
-		return new IMO(mmsi);
+	public static IMO valueOf(Long imo) {
+		return new IMO(imo);
 	}
 	
 	@Override
