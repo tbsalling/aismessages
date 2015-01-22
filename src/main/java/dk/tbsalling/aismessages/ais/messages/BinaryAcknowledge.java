@@ -98,6 +98,7 @@ public class BinaryAcknowledge extends AISMessage {
 	public Integer getNumOfAcks() {
         if (numOfAcks == null) {
             final int numberOfBits = getNumberOfBits();
+            numOfAcks = 1;
             if (numberOfBits > 72) {
                 numOfAcks++;
             }

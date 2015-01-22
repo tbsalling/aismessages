@@ -90,14 +90,15 @@ public class SafetyRelatedAcknowledge extends AISMessage {
     @SuppressWarnings("unused")
 	public Integer getNumOfAcks() {
         if (numOfAcks == null) {
+        	final int numberOfBits = getNumberOfBits();
             numOfAcks = 1;
-            if(getNumberOfBits() > 72) {
+            if(numberOfBits > 72) {
                 numOfAcks ++;
             }
-            if(getNumberOfBits() > 104) {
+            if(numberOfBits > 104) {
                 numOfAcks ++;
             }
-            if(getNumberOfBits() > 136) {
+            if(numberOfBits > 136) {
                 numOfAcks ++;
             }
         }
