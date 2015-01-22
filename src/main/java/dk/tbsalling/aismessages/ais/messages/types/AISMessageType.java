@@ -42,10 +42,13 @@ public enum AISMessageType {
 	ChannelManagement(22), 
 	GroupAssignmentCommand(23), 
 	ClassBCSStaticDataReport(24), 
-	BinaryMessageSingleSlot(25), 
+	BinaryMessageSingleSlot(25),
 	BinaryMessageMultipleSlot(26),
 	LongRangeBroadcastMessage(27),
 	Error(-1);
+
+	public final static int MINIMUM_CODE = 1;
+	public final static int MAXIMUM_CODE = 27;
 
 	AISMessageType(Integer code) {
 		this.code = code;

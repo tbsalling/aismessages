@@ -28,8 +28,6 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
@@ -280,7 +278,6 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
             throw new UnsupportedMessageType(-1);
         }
 
-
         return aisMessageConstructor.apply(nmeaMessages, bitString);
     }
 
@@ -293,7 +290,7 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         }
 
         int messageType = Integer.parseInt(bitString.substring(0, 6), 2);
-        if (messageType < 1 || messageType > 26) {
+        if (messageType < AISMessageType.MINIMUM_CODE || messageType > AISMessageType.MAXIMUM_CODE) {
             LOG.warning("Unsupported message type: " + messageType);
             return Boolean.FALSE;
         }

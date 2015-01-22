@@ -1,6 +1,7 @@
 package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.ais.messages.types.NavigationStatus;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.BOOLEAN_DECODER;
@@ -25,9 +26,12 @@ public class LongRangeBroadcastMessage extends AISMessage {
         return AISMessageType.LongRangeBroadcastMessage;
     }
 
+    /**
+     * @return true if position accuracy lte 10m; false otherwise.
+     */
     @SuppressWarnings("unused")
-	public Boolean getAccuracy() {
-        return getDecodedValue(() -> accuracy, value -> accuracy = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(38, 39)));
+	public Boolean getPositionAccuracy() {
+        return getDecodedValue(() -> positionAccuracy, value -> positionAccuracy = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(38, 39)));
 	}
 
     @SuppressWarnings("unused")
@@ -36,8 +40,8 @@ public class LongRangeBroadcastMessage extends AISMessage {
 	}
 
     @SuppressWarnings("unused")
-	public Integer getStatus() {
-        return getDecodedValue(() -> status, value -> status = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(40, 44)));
+	public NavigationStatus getNavigationalStatus() {
+        return getDecodedValue(() -> navigationStatus, value -> navigationStatus = value, () -> Boolean.TRUE, () -> NavigationStatus.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 44))));
 	}
 
     @SuppressWarnings("unused")
@@ -50,22 +54,31 @@ public class LongRangeBroadcastMessage extends AISMessage {
         return getDecodedValue(() -> latitude, value -> latitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(62, 79)) / 600f);
 	}
 
+    /**
+     * @return Knots (0-62); 63 = not available = default
+     */
     @SuppressWarnings("unused")
-	public Integer getSpeed() {
+	public Integer getSpeedOverGround() {
         return getDecodedValue(() -> speed, value -> speed = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(79, 85)));
 	}
 
+    /**
+     * @return Degrees (0-359); 511 = not available = default
+     */
     @SuppressWarnings("unused")
-	public Integer getCourse() {
+	public Integer getCourseOverGround() {
         return getDecodedValue(() -> course, value -> course = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(85, 94)));
 	}
 
+    /**
+     * @return 0 if reported position latency is less than 5 seconds; 1 if reported position latency is greater than 5 seconds = default
+     */
     @SuppressWarnings("unused")
-	public Boolean getGnss() {
-        return getDecodedValue(() -> gnss, value -> gnss = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(94, 95)));
+	public Integer getPositionLatency() {
+        return getDecodedValue(() -> positionLatency, value -> positionLatency = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(94, 95)));
 	}
 
-    @SuppressWarnings("unused")
+   @SuppressWarnings("unused")
 	public Integer getSpare() {
         return getDecodedValue(() -> spare, value -> spare = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(95, 96)));
 	}
@@ -74,25 +87,25 @@ public class LongRangeBroadcastMessage extends AISMessage {
     public String toString() {
         return "LongRangeBroadcastMessage{" +
                 "messageType=" + getMessageType() +
-                ", accuracy=" + getAccuracy() +
+                ", positionAccuracy=" + getPositionAccuracy() +
                 ", raim=" + getRaim() +
-                ", status=" + getStatus() +
+                ", status=" + getNavigationalStatus() +
                 ", longitude=" + getLongitude() +
                 ", latitude=" + getLatitude() +
-                ", speed=" + getSpeed() +
-                ", course=" + getCourse() +
-                ", gnss=" + getGnss() +
+                ", speed=" + getSpeedOverGround() +
+                ", course=" + getCourseOverGround() +
+                ", positionLatency=" + getPositionLatency() +
                 ", spare=" + getSpare() +
                 "} " + super.toString();
     }
 
-    private transient Boolean accuracy;
+    private transient Boolean positionAccuracy;
 	private transient Boolean raim;
-	private transient Integer status;
+	private transient NavigationStatus navigationStatus;
 	private transient Float longitude;
 	private transient Float latitude;
 	private transient Integer speed;
 	private transient Integer course;
-	private transient Boolean gnss;
+	private transient Integer positionLatency;
 	private transient Integer spare;
 }
