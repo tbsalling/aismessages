@@ -17,7 +17,6 @@
 package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
-import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 /**
  * Identification and location message to be emitted by aids to navigation such as buoys and lighthouses.
@@ -34,8 +33,9 @@ public class Error extends AISMessage {
         return AISMessageType.Error;
     }
 
-    public Error(NMEAMessage[] nmeaMessages, String errorDescription) {
-        super(nmeaMessages);
+    public Error(String rawMessage, String errorDescription) {
+        super();
+        this.rawMessage = rawMessage;
 		this.errorDescription = errorDescription;
 	}
 
@@ -43,8 +43,14 @@ public class Error extends AISMessage {
     public String toString() {
         return "Error{" +
                 "messageType=" + getMessageType() +
+                ", rawMessage='" + rawMessage + '\'' +
                 ", errorDescription='" + errorDescription + '\'' +
                 "} " + super.toString();
+    }
+
+    @SuppressWarnings("unused")
+    public String getRawMessage() {
+        return rawMessage;
     }
 
     @SuppressWarnings("unused")
@@ -52,5 +58,6 @@ public class Error extends AISMessage {
 		return errorDescription;
 	}
 
+    private final String rawMessage;
 	private final String errorDescription;
 }
