@@ -9,7 +9,7 @@ import static dk.tbsalling.aismessages.ais.Decoders.FLOAT_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
 
 @SuppressWarnings("serial")
-public class LongRangeBroadcastMessage extends AISMessage {
+public class LongRangeBroadcastMessage extends AISMessage implements BasicShipDynamicDataReport{
 
     public LongRangeBroadcastMessage(NMEAMessage[] nmeaMessages) {
         super(nmeaMessages);
@@ -58,16 +58,16 @@ public class LongRangeBroadcastMessage extends AISMessage {
      * @return Knots (0-62); 63 = not available = default
      */
     @SuppressWarnings("unused")
-	public Integer getSpeedOverGround() {
-        return getDecodedValue(() -> speed, value -> speed = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(79, 85)));
+	public Float getSpeedOverGround() {
+        return Float.valueOf(getDecodedValue(() -> speed, value -> speed = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(79, 85))));
 	}
 
     /**
      * @return Degrees (0-359); 511 = not available = default
      */
     @SuppressWarnings("unused")
-	public Integer getCourseOverGround() {
-        return getDecodedValue(() -> course, value -> course = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(85, 94)));
+	public Float getCourseOverGround() {
+        return Float.valueOf(getDecodedValue(() -> course, value -> course = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(85, 94))));
 	}
 
     /**
