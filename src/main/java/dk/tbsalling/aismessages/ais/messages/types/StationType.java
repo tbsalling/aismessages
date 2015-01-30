@@ -17,22 +17,22 @@
 package dk.tbsalling.aismessages.ais.messages.types;
 
 public enum StationType {
-	AllTypesOfMobiles (0),
-	ReservedForFutureUse(1),
+	AllTypesOfMobileStations(0),
+	ClassAMobileStation(1),
 	AllTypesOfClassBMobileStations(2),
 	SARAirborneMobileStation(3),
-	AidToNavigationStation(4),
-	ClassBShipborneMobileStation(5),
-	RegionalUse1(6),
-	RegionalUse2(7),
-	RegionalUse3(8),
-	RegionalUse4(9),
-	FutureUse1(10),
-	FutureUse2(11),
-	FutureUse3(12),
-	FutureUse4(13),
-	FutureUse5(14),
-	FutureUse6(15);
+	ClassBSOMobileStation(4),
+	ClassBCSShipborneMobileStation(5),
+	InlandWaterways(6),
+	RegionalUse1(7),
+	RegionalUse2(8),
+	RegionalUse3(9),
+	BaseStationCoverageArea(10),
+	FutureUse1(11),
+	FutureUse2(12),
+	FutureUse3(13),
+	FutureUse4(14),
+	FutureUse5(15);
 	
 	StationType(Integer code) {
 		this.code = code;
