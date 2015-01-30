@@ -1,6 +1,6 @@
 package dk.tbsalling.aismessages.ais.messages;
 
-import dk.tbsalling.aismessages.ais.exceptions.UnsupportedMessageType;
+import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import org.junit.Test;
 
@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 
 public class AISMessageTest {
 
-    @Test(expected = UnsupportedMessageType.class)
+    @Test(expected = InvalidMessage.class)
     public void canHandleEmptyMessage() {
         AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,00,4*21"));
     }

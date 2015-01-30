@@ -96,7 +96,11 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
             throw new UnsupportedMessageType(nmeaMessageType.getCode());
         }
         if (!isValid()) {
-            throw new InvalidMessage("Invalid AIS message");
+            StringBuffer sb = new StringBuffer();
+            for (NMEAMessage nmeaMessage : nmeaMessages) {
+                sb.append(nmeaMessage);
+            }
+            throw new InvalidMessage("Invalid AIS message: " + sb.toString());
         }
         checkAISMessage();
     }
@@ -275,7 +279,11 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
                     throw new UnsupportedMessageType(messageType.getCode());
             }
         } else {
-            throw new UnsupportedMessageType(-1);
+            StringBuffer sb = new StringBuffer();
+            for (NMEAMessage nmeaMessage : nmeaMessages) {
+                sb.append(nmeaMessage);
+            }
+            throw new InvalidMessage("Cannot extract message type from NMEA message: " + sb.toString());
         }
 
         return aisMessageConstructor.apply(nmeaMessages, bitString);
