@@ -27,7 +27,7 @@ import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_LONG_DECODER;
 
 @SuppressWarnings("serial")
-public class ClassBCSStaticDataReport extends AISMessage implements ShipStaticDataReport {
+public class ClassBCSStaticDataReport extends AISMessage implements StaticDataReport {
 
     public ClassBCSStaticDataReport(NMEAMessage[] nmeaMessages) {
         super(nmeaMessages);

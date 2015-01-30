@@ -40,7 +40,7 @@ import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
  *
  */
 @SuppressWarnings("serial")
-public abstract class PositionReport extends AISMessage implements ShipDynamicDataReport {
+public abstract class PositionReport extends AISMessage implements ExtendedDynamicDataReport {
 
     public PositionReport(NMEAMessage[] nmeaMessages) {
         super(nmeaMessages);

@@ -18,7 +18,7 @@ package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.ShipType;
 
-public interface ShipStaticDataReport extends DataReport {
+public interface StaticDataReport extends DataReport {
 
 	String getCallsign();
 	String getShipName();

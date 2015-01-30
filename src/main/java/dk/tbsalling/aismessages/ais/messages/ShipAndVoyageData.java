@@ -41,7 +41,7 @@ import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_LONG_DECODER;
  * @author tbsalling
  */
 @SuppressWarnings("serial")
-public class ShipAndVoyageData extends AISMessage implements ShipStaticDataReport {
+public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
 
     public ShipAndVoyageData(NMEAMessage[] nmeaMessages) {
         super(nmeaMessages);

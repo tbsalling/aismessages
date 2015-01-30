@@ -19,7 +19,7 @@
  */
 package dk.tbsalling.aismessages.ais.messages;
 
-public interface ShipDynamicDataReport extends DynamicDataReport {
+public interface ExtendedDynamicDataReport extends DynamicDataReport {
 	Integer getTrueHeading();
 	Integer getSecond();
 }
