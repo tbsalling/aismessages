@@ -541,4 +541,23 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         charToSixBit.put("w", "111111"); // 63
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AISMessage)) return false;
+
+        AISMessage that = (AISMessage) o;
+
+        if (!getBitString().equals(that.getBitString())) return false;
+        if (metadata != null ? !metadata.equals(that.metadata) : that.metadata != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = metadata != null ? metadata.hashCode() : 0;
+        result = 31*result + getBitString().hashCode();
+        return result;
+    }
 }
