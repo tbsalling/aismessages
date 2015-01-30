@@ -20,6 +20,7 @@ import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.CommunicationState;
 import dk.tbsalling.aismessages.ais.messages.types.ITDMACommunicationState;
 import dk.tbsalling.aismessages.ais.messages.types.SOTDMACommunicationState;
+import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import java.lang.ref.WeakReference;
@@ -53,6 +54,11 @@ public class StandardClassBCSPositionReport extends AISMessage implements ShipDy
 
     public final AISMessageType getMessageType() {
         return AISMessageType.StandardClassBCSPositionReport;
+    }
+
+    @Override
+    public TransponderClass getTransponderClass() {
+        return TransponderClass.B;
     }
 
     @SuppressWarnings("unused")
@@ -190,4 +196,5 @@ public class StandardClassBCSPositionReport extends AISMessage implements ShipDy
 	private transient Boolean raimFlag;
 	private transient Boolean commStateSelectorFlag;
 	private transient WeakReference<CommunicationState> communicationState;
+
 }

@@ -16,16 +16,12 @@
 
 package dk.tbsalling.aismessages.ais.messages;
 
-import dk.tbsalling.aismessages.ais.messages.types.ShipType;
+import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 
-public interface ShipStaticDataReport extends DataReport {
-
-	String getCallsign();
-	String getShipName();
-	ShipType getShipType();
-	Integer getToBow();
-	Integer getToStern();
-	Integer getToStarboard();
-	Integer getToPort();
-
+/**
+ * AIS messages with a payload of ship static or voyage related data
+ * or position reports implement this interface.
+ */
+public interface DataReport {
+	TransponderClass getTransponderClass();
 }

@@ -21,6 +21,7 @@ import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.IMO;
 import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
 import dk.tbsalling.aismessages.ais.messages.types.ShipType;
+import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
@@ -64,6 +65,11 @@ public class ShipAndVoyageData extends AISMessage implements ShipStaticDataRepor
 
     public final AISMessageType getMessageType() {
         return AISMessageType.ShipAndVoyageRelatedData;
+    }
+
+    @Override
+    public TransponderClass getTransponderClass() {
+        return TransponderClass.A;
     }
 
     @SuppressWarnings("unused")

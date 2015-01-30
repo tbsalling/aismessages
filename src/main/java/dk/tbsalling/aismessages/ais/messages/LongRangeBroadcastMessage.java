@@ -2,6 +2,7 @@ package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.NavigationStatus;
+import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.BOOLEAN_DECODER;
@@ -9,7 +10,7 @@ import static dk.tbsalling.aismessages.ais.Decoders.FLOAT_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
 
 @SuppressWarnings("serial")
-public class LongRangeBroadcastMessage extends AISMessage implements BasicShipDynamicDataReport{
+public class LongRangeBroadcastMessage extends AISMessage implements DynamicDataReport {
 
     public LongRangeBroadcastMessage(NMEAMessage[] nmeaMessages) {
         super(nmeaMessages);
@@ -24,6 +25,11 @@ public class LongRangeBroadcastMessage extends AISMessage implements BasicShipDy
 
     public AISMessageType getMessageType() {
         return AISMessageType.LongRangeBroadcastMessage;
+    }
+
+    @Override
+    public TransponderClass getTransponderClass() {
+        return TransponderClass.A; // TODO this could also be type B (though expected to be very rare).
     }
 
     /**

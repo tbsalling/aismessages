@@ -17,6 +17,7 @@
 package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.BIT_DECODER;
@@ -26,7 +27,7 @@ import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_FLOAT_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
 
 @SuppressWarnings("serial")
-public class StandardSARAircraftPositionReport extends AISMessage {
+public class StandardSARAircraftPositionReport extends AISMessage implements DynamicDataReport {
 
     public StandardSARAircraftPositionReport(NMEAMessage[] nmeaMessages) {
         super(nmeaMessages);
@@ -43,14 +44,19 @@ public class StandardSARAircraftPositionReport extends AISMessage {
         return AISMessageType.StandardSARAircraftPositionReport;
     }
 
+    @Override
+    public TransponderClass getTransponderClass() {
+        return TransponderClass.SAR;
+    }
+
     @SuppressWarnings("unused")
 	public Integer getAltitude() {
         return getDecodedValue(() -> altitude, value -> altitude = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 50)));
 	}
 
     @SuppressWarnings("unused")
-	public Integer getSpeed() {
-        return getDecodedValue(() -> speed, value -> speed = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(50, 60)));
+	public Float getSpeedOverGround() {
+        return getDecodedValue(() -> speed, value -> speed = value, () -> Boolean.TRUE, () -> Float.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(50, 60))));
 	}
 
     @SuppressWarnings("unused")
@@ -108,7 +114,7 @@ public class StandardSARAircraftPositionReport extends AISMessage {
         return "StandardSARAircraftPositionReport{" +
                 "messageType=" + getMessageType() +
                 ", altitude=" + getAltitude() +
-                ", speed=" + getSpeed() +
+                ", speed=" + getSpeedOverGround() +
                 ", positionAccurate=" + getPositionAccurate() +
                 ", latitude=" + getLatitude() +
                 ", longitude=" + getLongitude() +
@@ -123,7 +129,7 @@ public class StandardSARAircraftPositionReport extends AISMessage {
     }
 
     private transient Integer altitude;
-	private transient Integer speed;
+	private transient Float speed;
 	private transient Boolean positionAccurate;
 	private transient Float latitude;
 	private transient Float longitude;
@@ -134,4 +140,5 @@ public class StandardSARAircraftPositionReport extends AISMessage {
 	private transient Boolean assigned;
 	private transient Boolean raimFlag;
 	private transient String radioStatus;
+
 }

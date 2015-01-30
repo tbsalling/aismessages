@@ -14,18 +14,14 @@
  * 
  */
 
+/**
+ * 
+ */
 package dk.tbsalling.aismessages.ais.messages;
 
-import dk.tbsalling.aismessages.ais.messages.types.ShipType;
-
-public interface ShipStaticDataReport extends DataReport {
-
-	String getCallsign();
-	String getShipName();
-	ShipType getShipType();
-	Integer getToBow();
-	Integer getToStern();
-	Integer getToStarboard();
-	Integer getToPort();
-
+public interface DynamicDataReport extends DataReport {
+	Float getLatitude();
+	Float getLongitude();
+	Float getSpeedOverGround();
+	Float getCourseOverGround();
 }

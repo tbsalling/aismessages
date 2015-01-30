@@ -24,6 +24,7 @@ import dk.tbsalling.aismessages.ais.messages.types.ITDMACommunicationState;
 import dk.tbsalling.aismessages.ais.messages.types.ManeuverIndicator;
 import dk.tbsalling.aismessages.ais.messages.types.NavigationStatus;
 import dk.tbsalling.aismessages.ais.messages.types.SOTDMACommunicationState;
+import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import java.lang.ref.WeakReference;
@@ -50,6 +51,11 @@ public abstract class PositionReport extends AISMessage implements ShipDynamicDa
     }
 
     protected void checkAISMessage() {
+    }
+
+    @Override
+    public TransponderClass getTransponderClass() {
+        return TransponderClass.A;
     }
 
     @SuppressWarnings("unused")

@@ -19,6 +19,7 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.ShipType;
+import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.STRING_DECODER;
@@ -41,6 +42,11 @@ public class ClassBCSStaticDataReport extends AISMessage implements ShipStaticDa
 
     public final AISMessageType getMessageType() {
         return AISMessageType.ClassBCSStaticDataReport;
+    }
+
+    @Override
+    public TransponderClass getTransponderClass() {
+        return TransponderClass.B;
     }
 
     @SuppressWarnings("unused")
@@ -120,4 +126,5 @@ public class ClassBCSStaticDataReport extends AISMessage implements ShipStaticDa
     private transient Integer toStarboard;
     private transient Integer toPort;
     private transient MMSI mothershipMmsi;
+
 }
