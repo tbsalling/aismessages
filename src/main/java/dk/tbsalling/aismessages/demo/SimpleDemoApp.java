@@ -16,7 +16,7 @@
 
 package dk.tbsalling.aismessages.demo;
 
-import dk.tbsalling.aismessages.AISMessageInputStreamReader;
+import dk.tbsalling.aismessages.AISInputStreamReader;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -31,7 +31,7 @@ public class SimpleDemoApp {
 		System.out.println("AISMessages Demo App");
 		System.out.println("--------------------");
 
-        AISMessageInputStreamReader streamReader = new AISMessageInputStreamReader(inputStream, aisMessage ->
+        AISInputStreamReader streamReader = new AISInputStreamReader(inputStream, aisMessage ->
             System.out.println("Received AIS message from MMSI " + aisMessage.getSourceMmsi().getMMSI() + ": " + aisMessage)
         );
 

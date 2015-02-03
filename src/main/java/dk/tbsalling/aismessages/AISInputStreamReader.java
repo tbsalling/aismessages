@@ -33,9 +33,9 @@ import java.util.function.Consumer;
  *
  * @see dk.tbsalling.aismessages.demo.SimpleDemoApp
  */
-public class AISMessageInputStreamReader {
+public class AISInputStreamReader {
 
-	public AISMessageInputStreamReader(InputStream inputStream, Consumer<? super AISMessage> aisMessageConsumer) {
+	public AISInputStreamReader(InputStream inputStream, Consumer<? super AISMessage> aisMessageConsumer) {
         this.nmeaMessageHandler = new NMEAMessageHandler("SRC", aisMessageConsumer);
         this.nmeaMessageInputStreamReader = new NMEAMessageInputStreamReader(inputStream, this.nmeaMessageHandler::accept);
 	}
