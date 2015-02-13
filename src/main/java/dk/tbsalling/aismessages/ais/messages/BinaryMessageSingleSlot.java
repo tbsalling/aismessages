@@ -18,6 +18,8 @@ package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Consumer;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Supplier;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.BIT_DECODER;
@@ -44,22 +46,102 @@ public class BinaryMessageSingleSlot extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Boolean getDestinationIndicator() {
-        return getDecodedValue(() -> destinationIndicator, value -> destinationIndicator = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(38, 39)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return destinationIndicator;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                destinationIndicator = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(BinaryMessageSingleSlot.this.getBits(38, 39));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getBinaryDataFlag() {
-        return getDecodedValue(() -> binaryDataFlag, value -> binaryDataFlag = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(39, 40)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return binaryDataFlag;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                binaryDataFlag = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(BinaryMessageSingleSlot.this.getBits(39, 40));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getDestinationMMSI() {
-        return getDecodedValue(() -> destinationMMSI, value -> destinationMMSI = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70))));
+        return getDecodedValue(new Supplier<MMSI>() {
+            @Override
+            public MMSI get() {
+                return destinationMMSI;
+            }
+        }, new Consumer<MMSI>() {
+            @Override
+            public void accept(MMSI value) {
+                destinationMMSI = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<MMSI>() {
+            @Override
+            public MMSI get() {
+                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(BinaryMessageSingleSlot.this.getBits(40, 70)));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public String getBinaryData() {
-        return getDecodedValue(() -> binaryData, value -> binaryData = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(40, 168)));
+        return getDecodedValue(new Supplier<String>() {
+            @Override
+            public String get() {
+                return binaryData;
+            }
+        }, new Consumer<String>() {
+            @Override
+            public void accept(String value) {
+                binaryData = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<String>() {
+            @Override
+            public String get() {
+                return BIT_DECODER.apply(BinaryMessageSingleSlot.this.getBits(40, 168));
+            }
+        });
 	}
 
     @Override

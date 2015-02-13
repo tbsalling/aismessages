@@ -18,6 +18,8 @@ package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Consumer;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Supplier;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
@@ -57,32 +59,152 @@ public class AssignedModeCommand extends AISMessage {
 
     @SuppressWarnings("unused")
     public MMSI getDestinationMmsiA() {
-        return getDecodedValue(() -> destinationMmsiA, value -> destinationMmsiA = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70))));
+        return getDecodedValue(new Supplier<MMSI>() {
+            @Override
+            public MMSI get() {
+                return destinationMmsiA;
+            }
+        }, new Consumer<MMSI>() {
+            @Override
+            public void accept(MMSI value) {
+                destinationMmsiA = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<MMSI>() {
+            @Override
+            public MMSI get() {
+                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(AssignedModeCommand.this.getBits(40, 70)));
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public Integer getOffsetA() {
-        return getDecodedValue(() -> offsetA, value -> offsetA = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(70, 82)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return offsetA;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                offsetA = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(AssignedModeCommand.this.getBits(70, 82));
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public Integer getIncrementA() {
-        return getDecodedValue(() -> incrementA, value -> incrementA = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(82, 92)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return incrementA;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                incrementA = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(AssignedModeCommand.this.getBits(82, 92));
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public MMSI getDestinationMmsiB() {
-        return getDecodedValue(() -> destinationMmsiB, value -> destinationMmsiB = value, () -> getNumberOfBits() >= 144, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(92, 122))));
+        return getDecodedValue(new Supplier<MMSI>() {
+            @Override
+            public MMSI get() {
+                return destinationMmsiB;
+            }
+        }, new Consumer<MMSI>() {
+            @Override
+            public void accept(MMSI value) {
+                destinationMmsiB = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return AssignedModeCommand.this.getNumberOfBits() >= 144;
+            }
+        }, new Supplier<MMSI>() {
+            @Override
+            public MMSI get() {
+                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(AssignedModeCommand.this.getBits(92, 122)));
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public Integer getOffsetB() {
-        return getDecodedValue(() -> offsetB, value -> offsetB = value, () -> getNumberOfBits() >= 144, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(122, 134)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return offsetB;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                offsetB = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return AssignedModeCommand.this.getNumberOfBits() >= 144;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(AssignedModeCommand.this.getBits(122, 134));
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public Integer getIncrementB() {
-        return getDecodedValue(() -> incrementB, value -> incrementB = value, () -> getNumberOfBits() >= 144, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(134, 144)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return incrementB;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                incrementB = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return AssignedModeCommand.this.getNumberOfBits() >= 144;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(AssignedModeCommand.this.getBits(134, 144));
+            }
+        });
     }
 
     @Override

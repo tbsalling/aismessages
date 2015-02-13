@@ -19,6 +19,8 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.TxRxMode;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Consumer;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Supplier;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.BOOLEAN_DECODER;
@@ -46,72 +48,352 @@ public class ChannelManagement extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Integer getChannelA() {
-        return getDecodedValue(() -> channelA, value -> channelA = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(40, 52)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return channelA;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                channelA = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(ChannelManagement.this.getBits(40, 52));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getChannelB() {
-        return getDecodedValue(() -> channelB, value -> channelB = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(52, 64)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return channelB;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                channelB = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(ChannelManagement.this.getBits(52, 64));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public TxRxMode getTransmitReceiveMode() {
-        return getDecodedValue(() -> transmitReceiveMode, value -> transmitReceiveMode = value, () -> Boolean.TRUE, () -> TxRxMode.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(64, 68))));
+        return getDecodedValue(new Supplier<TxRxMode>() {
+            @Override
+            public TxRxMode get() {
+                return transmitReceiveMode;
+            }
+        }, new Consumer<TxRxMode>() {
+            @Override
+            public void accept(TxRxMode value) {
+                transmitReceiveMode = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<TxRxMode>() {
+            @Override
+            public TxRxMode get() {
+                return TxRxMode.fromInteger(UNSIGNED_INTEGER_DECODER.apply(ChannelManagement.this.getBits(64, 68)));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getPower() {
-        return getDecodedValue(() -> power, value -> power = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(68, 69)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return power;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                power = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(ChannelManagement.this.getBits(68, 69));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Float getNorthEastLongitude() {
-        return getDecodedValue(() -> northEastLongitude, value -> northEastLongitude = value, () -> !getAddressed(), () -> FLOAT_DECODER.apply(getBits(69, 87)) / 10f);
+        return getDecodedValue(new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return northEastLongitude;
+            }
+        }, new Consumer<Float>() {
+            @Override
+            public void accept(Float value) {
+                northEastLongitude = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return !ChannelManagement.this.getAddressed();
+            }
+        }, new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return FLOAT_DECODER.apply(ChannelManagement.this.getBits(69, 87))/10f;
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Float getNorthEastLatitude() {
-        return getDecodedValue(() -> northEastLatitude, value -> northEastLatitude = value, () -> !getAddressed(), () -> FLOAT_DECODER.apply(getBits(87, 104)) / 10f);
+        return getDecodedValue(new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return northEastLatitude;
+            }
+        }, new Consumer<Float>() {
+            @Override
+            public void accept(Float value) {
+                northEastLatitude = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return !ChannelManagement.this.getAddressed();
+            }
+        }, new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return FLOAT_DECODER.apply(ChannelManagement.this.getBits(87, 104))/10f;
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Float getSouthWestLongitude() {
-        return getDecodedValue(() -> southWestLongitude, value -> southWestLongitude = value, () -> !getAddressed(), () -> FLOAT_DECODER.apply(getBits(104, 122)) / 10f);
+        return getDecodedValue(new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return southWestLongitude;
+            }
+        }, new Consumer<Float>() {
+            @Override
+            public void accept(Float value) {
+                southWestLongitude = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return !ChannelManagement.this.getAddressed();
+            }
+        }, new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return FLOAT_DECODER.apply(ChannelManagement.this.getBits(104, 122))/10f;
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Float getSouthWestLatitude() {
-        return getDecodedValue(() -> southWestLatitude, value -> southWestLatitude = value, () -> !getAddressed(), () -> FLOAT_DECODER.apply(getBits(122, 138)) / 10f);
+        return getDecodedValue(new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return southWestLatitude;
+            }
+        }, new Consumer<Float>() {
+            @Override
+            public void accept(Float value) {
+                southWestLatitude = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return !ChannelManagement.this.getAddressed();
+            }
+        }, new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return FLOAT_DECODER.apply(ChannelManagement.this.getBits(122, 138))/10f;
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getDestinationMmsi1() {
-        return getDecodedValue(() -> destinationMmsi1, value -> destinationMmsi1 = value, () -> getAddressed(), () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(69, 99))));
+        return getDecodedValue(new Supplier<MMSI>() {
+            @Override
+            public MMSI get() {
+                return destinationMmsi1;
+            }
+        }, new Consumer<MMSI>() {
+            @Override
+            public void accept(MMSI value) {
+                destinationMmsi1 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return ChannelManagement.this.getAddressed();
+            }
+        }, new Supplier<MMSI>() {
+            @Override
+            public MMSI get() {
+                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(ChannelManagement.this.getBits(69, 99)));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getDestinationMmsi2() {
-        return getDecodedValue(() -> destinationMmsi2, value -> destinationMmsi2 = value, () -> getAddressed(), () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(104, 134))));
+        return getDecodedValue(new Supplier<MMSI>() {
+            @Override
+            public MMSI get() {
+                return destinationMmsi2;
+            }
+        }, new Consumer<MMSI>() {
+            @Override
+            public void accept(MMSI value) {
+                destinationMmsi2 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return ChannelManagement.this.getAddressed();
+            }
+        }, new Supplier<MMSI>() {
+            @Override
+            public MMSI get() {
+                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(ChannelManagement.this.getBits(104, 134)));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getAddressed() {
-        return getDecodedValue(() -> addressed, value -> addressed = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(139, 140)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return addressed;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                addressed = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(ChannelManagement.this.getBits(139, 140));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getBandA() {
-        return getDecodedValue(() -> bandA, value -> bandA = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(140, 141)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return bandA;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                bandA = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(ChannelManagement.this.getBits(140, 141));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getBandB() {
-        return getDecodedValue(() -> bandB, value -> bandB = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(141, 142)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return bandB;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                bandB = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(ChannelManagement.this.getBits(141, 142));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getZoneSize() {
-        return getDecodedValue(() -> zoneSize, value -> zoneSize = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(142, 145)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return zoneSize;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                zoneSize = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(ChannelManagement.this.getBits(142, 145));
+            }
+        });
 	}
 
     @Override

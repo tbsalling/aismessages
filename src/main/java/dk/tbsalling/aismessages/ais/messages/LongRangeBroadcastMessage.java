@@ -3,6 +3,8 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.NavigationStatus;
 import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Consumer;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Supplier;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.BOOLEAN_DECODER;
@@ -37,27 +39,127 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
      */
     @SuppressWarnings("unused")
 	public Boolean getPositionAccuracy() {
-        return getDecodedValue(() -> positionAccuracy, value -> positionAccuracy = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(38, 39)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return positionAccuracy;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                positionAccuracy = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(LongRangeBroadcastMessage.this.getBits(38, 39));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
     public Boolean getRaim() {
-        return getDecodedValue(() -> raim, value -> raim = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(39, 40)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return raim;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                raim = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(LongRangeBroadcastMessage.this.getBits(39, 40));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public NavigationStatus getNavigationalStatus() {
-        return getDecodedValue(() -> navigationStatus, value -> navigationStatus = value, () -> Boolean.TRUE, () -> NavigationStatus.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 44))));
+        return getDecodedValue(new Supplier<NavigationStatus>() {
+            @Override
+            public NavigationStatus get() {
+                return navigationStatus;
+            }
+        }, new Consumer<NavigationStatus>() {
+            @Override
+            public void accept(NavigationStatus value) {
+                navigationStatus = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<NavigationStatus>() {
+            @Override
+            public NavigationStatus get() {
+                return NavigationStatus.fromInteger(UNSIGNED_INTEGER_DECODER.apply(LongRangeBroadcastMessage.this.getBits(40, 44)));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Float getLongitude() {
-        return getDecodedValue(() -> longitude, value -> longitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(44, 62)) / 600f);
+        return getDecodedValue(new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return longitude;
+            }
+        }, new Consumer<Float>() {
+            @Override
+            public void accept(Float value) {
+                longitude = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return FLOAT_DECODER.apply(LongRangeBroadcastMessage.this.getBits(44, 62))/600f;
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Float getLatitude() {
-        return getDecodedValue(() -> latitude, value -> latitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(62, 79)) / 600f);
+        return getDecodedValue(new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return latitude;
+            }
+        }, new Consumer<Float>() {
+            @Override
+            public void accept(Float value) {
+                latitude = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return FLOAT_DECODER.apply(LongRangeBroadcastMessage.this.getBits(62, 79))/600f;
+            }
+        });
 	}
 
     /**
@@ -65,7 +167,27 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
      */
     @SuppressWarnings("unused")
 	public Float getSpeedOverGround() {
-        return Float.valueOf(getDecodedValue(() -> speed, value -> speed = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(79, 85))));
+        return Float.valueOf(getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return speed;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                speed = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(LongRangeBroadcastMessage.this.getBits(79, 85));
+            }
+        }));
 	}
 
     /**
@@ -73,7 +195,27 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
      */
     @SuppressWarnings("unused")
 	public Float getCourseOverGround() {
-        return Float.valueOf(getDecodedValue(() -> course, value -> course = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(85, 94))));
+        return Float.valueOf(getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return course;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                course = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(LongRangeBroadcastMessage.this.getBits(85, 94));
+            }
+        }));
 	}
 
     /**
@@ -81,12 +223,52 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
      */
     @SuppressWarnings("unused")
 	public Integer getPositionLatency() {
-        return getDecodedValue(() -> positionLatency, value -> positionLatency = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(94, 95)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return positionLatency;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                positionLatency = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(LongRangeBroadcastMessage.this.getBits(94, 95));
+            }
+        });
 	}
 
    @SuppressWarnings("unused")
 	public Integer getSpare() {
-        return getDecodedValue(() -> spare, value -> spare = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(95, 96)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return spare;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                spare = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(LongRangeBroadcastMessage.this.getBits(95, 96));
+            }
+        });
 	}
 
     @Override

@@ -21,6 +21,8 @@ import dk.tbsalling.aismessages.ais.messages.types.CommunicationState;
 import dk.tbsalling.aismessages.ais.messages.types.ITDMACommunicationState;
 import dk.tbsalling.aismessages.ais.messages.types.SOTDMACommunicationState;
 import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Consumer;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Supplier;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import java.lang.ref.WeakReference;
@@ -63,94 +65,474 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
 
     @SuppressWarnings("unused")
 	public String getRegionalReserved1() {
-        return getDecodedValue(() -> regionalReserved1, value -> regionalReserved1 = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(38, 46)));
+        return getDecodedValue(new Supplier<String>() {
+            @Override
+            public String get() {
+                return regionalReserved1;
+            }
+        }, new Consumer<String>() {
+            @Override
+            public void accept(String value) {
+                regionalReserved1 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<String>() {
+            @Override
+            public String get() {
+                return BIT_DECODER.apply(StandardClassBCSPositionReport.this.getBits(38, 46));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Float getSpeedOverGround() {
-        return getDecodedValue(() -> speedOverGround, value -> speedOverGround = value, () -> Boolean.TRUE, () -> UNSIGNED_FLOAT_DECODER.apply(getBits(46, 56)) / 10f);
+        return getDecodedValue(new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return speedOverGround;
+            }
+        }, new Consumer<Float>() {
+            @Override
+            public void accept(Float value) {
+                speedOverGround = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return UNSIGNED_FLOAT_DECODER.apply(StandardClassBCSPositionReport.this.getBits(46, 56))/10f;
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getPositionAccurate() {
-        return getDecodedValue(() -> positionAccurate, value -> positionAccurate = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(56, 57)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return positionAccurate;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                positionAccurate = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(StandardClassBCSPositionReport.this.getBits(56, 57));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Float getLatitude() {
-        return getDecodedValue(() -> latitude, value -> latitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(85, 112)) / 600000f);
+        return getDecodedValue(new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return latitude;
+            }
+        }, new Consumer<Float>() {
+            @Override
+            public void accept(Float value) {
+                latitude = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return FLOAT_DECODER.apply(StandardClassBCSPositionReport.this.getBits(85, 112))/600000f;
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Float getLongitude() {
-        return getDecodedValue(() -> longitude, value -> longitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(57, 85)) / 600000f);
+        return getDecodedValue(new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return longitude;
+            }
+        }, new Consumer<Float>() {
+            @Override
+            public void accept(Float value) {
+                longitude = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return FLOAT_DECODER.apply(StandardClassBCSPositionReport.this.getBits(57, 85))/600000f;
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Float getCourseOverGround() {
-        return getDecodedValue(() -> courseOverGround, value -> courseOverGround = value, () -> Boolean.TRUE, () -> UNSIGNED_FLOAT_DECODER.apply(getBits(112, 124)) / 10f);
+        return getDecodedValue(new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return courseOverGround;
+            }
+        }, new Consumer<Float>() {
+            @Override
+            public void accept(Float value) {
+                courseOverGround = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return UNSIGNED_FLOAT_DECODER.apply(StandardClassBCSPositionReport.this.getBits(112, 124))/10f;
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getTrueHeading() {
-        return getDecodedValue(() -> trueHeading, value -> trueHeading = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(124, 133)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return trueHeading;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                trueHeading = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(StandardClassBCSPositionReport.this.getBits(124, 133));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getSecond() {
-        return getDecodedValue(() -> second, value -> second = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(133, 139)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return second;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                second = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(StandardClassBCSPositionReport.this.getBits(133, 139));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public String getRegionalReserved2() {
-        return getDecodedValue(() -> regionalReserved2, value -> regionalReserved2 = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(139, 141)));
+        return getDecodedValue(new Supplier<String>() {
+            @Override
+            public String get() {
+                return regionalReserved2;
+            }
+        }, new Consumer<String>() {
+            @Override
+            public void accept(String value) {
+                regionalReserved2 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<String>() {
+            @Override
+            public String get() {
+                return BIT_DECODER.apply(StandardClassBCSPositionReport.this.getBits(139, 141));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getCsUnit() {
-        return getDecodedValue(() -> csUnit, value -> csUnit = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(141, 142)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return csUnit;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                csUnit = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(StandardClassBCSPositionReport.this.getBits(141, 142));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getDisplay() {
-        return getDecodedValue(() -> display, value -> display = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(142, 143)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return display;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                display = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(StandardClassBCSPositionReport.this.getBits(142, 143));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getDsc() {
-        return getDecodedValue(() -> dsc, value -> dsc = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(143, 144)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return dsc;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                dsc = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(StandardClassBCSPositionReport.this.getBits(143, 144));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getBand() {
-        return getDecodedValue(() -> band, value -> band = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(144, 145)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return band;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                band = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(StandardClassBCSPositionReport.this.getBits(144, 145));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getMessage22() {
-        return getDecodedValue(() -> message22, value -> message22 = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(145, 146)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return message22;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                message22 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(StandardClassBCSPositionReport.this.getBits(145, 146));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getAssigned() {
-        return getDecodedValue(() -> assigned, value -> assigned = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(146, 147)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return assigned;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                assigned = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(StandardClassBCSPositionReport.this.getBits(146, 147));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getRaimFlag() {
-        return getDecodedValue(() -> raimFlag, value -> raimFlag = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(147, 148)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return raimFlag;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                raimFlag = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(StandardClassBCSPositionReport.this.getBits(147, 148));
+            }
+        });
 	}
 
     public Boolean getCommunicationStateSelectorFlag() {
-        return getDecodedValue(() -> commStateSelectorFlag, value -> commStateSelectorFlag = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(148, 149)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return commStateSelectorFlag;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                commStateSelectorFlag = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(StandardClassBCSPositionReport.this.getBits(148, 149));
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public CommunicationState getCommunicationState() {
         if (getCommunicationStateSelectorFlag() == Boolean.FALSE)
-            return getDecodedValueByWeakReference(() -> communicationState, value -> communicationState = value, () -> Boolean.TRUE, () -> SOTDMACommunicationState.fromBitString(getBits(149, 168)));
+            return getDecodedValueByWeakReference(new Supplier<WeakReference<CommunicationState>>() {
+                @Override
+                public WeakReference<CommunicationState> get() {
+                    return communicationState;
+                }
+            }, new Consumer<WeakReference<CommunicationState>>() {
+                @Override
+                public void accept(WeakReference<CommunicationState> value) {
+                    communicationState = value;
+                }
+            }, new Supplier<Boolean>() {
+                @Override
+                public Boolean get() {
+                    return Boolean.TRUE;
+                }
+            }, new Supplier<CommunicationState>() {
+                @Override
+                public CommunicationState get() {
+                    return SOTDMACommunicationState.fromBitString(StandardClassBCSPositionReport.this.getBits(149, 168));
+                }
+            });
         else
-            return getDecodedValueByWeakReference(() -> communicationState, value -> communicationState = value, () -> Boolean.TRUE, () -> ITDMACommunicationState.fromBitString(getBits(149, 168)));
+            return getDecodedValueByWeakReference(new Supplier<WeakReference<CommunicationState>>() {
+                @Override
+                public WeakReference<CommunicationState> get() {
+                    return communicationState;
+                }
+            }, new Consumer<WeakReference<CommunicationState>>() {
+                @Override
+                public void accept(WeakReference<CommunicationState> value) {
+                    communicationState = value;
+                }
+            }, new Supplier<Boolean>() {
+                @Override
+                public Boolean get() {
+                    return Boolean.TRUE;
+                }
+            }, new Supplier<CommunicationState>() {
+                @Override
+                public CommunicationState get() {
+                    return ITDMACommunicationState.fromBitString(StandardClassBCSPositionReport.this.getBits(149, 168));
+                }
+            });
     }
 
     @Override

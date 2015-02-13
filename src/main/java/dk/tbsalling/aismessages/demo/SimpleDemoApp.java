@@ -17,6 +17,8 @@
 package dk.tbsalling.aismessages.demo;
 
 import dk.tbsalling.aismessages.AISInputStreamReader;
+import dk.tbsalling.aismessages.ais.messages.AISMessage;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Consumer;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -31,8 +33,12 @@ public class SimpleDemoApp {
 		System.out.println("AISMessages Demo App");
 		System.out.println("--------------------");
 
-        AISInputStreamReader streamReader = new AISInputStreamReader(inputStream, aisMessage ->
-            System.out.println("Received AIS message from MMSI " + aisMessage.getSourceMmsi().getMMSI() + ": " + aisMessage)
+        AISInputStreamReader streamReader = new AISInputStreamReader(inputStream, new Consumer<AISMessage>() {
+            @Override
+            public void accept(AISMessage aisMessage) {
+                System.out.println("Received AIS message from MMSI " + aisMessage.getSourceMmsi().getMMSI() + ": " + aisMessage);
+            }
+        }
         );
 
         streamReader.run();

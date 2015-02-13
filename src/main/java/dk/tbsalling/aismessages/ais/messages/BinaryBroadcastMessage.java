@@ -17,6 +17,8 @@
 package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Consumer;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Supplier;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.BIT_DECODER;
@@ -51,17 +53,77 @@ public class BinaryBroadcastMessage extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Integer getDesignatedAreaCode() {
-        return getDecodedValue(() -> designatedAreaCode, value -> designatedAreaCode = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 52)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return designatedAreaCode;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                designatedAreaCode = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(BinaryBroadcastMessage.this.getBits(38, 52));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getFunctionalId() {
-        return getDecodedValue(() -> functionalId, value -> functionalId = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(52, 56)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return functionalId;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                functionalId = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(BinaryBroadcastMessage.this.getBits(52, 56));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public String getBinaryData() {
-        return getDecodedValue(() -> binaryData, value -> binaryData = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(52, 56)));
+        return getDecodedValue(new Supplier<String>() {
+            @Override
+            public String get() {
+                return binaryData;
+            }
+        }, new Consumer<String>() {
+            @Override
+            public void accept(String value) {
+                binaryData = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<String>() {
+            @Override
+            public String get() {
+                return BIT_DECODER.apply(BinaryBroadcastMessage.this.getBits(52, 56));
+            }
+        });
 	}
 
     @Override

@@ -1,13 +1,14 @@
 package dk.tbsalling.aismessages.ais.messages;
 
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Consumer;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Supplier;
+
 import java.lang.ref.WeakReference;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * Created by tbsalling on 20/01/15.
  */
-public interface CachedDecodedValues {
+public class CachedDecodedValues {
 
     /**
      * Decode a value and cache it for faster future calls. Use weak references for the caching to
@@ -19,7 +20,7 @@ public interface CachedDecodedValues {
      * @param <T> The return type.
      * @return The decoded (and now cached) value.
      */
-    default <T> T getDecodedValueByWeakReference(Supplier<WeakReference<T>> refGetter, Consumer<WeakReference<T>> refSetter, Supplier<Boolean> condition, Supplier<T> decoder) {
+    protected <T> T getDecodedValueByWeakReference(Supplier<WeakReference<T>> refGetter, Consumer<WeakReference<T>> refSetter, Supplier<Boolean> condition, Supplier<T> decoder) {
         T decodedValue = null;
         if (condition.get()) {
             WeakReference<T> ref = refGetter.get();
@@ -43,7 +44,7 @@ public interface CachedDecodedValues {
      * @param <T> The return type.
      * @return The decoded value.
      */
-    default <T> T getDecodedValue(Supplier<T> getter, Consumer<T> setter, Supplier<Boolean> condition, Supplier<T> decoder) {
+    protected <T> T getDecodedValue(Supplier<T> getter, Consumer<T> setter, Supplier<Boolean> condition, Supplier<T> decoder) {
         T decodedValue = getter.get();
         if (condition.get() && decodedValue == null) {
             decodedValue = decoder.get();

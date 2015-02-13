@@ -18,6 +18,8 @@ package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Consumer;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Supplier;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import java.lang.ref.WeakReference;
@@ -56,37 +58,177 @@ public class AddressedBinaryMessage extends AISMessage {
 
     @SuppressWarnings("unused")
     public Integer getSequenceNumber() {
-        return getDecodedValue(() -> sequenceNumber, ref -> sequenceNumber = ref, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return sequenceNumber;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer ref) {
+                sequenceNumber = ref;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(AddressedBinaryMessage.this.getBits(38, 40));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getDestinationMmsi() {
-        return getDecodedValue(() -> destinationMmsi, ref -> destinationMmsi = ref, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70))));
+        return getDecodedValue(new Supplier<MMSI>() {
+            @Override
+            public MMSI get() {
+                return destinationMmsi;
+            }
+        }, new Consumer<MMSI>() {
+            @Override
+            public void accept(MMSI ref) {
+                destinationMmsi = ref;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<MMSI>() {
+            @Override
+            public MMSI get() {
+                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(AddressedBinaryMessage.this.getBits(40, 70)));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getRetransmit() {
-        return getDecodedValue(() -> retransmit, ref -> retransmit = ref, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(70, 71)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return retransmit;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean ref) {
+                retransmit = ref;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(AddressedBinaryMessage.this.getBits(70, 71));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public int getSpare() {
-        return getDecodedValue(() -> spare, ref -> spare = ref, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(71, 72)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return spare;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer ref) {
+                spare = ref;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(AddressedBinaryMessage.this.getBits(71, 72));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getDesignatedAreaCode() {
-        return getDecodedValue(() -> designatedAreaCode, ref -> designatedAreaCode = ref, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(72, 82)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return designatedAreaCode;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer ref) {
+                designatedAreaCode = ref;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(AddressedBinaryMessage.this.getBits(72, 82));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getFunctionalId() {
-        return getDecodedValue(() -> functionalId, ref -> functionalId = ref, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(82, 88)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return functionalId;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer ref) {
+                functionalId = ref;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(AddressedBinaryMessage.this.getBits(82, 88));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public String getBinaryData() {
-        return getDecodedValueByWeakReference(() -> binaryData, ref -> binaryData = ref, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(88, getNumberOfBits())));
+        return getDecodedValueByWeakReference(new Supplier<WeakReference<String>>() {
+            @Override
+            public WeakReference<String> get() {
+                return binaryData;
+            }
+        }, new Consumer<WeakReference<String>>() {
+            @Override
+            public void accept(WeakReference<String> ref) {
+                binaryData = ref;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<String>() {
+            @Override
+            public String get() {
+                return BIT_DECODER.apply(AddressedBinaryMessage.this.getBits(88, getNumberOfBits()));
+            }
+        });
 	}
 
     @Override

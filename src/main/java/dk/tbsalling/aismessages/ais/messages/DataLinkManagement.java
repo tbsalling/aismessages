@@ -17,6 +17,8 @@
 package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Consumer;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Supplier;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import java.util.logging.Logger;
@@ -55,82 +57,402 @@ public class DataLinkManagement extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Integer getOffsetNumber1() {
-        return getDecodedValue(() -> offsetNumber1, value -> offsetNumber1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(40, 52)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return offsetNumber1;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                offsetNumber1 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(DataLinkManagement.this.getBits(40, 52));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getReservedSlots1() {
-        return getDecodedValue(() -> reservedSlots1, value -> reservedSlots1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(52, 56)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return reservedSlots1;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                reservedSlots1 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(DataLinkManagement.this.getBits(52, 56));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getTimeout1() {
-        return getDecodedValue(() -> timeout1, value -> timeout1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(56, 59)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return timeout1;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                timeout1 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(DataLinkManagement.this.getBits(56, 59));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getIncrement1() {
-        return getDecodedValue(() -> increment1, value -> increment1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(59, 70)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return increment1;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                increment1 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(DataLinkManagement.this.getBits(59, 70));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getOffsetNumber2() {
-        return getDecodedValue(() -> offsetNumber2, value -> offsetNumber2 = value, () -> getNumberOfBits() >= 100, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(70, 82)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return offsetNumber2;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                offsetNumber2 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return DataLinkManagement.this.getNumberOfBits() >= 100;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(DataLinkManagement.this.getBits(70, 82));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getReservedSlots2() {
-        return getDecodedValue(() -> reservedSlots2, value -> reservedSlots2 = value, () -> getNumberOfBits() >= 100, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(82, 86)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return reservedSlots2;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                reservedSlots2 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return DataLinkManagement.this.getNumberOfBits() >= 100;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(DataLinkManagement.this.getBits(82, 86));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getTimeout2() {
-        return getDecodedValue(() -> timeout2, value -> timeout2 = value, () -> getNumberOfBits() >= 100, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(86, 89)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return timeout2;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                timeout2 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return DataLinkManagement.this.getNumberOfBits() >= 100;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(DataLinkManagement.this.getBits(86, 89));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getIncrement2() {
-        return getDecodedValue(() -> increment2, value -> increment2 = value, () -> getNumberOfBits() >= 100, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(89, 100)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return increment2;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                increment2 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return DataLinkManagement.this.getNumberOfBits() >= 100;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(DataLinkManagement.this.getBits(89, 100));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getOffsetNumber3() {
-        return getDecodedValue(() -> offsetNumber3, value -> offsetNumber3 = value, () -> getNumberOfBits() >= 130, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(100, 112)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return offsetNumber3;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                offsetNumber3 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return DataLinkManagement.this.getNumberOfBits() >= 130;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(DataLinkManagement.this.getBits(100, 112));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getReservedSlots3() {
-        return getDecodedValue(() -> reservedSlots3, value -> reservedSlots3 = value, () -> getNumberOfBits() >= 130, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(112, 116)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return reservedSlots3;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                reservedSlots3 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return DataLinkManagement.this.getNumberOfBits() >= 130;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(DataLinkManagement.this.getBits(112, 116));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getTimeout3() {
-        return getDecodedValue(() -> timeout3, value -> timeout3 = value, () -> getNumberOfBits() >= 130, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(116, 119)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return timeout3;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                timeout3 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return DataLinkManagement.this.getNumberOfBits() >= 130;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(DataLinkManagement.this.getBits(116, 119));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getIncrement3() {
-        return getDecodedValue(() -> increment3, value -> increment3 = value, () -> getNumberOfBits() >= 130, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(119, 130)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return increment3;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                increment3 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return DataLinkManagement.this.getNumberOfBits() >= 130;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(DataLinkManagement.this.getBits(119, 130));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getOffsetNumber4() {
-        return getDecodedValue(() -> offsetNumber4, value -> offsetNumber4 = value, () -> getNumberOfBits() >= 160, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(130, 142)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return offsetNumber4;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                offsetNumber4 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return DataLinkManagement.this.getNumberOfBits() >= 160;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(DataLinkManagement.this.getBits(130, 142));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getReservedSlots4() {
-        return getDecodedValue(() -> reservedSlots4, value -> reservedSlots4 = value, () -> getNumberOfBits() >= 160, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(142, 146)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return reservedSlots4;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                reservedSlots4 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return DataLinkManagement.this.getNumberOfBits() >= 160;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(DataLinkManagement.this.getBits(142, 146));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getTimeout4() {
-        return getDecodedValue(() -> timeout4, value -> timeout4 = value, () -> getNumberOfBits() >= 160, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(146, 149)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return timeout4;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                timeout4 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return DataLinkManagement.this.getNumberOfBits() >= 160;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(DataLinkManagement.this.getBits(146, 149));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getIncrement4() {
-        return getDecodedValue(() -> increment4, value -> increment4 = value, () -> getNumberOfBits() >= 160, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(149, 160)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return increment4;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                increment4 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return DataLinkManagement.this.getNumberOfBits() >= 160;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(DataLinkManagement.this.getBits(149, 160));
+            }
+        });
 	}
 
     @Override

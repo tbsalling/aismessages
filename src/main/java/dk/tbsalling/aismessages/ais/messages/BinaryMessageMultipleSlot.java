@@ -18,6 +18,8 @@ package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Consumer;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Supplier;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.BIT_DECODER;
@@ -45,27 +47,127 @@ public class BinaryMessageMultipleSlot extends AISMessage {
 
     @SuppressWarnings("unused")
     public Boolean getAddressed() {
-        return getDecodedValue(() -> addressed, value -> addressed = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(38, 39)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return addressed;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                addressed = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(BinaryMessageMultipleSlot.this.getBits(38, 39));
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public Boolean getStructured() {
-        return getDecodedValue(() -> structured, value -> structured = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(39, 40)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return structured;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                structured = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(BinaryMessageMultipleSlot.this.getBits(39, 40));
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public MMSI getDestinationMmsi() {
-        return getDecodedValue(() -> destinationMmsi, value -> destinationMmsi = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70))));
+        return getDecodedValue(new Supplier<MMSI>() {
+            @Override
+            public MMSI get() {
+                return destinationMmsi;
+            }
+        }, new Consumer<MMSI>() {
+            @Override
+            public void accept(MMSI value) {
+                destinationMmsi = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<MMSI>() {
+            @Override
+            public MMSI get() {
+                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(BinaryMessageMultipleSlot.this.getBits(40, 70)));
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public Integer getApplicationId() {
-        return getDecodedValue(() -> applicationId, value -> applicationId = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(70, 86)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return applicationId;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                applicationId = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(BinaryMessageMultipleSlot.this.getBits(70, 86));
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public String getData() {
-        return getDecodedValue(() -> data, value -> data = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(86, 86 + 1004 + 1)));
+        return getDecodedValue(new Supplier<String>() {
+            @Override
+            public String get() {
+                return data;
+            }
+        }, new Consumer<String>() {
+            @Override
+            public void accept(String value) {
+                data = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<String>() {
+            @Override
+            public String get() {
+                return BIT_DECODER.apply(BinaryMessageMultipleSlot.this.getBits(86, 86 + 1004 + 1));
+            }
+        });
     }
 
     @SuppressWarnings("unused")

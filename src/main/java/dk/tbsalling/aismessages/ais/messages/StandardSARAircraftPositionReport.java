@@ -18,6 +18,8 @@ package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Consumer;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Supplier;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.BIT_DECODER;
@@ -51,62 +53,302 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
 
     @SuppressWarnings("unused")
 	public Integer getAltitude() {
-        return getDecodedValue(() -> altitude, value -> altitude = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 50)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return altitude;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                altitude = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(StandardSARAircraftPositionReport.this.getBits(38, 50));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Float getSpeedOverGround() {
-        return getDecodedValue(() -> speed, value -> speed = value, () -> Boolean.TRUE, () -> Float.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(50, 60))));
+        return getDecodedValue(new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return speed;
+            }
+        }, new Consumer<Float>() {
+            @Override
+            public void accept(Float value) {
+                speed = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return Float.valueOf(UNSIGNED_INTEGER_DECODER.apply(StandardSARAircraftPositionReport.this.getBits(50, 60)));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getPositionAccurate() {
-        return getDecodedValue(() -> positionAccurate, value -> positionAccurate = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(60, 61)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return positionAccurate;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                positionAccurate = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(StandardSARAircraftPositionReport.this.getBits(60, 61));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Float getLongitude() {
-        return getDecodedValue(() -> longitude, value -> longitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(61, 89)) / 600000f);
+        return getDecodedValue(new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return longitude;
+            }
+        }, new Consumer<Float>() {
+            @Override
+            public void accept(Float value) {
+                longitude = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return FLOAT_DECODER.apply(StandardSARAircraftPositionReport.this.getBits(61, 89))/600000f;
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
     public Float getLatitude() {
-        return getDecodedValue(() -> latitude, value -> latitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(89, 116)) / 600000f);
+        return getDecodedValue(new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return latitude;
+            }
+        }, new Consumer<Float>() {
+            @Override
+            public void accept(Float value) {
+                latitude = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return FLOAT_DECODER.apply(StandardSARAircraftPositionReport.this.getBits(89, 116))/600000f;
+            }
+        });
     }
 
     @SuppressWarnings("unused")
 	public Float getCourseOverGround() {
-        return getDecodedValue(() -> courseOverGround, value -> courseOverGround = value, () -> Boolean.TRUE, () -> UNSIGNED_FLOAT_DECODER.apply(getBits(116, 128)) / 10f);
+        return getDecodedValue(new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return courseOverGround;
+            }
+        }, new Consumer<Float>() {
+            @Override
+            public void accept(Float value) {
+                courseOverGround = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return UNSIGNED_FLOAT_DECODER.apply(StandardSARAircraftPositionReport.this.getBits(116, 128))/10f;
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getSecond() {
-        return getDecodedValue(() -> second, value -> second = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(128, 134)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return second;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                second = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(StandardSARAircraftPositionReport.this.getBits(128, 134));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public String getRegionalReserved() {
-        return getDecodedValue(() -> regionalReserved, value -> regionalReserved = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(134, 142)));
+        return getDecodedValue(new Supplier<String>() {
+            @Override
+            public String get() {
+                return regionalReserved;
+            }
+        }, new Consumer<String>() {
+            @Override
+            public void accept(String value) {
+                regionalReserved = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<String>() {
+            @Override
+            public String get() {
+                return BIT_DECODER.apply(StandardSARAircraftPositionReport.this.getBits(134, 142));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getDataTerminalReady() {
-        return getDecodedValue(() -> dataTerminalReady, value -> dataTerminalReady = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(142, 143)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return dataTerminalReady;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                dataTerminalReady = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(StandardSARAircraftPositionReport.this.getBits(142, 143));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getAssigned() {
-        return getDecodedValue(() -> assigned, value -> assigned = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(146, 147)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return assigned;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                assigned = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(StandardSARAircraftPositionReport.this.getBits(146, 147));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getRaimFlag() {
-        return getDecodedValue(() -> raimFlag, value -> raimFlag = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(147, 148)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return raimFlag;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                raimFlag = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(StandardSARAircraftPositionReport.this.getBits(147, 148));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public String getRadioStatus() {
-        return getDecodedValue(() -> radioStatus, value -> radioStatus = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(148, 168)));
+        return getDecodedValue(new Supplier<String>() {
+            @Override
+            public String get() {
+                return radioStatus;
+            }
+        }, new Consumer<String>() {
+            @Override
+            public void accept(String value) {
+                radioStatus = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<String>() {
+            @Override
+            public String get() {
+                return BIT_DECODER.apply(StandardSARAircraftPositionReport.this.getBits(148, 168));
+            }
+        });
 	}
 
     @Override

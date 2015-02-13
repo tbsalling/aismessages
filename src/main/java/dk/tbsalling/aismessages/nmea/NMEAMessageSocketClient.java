@@ -17,6 +17,7 @@
 package dk.tbsalling.aismessages.nmea;
 
 
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Consumer;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import java.io.IOException;
@@ -26,7 +27,6 @@ import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.SocketAddress;
 import java.net.UnknownHostException;
-import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 public class NMEAMessageSocketClient {

@@ -19,6 +19,8 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.AidType;
 import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Consumer;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Supplier;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.BIT_DECODER;
@@ -52,107 +54,483 @@ public class AidToNavigationReport extends AISMessage {
 
     @SuppressWarnings("unused")
     public AidType getAidType() {
-        return getDecodedValue(() -> aidType, value -> aidType = value, () -> Boolean.TRUE, () -> AidType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(38, 43))));
+        return getDecodedValue(new Supplier<AidType>() {
+            @Override
+            public AidType get() {
+                return aidType;
+            }
+        }, new Consumer<AidType>() {
+            @Override
+            public void accept(AidType value) {
+                aidType = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<AidType>() {
+            @Override
+            public AidType get() {
+                return AidType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(AidToNavigationReport.this.getBits(38, 43)));
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public String getName() {
-        return getDecodedValue(() -> name, value -> name = value, () -> Boolean.TRUE, () -> STRING_DECODER.apply(getBits(43, 163)));
+        return getDecodedValue(new Supplier<String>() {
+            @Override
+            public String get() {
+                return name;
+            }
+        }, new Consumer<String>() {
+            @Override
+            public void accept(String value) {
+                name = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<String>() {
+            @Override
+            public String get() {
+                return STRING_DECODER.apply(AidToNavigationReport.this.getBits(43, 163));
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public Boolean getPositionAccurate() {
-        return getDecodedValue(() -> positionAccurate, value -> positionAccurate = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(163, 164)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return positionAccurate;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                positionAccurate = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(AidToNavigationReport.this.getBits(163, 164));
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public Float getLatitude() {
-        return getDecodedValue(() -> latitude, value -> latitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(192, 219))/600000f);
+        return getDecodedValue(new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return latitude;
+            }
+        }, new Consumer<Float>() {
+            @Override
+            public void accept(Float value) {
+                latitude = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return FLOAT_DECODER.apply(AidToNavigationReport.this.getBits(192, 219))/600000f;
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public Float getLongitude() {
-        return getDecodedValue(() -> longitude, value -> longitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(164, 192))/600000f);
+        return getDecodedValue(new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return longitude;
+            }
+        }, new Consumer<Float>() {
+            @Override
+            public void accept(Float value) {
+                longitude = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Float>() {
+            @Override
+            public Float get() {
+                return FLOAT_DECODER.apply(AidToNavigationReport.this.getBits(164, 192))/600000f;
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public Integer getToBow() {
-        return getDecodedValue(() -> toBow, value -> toBow = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(219, 228)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return toBow;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                toBow = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(AidToNavigationReport.this.getBits(219, 228));
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public Integer getToStern() {
-        return getDecodedValue(() -> toStern, value -> toStern = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(228, 237)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return toStern;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                toStern = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(AidToNavigationReport.this.getBits(228, 237));
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public Integer getToStarboard() {
-        return getDecodedValue(() -> toStarboard, value -> toStarboard = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(243, 249)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return toStarboard;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                toStarboard = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(AidToNavigationReport.this.getBits(243, 249));
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public Integer getToPort() {
-        return getDecodedValue(() -> toPort, value -> toPort = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(237, 243)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return toPort;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                toPort = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(AidToNavigationReport.this.getBits(237, 243));
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public PositionFixingDevice getPositionFixingDevice() {
-        return getDecodedValue(() -> positionFixingDevice, value -> positionFixingDevice = value, () -> Boolean.TRUE, () -> PositionFixingDevice.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(249, 253))));
+        return getDecodedValue(new Supplier<PositionFixingDevice>() {
+            @Override
+            public PositionFixingDevice get() {
+                return positionFixingDevice;
+            }
+        }, new Consumer<PositionFixingDevice>() {
+            @Override
+            public void accept(PositionFixingDevice value) {
+                positionFixingDevice = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<PositionFixingDevice>() {
+            @Override
+            public PositionFixingDevice get() {
+                return PositionFixingDevice.fromInteger(UNSIGNED_INTEGER_DECODER.apply(AidToNavigationReport.this.getBits(249, 253)));
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public Integer getSecond() {
-        return getDecodedValue(() -> second, value -> second = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(253, 259)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return second;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                second = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(AidToNavigationReport.this.getBits(253, 259));
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public Boolean getOffPosition() {
-        return getDecodedValue(() -> offPosition, value -> offPosition = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(259, 260)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return offPosition;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                offPosition = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(AidToNavigationReport.this.getBits(259, 260));
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public String getRegionalUse() {
-        return getDecodedValue(() -> regionalUse, value -> regionalUse = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(260, 268)));
+        return getDecodedValue(new Supplier<String>() {
+            @Override
+            public String get() {
+                return regionalUse;
+            }
+        }, new Consumer<String>() {
+            @Override
+            public void accept(String value) {
+                regionalUse = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<String>() {
+            @Override
+            public String get() {
+                return BIT_DECODER.apply(AidToNavigationReport.this.getBits(260, 268));
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public Boolean getRaimFlag() {
-        return getDecodedValue(() -> raimFlag, value -> raimFlag = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(268, 269)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return raimFlag;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                raimFlag = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(AidToNavigationReport.this.getBits(268, 269));
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public Boolean getVirtualAid() {
-        return getDecodedValue(() -> virtualAid, value -> virtualAid = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(269, 270)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return virtualAid;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                virtualAid = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(AidToNavigationReport.this.getBits(269, 270));
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public Boolean getAssignedMode() {
-        return getDecodedValue(() -> assignedMode, value -> assignedMode = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(270, 271)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return assignedMode;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                assignedMode = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(AidToNavigationReport.this.getBits(270, 271));
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public int getSpare1() {
-        return getDecodedValue(() -> spare1, value -> spare1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(271, 272)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return spare1;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                spare1 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(AidToNavigationReport.this.getBits(271, 272));
+            }
+        });
     }
 
     @SuppressWarnings("unused")
     public String getNameExtension() {
-        getDecodedValue(() -> nameExtension, value -> nameExtension = value, () -> getNumberOfBits() > 272, () -> {
-            int extraBits = getNumberOfBits() - 272;
-            int extraChars = extraBits/6;
-            int extraBitsOfChars = extraChars*6;
-            return STRING_DECODER.apply(getBits(272, 272 + extraBitsOfChars));
+        getDecodedValue(new Supplier<String>() {
+            @Override
+            public String get() {
+                return nameExtension;
+            }
+        }, new Consumer<String>() {
+            @Override
+            public void accept(String value) {
+                nameExtension = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return AidToNavigationReport.this.getNumberOfBits() > 272;
+            }
+        }, new Supplier<String>() {
+            @Override
+            public String get() {
+                int extraBits = AidToNavigationReport.this.getNumberOfBits() - 272;
+                int extraChars = extraBits/6;
+                int extraBitsOfChars = extraChars*6;
+                return STRING_DECODER.apply(AidToNavigationReport.this.getBits(272, 272 + extraBitsOfChars));
+            }
         });
         return nameExtension;
     }
 
     @SuppressWarnings("unused")
     public int getSpare2() {
-        getDecodedValue(() -> spare2, value -> spare2 = value, () -> getNumberOfBits() >= 272, () -> {
-            int extraBits = getNumberOfBits() - 272;
-            int extraChars = extraBits/6;
-            int extraBitsOfChars = extraChars*6;
-            return (extraBits == extraBitsOfChars) ? 0 : UNSIGNED_INTEGER_DECODER.apply(getBits(272 + extraBitsOfChars, getNumberOfBits()));
+        getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return spare2;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                spare2 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return AidToNavigationReport.this.getNumberOfBits() >= 272;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                int extraBits = AidToNavigationReport.this.getNumberOfBits() - 272;
+                int extraChars = extraBits/6;
+                int extraBitsOfChars = extraChars*6;
+                return (extraBits == extraBitsOfChars) ? 0 : UNSIGNED_INTEGER_DECODER.apply(AidToNavigationReport.this.getBits(272 + extraBitsOfChars, getNumberOfBits()));
+            }
         });
         return spare2;
     }

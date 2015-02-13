@@ -16,9 +16,10 @@
 
 package dk.tbsalling.aismessages.ais;
 
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Function;
+
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.function.Function;
 
 public class Decoders {
 
@@ -40,15 +41,40 @@ public class Decoders {
         }
     };
 
-    public static final Function<String, Float> FLOAT_DECODER = bitString -> Float.valueOf(INTEGER_DECODER.apply(bitString));
+    public static final Function<String, Float> FLOAT_DECODER = new Function<String, Float>() {
+        @Override
+        public Float apply(String bitString) {
+            return Float.valueOf(INTEGER_DECODER.apply(bitString));
+        }
+    };
 
-    public static final Function<String, Boolean> BOOLEAN_DECODER = bitString -> "1".equals(bitString.substring(0, 1));
+    public static final Function<String, Boolean> BOOLEAN_DECODER = new Function<String, Boolean>() {
+        @Override
+        public Boolean apply(String bitString) {
+            return "1".equals(bitString.substring(0, 1));
+        }
+    };
 
-    public static final Function<String, Integer> UNSIGNED_INTEGER_DECODER = bitString -> Integer.parseInt(bitString, 2);
+    public static final Function<String, Integer> UNSIGNED_INTEGER_DECODER = new Function<String, Integer>() {
+        @Override
+        public Integer apply(String bitString) {
+            return Integer.parseInt(bitString, 2);
+        }
+    };
 
-    public static final Function<String, Long> UNSIGNED_LONG_DECODER = bitString -> Long.parseLong(bitString, 2);
+    public static final Function<String, Long> UNSIGNED_LONG_DECODER = new Function<String, Long>() {
+        @Override
+        public Long apply(String bitString) {
+            return Long.parseLong(bitString, 2);
+        }
+    };
 
-    public static final Function<String, Float> UNSIGNED_FLOAT_DECODER = bitString -> Float.valueOf(UNSIGNED_INTEGER_DECODER.apply(bitString));
+    public static final Function<String, Float> UNSIGNED_FLOAT_DECODER = new Function<String, Float>() {
+        @Override
+        public Float apply(String bitString) {
+            return Float.valueOf(UNSIGNED_INTEGER_DECODER.apply(bitString));
+        }
+    };
 
     public static final Function<String, String> TIME_DECODER = new Function<String, String>() {
         @Override
@@ -87,7 +113,12 @@ public class Decoders {
         }
     };
 
-    public static final Function<String, String> BIT_DECODER = bitString -> bitString;
+    public static final Function<String, String> BIT_DECODER = new Function<String, String>() {
+        @Override
+        public String apply(String bitString) {
+            return bitString;
+        }
+    };
 
 	private final static Map<Integer, String> SIX_BIT_ASCII = new TreeMap<Integer, String>();
 	static {

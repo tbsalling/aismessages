@@ -18,12 +18,12 @@ package dk.tbsalling.aismessages.nmea;
 
 import dk.tbsalling.aismessages.ais.messages.AISMessage;
 import dk.tbsalling.aismessages.ais.messages.Metadata;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Consumer;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.logging.Logger;
 
 /**
@@ -107,7 +107,9 @@ public class NMEAMessageHandler implements Consumer<NMEAMessage> {
 
     /** Send encoded AIS message to all interested receivers. */
     private void sendToAisMessageReceivers(final AISMessage aisMessage) {
-        aisMessageReceivers.forEach(r -> r.accept(aisMessage));
+        for (Consumer<? super AISMessage> r : aisMessageReceivers) {
+            r.accept(aisMessage);
+        }
     }
 
     /**

@@ -17,12 +17,12 @@
 package dk.tbsalling.aismessages.demo;
 
 import dk.tbsalling.aismessages.ais.messages.AISMessage;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Consumer;
 import dk.tbsalling.aismessages.nmea.NMEAMessageHandler;
 import dk.tbsalling.aismessages.nmea.NMEAMessageSocketClient;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
-import java.util.function.Consumer;
 
 public class SocketDemoApp implements Consumer<AISMessage> {
 

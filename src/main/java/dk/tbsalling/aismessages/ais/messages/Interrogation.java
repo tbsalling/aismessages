@@ -18,6 +18,8 @@ package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Consumer;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Supplier;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
@@ -48,42 +50,202 @@ public class Interrogation extends AISMessage {
 
     @SuppressWarnings("unused")
 	public final MMSI getInterrogatedMmsi1() {
-        return getDecodedValue(() -> interrogatedMmsi1, value -> interrogatedMmsi1 = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70))));
+        return getDecodedValue(new Supplier<MMSI>() {
+            @Override
+            public MMSI get() {
+                return interrogatedMmsi1;
+            }
+        }, new Consumer<MMSI>() {
+            @Override
+            public void accept(MMSI value) {
+                interrogatedMmsi1 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<MMSI>() {
+            @Override
+            public MMSI get() {
+                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(Interrogation.this.getBits(40, 70)));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public final Integer getType1_1() {
-        return getDecodedValue(() -> type1_1, value -> type1_1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(70, 76)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return type1_1;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                type1_1 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(Interrogation.this.getBits(70, 76));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public final Integer getOffset1_1() {
-        return getDecodedValue(() -> offset1_1, value -> offset1_1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(76, 88)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return offset1_1;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                offset1_1 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(Interrogation.this.getBits(76, 88));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public final Integer getType1_2() {
-        return getDecodedValue(() -> type1_2, value -> type1_2 = value, () -> getNumberOfBits() > 88, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(90, 96)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return type1_2;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                type1_2 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Interrogation.this.getNumberOfBits() > 88;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(Interrogation.this.getBits(90, 96));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public final Integer getOffset1_2() {
-        return getDecodedValue(() -> offset1_2, value -> offset1_2 = value, () -> getNumberOfBits() > 88, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(96, 108)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return offset1_2;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                offset1_2 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Interrogation.this.getNumberOfBits() > 88;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(Interrogation.this.getBits(96, 108));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public final MMSI getInterrogatedMmsi2() {
-        return getDecodedValue(() -> interrogatedMmsi2, value -> interrogatedMmsi2 = value, () -> getNumberOfBits() >= 110, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(110, 140))));
+        return getDecodedValue(new Supplier<MMSI>() {
+            @Override
+            public MMSI get() {
+                return interrogatedMmsi2;
+            }
+        }, new Consumer<MMSI>() {
+            @Override
+            public void accept(MMSI value) {
+                interrogatedMmsi2 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Interrogation.this.getNumberOfBits() >= 110;
+            }
+        }, new Supplier<MMSI>() {
+            @Override
+            public MMSI get() {
+                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(Interrogation.this.getBits(110, 140)));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public final Integer getType2_1() {
-        return getDecodedValue(() -> type2_1, value -> type2_1 = value, () -> getNumberOfBits() >= 110, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(140, 146)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return type2_1;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                type2_1 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Interrogation.this.getNumberOfBits() >= 110;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(Interrogation.this.getBits(140, 146));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public final Integer getOffset2_1() {
-        return getDecodedValue(() -> offset2_1, value -> offset2_1 = value, () -> getNumberOfBits() >= 110, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(146, 158)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return offset2_1;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                offset2_1 = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Interrogation.this.getNumberOfBits() >= 110;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(Interrogation.this.getBits(146, 158));
+            }
+        });
 	}
 
     @Override

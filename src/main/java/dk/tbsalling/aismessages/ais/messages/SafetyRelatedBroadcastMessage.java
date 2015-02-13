@@ -17,6 +17,8 @@
 package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Consumer;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Supplier;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.STRING_DECODER;
@@ -42,14 +44,52 @@ public class SafetyRelatedBroadcastMessage extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Integer getSpare() {
-        return getDecodedValue(() -> spare, value -> spare = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return spare;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                spare = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(SafetyRelatedBroadcastMessage.this.getBits(38, 40));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public final String getText() {
-        return getDecodedValue(() -> text, value -> text = value, () -> Boolean.TRUE, () -> {
-            int extraBitsOfChars = ((getNumberOfBits() - 40) / 6) * 6;
-            return STRING_DECODER.apply(getBits(40, 40 + extraBitsOfChars));
+        return getDecodedValue(new Supplier<String>() {
+            @Override
+            public String get() {
+                return text;
+            }
+        }, new Consumer<String>() {
+            @Override
+            public void accept(String value) {
+                text = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<String>() {
+            @Override
+            public String get() {
+                int extraBitsOfChars = ((SafetyRelatedBroadcastMessage.this.getNumberOfBits() - 40)/6)*6;
+                return STRING_DECODER.apply(SafetyRelatedBroadcastMessage.this.getBits(40, 40 + extraBitsOfChars));
+            }
         });
 	}
 

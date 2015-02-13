@@ -2,6 +2,7 @@ package dk.tbsalling.aismessages.nmea;
 
 import dk.tbsalling.aismessages.ais.messages.AISMessage;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Consumer;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.test.helpers.ArgumentCaptor;
 import org.jmock.Expectations;
@@ -11,7 +12,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.function.Consumer;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;

@@ -19,6 +19,9 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.BiFunction;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Consumer;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Supplier;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
@@ -27,7 +30,6 @@ import java.lang.ref.WeakReference;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.function.BiFunction;
 import java.util.logging.Logger;
 
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
@@ -45,7 +47,7 @@ import static java.util.Objects.requireNonNull;
  * @author tbsalling
  */
 @SuppressWarnings("serial")
-public abstract class AISMessage implements Serializable, CachedDecodedValues {
+public abstract class AISMessage extends CachedDecodedValues implements Serializable {
 
     private transient static final Logger LOG = Logger.getLogger(AISMessage.class.getName());
 
@@ -133,12 +135,52 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
 
     @SuppressWarnings("unused")
 	public final Integer getRepeatIndicator() {
-        return getDecodedValue(() -> repeatIndicator, value -> repeatIndicator = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(6, 8)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return repeatIndicator;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                repeatIndicator = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(AISMessage.this.getBits(6, 8));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public final MMSI getSourceMmsi() {
-        return getDecodedValue(() -> sourceMmsi, value -> sourceMmsi = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(8, 38))));
+        return getDecodedValue(new Supplier<MMSI>() {
+            @Override
+            public MMSI get() {
+                return sourceMmsi;
+            }
+        }, new Consumer<MMSI>() {
+            @Override
+            public void accept(MMSI value) {
+                sourceMmsi = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<MMSI>() {
+            @Override
+            public MMSI get() {
+                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(AISMessage.this.getBits(8, 38)));
+            }
+        });
 	}
 
     @Override
@@ -195,85 +237,220 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         if (messageType != null) {
             switch (messageType) {
                 case ShipAndVoyageRelatedData:
-                    aisMessageConstructor = ShipAndVoyageData::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new ShipAndVoyageData(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 case PositionReportClassAScheduled:
-                    aisMessageConstructor = PositionReportClassAScheduled::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new PositionReportClassAScheduled(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 case PositionReportClassAAssignedSchedule:
-                    aisMessageConstructor = PositionReportClassAAssignedSchedule::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new PositionReportClassAAssignedSchedule(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 case PositionReportClassAResponseToInterrogation:
-                    aisMessageConstructor = PositionReportClassAResponseToInterrogation::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new PositionReportClassAResponseToInterrogation(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 case BaseStationReport:
-                    aisMessageConstructor = BaseStationReport::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new BaseStationReport(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 case AddressedBinaryMessage:
-                    aisMessageConstructor = AddressedBinaryMessage::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new AddressedBinaryMessage(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 case BinaryAcknowledge:
-                    aisMessageConstructor = BinaryAcknowledge::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new BinaryAcknowledge(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 case BinaryBroadcastMessage:
-                    aisMessageConstructor = BinaryBroadcastMessage::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new BinaryBroadcastMessage(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 case StandardSARAircraftPositionReport:
-                    aisMessageConstructor = StandardSARAircraftPositionReport::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new StandardSARAircraftPositionReport(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 case UTCAndDateInquiry:
-                    aisMessageConstructor = UTCAndDateInquiry::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new UTCAndDateInquiry(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 case UTCAndDateResponse:
-                    aisMessageConstructor = UTCAndDateResponse::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new UTCAndDateResponse(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 case AddressedSafetyRelatedMessage:
-                    aisMessageConstructor = AddressedSafetyRelatedMessage::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new AddressedSafetyRelatedMessage(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 case SafetyRelatedAcknowledge:
-                    aisMessageConstructor = SafetyRelatedAcknowledge::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new SafetyRelatedAcknowledge(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 case SafetyRelatedBroadcastMessage:
-                    aisMessageConstructor = SafetyRelatedBroadcastMessage::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new SafetyRelatedBroadcastMessage(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 case Interrogation:
-                    aisMessageConstructor = Interrogation::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new Interrogation(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 case AssignedModeCommand:
-                    aisMessageConstructor = AssignedModeCommand::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new AssignedModeCommand(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 case GNSSBinaryBroadcastMessage:
-                    aisMessageConstructor = GNSSBinaryBroadcastMessage::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new GNSSBinaryBroadcastMessage(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 case StandardClassBCSPositionReport:
-                    aisMessageConstructor = StandardClassBCSPositionReport::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new StandardClassBCSPositionReport(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 case ExtendedClassBEquipmentPositionReport:
-                    aisMessageConstructor = ExtendedClassBEquipmentPositionReport::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new ExtendedClassBEquipmentPositionReport(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 case DataLinkManagement:
-                    aisMessageConstructor = DataLinkManagement::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new DataLinkManagement(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 case AidToNavigationReport:
-                    aisMessageConstructor = AidToNavigationReport::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new AidToNavigationReport(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 case ChannelManagement:
-                    aisMessageConstructor = ChannelManagement::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new ChannelManagement(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 case GroupAssignmentCommand:
-                    aisMessageConstructor = GroupAssignmentCommand::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new GroupAssignmentCommand(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 case ClassBCSStaticDataReport:
-                    aisMessageConstructor = ClassBCSStaticDataReport::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new ClassBCSStaticDataReport(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 case BinaryMessageSingleSlot:
-                    aisMessageConstructor = BinaryMessageSingleSlot::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new BinaryMessageSingleSlot(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 case BinaryMessageMultipleSlot:
-                    aisMessageConstructor = BinaryMessageMultipleSlot::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new BinaryMessageMultipleSlot(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 case LongRangeBroadcastMessage:
-                    aisMessageConstructor = LongRangeBroadcastMessage::new;
+                    aisMessageConstructor = new BiFunction<NMEAMessage[], String, AISMessage>() {
+                        @Override
+                        public AISMessage apply(NMEAMessage[] nmeaMessages1, String bitString1) {
+                            return new LongRangeBroadcastMessage(nmeaMessages1, bitString1);
+                        }
+                    };
                     break;
                 default:
                     throw new UnsupportedMessageType(messageType.getCode());

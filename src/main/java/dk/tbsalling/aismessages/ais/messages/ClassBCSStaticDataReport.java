@@ -20,6 +20,8 @@ import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.ShipType;
 import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Consumer;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Supplier;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.STRING_DECODER;
@@ -51,52 +53,252 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
 
     @SuppressWarnings("unused")
 	public Integer getPartNumber() {
-        return getDecodedValue(() -> partNumber, value -> partNumber = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return partNumber;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                partNumber = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(ClassBCSStaticDataReport.this.getBits(38, 40));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public String getShipName() {
-        return getDecodedValue(() -> shipName, value -> shipName = value, () -> getPartNumber() == 0, () -> STRING_DECODER.apply(getBits(40, 160)));
+        return getDecodedValue(new Supplier<String>() {
+            @Override
+            public String get() {
+                return shipName;
+            }
+        }, new Consumer<String>() {
+            @Override
+            public void accept(String value) {
+                shipName = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return ClassBCSStaticDataReport.this.getPartNumber() == 0;
+            }
+        }, new Supplier<String>() {
+            @Override
+            public String get() {
+                return STRING_DECODER.apply(ClassBCSStaticDataReport.this.getBits(40, 160));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public ShipType getShipType() {
-        return getDecodedValue(() -> shipType, value -> shipType = value, () -> getPartNumber() == 1, () -> ShipType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 48))));
+        return getDecodedValue(new Supplier<ShipType>() {
+            @Override
+            public ShipType get() {
+                return shipType;
+            }
+        }, new Consumer<ShipType>() {
+            @Override
+            public void accept(ShipType value) {
+                shipType = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return ClassBCSStaticDataReport.this.getPartNumber() == 1;
+            }
+        }, new Supplier<ShipType>() {
+            @Override
+            public ShipType get() {
+                return ShipType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(ClassBCSStaticDataReport.this.getBits(40, 48)));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public String getVendorId() {
-        return getDecodedValue(() -> vendorId, value -> vendorId = value, () -> getPartNumber() == 1, () -> STRING_DECODER.apply(getBits(48, 90)));
+        return getDecodedValue(new Supplier<String>() {
+            @Override
+            public String get() {
+                return vendorId;
+            }
+        }, new Consumer<String>() {
+            @Override
+            public void accept(String value) {
+                vendorId = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return ClassBCSStaticDataReport.this.getPartNumber() == 1;
+            }
+        }, new Supplier<String>() {
+            @Override
+            public String get() {
+                return STRING_DECODER.apply(ClassBCSStaticDataReport.this.getBits(48, 90));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public String getCallsign() {
-        return getDecodedValue(() -> callsign, value -> callsign = value, () -> getPartNumber() == 1, () -> STRING_DECODER.apply(getBits(90, 132)));
+        return getDecodedValue(new Supplier<String>() {
+            @Override
+            public String get() {
+                return callsign;
+            }
+        }, new Consumer<String>() {
+            @Override
+            public void accept(String value) {
+                callsign = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return ClassBCSStaticDataReport.this.getPartNumber() == 1;
+            }
+        }, new Supplier<String>() {
+            @Override
+            public String get() {
+                return STRING_DECODER.apply(ClassBCSStaticDataReport.this.getBits(90, 132));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getToBow() {
-        return getDecodedValue(() -> toBow, value -> toBow = value, () -> getPartNumber() == 1, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(132, 141)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return toBow;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                toBow = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return ClassBCSStaticDataReport.this.getPartNumber() == 1;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(ClassBCSStaticDataReport.this.getBits(132, 141));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getToStern() {
-        return getDecodedValue(() -> toStern, value -> toStern = value, () -> getPartNumber() == 1, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(141, 150)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return toStern;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                toStern = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return ClassBCSStaticDataReport.this.getPartNumber() == 1;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(ClassBCSStaticDataReport.this.getBits(141, 150));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getToStarboard() {
-        return getDecodedValue(() -> toStarboard, value -> toStarboard = value, () -> getPartNumber() == 1, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(156, 162)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return toStarboard;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                toStarboard = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return ClassBCSStaticDataReport.this.getPartNumber() == 1;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(ClassBCSStaticDataReport.this.getBits(156, 162));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getToPort() {
-        return getDecodedValue(() -> toPort, value -> toPort = value, () -> getPartNumber() == 1, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(150, 156)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return toPort;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                toPort = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return ClassBCSStaticDataReport.this.getPartNumber() == 1;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(ClassBCSStaticDataReport.this.getBits(150, 156));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getMothershipMmsi() {
-        return getDecodedValue(() -> mothershipMmsi, value -> mothershipMmsi = value, () -> getPartNumber() == 1, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(132, 162))));
+        return getDecodedValue(new Supplier<MMSI>() {
+            @Override
+            public MMSI get() {
+                return mothershipMmsi;
+            }
+        }, new Consumer<MMSI>() {
+            @Override
+            public void accept(MMSI value) {
+                mothershipMmsi = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return ClassBCSStaticDataReport.this.getPartNumber() == 1;
+            }
+        }, new Supplier<MMSI>() {
+            @Override
+            public MMSI get() {
+                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(ClassBCSStaticDataReport.this.getBits(132, 162)));
+            }
+        });
 	}
 
     @Override

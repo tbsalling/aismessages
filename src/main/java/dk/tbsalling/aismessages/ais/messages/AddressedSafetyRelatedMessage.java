@@ -18,6 +18,8 @@ package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Consumer;
+import dk.tbsalling.aismessages.dk.tbsalling.util.function.Supplier;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.BOOLEAN_DECODER;
@@ -45,29 +47,127 @@ public class AddressedSafetyRelatedMessage extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Integer getSequenceNumber() {
-        return getDecodedValue(() -> sequenceNumber, value -> sequenceNumber=value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return sequenceNumber;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                sequenceNumber = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(AddressedSafetyRelatedMessage.this.getBits(38, 40));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getDestinationMmsi() {
-        return getDecodedValue(() -> destinationMmsi, value -> destinationMmsi = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70))));
+        return getDecodedValue(new Supplier<MMSI>() {
+            @Override
+            public MMSI get() {
+                return destinationMmsi;
+            }
+        }, new Consumer<MMSI>() {
+            @Override
+            public void accept(MMSI value) {
+                destinationMmsi = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<MMSI>() {
+            @Override
+            public MMSI get() {
+                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(AddressedSafetyRelatedMessage.this.getBits(40, 70)));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getRetransmit() {
-        return getDecodedValue(() -> retransmit, value -> retransmit = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(70, 71)));
+        return getDecodedValue(new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return retransmit;
+            }
+        }, new Consumer<Boolean>() {
+            @Override
+            public void accept(Boolean value) {
+                retransmit = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return BOOLEAN_DECODER.apply(AddressedSafetyRelatedMessage.this.getBits(70, 71));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public Integer getSpare() {
-        return getDecodedValue(() -> spare, value -> spare = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(71, 72)));
+        return getDecodedValue(new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return spare;
+            }
+        }, new Consumer<Integer>() {
+            @Override
+            public void accept(Integer value) {
+                spare = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<Integer>() {
+            @Override
+            public Integer get() {
+                return UNSIGNED_INTEGER_DECODER.apply(AddressedSafetyRelatedMessage.this.getBits(71, 72));
+            }
+        });
 	}
 
     @SuppressWarnings("unused")
 	public String getText() {
-        return getDecodedValue(() -> text, value -> text = value, () -> Boolean.TRUE, () -> {
-            int extraBitsOfChars = ((getNumberOfBits() - 72)/6)*6;
-            return STRING_DECODER.apply(getBits(72, 72 + extraBitsOfChars));
+        return getDecodedValue(new Supplier<String>() {
+            @Override
+            public String get() {
+                return text;
+            }
+        }, new Consumer<String>() {
+            @Override
+            public void accept(String value) {
+                text = value;
+            }
+        }, new Supplier<Boolean>() {
+            @Override
+            public Boolean get() {
+                return Boolean.TRUE;
+            }
+        }, new Supplier<String>() {
+            @Override
+            public String get() {
+                int extraBitsOfChars = ((AddressedSafetyRelatedMessage.this.getNumberOfBits() - 72)/6)*6;
+                return STRING_DECODER.apply(AddressedSafetyRelatedMessage.this.getBits(72, 72 + extraBitsOfChars));
+            }
         });
 	}
 
