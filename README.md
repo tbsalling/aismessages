@@ -56,3 +56,5 @@ then you can decode it into Java POJO's of type AISMessage like this:
 ```
 
 Read more in the wiki - [https://github.com/tbsalling/aismessages/wiki](https://github.com/tbsalling/aismessages/wiki).
+
+BTW - you might also want to have a look at AISutils: https://github.com/tbsalling/aisutils.
