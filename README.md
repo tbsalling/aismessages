@@ -1,14 +1,6 @@
 ![Build status](https://travis-ci.org/tbsalling/aismessages.svg?branch=master)
 [![License](http://img.shields.io/badge/license-CCANS3-green.svg)](https://github.com/tbsalling/aismessages/blob/master/LICENSE)
 
----
-
-**Important compiler note!** Due to a [compiler bug](https://bugs.openjdk.java.net/browse/JDK-8062253) in JDK 8u20, 8u25, and 8u31
-AISmessages can only be compiled with JDK 8u11 or older JDK 8 versions. The compiler bug is expected to be fixed in JDK 8u40 which
-should be available from March, 2015.
-
----
-
 AISmessages is a Java-based light-weight, zero-dependency, and ultra-efficient message decoder for maritime
 navigation and safety messages compliant with ITU 1371 (NMEA armoured AIS messages).
 
@@ -57,4 +49,24 @@ then you can decode it into Java POJO's of type AISMessage like this:
 
 Read more in the wiki - [https://github.com/tbsalling/aismessages/wiki](https://github.com/tbsalling/aismessages/wiki).
 
-BTW - you might also want to have a look at AISutils: https://github.com/tbsalling/aisutils.
+You do not need to compile AISmessages yourself. It is available in Maven Central. So if you are using Maven, 
+all you need to do is add these lines to your pom.xml:
+
+``` xml
+	<dependency>
+	    <groupId>dk.tbsalling</groupId>
+	    <artifactId>aismessages</artifactId>
+	    <version>2.1.0</version>
+	</dependency>
+```
+
+If you need more advanced funtionality than merely decoding AIS messages, then you might also want to have a look at 
+AISutils: https://github.com/tbsalling/aisutils.
+
+---
+
+**Important compiler note!** Due to a [compiler bug](https://bugs.openjdk.java.net/browse/JDK-8062253) in JDK 8u20, 8u25, and 8u31
+AISmessages can only be compiled with JDK 8u11 or older JDK 8 versions. The compiler bug is expected to be fixed in JDK 8u40 which
+should be available from March, 2015.
+
+---
