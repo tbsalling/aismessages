@@ -21,7 +21,7 @@ public class AidToNavigationReportTest {
         assertEquals(AISMessageType.AidToNavigationReport, aisMessage.getMessageType());
         assertEquals((Integer) 0, aisMessage.getRepeatIndicator());
         AidToNavigationReport message = (AidToNavigationReport) aisMessage;
-        assertEquals(MMSI.valueOf(995036019L), message.getSourceMmsi());
+        assertEquals(MMSI.valueOf(995036019), message.getSourceMmsi());
         assertEquals(AidType.BeaconSpecialMark, message.getAidType());
         assertEquals(false, message.getAssignedMode());
         assertEquals("S16A GLT VIRT ATON", message.getName());
@@ -49,7 +49,7 @@ public class AidToNavigationReportTest {
         assertEquals(AISMessageType.AidToNavigationReport, aisMessage.getMessageType());
         assertEquals((Integer) 0, aisMessage.getRepeatIndicator());
         AidToNavigationReport message = (AidToNavigationReport) aisMessage;
-        assertEquals(MMSI.valueOf(995036021L), message.getSourceMmsi());
+        assertEquals(MMSI.valueOf(995036021), message.getSourceMmsi());
         assertEquals(AidType.BeaconSpecialMark, message.getAidType());
         assertEquals(false, message.getAssignedMode());
         assertEquals("S6A GLT VIRTU ATON", message.getName());

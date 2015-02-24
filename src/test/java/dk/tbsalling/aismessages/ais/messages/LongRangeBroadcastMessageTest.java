@@ -20,7 +20,7 @@ public class LongRangeBroadcastMessageTest {
 
         assertEquals(AISMessageType.LongRangeBroadcastMessage, aisMessage.getMessageType());
         assertEquals((Integer) 1, aisMessage.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(206914217L), aisMessage.getSourceMmsi());
+        assertEquals(MMSI.valueOf(206914217), aisMessage.getSourceMmsi());
 
         LongRangeBroadcastMessage message = (LongRangeBroadcastMessage) aisMessage;
         assertFalse(message.getPositionAccuracy());
@@ -40,7 +40,7 @@ public class LongRangeBroadcastMessageTest {
 
         assertEquals(AISMessageType.LongRangeBroadcastMessage, aisMessage.getMessageType());
         assertEquals((Integer) 0, aisMessage.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(357277000L), aisMessage.getSourceMmsi());
+        assertEquals(MMSI.valueOf(357277000), aisMessage.getSourceMmsi());
 
         LongRangeBroadcastMessage message = (LongRangeBroadcastMessage) aisMessage;
         assertTrue(message.getPositionAccuracy());

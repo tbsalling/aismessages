@@ -23,7 +23,7 @@ public class StandardClassBCSPositionReportTest {
         assertEquals(AISMessageType.StandardClassBCSPositionReport, aisMessage.getMessageType());
         StandardClassBCSPositionReport message = (StandardClassBCSPositionReport) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(367430530L), message.getSourceMmsi());
+        assertEquals(MMSI.valueOf(367430530), message.getSourceMmsi());
         assertEquals("00000000", message.getRegionalReserved1());
         assertEquals((Float) 0.0f, message.getSpeedOverGround());
         assertFalse(message.getPositionAccurate());
@@ -52,7 +52,7 @@ public class StandardClassBCSPositionReportTest {
         assertEquals(AISMessageType.StandardClassBCSPositionReport, aisMessage.getMessageType());
         StandardClassBCSPositionReport message = (StandardClassBCSPositionReport) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(423302100L), message.getSourceMmsi());
+        assertEquals(MMSI.valueOf(423302100), message.getSourceMmsi());
         assertEquals("00001111", message.getRegionalReserved1());
         assertEquals((Float) 1.4f, message.getSpeedOverGround());
         assertTrue(message.getPositionAccurate());

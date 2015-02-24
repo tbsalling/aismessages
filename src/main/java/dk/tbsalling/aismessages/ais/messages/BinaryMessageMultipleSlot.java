@@ -23,7 +23,6 @@ import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import static dk.tbsalling.aismessages.ais.Decoders.BIT_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.BOOLEAN_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_LONG_DECODER;
 
 @SuppressWarnings("serial")
 public class BinaryMessageMultipleSlot extends AISMessage {
@@ -55,7 +54,7 @@ public class BinaryMessageMultipleSlot extends AISMessage {
 
     @SuppressWarnings("unused")
     public MMSI getDestinationMmsi() {
-        return getDecodedValue(() -> destinationMmsi, value -> destinationMmsi = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70))));
+        return getDecodedValue(() -> destinationMmsi, value -> destinationMmsi = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70))));
     }
 
     @SuppressWarnings("unused")

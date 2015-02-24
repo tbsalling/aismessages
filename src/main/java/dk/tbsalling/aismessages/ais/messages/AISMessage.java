@@ -31,7 +31,6 @@ import java.util.function.BiFunction;
 import java.util.logging.Logger;
 
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_LONG_DECODER;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -138,7 +137,7 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
 
     @SuppressWarnings("unused")
 	public final MMSI getSourceMmsi() {
-        return getDecodedValue(() -> sourceMmsi, value -> sourceMmsi = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(8, 38))));
+        return getDecodedValue(() -> sourceMmsi, value -> sourceMmsi = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(8, 38))));
 	}
 
     @Override

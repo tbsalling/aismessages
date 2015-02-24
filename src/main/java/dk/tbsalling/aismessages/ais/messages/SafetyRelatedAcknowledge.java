@@ -21,7 +21,6 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_LONG_DECODER;
 
 @SuppressWarnings("serial")
 public class SafetyRelatedAcknowledge extends AISMessage {
@@ -49,7 +48,7 @@ public class SafetyRelatedAcknowledge extends AISMessage {
 
     @SuppressWarnings("unused")
 	public MMSI getMmsi1() {
-        return getDecodedValue(() -> mmsi1, value -> mmsi1 = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70))));
+        return getDecodedValue(() -> mmsi1, value -> mmsi1 = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70))));
 	}
 
     @SuppressWarnings("unused")
@@ -59,7 +58,7 @@ public class SafetyRelatedAcknowledge extends AISMessage {
 
     @SuppressWarnings("unused")
 	public MMSI getMmsi2() {
-        return getDecodedValue(() -> mmsi2, value -> mmsi2 = value, () -> getNumberOfBits() > 72, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(72, 102))));
+        return getDecodedValue(() -> mmsi2, value -> mmsi2 = value, () -> getNumberOfBits() > 72, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(72, 102))));
 	}
 
     @SuppressWarnings("unused")
@@ -69,7 +68,7 @@ public class SafetyRelatedAcknowledge extends AISMessage {
 
     @SuppressWarnings("unused")
 	public MMSI getMmsi3() {
-        return getDecodedValue(() -> mmsi3, value -> mmsi3 = value, () -> getNumberOfBits() > 104, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(104, 134))));
+        return getDecodedValue(() -> mmsi3, value -> mmsi3 = value, () -> getNumberOfBits() > 104, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(104, 134))));
 	}
 
     @SuppressWarnings("unused")
@@ -79,7 +78,7 @@ public class SafetyRelatedAcknowledge extends AISMessage {
 
     @SuppressWarnings("unused")
 	public MMSI getMmsi4() {
-        return getDecodedValue(() -> mmsi4, value -> mmsi4 = value, () -> getNumberOfBits() > 136, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(136, 166))));
+        return getDecodedValue(() -> mmsi4, value -> mmsi4 = value, () -> getNumberOfBits() > 136, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(136, 166))));
 	}
 
     @SuppressWarnings("unused")

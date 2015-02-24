@@ -21,7 +21,6 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_LONG_DECODER;
 
 /**
  * Used by a base station to query one or two other AIS transceivers for status messages of specified types.
@@ -48,7 +47,7 @@ public class Interrogation extends AISMessage {
 
     @SuppressWarnings("unused")
 	public final MMSI getInterrogatedMmsi1() {
-        return getDecodedValue(() -> interrogatedMmsi1, value -> interrogatedMmsi1 = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70))));
+        return getDecodedValue(() -> interrogatedMmsi1, value -> interrogatedMmsi1 = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70))));
 	}
 
     @SuppressWarnings("unused")
@@ -73,7 +72,7 @@ public class Interrogation extends AISMessage {
 
     @SuppressWarnings("unused")
 	public final MMSI getInterrogatedMmsi2() {
-        return getDecodedValue(() -> interrogatedMmsi2, value -> interrogatedMmsi2 = value, () -> getNumberOfBits() >= 110, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(110, 140))));
+        return getDecodedValue(() -> interrogatedMmsi2, value -> interrogatedMmsi2 = value, () -> getNumberOfBits() >= 110, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(110, 140))));
 	}
 
     @SuppressWarnings("unused")

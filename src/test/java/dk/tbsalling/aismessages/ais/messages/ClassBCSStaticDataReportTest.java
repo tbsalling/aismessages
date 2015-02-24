@@ -20,7 +20,7 @@ public class ClassBCSStaticDataReportTest {
         assertEquals(AISMessageType.ClassBCSStaticDataReport, aisMessage.getMessageType());
         ClassBCSStaticDataReport message = (ClassBCSStaticDataReport) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(367468490L), message.getSourceMmsi());
+        assertEquals(MMSI.valueOf(367468490), message.getSourceMmsi());
         assertEquals((Integer) 1, message.getPartNumber());
         assertNull(message.getShipName());
         assertEquals(ShipType.PleasureCraft, message.getShipType());
@@ -30,7 +30,7 @@ public class ClassBCSStaticDataReportTest {
         assertEquals((Integer) 7, message.getToStern());
         assertEquals((Integer) 3, message.getToStarboard());
         assertEquals((Integer) 1, message.getToPort());
-        assertEquals(MMSI.valueOf(8417347L), message.getMothershipMmsi());
+        assertEquals(MMSI.valueOf(8417347), message.getMothershipMmsi());
 
     }
 }
