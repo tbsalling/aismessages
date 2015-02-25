@@ -22,9 +22,15 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.BiFunction;
@@ -106,6 +112,62 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
 
     private static void check(NMEAMessage[] nmeaMessages) {
         // TODO sanity check NMEA messages
+    }
+
+    /** Return a map of data field name and values. */
+    public  Map<String, Object> dataFields() {
+        HashMap<String,Object> map = new HashMap<>();
+        try {
+            PropertyDescriptor[] propertyDescriptors = Introspector.getBeanInfo(this.getClass()).getPropertyDescriptors();
+            for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+                if (!"class".equals(propertyDescriptor.getName())) {
+                    Method readMethod = propertyDescriptor.getReadMethod();
+
+                    Class<?> returnType = readMethod.getReturnType();
+                    if (isComplexType(returnType)) {
+                        Object complexValue = readMethod.invoke(this);
+                        if (complexValue != null) {
+                            PropertyDescriptor[] propertyDescriptors2 = Introspector.getBeanInfo(returnType).getPropertyDescriptors();
+                            for (PropertyDescriptor pd2 : propertyDescriptors2) {
+                                if (!"class".equals(pd2.getName()))
+                                    map.put(propertyDescriptor.getName() + "." + pd2.getName(), pd2.getReadMethod().invoke(complexValue));
+                            }
+                        }
+                    } else if (Class.class.equals(returnType)) {
+                        Object value = readMethod.invoke(this);
+                        map.put(propertyDescriptor.getName(), ((Class) value).getSimpleName());
+                    } else {
+                        Object value = readMethod.invoke(this);
+                        if (value != null)
+                            if (returnType.isEnum())
+                                map.put(propertyDescriptor.getName(), value.toString());
+                            else
+                                map.put(propertyDescriptor.getName(), value);
+                    }
+                }
+            }
+        } catch (IntrospectionException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
+
+    private boolean isComplexType(Class<?> clazz) {
+        if (clazz.isArray() || clazz.isEnum() || clazz.getPackage()==null || !"dk.tbsalling.aismessages.ais.messages.types".equals(clazz.getPackage().getName()))
+            return false;
+
+        boolean hasGetters = false;
+        try {
+            hasGetters = Introspector.getBeanInfo(clazz).getPropertyDescriptors().length > 0;
+        } catch (IntrospectionException e) {
+            e.printStackTrace();
+        }
+
+        return hasGetters;
     }
 
     protected abstract void checkAISMessage();

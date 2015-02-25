@@ -111,7 +111,7 @@ public class AidToNavigationReport extends AISMessage {
     }
 
     @SuppressWarnings("unused")
-    public String getRegionalUse() {
+    public String getAtoNStatus() {
         return getDecodedValue(() -> regionalUse, value -> regionalUse = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(260, 268)));
     }
 
@@ -173,7 +173,7 @@ public class AidToNavigationReport extends AISMessage {
                 ", positionFixingDevice=" + getPositionFixingDevice() +
                 ", second=" + getSecond() +
                 ", offPosition=" + getOffPosition() +
-                ", regionalUse='" + getRegionalUse() + '\'' +
+                ", regionalUse='" + getAtoNStatus() + '\'' +
                 ", raimFlag=" + getRaimFlag() +
                 ", virtualAid=" + getVirtualAid() +
                 ", assignedMode=" + getAssignedMode() +
