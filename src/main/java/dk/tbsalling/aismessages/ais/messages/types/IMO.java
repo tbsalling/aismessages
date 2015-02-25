@@ -20,47 +20,39 @@ import java.io.Serializable;
 
 public class IMO implements Serializable {
 
-	public IMO(Long imo) {
+	public IMO(int imo) {
 		this.imo = imo;
 	}
 	
-	public static IMO valueOf(Long imo) {
+	public static IMO valueOf(int imo) {
 		return new IMO(imo);
 	}
-	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((imo == null) ? 0 : imo.hashCode());
-		return result;
-	}
 
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		IMO other = (IMO) obj;
-		if (imo == null) {
-			if (other.imo != null)
-				return false;
-		} else if (!imo.equals(other.imo))
-			return false;
-		return true;
-	}
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-	@Override
+        IMO imo1 = (IMO) o;
+
+        if (imo != imo1.imo) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return imo;
+    }
+
+    @Override
 	public String toString() {
 		return "IMO [imo=" + imo + "]";
 	}
 
-        public Long getIMO() {
+    public Integer getIMO() {
 	    return imo;
 	}
 
-	private final Long imo;
+	private final int imo;
 }

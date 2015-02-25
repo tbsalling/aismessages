@@ -30,7 +30,6 @@ import static dk.tbsalling.aismessages.ais.Decoders.STRING_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.TIME_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_FLOAT_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_LONG_DECODER;
 
 /**
  * Message has a total of 424 bits, occupying two AIVDM sentences. In practice,
@@ -74,7 +73,7 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
 
     @SuppressWarnings("unused")
 	public IMO getImo() {
-        return getDecodedValue(() -> imo, value -> imo = value, () -> Boolean.TRUE, () -> IMO.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70))));
+        return getDecodedValue(() -> imo, value -> imo = value, () -> Boolean.TRUE, () -> IMO.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70))));
 	}
 
     @SuppressWarnings("unused")
