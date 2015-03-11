@@ -22,18 +22,21 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.BiFunction;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 import java.util.logging.Logger;
 
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_LONG_DECODER;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -47,11 +50,11 @@ import static java.util.Objects.requireNonNull;
  * @author tbsalling
  */
 @SuppressWarnings("serial")
-public abstract class AISMessage implements Serializable {
+public abstract class AISMessage implements Serializable, CachedDecodedValues {
 
     private transient static final Logger LOG = Logger.getLogger(AISMessage.class.getName());
 
-    public transient static final String VERSION = "2.0.0-SNAPSHOT";
+    public transient static final String VERSION = "2.1.1";
 
     static {
         System.err.print("\n" + "AISMessages v" + VERSION + " // Copyright (c) 2011- by S-Consult ApS, Denmark, CVR DK31327490. http://s-consult.dk.\n" + "\n" + "This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License. To view a copy of\n" + "this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/ or send a letter to Creative Commons, 171 Second Street,\n" + "Suite 300, San Francisco, California, 94105, USA.\n" + "\n" + "NOT FOR COMMERCIAL USE!\n" + "Contact sales@s-consult.dk to obtain commercially licensed software.\n" + "\n");
@@ -97,54 +100,74 @@ public abstract class AISMessage implements Serializable {
         if (getMessageType() != nmeaMessageType) {
             throw new UnsupportedMessageType(nmeaMessageType.getCode());
         }
+        if (!isValid()) {
+            StringBuffer sb = new StringBuffer();
+            for (NMEAMessage nmeaMessage : nmeaMessages) {
+                sb.append(nmeaMessage);
+            }
+            throw new InvalidMessage("Invalid AIS message: " + sb.toString());
+        }
         checkAISMessage();
-    }
-
-    /**
-     * Decode a value and cache it for faster future calls. Use weak references for the caching to
-     * allow the garbage collector to free up memory. The value can just be decoded again.
-     *
-     * @param refGetter A getter which gets the weak reference to be used as cache
-     * @param refSetter A setter to set the weak reference caching the decoded value.
-     * @param decoder A supplier which can extract the decoded value from a bit string.
-     * @param <T> The return type.
-     * @return The decoded (and now cached) value.
-     */
-    protected <T> T getDecodedValueByWeakReference(Supplier<WeakReference<T>> refGetter, Consumer<WeakReference<T>> refSetter, Supplier<Boolean> condition, Supplier<T> decoder) {
-        T decodedValue = null;
-        if (condition.get()) {
-            WeakReference<T> ref = refGetter.get();
-            if (ref != null) {
-                decodedValue = ref.get();
-            }
-            if (decodedValue == null) {
-                decodedValue = decoder.get();
-                refSetter.accept(new WeakReference<>(decodedValue));
-            }
-        }
-        return decodedValue;
-    }
-
-    /**
-     * Decode a value and cache it for faster future calls.
-     *
-     * @param getter A getter which gets previously decoded values of this property.
-     * @param setter A setter which stores or caches the decoded value
-     * @param decoder A supplier which can extract the decoded value from a bit string.
-     * @param <T> The return type.
-     * @return The decoded value.
-     */
-    protected <T> T getDecodedValue(Supplier<T> getter, Consumer<T> setter, Supplier<Boolean> condition, Supplier<T> decoder) {
-        T decodedValue = getter.get();
-        if (condition.get() && decodedValue == null) {
-            decodedValue = decoder.get();
-            setter.accept(decodedValue);
-        }
-        return decodedValue;
     }
 
     private static void check(NMEAMessage[] nmeaMessages) {
         // TODO sanity check NMEA messages
+    }
+
+    /** Return a map of data field name and values. */
+    public  Map<String, Object> dataFields() {
+        HashMap<String,Object> map = new HashMap<>();
+        try {
+            PropertyDescriptor[] propertyDescriptors = Introspector.getBeanInfo(this.getClass()).getPropertyDescriptors();
+            for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+                if (!"class".equals(propertyDescriptor.getName())) {
+                    Method readMethod = propertyDescriptor.getReadMethod();
+
+                    Class<?> returnType = readMethod.getReturnType();
+                    if (isComplexType(returnType)) {
+                        Object complexValue = readMethod.invoke(this);
+                        if (complexValue != null) {
+                            PropertyDescriptor[] propertyDescriptors2 = Introspector.getBeanInfo(returnType).getPropertyDescriptors();
+                            for (PropertyDescriptor pd2 : propertyDescriptors2) {
+                                if (!"class".equals(pd2.getName()))
+                                    map.put(propertyDescriptor.getName() + "." + pd2.getName(), pd2.getReadMethod().invoke(complexValue));
+                            }
+                        }
+                    } else if (Class.class.equals(returnType)) {
+                        Object value = readMethod.invoke(this);
+                        map.put(propertyDescriptor.getName(), ((Class) value).getSimpleName());
+                    } else {
+                        Object value = readMethod.invoke(this);
+                        if (value != null)
+                            if (returnType.isEnum())
+                                map.put(propertyDescriptor.getName(), value.toString());
+                            else
+                                map.put(propertyDescriptor.getName(), value);
+                    }
+                }
+            }
+        } catch (IntrospectionException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
+
+    private boolean isComplexType(Class<?> clazz) {
+        if (clazz.isArray() || clazz.isEnum() || clazz.getPackage()==null || !"dk.tbsalling.aismessages.ais.messages.types".equals(clazz.getPackage().getName()))
+            return false;
+
+        boolean hasGetters = false;
+        try {
+            hasGetters = Introspector.getBeanInfo(clazz).getPropertyDescriptors().length > 0;
+        } catch (IntrospectionException e) {
+            e.printStackTrace();
+        }
+
+        return hasGetters;
     }
 
     protected abstract void checkAISMessage();
@@ -176,7 +199,7 @@ public abstract class AISMessage implements Serializable {
 
     @SuppressWarnings("unused")
 	public final MMSI getSourceMmsi() {
-        return getDecodedValue(() -> sourceMmsi, value -> sourceMmsi = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(8, 38))));
+        return getDecodedValue(() -> sourceMmsi, value -> sourceMmsi = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(8, 38))));
 	}
 
     @Override
@@ -202,7 +225,7 @@ public abstract class AISMessage implements Serializable {
         return getBitString().substring(beginIndex, endIndex);
     }
 
-    protected int getNumberOfBits() {
+    protected int getNumberOfBits() {	
         if (numberOfBits < 0) {
             numberOfBits = getBitString().length();
         }
@@ -317,9 +340,12 @@ public abstract class AISMessage implements Serializable {
                     throw new UnsupportedMessageType(messageType.getCode());
             }
         } else {
-            throw new UnsupportedMessageType(-1);
+            StringBuffer sb = new StringBuffer();
+            for (NMEAMessage nmeaMessage : nmeaMessages) {
+                sb.append(nmeaMessage);
+            }
+            throw new InvalidMessage("Cannot extract message type from NMEA message: " + sb.toString());
         }
-
 
         return aisMessageConstructor.apply(nmeaMessages, bitString);
     }
@@ -333,7 +359,7 @@ public abstract class AISMessage implements Serializable {
         }
 
         int messageType = Integer.parseInt(bitString.substring(0, 6), 2);
-        if (messageType < 1 || messageType > 26) {
+        if (messageType < AISMessageType.MINIMUM_CODE || messageType > AISMessageType.MAXIMUM_CODE) {
             LOG.warning("Unsupported message type: " + messageType);
             return Boolean.FALSE;
         }
@@ -368,49 +394,127 @@ public abstract class AISMessage implements Serializable {
                 }
                 break;
             case 6:
+                if (actualMessageLength > 1008) {
+                    LOG.warning("Message type 6: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 7:
+                if (actualMessageLength != 72 && actualMessageLength != 104 && actualMessageLength != 136 && actualMessageLength != 168) {
+                    LOG.warning("Message type 7: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 8:
+                if (actualMessageLength > 1008) {
+                    LOG.warning("Message type 8: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 9:
+                if (actualMessageLength != 168) {
+                    LOG.warning("Message type 9: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 10:
+                if (actualMessageLength != 72) {
+                    LOG.warning("Message type 10: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 11:
+            	if (actualMessageLength != 168) return Boolean.FALSE;
                 break;
             case 12:
+                if (actualMessageLength > 1008) {
+                    LOG.warning("Message type 12: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 13:
+                if (actualMessageLength != 72 && actualMessageLength != 104 && actualMessageLength != 136 && actualMessageLength != 168) {
+                    LOG.warning("Message type 13: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 14:
+                if (actualMessageLength > 1008) {
+                    LOG.warning("Message type 14: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 15:
                 if (actualMessageLength != 88 && actualMessageLength != 110 && actualMessageLength != 112 && actualMessageLength != 160) return Boolean.FALSE;
                 break;
             case 16:
+                if (actualMessageLength != 96 && actualMessageLength != 144) {
+                    LOG.warning("Message type 16: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 17:
+                if (actualMessageLength < 80 || actualMessageLength > 816) {
+                    LOG.warning("Message type 17: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 18:
+                if (actualMessageLength != 168) {
+                    LOG.warning("Message type 18: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 19:
+                if (actualMessageLength != 312) {
+                    LOG.warning("Message type 19: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 20:
+                if (actualMessageLength < 72 || actualMessageLength > 160) {
+                    LOG.warning("Message type 20: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 21:
+                if (actualMessageLength < 272  || actualMessageLength > 360) {
+                    LOG.warning("Message type 21: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 22:
+                if (actualMessageLength != 168) {
+                    LOG.warning("Message type 22: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 23:
+                if (actualMessageLength != 160) {
+                    LOG.warning("Message type 23: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 24:
+                if (actualMessageLength != 160 && actualMessageLength != 168) {
+                    LOG.warning("Message type 24: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 25:
+                if (actualMessageLength > 168) {
+                    LOG.warning("Message type 25: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             case 26:
+            	// ??
                 break;
             case 27:
+                if (actualMessageLength != 96 && actualMessageLength != 168) {
+                    LOG.warning("Message type 27: Illegal message length: " + bitString.length() + " bits.");
+                    return Boolean.FALSE;
+                }
                 break;
             default:
                 return Boolean.FALSE;
@@ -498,4 +602,23 @@ public abstract class AISMessage implements Serializable {
         charToSixBit.put("w", "111111"); // 63
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof AISMessage)) return false;
+
+        AISMessage that = (AISMessage) o;
+
+        if (!getBitString().equals(that.getBitString())) return false;
+        if (metadata != null ? !metadata.equals(that.metadata) : that.metadata != null) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = metadata != null ? metadata.hashCode() : 0;
+        result = 31*result + getBitString().hashCode();
+        return result;
+    }
 }

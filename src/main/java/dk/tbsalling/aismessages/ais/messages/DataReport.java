@@ -14,45 +14,14 @@
  * 
  */
 
-package dk.tbsalling.aismessages.ais.messages.types;
+package dk.tbsalling.aismessages.ais.messages;
 
-import java.io.Serializable;
+import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 
-public class IMO implements Serializable {
-
-	public IMO(int imo) {
-		this.imo = imo;
-	}
-	
-	public static IMO valueOf(int imo) {
-		return new IMO(imo);
-	}
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        IMO imo1 = (IMO) o;
-
-        if (imo != imo1.imo) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return imo;
-    }
-
-    @Override
-	public String toString() {
-		return "IMO [imo=" + imo + "]";
-	}
-
-    public Integer getIMO() {
-	    return imo;
-	}
-
-	private final int imo;
+/**
+ * AIS messages with a payload of ship static or voyage related data
+ * or position reports implement this interface.
+ */
+public interface DataReport {
+	TransponderClass getTransponderClass();
 }

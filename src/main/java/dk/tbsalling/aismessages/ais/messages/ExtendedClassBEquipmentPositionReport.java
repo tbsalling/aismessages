@@ -19,6 +19,7 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
 import dk.tbsalling.aismessages.ais.messages.types.ShipType;
+import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.BIT_DECODER;
@@ -29,7 +30,7 @@ import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_FLOAT_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
 
 @SuppressWarnings("serial")
-public class ExtendedClassBEquipmentPositionReport extends AISMessage {
+public class ExtendedClassBEquipmentPositionReport extends AISMessage implements ExtendedDynamicDataReport {
 
     public ExtendedClassBEquipmentPositionReport(NMEAMessage[] nmeaMessages) {
         super(nmeaMessages);
@@ -44,6 +45,11 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage {
 
     public final AISMessageType getMessageType() {
         return AISMessageType.ExtendedClassBEquipmentPositionReport;
+    }
+
+    @Override
+    public TransponderClass getTransponderClass() {
+        return TransponderClass.B;
     }
 
     @SuppressWarnings("unused")

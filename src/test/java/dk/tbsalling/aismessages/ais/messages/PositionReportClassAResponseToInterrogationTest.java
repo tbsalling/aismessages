@@ -22,17 +22,17 @@ public class PositionReportClassAResponseToInterrogationTest {
         assertEquals(AISMessageType.PositionReportClassAResponseToInterrogation, aisMessage.getMessageType());
         assertEquals((Integer) 0, aisMessage.getRepeatIndicator());
         PositionReportClassAResponseToInterrogation message = (PositionReportClassAResponseToInterrogation) aisMessage;
-        assertEquals(MMSI.valueOf(304911000L), message.getSourceMmsi());
+        assertEquals(MMSI.valueOf(304911000), message.getSourceMmsi());
         assertEquals(NavigationStatus.UnderwayUsingEngine, message.getNavigationStatus());
         assertEquals((Integer) 0, message.getRateOfTurn());
         assertEquals((Float) 13.6f, message.getSpeedOverGround());
-        assertTrue(message.getPositionAccurate());
+        assertTrue(message.getPositionAccuracy());
         assertEquals(Float.valueOf(37.21113f), message.getLatitude());
         assertEquals(Float.valueOf(-123.45053f), message.getLongitude());
         assertEquals(Float.valueOf(329.7f), message.getCourseOverGround());
         assertEquals((Integer) 331, message.getTrueHeading());
         assertEquals((Integer) 7, message.getSecond());
-        assertEquals(ManeuverIndicator.NotAvailable, message.getManeuverIndicator());
+        assertEquals(ManeuverIndicator.NotAvailable, message.getSpecialManeuverIndicator());
         assertFalse(message.getRaimFlag());
     }
 }

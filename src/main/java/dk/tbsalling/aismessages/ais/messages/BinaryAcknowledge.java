@@ -21,7 +21,6 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_LONG_DECODER;
 
 /**
  * a receipt acknowledgement to the senders of a previous messages of type 6.
@@ -56,7 +55,7 @@ public class BinaryAcknowledge extends AISMessage {
 
     @SuppressWarnings("unused")
 	public MMSI getMmsi1() {
-        return getDecodedValue(() -> mmsi1, value -> mmsi1 = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70))));
+        return getDecodedValue(() -> mmsi1, value -> mmsi1 = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70))));
 	}
 
     @SuppressWarnings("unused")
@@ -66,7 +65,7 @@ public class BinaryAcknowledge extends AISMessage {
 
     @SuppressWarnings("unused")
 	public MMSI getMmsi2() {
-        return getDecodedValue(() -> mmsi2, value -> mmsi2 = value, () -> getNumberOfBits() > 72, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(72, 102))));
+        return getDecodedValue(() -> mmsi2, value -> mmsi2 = value, () -> getNumberOfBits() > 72, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(72, 102))));
 	}
 
     @SuppressWarnings("unused")
@@ -76,7 +75,7 @@ public class BinaryAcknowledge extends AISMessage {
 
     @SuppressWarnings("unused")
 	public MMSI getMmsi3() {
-        return getDecodedValue(() -> mmsi3, value -> mmsi3 = value, () -> getNumberOfBits() > 104, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(104, 134))));
+        return getDecodedValue(() -> mmsi3, value -> mmsi3 = value, () -> getNumberOfBits() > 104, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(104, 134))));
 	}
 
     @SuppressWarnings("unused")
@@ -86,7 +85,7 @@ public class BinaryAcknowledge extends AISMessage {
 
     @SuppressWarnings("unused")
 	public MMSI getMmsi4() {
-        return getDecodedValue(() -> mmsi4, value -> mmsi4 = value, () -> getNumberOfBits() > 136, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(136, 166))));
+        return getDecodedValue(() -> mmsi4, value -> mmsi4 = value, () -> getNumberOfBits() > 136, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(136, 166))));
 	}
 
     @SuppressWarnings("unused")
@@ -98,6 +97,7 @@ public class BinaryAcknowledge extends AISMessage {
 	public Integer getNumOfAcks() {
         if (numOfAcks == null) {
             final int numberOfBits = getNumberOfBits();
+            numOfAcks = 1;
             if (numberOfBits > 72) {
                 numOfAcks++;
             }

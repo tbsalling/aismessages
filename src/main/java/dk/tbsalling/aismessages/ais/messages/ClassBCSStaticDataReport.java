@@ -19,14 +19,14 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.ShipType;
+import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.STRING_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_LONG_DECODER;
 
 @SuppressWarnings("serial")
-public class ClassBCSStaticDataReport extends AISMessage {
+public class ClassBCSStaticDataReport extends AISMessage implements StaticDataReport {
 
     public ClassBCSStaticDataReport(NMEAMessage[] nmeaMessages) {
         super(nmeaMessages);
@@ -41,6 +41,11 @@ public class ClassBCSStaticDataReport extends AISMessage {
 
     public final AISMessageType getMessageType() {
         return AISMessageType.ClassBCSStaticDataReport;
+    }
+
+    @Override
+    public TransponderClass getTransponderClass() {
+        return TransponderClass.B;
     }
 
     @SuppressWarnings("unused")
@@ -90,7 +95,7 @@ public class ClassBCSStaticDataReport extends AISMessage {
 
     @SuppressWarnings("unused")
 	public MMSI getMothershipMmsi() {
-        return getDecodedValue(() -> mothershipMmsi, value -> mothershipMmsi = value, () -> getPartNumber() == 1, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(132, 162))));
+        return getDecodedValue(() -> mothershipMmsi, value -> mothershipMmsi = value, () -> getPartNumber() == 1, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(132, 162))));
 	}
 
     @Override
@@ -120,4 +125,5 @@ public class ClassBCSStaticDataReport extends AISMessage {
     private transient Integer toStarboard;
     private transient Integer toPort;
     private transient MMSI mothershipMmsi;
+
 }

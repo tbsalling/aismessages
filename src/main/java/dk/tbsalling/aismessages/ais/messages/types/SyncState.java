@@ -16,25 +16,13 @@
 
 package dk.tbsalling.aismessages.ais.messages.types;
 
-public enum NavigationStatus {
-	UnderwayUsingEngine (0),
-	AtAnchor(1),
-	NotUnderCommand(2),
-	RestrictedManoeuverability(3),
-	ConstrainedByHerDraught(4),
-	Moored(5),
-	Aground(6),
-	EngagedInFising(7),
-	UnderwaySailing(8),
-	ReservedForFutureUse9(9),
-	ReservedForFutureUse10(10),
-	PowerDrivenVesselTowingAstern(11),
-	PowerDrivenVesselPushingAheadOrTowingAlongside(12),
-	ReservedForFutureUse13(13),
-	SartMobOrEpirb(14),
-	Undefined(15);
+public enum SyncState {
+	UTCDirect(0),
+	UTCIndirect(1),
+	BaseDirect(2),
+	BaseIndirect(3);
 
-	NavigationStatus(Integer code) {
+	SyncState(Integer code) {
 		this.code = code;
 	}
 	
@@ -48,9 +36,9 @@ public enum NavigationStatus {
 
 	private final Integer code;
 
-	public static NavigationStatus fromInteger(Integer integer) {
+	public static SyncState fromInteger(Integer integer) {
 		if (integer != null) {
-			for (NavigationStatus b : NavigationStatus.values()) {
+			for (SyncState b : SyncState.values()) {
 				if (integer.equals(b.code)) {
 					return b;
 				}

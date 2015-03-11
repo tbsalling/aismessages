@@ -17,7 +17,13 @@
 package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.ais.messages.types.CommunicationState;
+import dk.tbsalling.aismessages.ais.messages.types.ITDMACommunicationState;
+import dk.tbsalling.aismessages.ais.messages.types.SOTDMACommunicationState;
+import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+
+import java.lang.ref.WeakReference;
 
 import static dk.tbsalling.aismessages.ais.Decoders.BIT_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.BOOLEAN_DECODER;
@@ -33,7 +39,7 @@ import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
  * 
  */
 @SuppressWarnings("serial")
-public class StandardClassBCSPositionReport extends AISMessage {
+public class StandardClassBCSPositionReport extends AISMessage implements ExtendedDynamicDataReport {
 
     public StandardClassBCSPositionReport(NMEAMessage[] nmeaMessages) {
         super(nmeaMessages);
@@ -50,6 +56,11 @@ public class StandardClassBCSPositionReport extends AISMessage {
         return AISMessageType.StandardClassBCSPositionReport;
     }
 
+    @Override
+    public TransponderClass getTransponderClass() {
+        return TransponderClass.B;
+    }
+
     @SuppressWarnings("unused")
 	public String getRegionalReserved1() {
         return getDecodedValue(() -> regionalReserved1, value -> regionalReserved1 = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(38, 46)));
@@ -57,7 +68,7 @@ public class StandardClassBCSPositionReport extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Float getSpeedOverGround() {
-        return getDecodedValue(() -> speedOverGround, value -> speedOverGround = value, () -> Boolean.TRUE, () -> UNSIGNED_FLOAT_DECODER.apply(getBits(46, 55)) / 10f);
+        return getDecodedValue(() -> speedOverGround, value -> speedOverGround = value, () -> Boolean.TRUE, () -> UNSIGNED_FLOAT_DECODER.apply(getBits(46, 56)) / 10f);
 	}
 
     @SuppressWarnings("unused")
@@ -130,10 +141,17 @@ public class StandardClassBCSPositionReport extends AISMessage {
         return getDecodedValue(() -> raimFlag, value -> raimFlag = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(147, 148)));
 	}
 
+    public Boolean getCommunicationStateSelectorFlag() {
+        return getDecodedValue(() -> commStateSelectorFlag, value -> commStateSelectorFlag = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(148, 149)));
+    }
+
     @SuppressWarnings("unused")
-	public String getRadioStatus() {
-        return getDecodedValue(() -> radioStatus, value -> radioStatus = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(148, 168)));
-	}
+    public CommunicationState getCommunicationState() {
+        if (getCommunicationStateSelectorFlag() == Boolean.FALSE)
+            return getDecodedValueByWeakReference(() -> communicationState, value -> communicationState = value, () -> Boolean.TRUE, () -> SOTDMACommunicationState.fromBitString(getBits(149, 168)));
+        else
+            return getDecodedValueByWeakReference(() -> communicationState, value -> communicationState = value, () -> Boolean.TRUE, () -> ITDMACommunicationState.fromBitString(getBits(149, 168)));
+    }
 
     @Override
     public String toString() {
@@ -155,7 +173,8 @@ public class StandardClassBCSPositionReport extends AISMessage {
                 ", message22=" + getMessage22() +
                 ", assigned=" + getAssigned() +
                 ", raimFlag=" + getRaimFlag() +
-                ", radioStatus='" + getRadioStatus() + '\'' +
+                ", commStateSelectorFlag=" + getCommunicationStateSelectorFlag() +
+                ", commState=" + getCommunicationState() +
                 "} " + super.toString();
     }
 
@@ -175,5 +194,7 @@ public class StandardClassBCSPositionReport extends AISMessage {
 	private transient Boolean message22;
 	private transient Boolean assigned;
 	private transient Boolean raimFlag;
-	private transient String radioStatus;
+	private transient Boolean commStateSelectorFlag;
+	private transient WeakReference<CommunicationState> communicationState;
+
 }

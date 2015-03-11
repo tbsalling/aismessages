@@ -24,7 +24,6 @@ import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import static dk.tbsalling.aismessages.ais.Decoders.BOOLEAN_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.FLOAT_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_LONG_DECODER;
 
 @SuppressWarnings("serial")
 public class ChannelManagement extends AISMessage {
@@ -86,12 +85,12 @@ public class ChannelManagement extends AISMessage {
 
     @SuppressWarnings("unused")
 	public MMSI getDestinationMmsi1() {
-        return getDecodedValue(() -> destinationMmsi1, value -> destinationMmsi1 = value, () -> getAddressed(), () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(69, 99))));
+        return getDecodedValue(() -> destinationMmsi1, value -> destinationMmsi1 = value, () -> getAddressed(), () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(69, 99))));
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getDestinationMmsi2() {
-        return getDecodedValue(() -> destinationMmsi2, value -> destinationMmsi2 = value, () -> getAddressed(), () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(104, 134))));
+        return getDecodedValue(() -> destinationMmsi2, value -> destinationMmsi2 = value, () -> getAddressed(), () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(104, 134))));
 	}
 
     @SuppressWarnings("unused")

@@ -145,6 +145,23 @@ public class NMEAMessage implements Serializable {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        NMEAMessage that = (NMEAMessage) o;
+
+        if (!rawMessage.equals(that.rawMessage)) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return rawMessage.hashCode();
+    }
+
     private static boolean isBlank(String s) {
 		return s == null || s.trim().length() == 0;
 	}

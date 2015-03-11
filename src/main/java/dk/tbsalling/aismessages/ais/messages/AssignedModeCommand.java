@@ -21,7 +21,6 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_LONG_DECODER;
 
 /**
  * used by a base station with control authority to configure the scheduling of
@@ -57,7 +56,7 @@ public class AssignedModeCommand extends AISMessage {
 
     @SuppressWarnings("unused")
     public MMSI getDestinationMmsiA() {
-        return getDecodedValue(() -> destinationMmsiA, value -> destinationMmsiA = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(40, 70))));
+        return getDecodedValue(() -> destinationMmsiA, value -> destinationMmsiA = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70))));
     }
 
     @SuppressWarnings("unused")
@@ -72,7 +71,7 @@ public class AssignedModeCommand extends AISMessage {
 
     @SuppressWarnings("unused")
     public MMSI getDestinationMmsiB() {
-        return getDecodedValue(() -> destinationMmsiB, value -> destinationMmsiB = value, () -> getNumberOfBits() >= 144, () -> MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(getBits(92, 122))));
+        return getDecodedValue(() -> destinationMmsiB, value -> destinationMmsiB = value, () -> getNumberOfBits() >= 144, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(92, 122))));
     }
 
     @SuppressWarnings("unused")
