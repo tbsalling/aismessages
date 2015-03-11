@@ -220,9 +220,21 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         }
         return b;
     }
+    
+    protected String getZeroBitStuffedString(Integer endIndex) {
+        String b = getBitString();
+		if (b.length()-endIndex < 0){
+	        StringBuffer c = new StringBuffer(b);
+			for (int i = b.length()-endIndex; i < 0; i++) {
+				c  = c.append("0");
+			}
+			b = c.toString();
+		}
+        return b;
+    }
 
     protected String getBits(Integer beginIndex, Integer endIndex) {
-        return getBitString().substring(beginIndex, endIndex);
+        return getZeroBitStuffedString(endIndex).substring(beginIndex, endIndex);
     }
 
     protected int getNumberOfBits() {	
@@ -496,7 +508,7 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
                 }
                 break;
             case 24:
-                if (actualMessageLength != 160 && actualMessageLength != 168) {
+                if (actualMessageLength != 160 && actualMessageLength != 168 && actualMessageLength != 158 ) {
                     LOG.warning("Message type 24: Illegal message length: " + bitString.length() + " bits.");
                     return Boolean.FALSE;
                 }
