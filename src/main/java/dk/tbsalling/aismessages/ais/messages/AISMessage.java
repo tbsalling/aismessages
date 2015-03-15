@@ -400,7 +400,7 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
                 if (actualMessageLength != 168) return Boolean.FALSE;
                 break;
             case 5:
-                if (actualMessageLength != 424) {
+                if (actualMessageLength != 424 && actualMessageLength != 422) {
                     LOG.warning("Message type 5: Illegal message length: " + bitString.length() + " bits.");
                     return Boolean.FALSE;
                 }
