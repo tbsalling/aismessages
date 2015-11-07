@@ -1,16 +1,29 @@
 ![Build status](https://travis-ci.org/tbsalling/aismessages.svg?branch=master)
 [![License](http://img.shields.io/badge/license-CCANS3-green.svg)](https://github.com/tbsalling/aismessages/blob/master/LICENSE)
 
+Introduction
+---
 AISmessages is a Java-based light-weight, zero-dependency, and ultra-efficient message decoder for maritime
 navigation and safety messages compliant with ITU 1371 (NMEA armoured AIS messages).
 
 It exhibits lazy decoding and fully decodes tens of thousands of NMEA armoured AIS messages per second per CPU
 core on an Intel i7-based laptop.
 
+Applications, demos, and talks
+---
 See simple demo applications in the source code in the `dk.tbsalling.aismessages.demo` package (view via 
 [Github](https://github.com/tbsalling/aismessages/tree/master/src/main/java/dk/tbsalling/aismessages/demo)). 
+
 A live demo of AISmessages is available on http://ais.tbsalling.dk. 
 
+See also how AISmessages was utilized by OpenRemote, Inc. for the Safe Waterways project in the Beatrix Canal, NL, in this [Youtube video](https://youtu.be/_pcH0KB5J2Q):
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/_pcH0KB5J2Q" frameborder="0"></iframe>
+
+AISmessages has also been addressed in talks at various conferences; e.g. [at DEVOXX BE 2015](http://cfp.devoxx.be/2015/talk/OOF-1013/Decoding_the_air_around_you_with_Java_and_$7_hardware) by Bert Jan Schrijver of JPoint ([@bjschrijver](https://twitter.com/bjschrijver)):  
+
+Programmatic usage
+---
 Programmatically the starting point is the AISStreamReader. It takes an InputStream (feeding
 NMEA data), and a consumer of AISMessages which as called back every time an AIS message is decoded. So,
 if you have an InputStream serving data like this:
