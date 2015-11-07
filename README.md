@@ -11,16 +11,18 @@ core on an Intel i7-based laptop.
 
 Applications, demos, and talks
 ---
-See simple demo applications in the source code in the `dk.tbsalling.aismessages.demo` package (view via 
+There are several demos, intros, and public appearances of AISmessages.
+
+For starters - see a simple demo applications in the source code in the `dk.tbsalling.aismessages.demo` package (view via 
 [Github](https://github.com/tbsalling/aismessages/tree/master/src/main/java/dk/tbsalling/aismessages/demo)). 
 
 A live demo of AISmessages is available on http://ais.tbsalling.dk. 
 
 See also how AISmessages was utilized by OpenRemote, Inc. for the Safe Waterways project in the Beatrix Canal, NL, in this [Youtube video](https://youtu.be/_pcH0KB5J2Q):
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/_pcH0KB5J2Q" frameborder="0"></iframe>
+[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/_pcH0KB5J2Q/0.jpg)](https://youtu.be/_pcH0KB5J2Q)
 
-AISmessages has also been addressed in talks at various conferences; e.g. [at DEVOXX BE 2015](http://cfp.devoxx.be/2015/talk/OOF-1013/Decoding_the_air_around_you_with_Java_and_$7_hardware) by Bert Jan Schrijver of JPoint ([@bjschrijver](https://twitter.com/bjschrijver)):  
+And AISmessages has been addressed in talks at various conferences; e.g. [at DEVOXX BE 2015](http://cfp.devoxx.be/2015/talk/OOF-1013/Decoding_the_air_around_you_with_Java_and_$7_hardware) by Bert Jan Schrijver of JPoint ([@bjschrijver](https://twitter.com/bjschrijver)).
 
 Programmatic usage
 ---
