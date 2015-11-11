@@ -11,18 +11,19 @@ core on an Intel i7-based laptop.
 
 Applications, demos, and talks
 ---
-There are several demos, intros, and public appearances of AISmessages.
+There are several demos, intros, and public appearances of AISmessages; like for instance:
 
-For starters - see a simple demo applications in the source code in the `dk.tbsalling.aismessages.demo` package (view via 
-[Github](https://github.com/tbsalling/aismessages/tree/master/src/main/java/dk/tbsalling/aismessages/demo)). 
-
-A live demo of AISmessages is available on http://ais.tbsalling.dk. 
-
-See also how AISmessages was utilized by OpenRemote, Inc. for the Safe Waterways project in the Beatrix Canal, NL, in this [Youtube video](https://youtu.be/_pcH0KB5J2Q):
-
+1. How AISmessages is utilized by OpenRemote, Inc. for the Safe Waterways project in the Beatrix Canal, NL, as explained in this [Youtube video](https://youtu.be/_pcH0KB5J2Q):<br>
 [![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/_pcH0KB5J2Q/0.jpg)](https://youtu.be/_pcH0KB5J2Q)
 
-And AISmessages has been addressed in talks at various conferences; e.g. [at DEVOXX BE 2015](http://cfp.devoxx.be/2015/talk/OOF-1013/Decoding_the_air_around_you_with_Java_and_$7_hardware) by Bert Jan Schrijver of JPoint ([@bjschrijver](https://twitter.com/bjschrijver)).
+1. How AISmessages can be used to "decode the air around you" as Bert Jan Schrijver ([@bjschrijver](https://twitter.com/bjschrijver)) of JPoint talks about 
+	1. at DEVOXX BE 2015 ([see schedule](http://cfp.devoxx.be/2015/talk/OOF-1013/Decoding_the_air_around_you_with_Java_and_$7_hardware))
+	1. at DEVOXX UK 2015 ([watch conference video](https://www.parleys.com/tutorial/decoding-air-around-you-java-7-hardware)) 
+
+1. A live demo of AISmessages is available on http://ais.tbsalling.dk. 
+
+1. See a simple demo applications in the source code in the `dk.tbsalling.aismessages.demo` package (view via 
+[Github](https://github.com/tbsalling/aismessages/tree/master/src/main/java/dk/tbsalling/aismessages/demo)). 
 
 Programmatic usage
 ---
