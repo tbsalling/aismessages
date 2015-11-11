@@ -1,7 +1,11 @@
 language: java
-sudo: false
+sudo: true
 jdk:
   - oraclejdk8
++before_install:
+  - sudo apt-get update -qq
+  - sudo apt-get install --only-upgrade -y oracle-java8-installer
+  - java -version
 deploy:
   provider: releases
   api_key:
