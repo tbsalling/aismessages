@@ -16,6 +16,8 @@ There are several demos, intros, and public appearances of AISmessages; like for
 1. How AISmessages is utilized by OpenRemote, Inc. for the Safe Waterways project in the Beatrix Canal, NL, as explained in this [Youtube video](https://youtu.be/_pcH0KB5J2Q):<br>
 [![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/_pcH0KB5J2Q/0.jpg)](https://youtu.be/_pcH0KB5J2Q)
 
+1. How AISmessages is used in Dakosy's PRISE system to optimise sequencing and arrival of mega-ships on the river Elbe and at the Port of Hamburg ([read reference page](https://www.dakosy.de/en/solutions/port-community-system/prise/))
+
 1. How AISmessages can be used to "decode the air around you" as Bert Jan Schrijver ([@bjschrijver](https://twitter.com/bjschrijver)) of JPoint talks about 
 	1. at DEVOXX BE 2015 ([see schedule](http://cfp.devoxx.be/2015/talk/OOF-1013/Decoding_the_air_around_you_with_Java_and_$7_hardware))
 	1. at DEVOXX UK 2015 ([watch conference video](https://www.parleys.com/tutorial/decoding-air-around-you-java-7-hardware)) 
