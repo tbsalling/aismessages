@@ -19,7 +19,7 @@ There are several demos, intros, and public appearances of AISmessages; like for
 1. How AISmessages is used in Dakosy's PRISE system to optimise sequencing and arrival of mega-ships on the river Elbe and at the Port of Hamburg ([read reference page](https://www.dakosy.de/en/solutions/port-community-system/prise/))
 
 1. How AISmessages can be used to "decode the air around you" as Bert Jan Schrijver ([@bjschrijver](https://twitter.com/bjschrijver)) of JPoint talks about 
-	1. at DEVOXX BE 2015 ([see schedule](http://cfp.devoxx.be/2015/talk/OOF-1013/Decoding_the_air_around_you_with_Java_and_$7_hardware))
+	1. at DEVOXX BE 2015 ([watch conference video](https://www.youtube.com/watch?v=fOlz0OcZPjc)
 	1. at DEVOXX UK 2015 ([watch conference video](https://www.parleys.com/tutorial/decoding-air-around-you-java-7-hardware)) 
 
 1. A live demo of AISmessages is available on http://ais.tbsalling.dk. 
