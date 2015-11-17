@@ -9,6 +9,8 @@ navigation and safety messages compliant with ITU 1371 (NMEA armoured AIS messag
 It exhibits lazy decoding and fully decodes tens of thousands of NMEA armoured AIS messages per second per CPU
 core on an Intel i7-based laptop.
 
+In addition to AISmessages, its sister project [AISutils](https://github.com/tbsalling/aisutils) offers higher level functionality such as Tracking and Filtering using AISmessages as a foundation.
+
 Applications, demos, and talks
 ---
 There are several demos, intros, and public appearances of AISmessages; like for instance:
@@ -77,9 +79,6 @@ all you need to do is add these lines to your pom.xml:
 	    <version>2.1.0</version>
 	</dependency>
 ```
-
-If you need more advanced funtionality than merely decoding AIS messages, then you might also want to have a look at 
-AISutils: https://github.com/tbsalling/aisutils.
 
 ---
 
