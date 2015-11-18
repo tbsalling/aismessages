@@ -83,6 +83,7 @@ all you need to do is add these lines to your pom.xml:
 ---
 
 **Important compiler note!** Due to a [compiler bug](https://bugs.openjdk.java.net/browse/JDK-8062253) in JDK 8u20, 8u25, and 8u31
-AISmessages can only be compiled with older or newer JDK 8 versions than these faulty ones.
+AISmessages can only be compiled with older or newer JDK 8 versions than these faulty ones. The project is confirmed to build with
+Oracle JDK 1.8.0_66.
 
 ---
