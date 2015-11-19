@@ -69,8 +69,7 @@ public class NMEAMessageHandler implements Consumer<NMEAMessage> {
 			messageFragments.clear();
 		} else if (numberOfFragments == 1) {
 			LOG.finest("Handling unfragmented NMEA message");
-            AISMessage aisMessage = AISMessage.create(nmeaMessage);
-            aisMessage.setMetadata(new Metadata(source));
+            AISMessage aisMessage = AISMessage.create(new Metadata(source), nmeaMessage);
             sendToAisMessageReceivers(aisMessage);
 			messageFragments.clear();
 		} else {
@@ -94,8 +93,7 @@ public class NMEAMessageHandler implements Consumer<NMEAMessage> {
 					LOG.finest("nmeaMessage.getNumberOfFragments(): " + nmeaMessage.getNumberOfFragments());
 					LOG.finest("messageFragments.size(): " + messageFragments.size());
 					if (nmeaMessage.getNumberOfFragments() == messageFragments.size()) {
-                        AISMessage aisMessage = AISMessage.create(messageFragments.toArray(new NMEAMessage[messageFragments.size()]));
-                        aisMessage.setMetadata(new Metadata(source));
+                        AISMessage aisMessage = AISMessage.create(new Metadata(source), messageFragments.toArray(new NMEAMessage[messageFragments.size()]));
                         sendToAisMessageReceivers(aisMessage);
 						messageFragments.clear();
 					} else

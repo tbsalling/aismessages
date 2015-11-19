@@ -274,6 +274,24 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         return toBitString(sixBitEncodedPayload.toString(), fillBits);
     }
 
+    /**
+     * Create proper type of AISMessage from 1..n NMEA messages, and
+     * attach metadata.
+     * @param metadata
+     * @param nmeaMessages
+     * @return
+     */
+    public static AISMessage create(Metadata metadata, NMEAMessage... nmeaMessages) {
+        AISMessage aisMessage = create(nmeaMessages);
+        aisMessage.setMetadata(metadata);
+        return aisMessage;
+    }
+
+    /**
+     * Create proper type of AISMessage from 1..n NMEA messages.
+     * @param nmeaMessages
+     * @return
+     */
     public static AISMessage create(NMEAMessage... nmeaMessages) {
         BiFunction<NMEAMessage[], String, AISMessage> aisMessageConstructor;
 
