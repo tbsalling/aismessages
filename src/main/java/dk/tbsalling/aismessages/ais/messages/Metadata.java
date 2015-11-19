@@ -1,17 +1,17 @@
 package dk.tbsalling.aismessages.ais.messages;
 
 import java.io.Serializable;
-import java.util.Date;
+import java.time.Instant;
 
 @SuppressWarnings("serial")
 public class Metadata implements Serializable {
 
     public Metadata(String source) {
         this.source = source;
-        this.received = System.currentTimeMillis();
+        this.received = Instant.now();
     }
 
-    public Metadata(String source, long received) {
+    public Metadata(String source, Instant received) {
         this.source = source;
         this.received = received;
     }
@@ -21,7 +21,7 @@ public class Metadata implements Serializable {
 		return source;
 	}
 
-    public long getReceived() {
+    public Instant getReceived() {
         return received;
     }
 
@@ -39,7 +39,7 @@ public class Metadata implements Serializable {
     public String toString() {
         return "Metadata{" +
                 "source='" + source + '\'' +
-                ", received=" + new Date(received) +
+                ", received=" + received +
                 '}';
     }
 
@@ -49,5 +49,5 @@ public class Metadata implements Serializable {
 	private final static String category = "AIS";
 
 	private final String source;
-    private final long received;
+    private final Instant received;
 }
