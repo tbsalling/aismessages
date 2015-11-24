@@ -29,7 +29,6 @@ import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
@@ -119,17 +118,15 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
 
     /**
      * Compute a SHA-1 message digest of this AISmessage. Suitable for e.g. doublet discovery and filtering.
-     * The returned result is of type BigInteger to facilitate easy equality comparisons between digests.
-     *
      * @return Message digest
      * @throws NoSuchAlgorithmException if SHA-1 algorithm is not accessible
      */
-    public BigInteger digest() throws NoSuchAlgorithmException {
+    public byte[] digest() throws NoSuchAlgorithmException {
         MessageDigest messageDigester = MessageDigest.getInstance("SHA");
         for (NMEAMessage nmeaMessage : nmeaMessages) {
             messageDigester.update(nmeaMessage.getRawMessage().getBytes());
         }
-        return new BigInteger(messageDigester.digest());
+        return messageDigester.digest();
     }
 
     /** Return a map of data field name and values. */
