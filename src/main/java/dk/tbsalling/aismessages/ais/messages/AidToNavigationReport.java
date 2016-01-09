@@ -131,7 +131,7 @@ public class AidToNavigationReport extends AISMessage {
     }
 
     @SuppressWarnings("unused")
-    public int getSpare1() {
+    public Integer getSpare1() {
         return getDecodedValue(() -> spare1, value -> spare1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(271, 272)));
     }
 
@@ -147,7 +147,7 @@ public class AidToNavigationReport extends AISMessage {
     }
 
     @SuppressWarnings("unused")
-    public int getSpare2() {
+    public Integer getSpare2() {
         getDecodedValue(() -> spare2, value -> spare2 = value, () -> getNumberOfBits() >= 272, () -> {
             int extraBits = getNumberOfBits() - 272;
             int extraChars = extraBits/6;
