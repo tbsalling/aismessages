@@ -3,9 +3,16 @@ package dk.tbsalling.aismessages.ais;
 import org.junit.Test;
 
 import static dk.tbsalling.aismessages.ais.Decoders.FLOAT_DECODER;
+import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_LONG_DECODER;
 import static org.junit.Assert.assertEquals;
 
 public class DecodersTest {
+
+    @Test
+    public void canConvertToULong() {
+        assertEquals(Long.valueOf(566517000), UNSIGNED_LONG_DECODER.apply("100001110001000101110100001000"));
+        assertEquals(Long.valueOf(9577991), UNSIGNED_LONG_DECODER.apply("000000100100100010011000000111"));
+    }
 
     @Test
     public void canConvertToUnsignedInteger() {
