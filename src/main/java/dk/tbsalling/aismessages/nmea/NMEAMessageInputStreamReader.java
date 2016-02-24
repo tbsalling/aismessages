@@ -17,6 +17,7 @@
 package dk.tbsalling.aismessages.nmea;
 
 import dk.tbsalling.aismessages.dk.tbsalling.util.function.Consumer;
+import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.exceptions.NMEAParseException;
 import dk.tbsalling.aismessages.nmea.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
@@ -52,6 +53,8 @@ public class NMEAMessageInputStreamReader {
 				NMEAMessage nmea = NMEAMessage.fromString(string);
 				nmeaMessageHandler.accept(nmea);
 				log.fine("Received: " + nmea.toString());
+			} catch (InvalidMessage invalidMessageException) {
+				log.warning("Received invalid AIS message: \"" + string + "\"");
 			} catch (UnsupportedMessageType unsupportedMessageTypeException) {
 				log.warning("Received unsupported NMEA message: \"" + string + "\"");
 			} catch (NMEAParseException parseException) {

@@ -353,7 +353,7 @@ public class AidToNavigationReport extends AISMessage {
     }
 
     @SuppressWarnings("unused")
-    public String getRegionalUse() {
+    public String getAtoNStatus() {
         return getDecodedValue(new Supplier<String>() {
             @Override
             public String get() {
@@ -453,7 +453,7 @@ public class AidToNavigationReport extends AISMessage {
     }
 
     @SuppressWarnings("unused")
-    public int getSpare1() {
+    public Integer getSpare1() {
         return getDecodedValue(new Supplier<Integer>() {
             @Override
             public Integer get() {
@@ -507,7 +507,7 @@ public class AidToNavigationReport extends AISMessage {
     }
 
     @SuppressWarnings("unused")
-    public int getSpare2() {
+    public Integer getSpare2() {
         getDecodedValue(new Supplier<Integer>() {
             @Override
             public Integer get() {
@@ -551,7 +551,7 @@ public class AidToNavigationReport extends AISMessage {
                 ", positionFixingDevice=" + getPositionFixingDevice() +
                 ", second=" + getSecond() +
                 ", offPosition=" + getOffPosition() +
-                ", regionalUse='" + getRegionalUse() + '\'' +
+                ", regionalUse='" + getAtoNStatus() + '\'' +
                 ", raimFlag=" + getRaimFlag() +
                 ", virtualAid=" + getVirtualAid() +
                 ", assignedMode=" + getAssignedMode() +

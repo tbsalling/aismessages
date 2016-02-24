@@ -32,7 +32,6 @@ import static dk.tbsalling.aismessages.ais.Decoders.STRING_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.TIME_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_FLOAT_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_LONG_DECODER;
 
 /**
  * Message has a total of 424 bits, occupying two AIVDM sentences. In practice,
@@ -60,7 +59,7 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
             throw new UnsupportedMessageType(messageType.getCode());
         }
         final int numberOfBits = getNumberOfBits();
-        if (numberOfBits != 424) {
+        if (numberOfBits != 424 && numberOfBits != 422) {
             throw new InvalidMessage("Message of type " + messageType + " expected to be 424 bits long; not " + numberOfBits);
         }
     }
@@ -94,7 +93,7 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
         }, new Supplier<IMO>() {
             @Override
             public IMO get() {
-                return IMO.valueOf(UNSIGNED_LONG_DECODER.apply(ShipAndVoyageData.this.getBits(40, 70)));
+                return IMO.valueOf(UNSIGNED_INTEGER_DECODER.apply(ShipAndVoyageData.this.getBits(40, 70)));
             }
         });
 	}

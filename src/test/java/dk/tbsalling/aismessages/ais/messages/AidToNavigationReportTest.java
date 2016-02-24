@@ -7,8 +7,11 @@ import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import org.junit.Test;
 
+import java.util.Map;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 
 public class AidToNavigationReportTest {
 
@@ -43,7 +46,6 @@ public class AidToNavigationReportTest {
     @Test
     public void canDecode2() {
         AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDO,1,1,,A,E>lt;MIas0h3V:@;4a::h0b7W005Jh4nq:3l800003v010,4*08"));
-
         System.out.println(aisMessage.toString());
 
         assertEquals(AISMessageType.AidToNavigationReport, aisMessage.getMessageType());
@@ -67,4 +69,40 @@ public class AidToNavigationReportTest {
         assertEquals(PositionFixingDevice.Surveyed, message.getPositionFixingDevice());
         assertFalse(message.getRaimFlag());
     }
+
+    @Test
+    public void testDataFields() {
+        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDO,1,1,,A,E>lt;MIas0h3V:@;4a::h0b7W005Jh4nq:3l800003v010,4*08"));
+        Map<String, Object> dataFields = aisMessage.dataFields();
+
+        assertNotNull(dataFields);
+        assertEquals(23, dataFields.size());
+
+        assertEquals("AidToNavigationReport", dataFields.get("messageType"));
+        assertEquals(0, dataFields.get("repeatIndicator"));
+        assertEquals(995036021L, dataFields.get("sourceMmsi.MMSI"));
+        assertEquals("BeaconSpecialMark", dataFields.get("aidType"));
+        assertEquals("S6A GLT VIRTU ATON", dataFields.get("name"));
+        assertEquals(false, dataFields.get("positionAccurate"));
+        assertEquals(151.49791f, dataFields.get("longitude"));
+        assertEquals(-23.917383f, dataFields.get("latitude"));
+        assertEquals(0, dataFields.get("toStern"));
+        assertEquals(0, dataFields.get("toBow"));
+        assertEquals(0, dataFields.get("toPort"));
+        assertEquals(0, dataFields.get("toStarboard"));
+        assertEquals("Surveyed", dataFields.get("positionFixingDevice"));
+        assertEquals(60, dataFields.get("second"));
+        assertEquals(false, dataFields.get("offPosition"));
+        assertEquals("00000000", dataFields.get("atoNStatus"));
+        assertEquals(false, dataFields.get("raimFlag"));
+        assertEquals(true, dataFields.get("virtualAid"));
+        assertEquals(false, dataFields.get("assignedMode"));
+        assertEquals(0, dataFields.get("spare1"));
+        assertEquals(0, dataFields.get("spare2"));
+        assertEquals(true, dataFields.get("valid"));
+
+        assertFalse(dataFields.containsKey("nameExtension"));
+        assertFalse(dataFields.containsKey("class"));
+    }
+
 }

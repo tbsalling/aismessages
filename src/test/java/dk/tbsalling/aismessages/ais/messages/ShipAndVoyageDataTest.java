@@ -8,8 +8,11 @@ import dk.tbsalling.aismessages.ais.messages.types.ShipType;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import org.junit.Test;
 
+import java.security.NoSuchAlgorithmException;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 
 public class ShipAndVoyageDataTest {
@@ -27,7 +30,7 @@ public class ShipAndVoyageDataTest {
         ShipAndVoyageData message = (ShipAndVoyageData) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
         assertEquals(MMSI.valueOf(366962000L), message.getSourceMmsi());
-        assertEquals(IMO.valueOf(9131369L), message.getImo());
+        assertEquals(IMO.valueOf(9131369), message.getImo());
         assertEquals("WDD7294", message.getCallsign());
         assertEquals("MISSISSIPPI VOYAGER", message.getShipName());
         assertEquals(ShipType.TankerHazardousD, message.getShipType());
@@ -55,7 +58,7 @@ public class ShipAndVoyageDataTest {
         ShipAndVoyageData message = (ShipAndVoyageData) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
         assertEquals(MMSI.valueOf(211339980L), message.getSourceMmsi());
-        assertEquals(IMO.valueOf(0L), message.getImo());
+        assertEquals(IMO.valueOf(0), message.getImo());
         assertEquals("J050A", message.getCallsign());
         assertEquals("HHLA 3         B", message.getShipName());
         assertEquals(ShipType.LawEnforcement, message.getShipType());
@@ -69,4 +72,38 @@ public class ShipAndVoyageDataTest {
         assertEquals("", message.getDestination());
         assertFalse(message.getDataTerminalReady());
     }
+
+    @Test
+    public void digest() throws NoSuchAlgorithmException {
+        String expectedDigest = "2ca6350a33d7b19f0ef49799aa96dd61da9e081e";
+
+        AISMessage aisMessage = AISMessage.create(
+            NMEAMessage.fromString("!AIVDM,2,1,0,B,539S:k40000000c3G04PPh63<00000000080000o1PVG2uGD:00000000000,0*34"),
+            NMEAMessage.fromString("!AIVDM,2,2,0,B,00000000000,2*27")
+        );
+        byte[] digest = aisMessage.digest();
+        String digestAsString = String.format("%040x", new java.math.BigInteger(1, digest));
+        assertEquals(expectedDigest, digestAsString);
+
+        // Change line 1
+        aisMessage = AISMessage.create(
+            NMEAMessage.fromString("!AIVDM,2,1,0,B,539S:k40000000c3G04PPh63<00000000080000o1PVG2uGD:00000000001,0*34"),
+            NMEAMessage.fromString("!AIVDM,2,2,0,B,00000000000,2*27")
+        );
+        digest = aisMessage.digest();
+        digestAsString = String.format("%040x", new java.math.BigInteger(1, digest));
+        assertNotEquals(expectedDigest, digestAsString);
+
+        // Change line 2
+        aisMessage = AISMessage.create(
+            NMEAMessage.fromString("!AIVDM,2,1,0,B,539S:k40000000c3G04PPh63<00000000080000o1PVG2uGD:00000000000,0*34"),
+            NMEAMessage.fromString("!AIVDM,2,2,0,B,00000000001,2*27")
+        );
+        digest = aisMessage.digest();
+        digestAsString = String.format("%040x", new java.math.BigInteger(1, digest));
+        assertNotEquals(expectedDigest, digestAsString);
+
+
+    }
+
 }

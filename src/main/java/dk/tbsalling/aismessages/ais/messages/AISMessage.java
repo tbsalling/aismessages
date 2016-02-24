@@ -25,9 +25,17 @@ import dk.tbsalling.aismessages.dk.tbsalling.util.function.Supplier;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
+import java.beans.IntrospectionException;
+import java.beans.Introspector;
+import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.logging.Logger;
@@ -51,7 +59,7 @@ public abstract class AISMessage extends CachedDecodedValues implements Serializ
 
     private transient static final Logger LOG = Logger.getLogger(AISMessage.class.getName());
 
-    public transient static final String VERSION = "2.0.0-SNAPSHOT";
+    public transient static final String VERSION = "2.1.1";
 
     static {
         System.err.print("\n" + "AISMessages v" + VERSION + " // Copyright (c) 2011- by S-Consult ApS, Denmark, CVR DK31327490. http://s-consult.dk.\n" + "\n" + "This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License. To view a copy of\n" + "this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/ or send a letter to Creative Commons, 171 Second Street,\n" + "Suite 300, San Francisco, California, 94105, USA.\n" + "\n" + "NOT FOR COMMERCIAL USE!\n" + "Contact sales@s-consult.dk to obtain commercially licensed software.\n" + "\n");
@@ -109,6 +117,75 @@ public abstract class AISMessage extends CachedDecodedValues implements Serializ
 
     private static void check(NMEAMessage[] nmeaMessages) {
         // TODO sanity check NMEA messages
+    }
+
+    /**
+     * Compute a SHA-1 message digest of this AISmessage. Suitable for e.g. doublet discovery and filtering.
+     * @return Message digest
+     * @throws NoSuchAlgorithmException if SHA-1 algorithm is not accessible
+     */
+    public byte[] digest() throws NoSuchAlgorithmException {
+        MessageDigest messageDigester = MessageDigest.getInstance("SHA");
+        for (NMEAMessage nmeaMessage : nmeaMessages) {
+            messageDigester.update(nmeaMessage.getRawMessage().getBytes());
+        }
+        return messageDigester.digest();
+    }
+
+    /** Return a map of data field name and values. */
+    public  Map<String, Object> dataFields() {
+        HashMap<String,Object> map = new HashMap<>();
+        try {
+            PropertyDescriptor[] propertyDescriptors = Introspector.getBeanInfo(this.getClass()).getPropertyDescriptors();
+            for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
+                if (!"class".equals(propertyDescriptor.getName())) {
+                    Method readMethod = propertyDescriptor.getReadMethod();
+
+                    Class<?> returnType = readMethod.getReturnType();
+                    if (isComplexType(returnType)) {
+                        Object complexValue = readMethod.invoke(this);
+                        if (complexValue != null) {
+                            PropertyDescriptor[] propertyDescriptors2 = Introspector.getBeanInfo(returnType).getPropertyDescriptors();
+                            for (PropertyDescriptor pd2 : propertyDescriptors2) {
+                                if (!"class".equals(pd2.getName()))
+                                    map.put(propertyDescriptor.getName() + "." + pd2.getName(), pd2.getReadMethod().invoke(complexValue));
+                            }
+                        }
+                    } else if (Class.class.equals(returnType)) {
+                        Object value = readMethod.invoke(this);
+                        map.put(propertyDescriptor.getName(), ((Class) value).getSimpleName());
+                    } else {
+                        Object value = readMethod.invoke(this);
+                        if (value != null)
+                            if (returnType.isEnum())
+                                map.put(propertyDescriptor.getName(), value.toString());
+                            else
+                                map.put(propertyDescriptor.getName(), value);
+                    }
+                }
+            }
+        } catch (IntrospectionException e) {
+            e.printStackTrace();
+        } catch (InvocationTargetException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+        return map;
+    }
+
+    private boolean isComplexType(Class<?> clazz) {
+        if (clazz.isArray() || clazz.isEnum() || clazz.getPackage()==null || !"dk.tbsalling.aismessages.ais.messages.types".equals(clazz.getPackage().getName()))
+            return false;
+
+        boolean hasGetters = false;
+        try {
+            hasGetters = Introspector.getBeanInfo(clazz).getPropertyDescriptors().length > 0;
+        } catch (IntrospectionException e) {
+            e.printStackTrace();
+        }
+
+        return hasGetters;
     }
 
     protected abstract void checkAISMessage();
@@ -202,8 +279,20 @@ public abstract class AISMessage extends CachedDecodedValues implements Serializ
         return b;
     }
 
+    protected String getZeroBitStuffedString(Integer endIndex) {
+        String b = getBitString();
+		if (b.length()-endIndex < 0){
+	        StringBuffer c = new StringBuffer(b);
+			for (int i = b.length()-endIndex; i < 0; i++) {
+				c  = c.append("0");
+			}
+			b = c.toString();
+		}
+        return b;
+    }
+
     protected String getBits(Integer beginIndex, Integer endIndex) {
-        return getBitString().substring(beginIndex, endIndex);
+        return getZeroBitStuffedString(endIndex).substring(beginIndex, endIndex);
     }
 
     protected int getNumberOfBits() {	
@@ -228,6 +317,24 @@ public abstract class AISMessage extends CachedDecodedValues implements Serializ
         return toBitString(sixBitEncodedPayload.toString(), fillBits);
     }
 
+    /**
+     * Create proper type of AISMessage from 1..n NMEA messages, and
+     * attach metadata.
+     * @param metadata
+     * @param nmeaMessages
+     * @return
+     */
+    public static AISMessage create(Metadata metadata, NMEAMessage... nmeaMessages) {
+        AISMessage aisMessage = create(nmeaMessages);
+        aisMessage.setMetadata(metadata);
+        return aisMessage;
+    }
+
+    /**
+     * Create proper type of AISMessage from 1..n NMEA messages.
+     * @param nmeaMessages
+     * @return
+     */
     public static AISMessage create(NMEAMessage... nmeaMessages) {
         BiFunction<NMEAMessage[], String, AISMessage> aisMessageConstructor;
 
@@ -504,7 +611,7 @@ public abstract class AISMessage extends CachedDecodedValues implements Serializ
                 if (actualMessageLength != 168) return Boolean.FALSE;
                 break;
             case 5:
-                if (actualMessageLength != 424) {
+                if (actualMessageLength != 424 && actualMessageLength != 422) {
                     LOG.warning("Message type 5: Illegal message length: " + bitString.length() + " bits.");
                     return Boolean.FALSE;
                 }
@@ -612,7 +719,7 @@ public abstract class AISMessage extends CachedDecodedValues implements Serializ
                 }
                 break;
             case 24:
-                if (actualMessageLength != 160 && actualMessageLength != 168) {
+                if (actualMessageLength != 160 && actualMessageLength != 168 && actualMessageLength != 158 ) {
                     LOG.warning("Message type 24: Illegal message length: " + bitString.length() + " bits.");
                     return Boolean.FALSE;
                 }

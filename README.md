@@ -1,24 +1,36 @@
 ![Build status](https://travis-ci.org/tbsalling/aismessages.svg?branch=master)
 [![License](http://img.shields.io/badge/license-CCANS3-green.svg)](https://github.com/tbsalling/aismessages/blob/master/LICENSE)
 
+Introduction
 ---
-
-**Important compiler note!** Due to a [compiler bug](https://bugs.openjdk.java.net/browse/JDK-8062253) in JDK 8u20, 8u25, and 8u31
-AISmessages can only be compiled with JDK 8u11 or older JDK 8 versions. The compiler bug is expected to be fixed in JDK 8u40 which
-should be available from March, 2015.
-
----
-
 AISmessages is a Java-based light-weight, zero-dependency, and ultra-efficient message decoder for maritime
 navigation and safety messages compliant with ITU 1371 (NMEA armoured AIS messages).
 
 It exhibits lazy decoding and fully decodes tens of thousands of NMEA armoured AIS messages per second per CPU
 core on an Intel i7-based laptop.
 
-See simple demo applications in the source code in the `dk.tbsalling.aismessages.demo` package (view via 
-[Github](https://github.com/tbsalling/aismessages/tree/master/src/main/java/dk/tbsalling/aismessages/demo)). 
-A live demo of AISmessages is available on http://ais.tbsalling.dk. 
+In addition to AISmessages, its sister project [AISutils](https://github.com/tbsalling/aisutils) offers higher level functionality such as Tracking and Filtering using AISmessages as a foundation.
 
+Applications, demos, and talks
+---
+There are several demos, intros, and public appearances of AISmessages; like for instance:
+
+1. How AISmessages is utilized by OpenRemote, Inc. for the Safe Waterways project in the Beatrix Canal, NL, as explained in this [Youtube video](https://youtu.be/_pcH0KB5J2Q):<br>
+[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/_pcH0KB5J2Q/0.jpg)](https://youtu.be/_pcH0KB5J2Q)
+
+1. How AISmessages is used in Dakosy's PRISE system to optimise sequencing and arrival of mega-ships on the river Elbe and at the Port of Hamburg ([read reference page](https://www.dakosy.de/en/solutions/port-community-system/prise/))
+
+1. How AISmessages can be used to "decode the air around you" as Bert Jan Schrijver ([@bjschrijver](https://twitter.com/bjschrijver)) of JPoint talks about 
+	1. at DEVOXX BE 2015 ([watch conference video](https://www.youtube.com/watch?v=fOlz0OcZPjc))
+	1. at DEVOXX UK 2015 ([watch conference video](https://www.parleys.com/tutorial/decoding-air-around-you-java-7-hardware)) 
+
+1. A live demo of AISmessages is available on http://ais.tbsalling.dk. 
+
+1. See a simple demo applications in the source code in the `dk.tbsalling.aismessages.demo` package (view via 
+[Github](https://github.com/tbsalling/aismessages/tree/master/src/main/java/dk/tbsalling/aismessages/demo)). 
+
+Programmatic usage
+---
 Programmatically the starting point is the AISStreamReader. It takes an InputStream (feeding
 NMEA data), and a consumer of AISMessages which as called back every time an AIS message is decoded. So,
 if you have an InputStream serving data like this:

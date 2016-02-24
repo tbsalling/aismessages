@@ -7,6 +7,8 @@ import dk.tbsalling.aismessages.ais.messages.types.NavigationStatus;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import org.junit.Test;
 
+import java.security.NoSuchAlgorithmException;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -34,5 +36,13 @@ public class PositionReportClassAResponseToInterrogationTest {
         assertEquals((Integer) 7, message.getSecond());
         assertEquals(ManeuverIndicator.NotAvailable, message.getSpecialManeuverIndicator());
         assertFalse(message.getRaimFlag());
+    }
+
+    @Test
+    public void digest() throws NoSuchAlgorithmException {
+        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,34RjBV0028o:pnNEBeU<pJF>0PT@,0*3F"));
+        byte[] digest = aisMessage.digest();
+        String digestAsString = String.format("%040x", new java.math.BigInteger(1, digest));
+        assertEquals("673ac3b20886868cafe7376e05092bf625f00b75", digestAsString);
     }
 }
