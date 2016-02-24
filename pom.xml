@@ -4,7 +4,7 @@
 	<groupId>dk.tbsalling</groupId>
 	<artifactId>aismessages</artifactId>
 	<packaging>jar</packaging>
-	<version>2.1.1-jdk7-backport</version>
+	<version>aismessages-2.1.2-jdk7-backport</version>
 	<name>aismessages</name>
 	<description>AISMessages is a light-weight and high-performing software library for decoding AIS messages related to maritime navigation and safety.</description>
 	<url>http://tbsalling.dk</url>
