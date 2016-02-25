@@ -290,18 +290,6 @@ public abstract class AISMessage extends CachedDecodedValues implements Serializ
         return b;
     }
 
-    protected String getZeroBitStuffedString(Integer endIndex) {
-        String b = getBitString();
-		if (b.length()-endIndex < 0){
-	        StringBuffer c = new StringBuffer(b);
-			for (int i = b.length()-endIndex; i < 0; i++) {
-				c  = c.append("0");
-			}
-			b = c.toString();
-		}
-        return b;
-    }
-
     protected String getBits(Integer beginIndex, Integer endIndex) {
         return getZeroBitStuffedString(endIndex).substring(beginIndex, endIndex);
     }
