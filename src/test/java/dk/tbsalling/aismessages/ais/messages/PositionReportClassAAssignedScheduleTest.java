@@ -47,7 +47,7 @@ public class PositionReportClassAAssignedScheduleTest {
         assertEquals(AISMessageType.PositionReportClassAAssignedSchedule, aisMessage.getMessageType());
         assertEquals((Integer) 0, aisMessage.getRepeatIndicator());
         PositionReportClassAAssignedSchedule message = (PositionReportClassAAssignedSchedule) aisMessage;
-        assertEquals(MMSI.valueOf(304911000L), message.getSourceMmsi());
+        assertEquals(MMSI.valueOf(304911000), message.getSourceMmsi());
         assertEquals(NavigationStatus.UnderwayUsingEngine, message.getNavigationStatus());
         assertEquals((Integer) 0, message.getRateOfTurn());
         assertEquals((Float) 13.6f, message.getSpeedOverGround());

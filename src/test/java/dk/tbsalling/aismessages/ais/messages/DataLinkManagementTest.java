@@ -19,7 +19,7 @@ public class DataLinkManagementTest {
         assertEquals(AISMessageType.DataLinkManagement, aisMessage.getMessageType());
         DataLinkManagement message = (DataLinkManagement) aisMessage;
         assertEquals(Integer.valueOf(3), message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(3669708L), message.getSourceMmsi());
+        assertEquals(MMSI.valueOf(3669708), message.getSourceMmsi());
         assertEquals((Integer) 1620, message.getOffsetNumber1());
         assertEquals((Integer) 5, message.getReservedSlots1());
         assertEquals((Integer) 7, message.getTimeout1());
@@ -43,7 +43,7 @@ public class DataLinkManagementTest {
         assertEquals(AISMessageType.DataLinkManagement, aisMessage.getMessageType());
         DataLinkManagement message = (DataLinkManagement) aisMessage;
         assertEquals(Integer.valueOf(3), message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(3669708L), message.getSourceMmsi());
+        assertEquals(MMSI.valueOf(3669708), message.getSourceMmsi());
         assertEquals((Integer) 1717, message.getOffsetNumber1());
         assertEquals((Integer) 5, message.getReservedSlots1());
         assertEquals((Integer) 7, message.getTimeout1());

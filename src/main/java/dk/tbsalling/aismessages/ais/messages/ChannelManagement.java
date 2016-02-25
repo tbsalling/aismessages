@@ -26,7 +26,6 @@ import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import static dk.tbsalling.aismessages.ais.Decoders.BOOLEAN_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.FLOAT_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_LONG_DECODER;
 
 @SuppressWarnings("serial")
 public class ChannelManagement extends AISMessage {
@@ -266,7 +265,7 @@ public class ChannelManagement extends AISMessage {
         }, new Supplier<MMSI>() {
             @Override
             public MMSI get() {
-                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(ChannelManagement.this.getBits(69, 99)));
+                return MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(ChannelManagement.this.getBits(69, 99)));
             }
         });
 	}
@@ -291,7 +290,7 @@ public class ChannelManagement extends AISMessage {
         }, new Supplier<MMSI>() {
             @Override
             public MMSI get() {
-                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(ChannelManagement.this.getBits(104, 134)));
+                return MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(ChannelManagement.this.getBits(104, 134)));
             }
         });
 	}

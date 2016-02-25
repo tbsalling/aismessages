@@ -22,7 +22,7 @@ import dk.tbsalling.aismessages.dk.tbsalling.util.function.Consumer;
 import dk.tbsalling.aismessages.dk.tbsalling.util.function.Supplier;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_LONG_DECODER;
+import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
 
 @SuppressWarnings("serial")
 public class UTCAndDateInquiry extends AISMessage {
@@ -62,7 +62,7 @@ public class UTCAndDateInquiry extends AISMessage {
         }, new Supplier<MMSI>() {
             @Override
             public MMSI get() {
-                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(UTCAndDateInquiry.this.getBits(40, 70)));
+                return MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(UTCAndDateInquiry.this.getBits(40, 70)));
             }
         });
 	}

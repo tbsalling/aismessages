@@ -23,7 +23,6 @@ import dk.tbsalling.aismessages.dk.tbsalling.util.function.Supplier;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_LONG_DECODER;
 
 /**
  * used by a base station with control authority to configure the scheduling of
@@ -77,7 +76,7 @@ public class AssignedModeCommand extends AISMessage {
         }, new Supplier<MMSI>() {
             @Override
             public MMSI get() {
-                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(AssignedModeCommand.this.getBits(40, 70)));
+                return MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(AssignedModeCommand.this.getBits(40, 70)));
             }
         });
     }
@@ -152,7 +151,7 @@ public class AssignedModeCommand extends AISMessage {
         }, new Supplier<MMSI>() {
             @Override
             public MMSI get() {
-                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(AssignedModeCommand.this.getBits(92, 122)));
+                return MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(AssignedModeCommand.this.getBits(92, 122)));
             }
         });
     }

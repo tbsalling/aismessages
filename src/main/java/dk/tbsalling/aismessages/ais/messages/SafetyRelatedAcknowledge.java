@@ -23,7 +23,6 @@ import dk.tbsalling.aismessages.dk.tbsalling.util.function.Supplier;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_LONG_DECODER;
 
 @SuppressWarnings("serial")
 public class SafetyRelatedAcknowledge extends AISMessage {
@@ -89,7 +88,7 @@ public class SafetyRelatedAcknowledge extends AISMessage {
         }, new Supplier<MMSI>() {
             @Override
             public MMSI get() {
-                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(SafetyRelatedAcknowledge.this.getBits(40, 70)));
+                return MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(SafetyRelatedAcknowledge.this.getBits(40, 70)));
             }
         });
 	}
@@ -139,7 +138,7 @@ public class SafetyRelatedAcknowledge extends AISMessage {
         }, new Supplier<MMSI>() {
             @Override
             public MMSI get() {
-                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(SafetyRelatedAcknowledge.this.getBits(72, 102)));
+                return MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(SafetyRelatedAcknowledge.this.getBits(72, 102)));
             }
         });
 	}
@@ -189,7 +188,7 @@ public class SafetyRelatedAcknowledge extends AISMessage {
         }, new Supplier<MMSI>() {
             @Override
             public MMSI get() {
-                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(SafetyRelatedAcknowledge.this.getBits(104, 134)));
+                return MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(SafetyRelatedAcknowledge.this.getBits(104, 134)));
             }
         });
 	}
@@ -239,7 +238,7 @@ public class SafetyRelatedAcknowledge extends AISMessage {
         }, new Supplier<MMSI>() {
             @Override
             public MMSI get() {
-                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(SafetyRelatedAcknowledge.this.getBits(136, 166)));
+                return MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(SafetyRelatedAcknowledge.this.getBits(136, 166)));
             }
         });
 	}

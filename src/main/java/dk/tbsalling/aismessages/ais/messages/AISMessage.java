@@ -41,7 +41,6 @@ import java.util.TreeMap;
 import java.util.logging.Logger;
 
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_LONG_DECODER;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -255,7 +254,7 @@ public abstract class AISMessage extends CachedDecodedValues implements Serializ
         }, new Supplier<MMSI>() {
             @Override
             public MMSI get() {
-                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(AISMessage.this.getBits(8, 38)));
+                return MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(AISMessage.this.getBits(8, 38)));
             }
         });
 	}
@@ -276,6 +275,18 @@ public abstract class AISMessage extends CachedDecodedValues implements Serializ
             b = decodePayloadToBitString(nmeaMessages);
             bitString = new WeakReference<>(b);
         }
+        return b;
+    }
+
+    protected String getZeroBitStuffedString(Integer endIndex) {
+        String b = getBitString();
+		if (b.length()-endIndex < 0){
+	        StringBuffer c = new StringBuffer(b);
+			for (int i = b.length()-endIndex; i < 0; i++) {
+				c  = c.append("0");
+			}
+			b = c.toString();
+		}
         return b;
     }
 

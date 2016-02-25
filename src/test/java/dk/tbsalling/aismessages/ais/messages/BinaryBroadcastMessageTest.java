@@ -18,7 +18,7 @@ public class BinaryBroadcastMessageTest {
         assertEquals(AISMessageType.BinaryBroadcastMessage, aisMessage.getMessageType());
         BinaryBroadcastMessage message = (BinaryBroadcastMessage) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(366999663L), message.getSourceMmsi());
+        assertEquals(MMSI.valueOf(366999663), message.getSourceMmsi());
         assertEquals((Integer) 1467, message.getDesignatedAreaCode());
         assertEquals((Integer) 8, message.getFunctionalId());
         assertEquals("1000", message.getBinaryData());

@@ -68,3 +68,22 @@ then you can decode it into Java POJO's of type AISMessage like this:
 ```
 
 Read more in the wiki - [https://github.com/tbsalling/aismessages/wiki](https://github.com/tbsalling/aismessages/wiki).
+
+You do not need to compile AISmessages yourself. It is available in Maven Central. So if you are using Maven, 
+all you need to do is add these lines to your pom.xml:
+
+``` xml
+	<dependency>
+	    <groupId>dk.tbsalling</groupId>
+	    <artifactId>aismessages</artifactId>
+	    <version>2.1.0</version>
+	</dependency>
+```
+
+---
+
+**Important compiler note!** Due to a [compiler bug](https://bugs.openjdk.java.net/browse/JDK-8062253) in JDK 8u20, 8u25, and 8u31
+AISmessages can only be compiled with older or newer JDK 8 versions than these faulty ones. The project is confirmed to build with
+Oracle JDK 1.8.0_66.
+
+---

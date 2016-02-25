@@ -26,7 +26,6 @@ import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.STRING_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_LONG_DECODER;
 
 @SuppressWarnings("serial")
 public class ClassBCSStaticDataReport extends AISMessage implements StaticDataReport {
@@ -296,7 +295,7 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
         }, new Supplier<MMSI>() {
             @Override
             public MMSI get() {
-                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(ClassBCSStaticDataReport.this.getBits(132, 162)));
+                return MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(ClassBCSStaticDataReport.this.getBits(132, 162)));
             }
         });
 	}

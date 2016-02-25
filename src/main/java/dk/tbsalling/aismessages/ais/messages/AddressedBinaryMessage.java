@@ -27,7 +27,6 @@ import java.lang.ref.WeakReference;
 import static dk.tbsalling.aismessages.ais.Decoders.BIT_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.BOOLEAN_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_LONG_DECODER;
 
 /**
  * an addressed point-to-point message with unspecified binary payload. The St.
@@ -101,7 +100,7 @@ public class AddressedBinaryMessage extends AISMessage {
         }, new Supplier<MMSI>() {
             @Override
             public MMSI get() {
-                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(AddressedBinaryMessage.this.getBits(40, 70)));
+                return MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(AddressedBinaryMessage.this.getBits(40, 70)));
             }
         });
 	}

@@ -23,7 +23,6 @@ import dk.tbsalling.aismessages.dk.tbsalling.util.function.Supplier;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_LONG_DECODER;
 
 /**
  * Used by a base station to query one or two other AIS transceivers for status messages of specified types.
@@ -68,7 +67,7 @@ public class Interrogation extends AISMessage {
         }, new Supplier<MMSI>() {
             @Override
             public MMSI get() {
-                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(Interrogation.this.getBits(40, 70)));
+                return MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(Interrogation.this.getBits(40, 70)));
             }
         });
 	}
@@ -193,7 +192,7 @@ public class Interrogation extends AISMessage {
         }, new Supplier<MMSI>() {
             @Override
             public MMSI get() {
-                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(Interrogation.this.getBits(110, 140)));
+                return MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(Interrogation.this.getBits(110, 140)));
             }
         });
 	}

@@ -21,47 +21,39 @@ import java.io.Serializable;
 @SuppressWarnings("serial")
 public class MMSI implements Serializable {
 
-	public MMSI(Long mmsi) {
+	public MMSI(int mmsi) {
 		this.mmsi = mmsi;
 	}
 	
-	public static MMSI valueOf(Long mmsi) {
+	public static MMSI valueOf(int mmsi) {
 		return new MMSI(mmsi);
 	}
 	
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((mmsi == null) ? 0 : mmsi.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		MMSI other = (MMSI) obj;
-		if (mmsi == null) {
-			if (other.mmsi != null)
-				return false;
-		} else if (!mmsi.equals(other.mmsi))
-			return false;
-		return true;
-	}
-
 	@Override
 	public String toString() {
 		return "MMSI [mmsi=" + mmsi + "]";
 	}
 
-	public Long getMMSI() {
-	    return mmsi;
+	public Integer getMMSI() {
+	    return Integer.valueOf(mmsi);
 	}
 
-	private final Long mmsi;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MMSI mmsi1 = (MMSI) o;
+
+        if (mmsi != mmsi1.mmsi) return false;
+
+        return true;
+    }
+
+    @Override
+    public int hashCode() {
+        return mmsi;
+    }
+
+    private final int mmsi;
 }

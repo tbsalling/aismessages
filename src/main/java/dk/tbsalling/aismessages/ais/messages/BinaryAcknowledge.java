@@ -23,7 +23,6 @@ import dk.tbsalling.aismessages.dk.tbsalling.util.function.Supplier;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_LONG_DECODER;
 
 /**
  * a receipt acknowledgement to the senders of a previous messages of type 6.
@@ -96,7 +95,7 @@ public class BinaryAcknowledge extends AISMessage {
         }, new Supplier<MMSI>() {
             @Override
             public MMSI get() {
-                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(BinaryAcknowledge.this.getBits(40, 70)));
+                return MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(BinaryAcknowledge.this.getBits(40, 70)));
             }
         });
 	}
@@ -146,7 +145,7 @@ public class BinaryAcknowledge extends AISMessage {
         }, new Supplier<MMSI>() {
             @Override
             public MMSI get() {
-                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(BinaryAcknowledge.this.getBits(72, 102)));
+                return MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(BinaryAcknowledge.this.getBits(72, 102)));
             }
         });
 	}
@@ -196,7 +195,7 @@ public class BinaryAcknowledge extends AISMessage {
         }, new Supplier<MMSI>() {
             @Override
             public MMSI get() {
-                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(BinaryAcknowledge.this.getBits(104, 134)));
+                return MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(BinaryAcknowledge.this.getBits(104, 134)));
             }
         });
 	}
@@ -246,7 +245,7 @@ public class BinaryAcknowledge extends AISMessage {
         }, new Supplier<MMSI>() {
             @Override
             public MMSI get() {
-                return MMSI.valueOf(UNSIGNED_LONG_DECODER.apply(BinaryAcknowledge.this.getBits(136, 166)));
+                return MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(BinaryAcknowledge.this.getBits(136, 166)));
             }
         });
 	}
