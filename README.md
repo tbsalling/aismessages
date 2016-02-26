@@ -76,7 +76,7 @@ all you need to do is add these lines to your pom.xml:
 	<dependency>
 	    <groupId>dk.tbsalling</groupId>
 	    <artifactId>aismessages</artifactId>
-	    <version>2.1.0</version>
+	    <version>2.2.1-jdk7-backport</version>
 	</dependency>
 ```
 
