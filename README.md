@@ -9,7 +9,12 @@ navigation and safety messages compliant with ITU 1371 (NMEA armoured AIS messag
 It exhibits lazy decoding and fully decodes tens of thousands of NMEA armoured AIS messages per second per CPU
 core on an Intel i7-based laptop.
 
+Other AIS projects
+---
 In addition to AISmessages, its sister project [AISutils](https://github.com/tbsalling/aisutils) offers higher level functionality such as Tracking and Filtering using AISmessages as a foundation.
+
+There is also [AIScli](https://github.com/tbsalling/aiscli) which allows conversion, filtering, etc. of AIS messages from the command line. AIScli 
+is built on top of both AISmessages and AISutils.
 
 Applications, demos, and talks
 ---
