@@ -1,6 +1,7 @@
 package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
+import dk.tbsalling.aismessages.nmea.exceptions.NMEAParseException;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import org.junit.Test;
 
@@ -25,6 +26,11 @@ public class AISMessageTest {
     @Test(expected = InvalidMessage.class)
     public void canHandleEmptyMessage() {
         AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,00,4*21"));
+    }
+
+    @Test(expected = NMEAParseException.class)
+    public void canHandleUnparsableNMEAMessage() {
+        AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,13K6th002u9@8P0DEVv2M1up02Pl,0*740008,2*09"));
     }
 
     @Test
