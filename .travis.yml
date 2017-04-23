@@ -1,16 +1,12 @@
 language: java
-sudo: true
+sudo: false
 jdk:
   - oraclejdk8
-+before_install:
-  - sudo apt-get update -qq
-  - sudo apt-get install --only-upgrade -y oracle-java8-installer
-  - java -version
 deploy:
   provider: releases
   api_key:
     secure: FAroFwBsfriqKs60bhuuqHJZ+27eYjxObBKuYi5YAK9g51a0CDSJ3Rum/NDKgbVWirhdR30REM8IHgHUuE0yvm3/JDv2lgiOdDUS9gdkYof6qLO21TZ2Ye36UU2+Cin7vIEzq3g2oMYCjKBQa6Z0gI1jNJa9qVyHV9M6G/BbBLE=
-  file: target/aismessages-2.0.0-SNAPSHOT.jar
+  file: target/aismessages-2.2.3-SNAPSHOT.jar
   skip_cleanup: true
   on:
     repo: tbsalling/aismessages
