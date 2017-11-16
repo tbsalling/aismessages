@@ -50,24 +50,31 @@ public class BinaryBroadcastMessage extends AISMessage {
     }
 
     @SuppressWarnings("unused")
+	public int getSpare() {
+        return getDecodedValue(() -> spare, ref -> spare = ref, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40)));
+	}
+
+    @SuppressWarnings("unused")
 	public Integer getDesignatedAreaCode() {
-        return getDecodedValue(() -> designatedAreaCode, value -> designatedAreaCode = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 52)));
+        return getDecodedValue(() -> designatedAreaCode, value -> designatedAreaCode = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(40, 50)));
 	}
 
     @SuppressWarnings("unused")
 	public Integer getFunctionalId() {
-        return getDecodedValue(() -> functionalId, value -> functionalId = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(52, 56)));
+        return getDecodedValue(() -> functionalId, value -> functionalId = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(50, 56)));
 	}
 
     @SuppressWarnings("unused")
 	public String getBinaryData() {
-        return getDecodedValue(() -> binaryData, value -> binaryData = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(52, 56)));
+        return getDecodedValue(() -> binaryData, value -> binaryData = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(56, getNumberOfBits())));
 	}
 
     @Override
     public String toString() {
         return "BinaryBroadcastMessage{" +
                 "messageType=" + getMessageType() +
+                
+                ", spare=" + getSpare() +
                 ", designatedAreaCode=" + getDesignatedAreaCode() +
                 ", functionalId=" + getFunctionalId() +
                 ", binaryData='" + getBinaryData() + '\'' +
