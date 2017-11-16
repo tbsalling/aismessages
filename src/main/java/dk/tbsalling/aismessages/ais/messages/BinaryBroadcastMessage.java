@@ -50,7 +50,7 @@ public class BinaryBroadcastMessage extends AISMessage {
     }
 
     @SuppressWarnings("unused")
-	public int getSpare() {
+	public Integer getSpare() {
         return getDecodedValue(() -> spare, ref -> spare = ref, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40)));
 	}
 
@@ -73,7 +73,6 @@ public class BinaryBroadcastMessage extends AISMessage {
     public String toString() {
         return "BinaryBroadcastMessage{" +
                 "messageType=" + getMessageType() +
-                
                 ", spare=" + getSpare() +
                 ", designatedAreaCode=" + getDesignatedAreaCode() +
                 ", functionalId=" + getFunctionalId() +
@@ -81,6 +80,7 @@ public class BinaryBroadcastMessage extends AISMessage {
                 "} " + super.toString();
     }
 
+    private transient Integer spare;
     private transient Integer designatedAreaCode;
 	private transient Integer functionalId;
 	private transient String binaryData;
