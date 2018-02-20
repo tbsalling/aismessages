@@ -172,8 +172,12 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
     }
 
     private boolean isComplexType(Class<?> clazz) {
-        if (clazz.isArray() || clazz.isEnum() || clazz.getPackage()==null || !"dk.tbsalling.aismessages.ais.messages.types".equals(clazz.getPackage().getName()))
+        if (clazz.isArray() || clazz.isEnum())
             return false;
+        String classname = clazz.getName();
+        if (!classname.contains(".") || !classname.startsWith("dk.tbsalling.aismessages.ais.messages.types.")) {
+          return false;
+        }
 
         boolean hasGetters = false;
         try {
