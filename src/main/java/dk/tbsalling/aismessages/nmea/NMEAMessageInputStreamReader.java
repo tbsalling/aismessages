@@ -26,13 +26,14 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.util.function.Consumer;
-import java.util.logging.Logger;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
+
+import static java.lang.System.Logger.Level.*;
 
 public class NMEAMessageInputStreamReader {
 
-	private static final Logger log = Logger.getLogger(NMEAMessageInputStreamReader.class.getName());
+	private static final System.Logger LOG = System.getLogger(NMEAMessageInputStreamReader.class.getName());
 
 	public NMEAMessageInputStreamReader(InputStream inputStream, Consumer<? super NMEAMessage> nmeaMessageHandler) {
 		this.nmeaMessageHandler = nmeaMessageHandler;
@@ -44,7 +45,7 @@ public class NMEAMessageInputStreamReader {
 	}
 
 	public void run() throws IOException {
-	    log.info("NMEAMessageInputStreamReader running.");
+	    LOG.log(INFO, "NMEAMessageInputStreamReader running.");
 
 		InputStreamReader reader = new InputStreamReader(inputStream, Charset.defaultCharset());
 		BufferedReader bufferedReader = new BufferedReader(reader);
@@ -53,17 +54,17 @@ public class NMEAMessageInputStreamReader {
 			try {
 				NMEAMessage nmea = NMEAMessage.fromString(string);
 				nmeaMessageHandler.accept(nmea);
-				log.fine("Received: " + nmea.toString());
+				LOG.log(DEBUG, "Received: " + nmea.toString());
 			} catch (InvalidMessage invalidMessageException) {
-				log.warning("Received invalid AIS message: \"" + string + "\"");
+				LOG.log(WARNING, "Received invalid AIS message: \"" + string + "\"");
 			} catch (UnsupportedMessageType unsupportedMessageTypeException) {
-				log.warning("Received unsupported NMEA message: \"" + string + "\"");
+				LOG.log(WARNING, "Received unsupported NMEA message: \"" + string + "\"");
 			} catch (NMEAParseException parseException) {
-				log.warning("Received non-compliant NMEA message: \"" + string + "\"");
+				LOG.log(WARNING, "Received non-compliant NMEA message: \"" + string + "\"");
 			}
 		}
 
-		log.info("NMEAMessageInputStreamReader stopping.");
+		LOG.log(INFO, "NMEAMessageInputStreamReader stopping.");
 	}
 
 	public final Boolean isStopRequested() {

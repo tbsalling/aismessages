@@ -20,8 +20,6 @@ import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
-import java.util.logging.Logger;
-
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
 import static java.lang.String.format;
 
@@ -37,8 +35,6 @@ import static java.lang.String.format;
 
 @SuppressWarnings("serial")
 public class DataLinkManagement extends AISMessage {
-
-    private static final Logger log = Logger.getLogger(DataLinkManagement.class.getName());
 
     public DataLinkManagement(NMEAMessage[] nmeaMessages) {
         super(nmeaMessages);

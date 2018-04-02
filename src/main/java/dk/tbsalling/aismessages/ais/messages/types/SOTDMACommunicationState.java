@@ -17,14 +17,14 @@
 package dk.tbsalling.aismessages.ais.messages.types;
 
 import java.io.Serializable;
-import java.util.logging.Logger;
 
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
+import static java.lang.System.Logger.Level.WARNING;
 import static java.util.Objects.requireNonNull;
 
 public class SOTDMACommunicationState extends CommunicationState implements Serializable {
 
-	private transient static final Logger LOG = Logger.getLogger(SOTDMACommunicationState.class.getName());
+	private static final System.Logger LOG = System.getLogger(SOTDMACommunicationState.class.getName());
 
 	private SOTDMACommunicationState(SyncState syncState, Integer slotTimeout, Integer numberOfReceivedStations, Integer slotNumber, Integer utcHour, Integer utcMinute, Integer slotOffset) {
 		super(syncState);

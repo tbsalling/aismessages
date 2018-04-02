@@ -24,7 +24,9 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
-import java.util.logging.Logger;
+
+import static java.lang.System.Logger.Level.DEBUG;
+import static java.lang.System.Logger.Level.WARNING;
 
 /**
  * This class receives NMEA messages containing armoured and encoded AIS strings.
@@ -37,9 +39,9 @@ import java.util.logging.Logger;
  */
 public class NMEAMessageHandler implements Consumer<NMEAMessage> {
 
-    private static final Logger LOG = Logger.getLogger(NMEAMessageHandler.class.getName());
+	private static final System.Logger LOG = System.getLogger(NMEAMessageHandler.class.getName());
 
-    private final String source;
+	private final String source;
     private final ArrayList<NMEAMessage> messageFragments = new ArrayList<>();
     private final List<Consumer<? super AISMessage>> aisMessageReceivers = new LinkedList<>();
 
@@ -56,48 +58,48 @@ public class NMEAMessageHandler implements Consumer<NMEAMessage> {
      */
     @Override
     public void accept(NMEAMessage nmeaMessage) {
-		LOG.finer("Received for processing: " + nmeaMessage.getRawMessage());
+		LOG.log(DEBUG, "Received for processing: " + nmeaMessage.getRawMessage());
 		
 		if (! nmeaMessage.isValid()) {
-			LOG.warning("NMEA message is invalid: " + nmeaMessage.toString());
+			LOG.log(WARNING, "NMEA message is invalid: " + nmeaMessage.toString());
 			return;
 		}
 		
 		int numberOfFragments = nmeaMessage.getNumberOfFragments();
 		if (numberOfFragments <= 0) {
-			LOG.warning("NMEA message is invalid: " + nmeaMessage.toString());
+			LOG.log(WARNING, "NMEA message is invalid: " + nmeaMessage.toString());
 			messageFragments.clear();
 		} else if (numberOfFragments == 1) {
-			LOG.finest("Handling unfragmented NMEA message");
+			LOG.log(DEBUG, "Handling unfragmented NMEA message");
             AISMessage aisMessage = AISMessage.create(new Metadata(source), nmeaMessage);
             sendToAisMessageReceivers(aisMessage);
 			messageFragments.clear();
 		} else {
 			int fragmentNumber = nmeaMessage.getFragmentNumber();
-			LOG.finest("Handling fragmented NMEA message with fragment number " + fragmentNumber);
+			LOG.log(DEBUG, "Handling fragmented NMEA message with fragment number " + fragmentNumber);
 			if (fragmentNumber < 0) {
-				LOG.warning("Fragment number cannot be negative: " + fragmentNumber + ": " + nmeaMessage.getRawMessage());
+				LOG.log(WARNING, "Fragment number cannot be negative: " + fragmentNumber + ": " + nmeaMessage.getRawMessage());
 				messageFragments.clear();
 			} else if (fragmentNumber > numberOfFragments) {
-				LOG.fine("Fragment number " + fragmentNumber + " higher than expected " + numberOfFragments + ": " + nmeaMessage.getRawMessage());
+				LOG.log(DEBUG, "Fragment number " + fragmentNumber + " higher than expected " + numberOfFragments + ": " + nmeaMessage.getRawMessage());
 				messageFragments.clear();
 			} else {
 				int expectedFragmentNumber = messageFragments.size() + 1;
-				LOG.finest("Expected fragment number is: " + expectedFragmentNumber + ": " + nmeaMessage.getRawMessage());
+				LOG.log(DEBUG, "Expected fragment number is: " + expectedFragmentNumber + ": " + nmeaMessage.getRawMessage());
 				
 				if (expectedFragmentNumber != fragmentNumber) {
-					LOG.fine("Expected fragment number " + expectedFragmentNumber + "; not " + fragmentNumber + ": " + nmeaMessage.getRawMessage());
+					LOG.log(DEBUG, "Expected fragment number " + expectedFragmentNumber + "; not " + fragmentNumber + ": " + nmeaMessage.getRawMessage());
 					messageFragments.clear();
 				} else {
 					messageFragments.add(nmeaMessage);
-					LOG.finest("nmeaMessage.getNumberOfFragments(): " + nmeaMessage.getNumberOfFragments());
-					LOG.finest("messageFragments.size(): " + messageFragments.size());
+					LOG.log(DEBUG, "nmeaMessage.getNumberOfFragments(): " + nmeaMessage.getNumberOfFragments());
+					LOG.log(DEBUG, "messageFragments.size(): " + messageFragments.size());
 					if (nmeaMessage.getNumberOfFragments() == messageFragments.size()) {
                         AISMessage aisMessage = AISMessage.create(new Metadata(source), messageFragments.toArray(new NMEAMessage[messageFragments.size()]));
                         sendToAisMessageReceivers(aisMessage);
 						messageFragments.clear();
 					} else
-						LOG.finest("Fragmented message not yet complete; missing " + (nmeaMessage.getNumberOfFragments() - messageFragments.size()) + " fragment(s).");
+						LOG.log(DEBUG, "Fragmented message not yet complete; missing " + (nmeaMessage.getNumberOfFragments() - messageFragments.size()) + " fragment(s).");
 				}
 			}
 		}
