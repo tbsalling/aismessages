@@ -34,7 +34,7 @@ public class Decoders {
                 valueBits = valueBits.replaceAll("0", "x");
                 valueBits = valueBits.replaceAll("1", "0");
                 valueBits = valueBits.replaceAll("x", "1");
-                value = UNSIGNED_INTEGER_DECODER.apply("-" + valueBits);
+                value = -1 - UNSIGNED_INTEGER_DECODER.apply(valueBits);
             }
             return value;
         }
@@ -44,7 +44,7 @@ public class Decoders {
 
     public static final Function<String, Boolean> BOOLEAN_DECODER = bitString -> "1".equals(bitString.substring(0, 1));
 
-    public static final Function<String, Integer> UNSIGNED_INTEGER_DECODER = bitString -> Integer.parseInt(bitString, 2);
+    public static final Function<String, Integer> UNSIGNED_INTEGER_DECODER = bitString -> Integer.parseUnsignedInt(bitString, 2);
 
     public static final Function<String, Long> UNSIGNED_LONG_DECODER = bitString -> Long.parseLong(bitString, 2);
 
