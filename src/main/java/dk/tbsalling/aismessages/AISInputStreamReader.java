@@ -40,19 +40,18 @@ public class AISInputStreamReader {
         this.nmeaMessageInputStreamReader = new NMEAMessageInputStreamReader(inputStream, this.nmeaMessageHandler::accept);
 	}
 
-	public final synchronized void requestStop() {
-		this.stopRequested = true;
+	public final void requestStop() {
+		this.nmeaMessageInputStreamReader.requestStop();
 	}
 
-    public final synchronized boolean isStopRequested() {
-        return stopRequested;
+    public final boolean isStopRequested() {
+        return this.nmeaMessageInputStreamReader.isStopRequested();
     }
 
     public void run() throws IOException {
         this.nmeaMessageInputStreamReader.run();
 	}
 
-	private boolean stopRequested = false;
     private final NMEAMessageHandler nmeaMessageHandler;
 	private final NMEAMessageInputStreamReader nmeaMessageInputStreamReader;
 }
