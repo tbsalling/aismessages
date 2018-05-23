@@ -51,7 +51,7 @@ public class PositionReportClassAScheduledTest {
         PositionReportClassAScheduled message = (PositionReportClassAScheduled) aisMessage;
         assertEquals(MMSI.valueOf(503175400), message.getSourceMmsi());
         assertEquals(NavigationStatus.Undefined, message.getNavigationStatus());
-        assertEquals(Integer.valueOf(-127), message.getRateOfTurn());
+        assertEquals(Integer.valueOf(-128), message.getRateOfTurn()); // ROT = 1000000b = -128
         assertEquals(Float.valueOf(0.0f), message.getSpeedOverGround());
         assertFalse(message.getPositionAccuracy());
         assertEquals(Float.valueOf(-34.773254f), message.getLatitude());

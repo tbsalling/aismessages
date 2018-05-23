@@ -99,8 +99,8 @@ public class StandardClassBCSPositionReportTest {
         assertFalse(message.getRaimFlag());
         assertTrue(message.getCommunicationStateSelectorFlag());
 
-        CommunicationState communicationState = message.getCommunicationState();
-        assertEquals(SyncState.UTCDirect, communicationState.getSyncState());
+        CommunicationState communicationState = message.getCommunicationState();   // 1100000000000000110b = 3, slot incr = 6
+        assertEquals(SyncState.BaseIndirect, communicationState.getSyncState());
         assertTrue(communicationState instanceof ITDMACommunicationState);
         ITDMACommunicationState itdmaCommunicationState = (ITDMACommunicationState) communicationState;
         assertEquals(Integer.valueOf(0), itdmaCommunicationState.getSlotIncrement());
