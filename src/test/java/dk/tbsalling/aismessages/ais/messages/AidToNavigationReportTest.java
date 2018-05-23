@@ -37,7 +37,7 @@ public class AidToNavigationReportTest {
         assertEquals(Integer.valueOf(0), message.getToStarboard());
         assertEquals(true, message.getVirtualAid());
         assertEquals(false, message.getPositionAccurate());
-        assertEquals(Float.valueOf(-23.936691f), message.getLatitude());
+        assertEquals(Float.valueOf(-23.936693f), message.getLatitude()); // lat = 111001001001101101001100000b = -23,9366933333
         assertEquals(Float.valueOf(151.44344f), message.getLongitude());
         assertEquals(PositionFixingDevice.Surveyed, message.getPositionFixingDevice());
         assertFalse(message.getRaimFlag());
@@ -64,7 +64,7 @@ public class AidToNavigationReportTest {
         assertEquals(Integer.valueOf(0), message.getToStarboard());
         assertEquals(true, message.getVirtualAid());
         assertEquals(false, message.getPositionAccurate());
-        assertEquals(Float.valueOf(-23.917383f), message.getLatitude());
+        assertEquals(Float.valueOf(-23.917385f), message.getLatitude());
         assertEquals(Float.valueOf(151.49791f), message.getLongitude());
         assertEquals(PositionFixingDevice.Surveyed, message.getPositionFixingDevice());
         assertFalse(message.getRaimFlag());
@@ -85,7 +85,7 @@ public class AidToNavigationReportTest {
         assertEquals("S6A GLT VIRTU ATON", dataFields.get("name"));
         assertEquals(false, dataFields.get("positionAccurate"));
         assertEquals(151.49791f, dataFields.get("longitude"));
-        assertEquals(-23.917383f, dataFields.get("latitude"));
+        assertEquals(-23.917385f, dataFields.get("latitude"));
         assertEquals(0, dataFields.get("toStern"));
         assertEquals(0, dataFields.get("toBow"));
         assertEquals(0, dataFields.get("toPort"));

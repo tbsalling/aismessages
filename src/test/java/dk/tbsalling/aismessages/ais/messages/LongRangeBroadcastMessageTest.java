@@ -47,7 +47,7 @@ public class LongRangeBroadcastMessageTest {
         assertFalse(message.getRaim());
         assertEquals(NavigationStatus.Moored, message.getNavigationalStatus());
         assertEquals(Float.valueOf(176.18167f), message.getLongitude());
-        assertEquals(Float.valueOf(-37.65167f), message.getLatitude());
+        assertEquals(Float.valueOf(-37.65333f), message.getLatitude());
         assertEquals(Float.valueOf(0f), message.getSpeedOverGround(), 1e-5);
         assertEquals(Float.valueOf(11f), message.getCourseOverGround(), 1e-5);
     }
