@@ -46,7 +46,7 @@ public class Decoders {
 
     public static final Function<String, Integer> UNSIGNED_INTEGER_DECODER = bitString -> Integer.parseUnsignedInt(bitString, 2);
 
-    public static final Function<String, Long> UNSIGNED_LONG_DECODER = bitString -> Long.parseLong(bitString, 2);
+    public static final Function<String, Long> UNSIGNED_LONG_DECODER = bitString -> Long.parseUnsignedLong(bitString, 2);
 
     public static final Function<String, Float> UNSIGNED_FLOAT_DECODER = bitString -> Float.valueOf(UNSIGNED_INTEGER_DECODER.apply(bitString));
 
