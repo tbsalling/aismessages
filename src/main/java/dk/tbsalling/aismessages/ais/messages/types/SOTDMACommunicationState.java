@@ -19,7 +19,7 @@ package dk.tbsalling.aismessages.ais.messages.types;
 import java.io.Serializable;
 import java.util.logging.Logger;
 
-import static dk.tbsalling.aismessages.ais.Decoders.INTEGER_DECODER;
+import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
 import static java.util.Objects.requireNonNull;
 
 public class SOTDMACommunicationState extends CommunicationState implements Serializable {
@@ -43,27 +43,27 @@ public class SOTDMACommunicationState extends CommunicationState implements Seri
 		if (bitString.length() != 19 || !bitString.matches("(0|1)*"))
 			return null;
 
-		SyncState syncState = SyncState.fromInteger(INTEGER_DECODER.apply(bitString.substring(0, 2)));
-		final int slotTimeout = INTEGER_DECODER.apply(bitString.substring(2, 5));
+		SyncState syncState = SyncState.fromInteger(UNSIGNED_INTEGER_DECODER.apply(bitString.substring(0, 2)));
+		final int slotTimeout = UNSIGNED_INTEGER_DECODER.apply(bitString.substring(2, 5));
 		Integer numberOfReceivedStations=null, slotNumber=null, utcHour=null, utcMinute=null, slotOffset=null;
 
 		if (slotTimeout == 3 || slotTimeout == 5 || slotTimeout == 7) {
-			numberOfReceivedStations = INTEGER_DECODER.apply(bitString.substring(5, 19));
-			if (numberOfReceivedStations < 0 || numberOfReceivedStations > 16383)
+			numberOfReceivedStations = UNSIGNED_INTEGER_DECODER.apply(bitString.substring(5, 19));
+			if (numberOfReceivedStations > 16383)
 				LOG.warning("numberOfReceivedStations: " + numberOfReceivedStations + ": Out of range.");
 		} else if (slotTimeout == 2 || slotTimeout == 4 || slotTimeout == 6) {
-			slotNumber = INTEGER_DECODER.apply(bitString.substring(5, 19));
-			if (slotNumber < 0 || slotNumber > 2249)
+			slotNumber = UNSIGNED_INTEGER_DECODER.apply(bitString.substring(5, 19));
+			if (slotNumber > 2249)
 				LOG.warning("slotNumber: " + slotNumber + ": Out of range.");
 		}  else if (slotTimeout == 1) {
-			utcHour = INTEGER_DECODER.apply(bitString.substring(5, 10));
-			if (utcHour < 0 || utcHour > 23)
+			utcHour = UNSIGNED_INTEGER_DECODER.apply(bitString.substring(5, 10));
+			if (utcHour > 23)
 				LOG.warning("utcHour: " + utcHour + ": Out of range.");
-			utcMinute = INTEGER_DECODER.apply(bitString.substring(10, 17));
-			if (utcMinute < 0 || utcMinute > 59)
+			utcMinute = UNSIGNED_INTEGER_DECODER.apply(bitString.substring(10, 17));
+			if (utcMinute > 59)
 				LOG.warning("utcMinute: " + utcMinute + ": Out of range.");
 		}  else if (slotTimeout == 0) {
-			slotOffset = INTEGER_DECODER.apply(bitString.substring(5, 19));
+			slotOffset = UNSIGNED_INTEGER_DECODER.apply(bitString.substring(5, 19));
 		}
 
 		return new SOTDMACommunicationState(syncState, slotTimeout, numberOfReceivedStations, slotNumber, utcHour, utcMinute, slotOffset);
