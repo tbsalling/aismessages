@@ -19,7 +19,7 @@ package dk.tbsalling.aismessages.ais.messages.types;
 import java.io.Serializable;
 
 import static dk.tbsalling.aismessages.ais.Decoders.BOOLEAN_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.INTEGER_DECODER;
+import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
 import static java.util.Objects.requireNonNull;
 
 public class ITDMACommunicationState extends CommunicationState implements Serializable {
@@ -39,9 +39,9 @@ public class ITDMACommunicationState extends CommunicationState implements Seria
 			return null;
 
 		return new ITDMACommunicationState(
-			SyncState.fromInteger(INTEGER_DECODER.apply(bitString.substring(0, 2))),
-			INTEGER_DECODER.apply(bitString.substring(2, 15)),
-			INTEGER_DECODER.apply(bitString.substring(15, 18)),
+			SyncState.fromInteger(UNSIGNED_INTEGER_DECODER.apply(bitString.substring(0, 2))),
+			UNSIGNED_INTEGER_DECODER.apply(bitString.substring(2, 15)),
+			UNSIGNED_INTEGER_DECODER.apply(bitString.substring(15, 18)),
 			BOOLEAN_DECODER.apply(bitString.substring(18, 19))
 		);
 	}
