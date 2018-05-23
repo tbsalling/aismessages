@@ -28,6 +28,7 @@ import java.io.InputStreamReader;
 import java.nio.charset.Charset;
 import java.util.function.Consumer;
 import java.util.logging.Logger;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 public class NMEAMessageInputStreamReader {
 
@@ -38,8 +39,8 @@ public class NMEAMessageInputStreamReader {
 		this.inputStream = inputStream;
 	}
 
-	public final synchronized void requestStop() {
-		this.stopRequested = true;
+	public final void requestStop() {
+		this.stopRequested.set(true);
 	}
 
 	public void run() throws IOException {
@@ -48,7 +49,7 @@ public class NMEAMessageInputStreamReader {
 		InputStreamReader reader = new InputStreamReader(inputStream, Charset.defaultCharset());
 		BufferedReader bufferedReader = new BufferedReader(reader);
 		String string;
-		while ((string = bufferedReader.readLine()) != null && !stopRequested()) {
+		while ((string = bufferedReader.readLine()) != null && !isStopRequested()) {
 			try {
 				NMEAMessage nmea = NMEAMessage.fromString(string);
 				nmeaMessageHandler.accept(nmea);
@@ -65,11 +66,11 @@ public class NMEAMessageInputStreamReader {
 		log.info("NMEAMessageInputStreamReader stopping.");
 	}
 
-	private synchronized Boolean stopRequested() {
-		return this.stopRequested;
+	public final Boolean isStopRequested() {
+		return this.stopRequested.get();
 	}
 
-	private Boolean stopRequested = false;
+	private final AtomicBoolean stopRequested = new AtomicBoolean(false);
 	private final InputStream inputStream;
 	private final Consumer<? super NMEAMessage> nmeaMessageHandler;
 }
