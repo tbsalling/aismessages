@@ -43,6 +43,24 @@ public class Metadata implements Serializable {
                 '}';
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Metadata metadata = (Metadata) o;
+
+        if (source != null ? !source.equals(metadata.source) : metadata.source != null) return false;
+        return received != null ? received.equals(metadata.received) : metadata.received == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = source != null ? source.hashCode() : 0;
+        result = 31 * result + (received != null ? received.hashCode() : 0);
+        return result;
+    }
+
     // TODO Add decoder version from maven
 	// TODO Add decode status and error descriptions
 	private final static String decoderVersion = AISMessage.VERSION;

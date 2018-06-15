@@ -9,6 +9,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.time.Instant;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
@@ -21,6 +22,27 @@ public class AISMessageTest {
     public void testEquals() {
           assertEquals(AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,13AkSB0000PhAmJPoTMoiQFT0D1:,0*5E")), AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,13AkSB0000PhAmJPoTMoiQFT0D1:,0*5E")));
           assertNotEquals(AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,13AkSB0000PhAmJPoTMoiQFT0D1:,0*5E")), AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,13AkSB0000PhAmHPoTNcp1Fp0D17,0*00")));
+    }
+
+    @Test
+    public void testEqualsWithMetadata() {
+        String source = "test";
+        Instant time = Instant.now();
+        NMEAMessage nmea = NMEAMessage.fromString("!AIVDM,1,1,,A,13aEOK?P00PD2wVMdLDRhgvL289?,0*26");
+
+        Metadata meta1 = new Metadata(source, time);
+        Metadata meta2 = new Metadata(source, time);
+        Metadata meta3 = new Metadata(source, time.plusMillis(1000));
+
+        AISMessage ais1 = AISMessage.create(meta1, nmea);
+        AISMessage ais2 = AISMessage.create(meta2, nmea);
+        AISMessage ais3 = AISMessage.create(meta3, nmea);
+
+        assertEquals(meta1, meta2);
+        assertNotEquals(meta1, meta3);
+
+        assertEquals(ais1, ais2);
+        assertNotEquals(ais1, ais3);
     }
 
     @Test(expected = InvalidMessage.class)
