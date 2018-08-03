@@ -28,6 +28,7 @@ import static dk.tbsalling.aismessages.ais.Decoders.FLOAT_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.STRING_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_FLOAT_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
+import static dk.tbsalling.aismessages.ais.Decoders.INTEGER_DECODER;
 
 @SuppressWarnings("serial")
 public class ExtendedClassBEquipmentPositionReport extends AISMessage implements ExtendedDynamicDataReport {
@@ -63,6 +64,11 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
 	}
 
     @SuppressWarnings("unused")
+    public Integer getRawSpeedOverGround() {
+        return UNSIGNED_INTEGER_DECODER.apply(getBits(46, 55));
+    }
+
+    @SuppressWarnings("unused")
 	public Boolean getPositionAccurate() {
         return getDecodedValue(() -> positionAccurate, value -> positionAccurate = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(56, 57)));
 	}
@@ -73,14 +79,29 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
 	}
 
     @SuppressWarnings("unused")
+    public Integer getRawLatitude() {
+        return INTEGER_DECODER.apply(getBits(85, 112));
+    }
+
+    @SuppressWarnings("unused")
 	public Float getLongitude() {
         return getDecodedValue(() -> longitude, value -> longitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(57, 85)) / 600000f);
 	}
 
     @SuppressWarnings("unused")
+    public Integer getRawLongitude() {
+        return INTEGER_DECODER.apply(getBits(57, 85));
+    }
+
+    @SuppressWarnings("unused")
 	public Float getCourseOverGround() {
         return getDecodedValue(() -> courseOverGround, value -> courseOverGround = value, () -> Boolean.TRUE, () -> UNSIGNED_FLOAT_DECODER.apply(getBits(112, 124)) / 10f);
 	}
+
+    @SuppressWarnings("unused")
+    public Integer getRawCourseOverGround() {
+        return UNSIGNED_INTEGER_DECODER.apply(getBits(112, 124));
+    }
 
     @SuppressWarnings("unused")
 	public Integer getTrueHeading() {

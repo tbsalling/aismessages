@@ -75,6 +75,11 @@ public abstract class PositionReport extends AISMessage implements ExtendedDynam
 	}
 
     @SuppressWarnings("unused")
+	public Integer getRawSpeedOverGround() {
+        return UNSIGNED_INTEGER_DECODER.apply(getBits(50, 60));
+    }
+
+    @SuppressWarnings("unused")
 	public Boolean getPositionAccuracy() {
         return getDecodedValue(() -> positionAccuracy, value -> positionAccuracy = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(60, 61)));
 	}
@@ -85,14 +90,29 @@ public abstract class PositionReport extends AISMessage implements ExtendedDynam
 	}
 
     @SuppressWarnings("unused")
+    public Integer getRawLatitude() {
+        return INTEGER_DECODER.apply(getBits(89, 116));
+    }
+
+    @SuppressWarnings("unused")
 	public Float getLongitude() {
         return getDecodedValue(() -> longitude, value -> longitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(61, 89)) / 600000f);
 	}
 
     @SuppressWarnings("unused")
+    public Integer getRawLongitude() {
+        return INTEGER_DECODER.apply(getBits(61, 89));
+    }
+
+    @SuppressWarnings("unused")
 	public Float getCourseOverGround() {
         return getDecodedValue(() -> courseOverGround, value -> courseOverGround = value, () -> Boolean.TRUE, () -> UNSIGNED_FLOAT_DECODER.apply(getBits(116, 128)) / 10f);
 	}
+
+    @SuppressWarnings("unused")
+    public Integer getRawCourseOverGround() {
+        return UNSIGNED_INTEGER_DECODER.apply(getBits(116, 128));
+    }
 
     @SuppressWarnings("unused")
 	public Integer getTrueHeading() {

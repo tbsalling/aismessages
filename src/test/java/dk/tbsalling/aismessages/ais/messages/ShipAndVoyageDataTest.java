@@ -40,6 +40,7 @@ public class ShipAndVoyageDataTest {
         assertEquals(Integer.valueOf(14), message.getToPort());
         assertEquals(PositionFixingDevice.Gps, message.getPositionFixingDevice());
         assertEquals(Float.valueOf("8.3"), message.getDraught());
+        assertEquals((Integer) 83 , message.getRawDraught());
         assertEquals("06-03 19:00", message.getEta());
         assertEquals("SFO 70", message.getDestination());
         assertFalse(message.getDataTerminalReady());

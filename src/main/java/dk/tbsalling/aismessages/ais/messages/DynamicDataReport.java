@@ -21,7 +21,11 @@ package dk.tbsalling.aismessages.ais.messages;
 
 public interface DynamicDataReport extends DataReport {
 	Float getLatitude();
+	Integer getRawLatitude();
 	Float getLongitude();
+	Integer getRawLongitude();
 	Float getSpeedOverGround();
+	Integer getRawSpeedOverGround();
 	Float getCourseOverGround();
+	Integer getRawCourseOverGround();
 }

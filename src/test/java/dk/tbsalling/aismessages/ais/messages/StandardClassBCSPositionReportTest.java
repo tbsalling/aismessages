@@ -26,10 +26,14 @@ public class StandardClassBCSPositionReportTest {
         assertEquals(MMSI.valueOf(367430530), message.getSourceMmsi());
         assertEquals("00000000", message.getRegionalReserved1());
         assertEquals((Float) 0.0f, message.getSpeedOverGround());
+        assertEquals((Integer) 0, message.getRawSpeedOverGround());
         assertFalse(message.getPositionAccurate());
         assertEquals(Float.valueOf(37.785034f), message.getLatitude());
+        assertEquals((Integer)22671021, message.getRawLatitude());
         assertEquals(Float.valueOf(-122.26732f), message.getLongitude());
+        assertEquals((Integer)(-73360392), message.getRawLongitude());
         assertEquals(Float.valueOf(0.0f), message.getCourseOverGround());
+        assertEquals((Integer) 0, message.getRawCourseOverGround());
         assertEquals((Integer) 511, message.getTrueHeading());
         assertEquals((Integer) 55, message.getSecond());
         assertEquals("00", message.getRegionalReserved2());

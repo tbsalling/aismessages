@@ -32,8 +32,11 @@ public class PositionReportClassAScheduledTest {
         assertEquals((Float) 7.8f, message.getSpeedOverGround());
         assertTrue(message.getPositionAccuracy());
         assertEquals(Float.valueOf(56.56692f), message.getLatitude());
+        assertEquals((Integer) 33940151, message.getRawLatitude());
         assertEquals(Float.valueOf(11.071096f), message.getLongitude());
+        assertEquals((Integer) 6642658, message.getRawLongitude());
         assertEquals(Float.valueOf(189.7f), message.getCourseOverGround());
+        assertEquals((Integer) 1897, message.getRawCourseOverGround());
         assertEquals((Integer) 46, message.getSecond());
         assertEquals((Integer) 186, message.getTrueHeading());
         assertEquals(ManeuverIndicator.NotAvailable, message.getSpecialManeuverIndicator());
