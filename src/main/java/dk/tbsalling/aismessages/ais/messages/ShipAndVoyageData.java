@@ -25,6 +25,10 @@ import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.Optional;
+
 import static dk.tbsalling.aismessages.ais.Decoders.BOOLEAN_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.STRING_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_FLOAT_DECODER;
@@ -139,10 +143,47 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
         return getDecodedValue(() -> etaMinute, value -> etaMinute = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(288, 294)));
     }
 
+    @Deprecated
     @SuppressWarnings("unused")
 	public String getEta() {
         return String.format("%02d-%02d %02d:%02d", this.getEtaDay(), this.getEtaMonth(), this.getEtaHour(), this.getEtaMinute());
 	}
+
+    /**
+     * The vessel AIS ETA, with the year filled in based on the metadata received time.
+     * If the AIS Month and day are the received date or later, the first calendar date after the received is used for the year.
+     * Unavailable hour (24) or minute (60) will be treated as 0
+     * Examples:
+     * Received on 2018-06-01 and ETA AIS is 06-03, this will return 2018-06-03
+     * Received on 2018-12-31 and ETA AIS is 01-02, this will return 2019-01-02
+     * Received on 2018-06-01 and ETA AIS is 05-31, this will return 2019-05-31
+     * Received on 2018-06-01 and ETA AIS is 06-03 24:00, this will return 2018-06-01 00:00
+     * Received on 2018-06-01 and ETA AIS is 06-03 12:60, this will return 2018-06-03 12:00
+     */
+    @SuppressWarnings("unused")
+	public Optional<ZonedDateTime> getEtaAfterReceived() {
+        Metadata meta = this.getMetadata();
+        ZonedDateTime received = (meta == null) ? null : meta.getReceived().atZone(ZoneOffset.UTC);
+        if(received == null) {
+            return Optional.empty();
+        }
+        int month = this.getEtaMonth();
+        int day = this.getEtaDay();
+        int hour = this.getEtaHour() == 24 ? 0 : this.getEtaHour();
+        int minute = this.getEtaMinute() == 60 ? 0 : this.getEtaMinute();
+        if(month <= 0 || month > 12 || day <= 0 || day > 31 || hour < 0 || hour >= 24 || minute < 0 || minute >= 60) {
+            return Optional.empty();
+        } else {
+            // determine year according to rules from the javadoc
+            int year;
+            if(month < received.getMonthValue() || (month == received.getMonthValue() && day < received.getDayOfMonth())) {
+                year = received.getYear() + 1;
+            } else {
+                year = received.getYear();
+            }
+            return Optional.of(ZonedDateTime.of(year, month, day, hour, minute, 0, 0, ZoneOffset.UTC));
+        }
+    }
 
     @SuppressWarnings("unused")
 	public Float getDraught() {
@@ -177,7 +218,7 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
                 ", toStarboard=" + getToStarboard() +
                 ", toPort=" + getToPort() +
                 ", positionFixingDevice=" + getPositionFixingDevice() +
-                ", eta='" + getEta() + '\'' +
+                ", eta='" + String.format("%02d-%02d %02d:%02d", this.getEtaDay(), this.getEtaMonth(), this.getEtaHour(), this.getEtaMinute()) + '\'' +
                 ", draught=" + getDraught() +
                 ", destination='" + getDestination() + '\'' +
                 ", dataTerminalReady=" + getDataTerminalReady() +

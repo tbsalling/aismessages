@@ -9,6 +9,9 @@ import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import org.junit.Test;
 
 import java.security.NoSuchAlgorithmException;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.util.Optional;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -46,13 +49,15 @@ public class ShipAndVoyageDataTest {
         assertEquals((Integer) 6, message.getEtaDay());
         assertEquals((Integer) 19, message.getEtaHour());
         assertEquals((Integer) 0, message.getEtaMinute());
+        assertEquals(Optional.empty(), message.getEtaAfterReceived());
         assertEquals("SFO 70", message.getDestination());
         assertFalse(message.getDataTerminalReady());
     }
 
     @Test
     public void canDecode2() {
-        AISMessage aisMessage = AISMessage.create(
+        ZonedDateTime now = ZonedDateTime.of(2010, 12, 31, 23, 59, 59, 0, ZoneOffset.UTC);
+        AISMessage aisMessage = AISMessage.create(new Metadata("Test", now.toInstant()),
             NMEAMessage.fromString("!AIVDM,2,1,0,B,539S:k40000000c3G04PPh63<00000000080000o1PVG2uGD:00000000000,0*34"),
             NMEAMessage.fromString("!AIVDM,2,2,0,B,00000000000,2*27")
         );
@@ -78,6 +83,7 @@ public class ShipAndVoyageDataTest {
         assertEquals((Integer) 14, message.getEtaDay());
         assertEquals((Integer) 20, message.getEtaHour());
         assertEquals((Integer) 10, message.getEtaMinute());
+        assertEquals(Optional.of(ZonedDateTime.of(2011, 5, 14, 20, 10, 0, 0, ZoneOffset.UTC)), message.getEtaAfterReceived());
         assertEquals("", message.getDestination());
         assertFalse(message.getDataTerminalReady());
     }
