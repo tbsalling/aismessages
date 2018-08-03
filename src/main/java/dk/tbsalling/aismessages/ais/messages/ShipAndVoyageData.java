@@ -127,6 +127,11 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
 	}
 
     @SuppressWarnings("unused")
+    public Integer getRawDraught() {
+        return UNSIGNED_INTEGER_DECODER.apply(getBits(294, 302));
+    }
+
+    @SuppressWarnings("unused")
 	public String getDestination() {
         return getDecodedValue(() -> destination, value -> destination = value, () -> Boolean.TRUE, () -> STRING_DECODER.apply(getBits(302, 422)));
 	}

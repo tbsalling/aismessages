@@ -29,7 +29,9 @@ public class LongRangeBroadcastMessageTest {
         assertEquals(Float.valueOf(137.02333f), message.getLongitude());
         assertEquals(Float.valueOf(4.84f), message.getLatitude());
         assertEquals(Float.valueOf(57f), message.getSpeedOverGround(), 1e-5);
+        assertEquals((Integer)57, message.getRawSpeedOverGround());
         assertEquals(Float.valueOf(167f), message.getCourseOverGround(), 1e-5);
+        assertEquals((Integer)167, message.getRawCourseOverGround());
     }
 
     @Test
@@ -49,7 +51,9 @@ public class LongRangeBroadcastMessageTest {
         assertEquals(Float.valueOf(176.18167f), message.getLongitude());
         assertEquals(Float.valueOf(-37.65333f), message.getLatitude());
         assertEquals(Float.valueOf(0f), message.getSpeedOverGround(), 1e-5);
+        assertEquals((Integer)0, message.getRawSpeedOverGround());
         assertEquals(Float.valueOf(11f), message.getCourseOverGround(), 1e-5);
+        assertEquals((Integer)11, message.getRawCourseOverGround());
     }
 
 }

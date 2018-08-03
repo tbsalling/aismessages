@@ -25,6 +25,7 @@ import static dk.tbsalling.aismessages.ais.Decoders.BOOLEAN_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.FLOAT_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_FLOAT_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
+import static dk.tbsalling.aismessages.ais.Decoders.INTEGER_DECODER;
 
 @SuppressWarnings("serial")
 public class StandardSARAircraftPositionReport extends AISMessage implements DynamicDataReport {
@@ -60,6 +61,11 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
 	}
 
     @SuppressWarnings("unused")
+    public Integer getRawSpeedOverGround() {
+        return UNSIGNED_INTEGER_DECODER.apply(getBits(50, 60));
+    }
+
+    @SuppressWarnings("unused")
 	public Boolean getPositionAccurate() {
         return getDecodedValue(() -> positionAccurate, value -> positionAccurate = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(60, 61)));
 	}
@@ -70,14 +76,29 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
 	}
 
     @SuppressWarnings("unused")
+    public Integer getRawLongitude() {
+        return INTEGER_DECODER.apply(getBits(61, 89));
+    }
+
+    @SuppressWarnings("unused")
     public Float getLatitude() {
         return getDecodedValue(() -> latitude, value -> latitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(89, 116)) / 600000f);
+    }
+
+    @SuppressWarnings("unused")
+    public Integer getRawLatitude() {
+        return INTEGER_DECODER.apply(getBits(89, 116));
     }
 
     @SuppressWarnings("unused")
 	public Float getCourseOverGround() {
         return getDecodedValue(() -> courseOverGround, value -> courseOverGround = value, () -> Boolean.TRUE, () -> UNSIGNED_FLOAT_DECODER.apply(getBits(116, 128)) / 10f);
 	}
+
+    @SuppressWarnings("unused")
+    public Integer getRawCourseOverGround() {
+        return UNSIGNED_INTEGER_DECODER.apply(getBits(116, 128));
+    }
 
     @SuppressWarnings("unused")
 	public Integer getSecond() {

@@ -8,6 +8,7 @@ import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import static dk.tbsalling.aismessages.ais.Decoders.BOOLEAN_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.FLOAT_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
+import static dk.tbsalling.aismessages.ais.Decoders.INTEGER_DECODER;
 
 @SuppressWarnings("serial")
 public class LongRangeBroadcastMessage extends AISMessage implements DynamicDataReport {
@@ -56,9 +57,19 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
 	}
 
     @SuppressWarnings("unused")
+    public Integer getRawLongitude() {
+        return INTEGER_DECODER.apply(getBits(44, 62));
+    }
+
+    @SuppressWarnings("unused")
 	public Float getLatitude() {
         return getDecodedValue(() -> latitude, value -> latitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(62, 79)) / 600f);
 	}
+
+    @SuppressWarnings("unused")
+    public Integer getRawLatitude() {
+        return INTEGER_DECODER.apply(getBits(62, 79));
+    }
 
     /**
      * @return Knots (0-62); 63 = not available = default
@@ -68,6 +79,11 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
         return Float.valueOf(getDecodedValue(() -> speed, value -> speed = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(79, 85))));
 	}
 
+    @SuppressWarnings("unused")
+    public Integer getRawSpeedOverGround() {
+        return UNSIGNED_INTEGER_DECODER.apply(getBits(79, 85));
+    }
+
     /**
      * @return Degrees (0-359); 511 = not available = default
      */
@@ -75,6 +91,11 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
 	public Float getCourseOverGround() {
         return Float.valueOf(getDecodedValue(() -> course, value -> course = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(85, 94))));
 	}
+
+    @SuppressWarnings("unused")
+    public Integer getRawCourseOverGround() {
+        return UNSIGNED_INTEGER_DECODER.apply(getBits(85, 94));
+    }
 
     /**
      * @return 0 if reported position latency is less than 5 seconds; 1 if reported position latency is greater than 5 seconds = default
