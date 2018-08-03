@@ -27,7 +27,6 @@ import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import static dk.tbsalling.aismessages.ais.Decoders.BOOLEAN_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.STRING_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.TIME_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_FLOAT_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
 
@@ -116,9 +115,33 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
         return getDecodedValue(() -> positionFixingDevice, value -> positionFixingDevice = value, () -> Boolean.TRUE, () -> PositionFixingDevice.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(270, 274))));
 	}
 
+	/** @return The UTC ETA Month (1-12) 0 = not available. */
+    @SuppressWarnings("unused")
+    public Integer getEtaMonth() {
+        return getDecodedValue(() -> etaMonth, value -> etaMonth = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(274, 278)));
+    }
+
+    /** @return The UTC ETA Day (1-31) 0 = not available. */
+    @SuppressWarnings("unused")
+    public Integer getEtaDay() {
+        return getDecodedValue(() -> etaDay, value -> etaDay = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(278, 283)));
+    }
+
+    /** @return The UTC ETA Hour (0-23) 24 = not available. */
+    @SuppressWarnings("unused")
+    public Integer getEtaHour() {
+        return getDecodedValue(() -> etaHour, value -> etaHour = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(283, 288)));
+    }
+
+    /** @return The UTC ETA Minute (0-59) 60 = not available. */
+    @SuppressWarnings("unused")
+    public Integer getEtaMinute() {
+        return getDecodedValue(() -> etaMinute, value -> etaMinute = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(288, 294)));
+    }
+
     @SuppressWarnings("unused")
 	public String getEta() {
-        return getDecodedValue(() -> eta, value -> eta = value, () -> Boolean.TRUE, () -> TIME_DECODER.apply(getBits(274, 294)));
+        return String.format("%02d-%02d %02d:%02d", this.getEtaDay(), this.getEtaMonth(), this.getEtaHour(), this.getEtaMinute());
 	}
 
     @SuppressWarnings("unused")
@@ -165,7 +188,10 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
     private transient Integer toStarboard;
     private transient Integer toPort;
     private transient PositionFixingDevice positionFixingDevice;
-    private transient String eta;
+    private transient Integer etaMonth;
+    private transient Integer etaDay;
+    private transient Integer etaHour;
+    private transient Integer etaMinute;
     private transient Float draught;
     private transient String destination;
     private transient Boolean dataTerminalReady;

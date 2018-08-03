@@ -121,6 +121,7 @@ public class Decoders {
 
     public static final Function<String, Float> UNSIGNED_FLOAT_DECODER = bitString -> Float.valueOf(UNSIGNED_INTEGER_DECODER.apply(bitString));
 
+    @Deprecated
     public static final Function<String, String> TIME_DECODER = bitString -> {
         Integer month = UNSIGNED_INTEGER_DECODER.apply(bitString.substring(0, 4));
         Integer day = UNSIGNED_INTEGER_DECODER.apply(bitString.substring(4, 9));

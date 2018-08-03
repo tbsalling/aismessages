@@ -41,6 +41,10 @@ public class ShipAndVoyageDataTest {
         assertEquals(PositionFixingDevice.Gps, message.getPositionFixingDevice());
         assertEquals(Float.valueOf("8.3"), message.getDraught());
         assertEquals("06-03 19:00", message.getEta());
+        assertEquals((Integer) 3, message.getEtaMonth());
+        assertEquals((Integer) 6, message.getEtaDay());
+        assertEquals((Integer) 19, message.getEtaHour());
+        assertEquals((Integer) 0, message.getEtaMinute());
         assertEquals("SFO 70", message.getDestination());
         assertFalse(message.getDataTerminalReady());
     }
@@ -69,6 +73,10 @@ public class ShipAndVoyageDataTest {
         assertNull(message.getPositionFixingDevice());
         assertEquals(Float.valueOf("0"), message.getDraught());
         assertEquals("14-05 20:10", message.getEta());
+        assertEquals((Integer) 5, message.getEtaMonth());
+        assertEquals((Integer) 14, message.getEtaDay());
+        assertEquals((Integer) 20, message.getEtaHour());
+        assertEquals((Integer) 10, message.getEtaMinute());
         assertEquals("", message.getDestination());
         assertFalse(message.getDataTerminalReady());
     }
