@@ -1,19 +1,18 @@
 package dk.tbsalling.aismessages.ais.messages.asm;
 
-import dk.tbsalling.aismessages.ais.messages.AISMessage;
 import dk.tbsalling.aismessages.ais.messages.CachedDecodedValues;
 
 import java.io.Serializable;
 
 import static java.util.Objects.requireNonNull;
 
-public class ApplicationSpecificMessage implements Serializable, CachedDecodedValues {
+public abstract class ApplicationSpecificMessage implements Serializable, CachedDecodedValues {
 
     /**
      * Create proper type of ApplicationSpecificMessage
      */
-    public static ApplicationSpecificMessage create(AISMessage owner, int designatedAreaCode, int functionalId) {
-        requireNonNull(owner);
+    public static ApplicationSpecificMessage create(int designatedAreaCode, int functionalId, String binaryData) {
+        requireNonNull(binaryData);
 
         ApplicationSpecificMessage asm = null;
 
@@ -26,25 +25,32 @@ public class ApplicationSpecificMessage implements Serializable, CachedDecodedVa
         } else if (designatedAreaCode == 200) {
             switch (functionalId) {
                 case 10:
-                    asm = new InlandShipStaticAndVoyageRelatedData(owner);
+                    asm = new InlandShipStaticAndVoyageRelatedData(binaryData);
                     break;
             }
         }
 
         if (asm == null)
-            asm = new UnknownApplicationSpecificMessage(owner);
+            asm = new UnknownApplicationSpecificMessage(binaryData);
 
         return asm;
     }
 
-    protected ApplicationSpecificMessage(AISMessage owner) {
-        this.owner = owner;
+    @SuppressWarnings("unused")
+    public abstract Integer getDesignatedAreaCode();
+
+    @SuppressWarnings("unused")
+    public abstract Integer getFunctionalId();
+
+    @SuppressWarnings("unused")
+    public final String getBinaryData() {
+        return binaryData;
     }
 
-    protected String getBits(int beginIndex, int endIndex) {
-        return owner.getBits(beginIndex, endIndex);
+    protected ApplicationSpecificMessage(String binaryData) {
+        this.binaryData = binaryData;
     }
 
-    private final AISMessage owner;
+    private final String binaryData;
 
 }

@@ -1,54 +1,62 @@
 package dk.tbsalling.aismessages.ais.messages.asm;
 
-import dk.tbsalling.aismessages.ais.messages.AISMessage;
-
 import static dk.tbsalling.aismessages.ais.Decoders.STRING_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
 
 public class InlandShipStaticAndVoyageRelatedData extends ApplicationSpecificMessage {
 
-    protected InlandShipStaticAndVoyageRelatedData(AISMessage owner) {
-        super(owner);
+    @Override
+    public final Integer getDesignatedAreaCode() {
+        return 200;
+    }
+
+    @Override
+    public final Integer getFunctionalId() {
+        return 10;
+    }
+
+    protected InlandShipStaticAndVoyageRelatedData(String binaryData) {
+        super(binaryData);
     }
 
     public String getUniqueEuropeanVesselIdentificationNumber() {
-        return getDecodedValue(() -> uniqueEuropeanVesselIdentificationNumber, value -> uniqueEuropeanVesselIdentificationNumber = value, () -> Boolean.TRUE, () -> STRING_DECODER.apply(getBits(56, 104)));
+        return getDecodedValue(() -> uniqueEuropeanVesselIdentificationNumber, value -> uniqueEuropeanVesselIdentificationNumber = value, () -> Boolean.TRUE, () -> STRING_DECODER.apply(getBinaryData().substring(0,48)));
     }
 
     public Float getLengthOfShip() {
-        return getDecodedValue(() -> lengthOfShip, value -> lengthOfShip = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(104, 117)) / 10f);
+        return getDecodedValue(() -> lengthOfShip, value -> lengthOfShip = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(48, 61)) / 10f);
     }
 
     public Float getBeamOfShip() {
-        return getDecodedValue(() -> beamOfShip, value -> beamOfShip = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(117, 127)) / 10f);
+        return getDecodedValue(() -> beamOfShip, value -> beamOfShip = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(61, 71)) / 10f);
     }
 
     public Integer getShipOrCombinationType() {
-        return getDecodedValue(() -> shipOrCombinationType, value -> shipOrCombinationType = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(127, 141)));
+        return getDecodedValue(() -> shipOrCombinationType, value -> shipOrCombinationType = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(71, 85)));
     }
 
     public Integer getHarzardousCargo() {
-        return getDecodedValue(() -> harzardousCargo, value -> harzardousCargo = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(141, 144)));
+        return getDecodedValue(() -> harzardousCargo, value -> harzardousCargo = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(85, 88)));
     }
 
     public Float getDraught() {
-        return getDecodedValue(() -> draught, value -> draught = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(144, 155)) / 100f);
+        return getDecodedValue(() -> draught, value -> draught = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(88, 99)) / 100f);
     }
 
     public Integer getLoaded() {
-        return getDecodedValue(() -> loaded, value -> loaded = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(155, 157)));
+        return getDecodedValue(() -> loaded, value -> loaded = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(99, 101)));
     }
 
     public Integer getQualityOfSpeedInformation() {
-        return getDecodedValue(() -> qualityOfSpeedInformation, value -> qualityOfSpeedInformation = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(157, 158)));
+        return getDecodedValue(() -> qualityOfSpeedInformation, value -> qualityOfSpeedInformation = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(101, 102)));
     }
 
     public Integer getQualityOfCourseInformation() {
-        return getDecodedValue(() -> qualityOfCourseInformation, value -> qualityOfCourseInformation = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(158, 159)));
+        return getDecodedValue(() -> qualityOfCourseInformation, value -> qualityOfCourseInformation = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(102, 103)));
     }
 
     public Integer getQualityOfHeadingInformation() {
-        return getDecodedValue(() -> qualityOfHeadingInformation, value -> qualityOfHeadingInformation = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(159, 160)));
+        return getDecodedValue(() -> qualityOfHeadingInformation, value -> qualityOfHeadingInformation = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(103, 104)));
     }
 
     private transient String uniqueEuropeanVesselIdentificationNumber;

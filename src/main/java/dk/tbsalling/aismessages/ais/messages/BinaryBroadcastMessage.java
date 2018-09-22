@@ -76,7 +76,7 @@ public class BinaryBroadcastMessage extends AISMessage {
     public ApplicationSpecificMessage getApplicationSpecificMessage() {
         ApplicationSpecificMessage asm = this.applicationSpecificMessage == null ? null : this.applicationSpecificMessage.get();
         if (asm == null) {
-            asm = ApplicationSpecificMessage.create(this, getDesignatedAreaCode(), getFunctionalId());
+            asm = ApplicationSpecificMessage.create(getDesignatedAreaCode(), getFunctionalId(), getBinaryData());
             applicationSpecificMessage = new WeakReference<>(asm);
         }
         return asm;

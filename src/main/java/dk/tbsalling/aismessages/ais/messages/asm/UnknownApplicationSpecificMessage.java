@@ -1,11 +1,19 @@
 package dk.tbsalling.aismessages.ais.messages.asm;
 
-import dk.tbsalling.aismessages.ais.messages.AISMessage;
+public final class UnknownApplicationSpecificMessage extends ApplicationSpecificMessage {
 
-public class UnknownApplicationSpecificMessage extends ApplicationSpecificMessage {
+    @Override
+    public Integer getDesignatedAreaCode() {
+        return null;
+    }
 
-    UnknownApplicationSpecificMessage(AISMessage owner) {
-        super(owner);
+    @Override
+    public Integer getFunctionalId() {
+        return null;
+    }
+
+    UnknownApplicationSpecificMessage(String binaryData) {
+        super(binaryData);
     }
 
 }

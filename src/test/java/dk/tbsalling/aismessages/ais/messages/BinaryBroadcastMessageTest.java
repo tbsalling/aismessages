@@ -66,6 +66,8 @@ public class BinaryBroadcastMessageTest {
 
         InlandShipStaticAndVoyageRelatedData asm = (InlandShipStaticAndVoyageRelatedData) binaryBroadcastMessage.getApplicationSpecificMessage();
 
+        assertEquals(200, asm.getDesignatedAreaCode().intValue());
+        assertEquals(10, asm.getFunctionalId().intValue());
         assertEquals("02325170", asm.getUniqueEuropeanVesselIdentificationNumber());
         assertEquals(Float.valueOf(80.0f), asm.getLengthOfShip());
         assertEquals(Float.valueOf(8.2f), asm.getBeamOfShip());
