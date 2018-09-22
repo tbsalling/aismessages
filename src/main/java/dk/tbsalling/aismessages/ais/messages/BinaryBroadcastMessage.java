@@ -16,8 +16,11 @@
 
 package dk.tbsalling.aismessages.ais.messages;
 
+import dk.tbsalling.aismessages.ais.messages.asm.ApplicationSpecificMessage;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+
+import java.lang.ref.WeakReference;
 
 import static dk.tbsalling.aismessages.ais.Decoders.BIT_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
@@ -69,6 +72,16 @@ public class BinaryBroadcastMessage extends AISMessage {
         return getDecodedValue(() -> binaryData, value -> binaryData = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(56, getNumberOfBits())));
 	}
 
+    @SuppressWarnings("unused")
+    public ApplicationSpecificMessage getApplicationSpecificMessage() {
+        ApplicationSpecificMessage asm = this.applicationSpecificMessage == null ? null : this.applicationSpecificMessage.get();
+        if (asm == null) {
+            asm = ApplicationSpecificMessage.create(getDesignatedAreaCode(), getFunctionalId(), getBinaryData());
+            applicationSpecificMessage = new WeakReference<>(asm);
+        }
+        return asm;
+    }
+
     @Override
     public String toString() {
         return "BinaryBroadcastMessage{" +
@@ -84,4 +97,5 @@ public class BinaryBroadcastMessage extends AISMessage {
     private transient Integer designatedAreaCode;
 	private transient Integer functionalId;
 	private transient String binaryData;
+	private transient WeakReference<ApplicationSpecificMessage> applicationSpecificMessage;
 }
