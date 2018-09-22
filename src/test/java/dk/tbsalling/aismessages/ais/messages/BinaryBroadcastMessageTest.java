@@ -54,7 +54,7 @@ public class BinaryBroadcastMessageTest {
 
 
     @Test
-    public void canDecodeDac200Fi10InlandShipStaticAndVoyageRelatedData() {
+    public void canDecodeDac200Fi10InlandShipStaticAndVoyageRelatedData1() {
         AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,839udkPj2d<dteLMt1T0a?bP01L0,0*79"));
         BinaryBroadcastMessage binaryBroadcastMessage = (BinaryBroadcastMessage) aisMessage;
 
@@ -76,6 +76,27 @@ public class BinaryBroadcastMessageTest {
         assertEquals(Integer.valueOf(1), asm.getQualityOfSpeedInformation());
         assertEquals(Integer.valueOf(1), asm.getQualityOfCourseInformation());
         assertEquals(Integer.valueOf(1), asm.getQualityOfHeadingInformation());
+    }
+
+    @Test
+    public void canDecodeDac200Fi10InlandShipStaticAndVoyageRelatedData2() {
+        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,83aDCr@j2P000000029Pt?cm0000,0*5F"));
+        BinaryBroadcastMessage binaryBroadcastMessage = (BinaryBroadcastMessage) aisMessage;
+
+        System.out.println(aisMessage.toString());
+
+        InlandShipStaticAndVoyageRelatedData asm = (InlandShipStaticAndVoyageRelatedData) binaryBroadcastMessage.getApplicationSpecificMessage();
+
+        assertEquals("", asm.getUniqueEuropeanVesselIdentificationNumber());
+        assertEquals(Float.valueOf(110.0f), asm.getLengthOfShip());
+        assertEquals(Float.valueOf(12.0f), asm.getBeamOfShip());
+        assertEquals(Integer.valueOf(8030), asm.getShipOrCombinationType());
+        assertEquals(Integer.valueOf(5), asm.getHarzardousCargo());
+        assertEquals(Float.valueOf(0.0f), asm.getDraught());
+        assertEquals(Integer.valueOf(0), asm.getLoaded());
+        assertEquals(Integer.valueOf(0), asm.getQualityOfSpeedInformation());
+        assertEquals(Integer.valueOf(0), asm.getQualityOfCourseInformation());
+        assertEquals(Integer.valueOf(0), asm.getQualityOfHeadingInformation());
     }
 
 }
