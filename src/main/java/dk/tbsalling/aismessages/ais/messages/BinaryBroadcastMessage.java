@@ -69,7 +69,7 @@ public class BinaryBroadcastMessage extends AISMessage {
 
     @SuppressWarnings("unused")
 	public String getBinaryData() {
-        return getDecodedValue(() -> binaryData, value -> binaryData = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(56, getNumberOfBits())));
+        return getDecodedValueByWeakReference(() -> binaryData, value -> binaryData = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(56, getNumberOfBits())));
 	}
 
     @SuppressWarnings("unused")
@@ -96,6 +96,6 @@ public class BinaryBroadcastMessage extends AISMessage {
     private transient Integer spare;
     private transient Integer designatedAreaCode;
 	private transient Integer functionalId;
-	private transient String binaryData;
+    private transient WeakReference<String> binaryData;
 	private transient WeakReference<ApplicationSpecificMessage> applicationSpecificMessage;
 }
