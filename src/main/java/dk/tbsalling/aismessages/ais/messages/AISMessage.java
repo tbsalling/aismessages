@@ -240,7 +240,7 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         return b;
     }
     
-    protected String getZeroBitStuffedString(Integer endIndex) {
+    protected String getZeroBitStuffedString(int endIndex) {
         String b = getBitString();
 		if (b.length()-endIndex < 0){
 	        StringBuffer c = new StringBuffer(b);
@@ -252,7 +252,7 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         return b;
     }
 
-    protected String getBits(Integer beginIndex, Integer endIndex) {
+    public String getBits(int beginIndex, int endIndex) {
         return getZeroBitStuffedString(endIndex).substring(beginIndex, endIndex);
     }
 

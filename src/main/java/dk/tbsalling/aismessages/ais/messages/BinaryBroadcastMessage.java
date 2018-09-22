@@ -17,6 +17,7 @@
 package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.asm.ApplicationSpecificMessage;
+import dk.tbsalling.aismessages.ais.messages.asm.ApplicationSpecificMessageEnvelope;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
@@ -35,7 +36,7 @@ import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
  * 
  */
 @SuppressWarnings("serial")
-public class BinaryBroadcastMessage extends AISMessage {
+public class BinaryBroadcastMessage extends AISMessage implements ApplicationSpecificMessageEnvelope {
 
     public BinaryBroadcastMessage(NMEAMessage[] nmeaMessages) {
         super(nmeaMessages);
@@ -76,7 +77,7 @@ public class BinaryBroadcastMessage extends AISMessage {
     public ApplicationSpecificMessage getApplicationSpecificMessage() {
         ApplicationSpecificMessage asm = this.applicationSpecificMessage == null ? null : this.applicationSpecificMessage.get();
         if (asm == null) {
-            asm = ApplicationSpecificMessage.create(getDesignatedAreaCode(), getFunctionalId(), getBinaryData());
+            asm = ApplicationSpecificMessage.create(this, getDesignatedAreaCode(), getFunctionalId());
             applicationSpecificMessage = new WeakReference<>(asm);
         }
         return asm;
