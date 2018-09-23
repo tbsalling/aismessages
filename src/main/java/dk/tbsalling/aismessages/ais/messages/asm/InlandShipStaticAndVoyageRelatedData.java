@@ -5,18 +5,8 @@ import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
 
 public class InlandShipStaticAndVoyageRelatedData extends ApplicationSpecificMessage {
 
-    @Override
-    public final Integer getDesignatedAreaCode() {
-        return 200;
-    }
-
-    @Override
-    public final Integer getFunctionalId() {
-        return 10;
-    }
-
-    protected InlandShipStaticAndVoyageRelatedData(String binaryData) {
-        super(binaryData);
+    protected InlandShipStaticAndVoyageRelatedData(int designatedAreaCode, int functionalId, String binaryData) {
+        super(designatedAreaCode, functionalId, binaryData);
     }
 
     public String getUniqueEuropeanVesselIdentificationNumber() {

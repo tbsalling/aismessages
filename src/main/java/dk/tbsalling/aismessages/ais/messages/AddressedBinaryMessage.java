@@ -16,15 +16,14 @@
 
 package dk.tbsalling.aismessages.ais.messages;
 
+import dk.tbsalling.aismessages.ais.messages.asm.ApplicationSpecificMessage;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import java.lang.ref.WeakReference;
 
-import static dk.tbsalling.aismessages.ais.Decoders.BIT_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.BOOLEAN_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
+import static dk.tbsalling.aismessages.ais.Decoders.*;
 
 /**
  * an addressed point-to-point message with unspecified binary payload. The St.
@@ -88,6 +87,23 @@ public class AddressedBinaryMessage extends AISMessage {
         return getDecodedValueByWeakReference(() -> binaryData, ref -> binaryData = ref, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(88, getNumberOfBits())));
 	}
 
+    @SuppressWarnings("unused")
+    public ApplicationSpecificMessage getApplicationSpecificMessage() {
+        ApplicationSpecificMessage asm = this.applicationSpecificMessage == null ? null : this.applicationSpecificMessage.get();
+        if (asm == null) {
+            asm = ApplicationSpecificMessage.create(getDesignatedAreaCode(), getFunctionalId(), getBinaryData());
+            applicationSpecificMessage = new WeakReference<>(asm);
+        }
+
+        if (asm.getDesignatedAreaCode() >= 0 && asm.getDesignatedAreaCode() != this.getDesignatedAreaCode().intValue())
+            throw new IllegalStateException("Implementation error: DAC of AISMessage does not match ASM: " + asm.getDesignatedAreaCode() + " " + this.getDesignatedAreaCode());
+
+        if (asm.getFunctionalId() >= 0 && asm.getFunctionalId() != this.getFunctionalId().intValue())
+            throw new IllegalStateException("Implementation error: FI of AISMessage does not match ASM: " + asm.getFunctionalId() + " " + this.getFunctionalId());
+
+        return asm;
+    }
+
     @Override
     public String toString() {
         return "AddressedBinaryMessage{" +
@@ -109,4 +125,5 @@ public class AddressedBinaryMessage extends AISMessage {
     private transient Integer designatedAreaCode;
     private transient Integer functionalId;
     private transient WeakReference<String> binaryData;
+    private transient WeakReference<ApplicationSpecificMessage> applicationSpecificMessage;
 }

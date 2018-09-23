@@ -25,32 +25,40 @@ public abstract class ApplicationSpecificMessage implements Serializable, Cached
         } else if (designatedAreaCode == 200) {
             switch (functionalId) {
                 case 10:
-                    asm = new InlandShipStaticAndVoyageRelatedData(binaryData);
+                    asm = new InlandShipStaticAndVoyageRelatedData(designatedAreaCode, functionalId, binaryData);
                     break;
             }
         }
 
         if (asm == null)
-            asm = new UnknownApplicationSpecificMessage(binaryData);
+            asm = new UnknownApplicationSpecificMessage(designatedAreaCode, functionalId, binaryData);
 
         return asm;
     }
 
     @SuppressWarnings("unused")
-    public abstract Integer getDesignatedAreaCode();
+    public final int getDesignatedAreaCode() {
+        return designatedAreaCode;
+    };
 
     @SuppressWarnings("unused")
-    public abstract Integer getFunctionalId();
+    public final int getFunctionalId() {
+        return functionalId;
+    }
 
     @SuppressWarnings("unused")
     public final String getBinaryData() {
         return binaryData;
     }
 
-    protected ApplicationSpecificMessage(String binaryData) {
+    protected ApplicationSpecificMessage(int designatedAreaCode, int functionalId, String binaryData) {
+        this.designatedAreaCode = designatedAreaCode;
+        this.functionalId = functionalId;
         this.binaryData = binaryData;
     }
 
+    private final int designatedAreaCode;
+    private final int functionalId;
     private final String binaryData;
 
 }

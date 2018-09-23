@@ -79,6 +79,13 @@ public class BinaryBroadcastMessage extends AISMessage {
             asm = ApplicationSpecificMessage.create(getDesignatedAreaCode(), getFunctionalId(), getBinaryData());
             applicationSpecificMessage = new WeakReference<>(asm);
         }
+
+        if (asm.getDesignatedAreaCode() != this.getDesignatedAreaCode().intValue())
+            throw new IllegalStateException("Implementation error: DAC of AISMessage does not match ASM: " + asm.getDesignatedAreaCode() + " " + this.getDesignatedAreaCode());
+
+        if (asm.getFunctionalId() != this.getFunctionalId().intValue())
+            throw new IllegalStateException("Implementation error: FI of AISMessage does not match ASM: " + asm.getFunctionalId() + " " + this.getFunctionalId());
+
         return asm;
     }
 
