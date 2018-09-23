@@ -18,8 +18,11 @@ public abstract class ApplicationSpecificMessage implements Serializable, Cached
 
         if (designatedAreaCode == 1) {
             switch (functionalId) {
+                case 20:
+                    asm = new BerthingData(designatedAreaCode, functionalId, binaryData);
+                    break;
                 case 24:
-                    //      asm = ExtendedShipStaticAndVoyageRelatedData.create
+                    asm = new ExtendedShipStaticAndVoyageRelatedData(designatedAreaCode, functionalId, binaryData);
                     break;
             }
         } else if (designatedAreaCode == 200) {
