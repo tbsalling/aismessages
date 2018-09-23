@@ -10,6 +10,11 @@ public abstract class ApplicationSpecificMessage implements Serializable, Cached
 
     /**
      * Create proper type of ApplicationSpecificMessage
+     *
+     * @param designatedAreaCode Designated area code.
+     * @param functionalId Functional ID
+     * @param binaryData Binary data
+     * @return Application Specific Message
      */
     public static ApplicationSpecificMessage create(int designatedAreaCode, int functionalId, String binaryData) {
         requireNonNull(binaryData);
