@@ -29,6 +29,9 @@ public abstract class ApplicationSpecificMessage implements Serializable, Cached
                 case 24:
                     asm = new ExtendedShipStaticAndVoyageRelatedData(designatedAreaCode, functionalId, binaryData);
                     break;
+                case 40:
+                    asm = new NumberOfPersonsOnBoard(designatedAreaCode, functionalId, binaryData);
+                    break;
             }
         } else if (designatedAreaCode == 200) {
             switch (functionalId) {
