@@ -5,6 +5,7 @@ import dk.tbsalling.aismessages.ais.messages.asm.InlandShipStaticAndVoyageRelate
 import dk.tbsalling.aismessages.ais.messages.asm.UnknownApplicationSpecificMessage;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
+import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import org.junit.Test;
 
@@ -113,4 +114,14 @@ public class BinaryBroadcastMessageTest {
         assertEquals(Integer.valueOf(0), inlandMessage.getQualityOfHeadingInformation());
     }
 
+
+    @Test(expected = InvalidMessage.class)
+    public void failsWithInvalidMessageWhenDecodingShortMessage() {
+        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,83aDCr@,0*5F"));
+        BinaryBroadcastMessage binaryBroadcastMessage = (BinaryBroadcastMessage) aisMessage;
+
+        ApplicationSpecificMessage asm = binaryBroadcastMessage.getApplicationSpecificMessage();
+
+        System.out.println(aisMessage);
+    }
 }
