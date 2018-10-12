@@ -16,14 +16,17 @@
 
 package dk.tbsalling.aismessages.ais.messages;
 
+import dk.tbsalling.aismessages.ais.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.ais.messages.asm.ApplicationSpecificMessage;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import java.lang.ref.WeakReference;
 
 import static dk.tbsalling.aismessages.ais.Decoders.BIT_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
+import static java.lang.String.format;
 
 /**
  * broadcast message with unspecified binary payload. The St. Lawrence Seaway
@@ -46,6 +49,30 @@ public class BinaryBroadcastMessage extends AISMessage {
     }
 
     protected void checkAISMessage() {
+        final AISMessageType messageType = getMessageType();
+        if (messageType != AISMessageType.BinaryBroadcastMessage)
+            throw new UnsupportedMessageType(messageType.getCode());
+
+        final int numberOfBits = getNumberOfBits();
+
+        StringBuffer message = new StringBuffer();
+
+        if (numberOfBits <= 56) {
+            message.append(format("Message of type %s should be at least 56 bits long; not %d.", messageType, numberOfBits));
+
+            if (numberOfBits >= 40)
+                message.append(format(" Unparseable binary payload: \"%s\".", getBits(40, numberOfBits)));
+        }
+
+        if (numberOfBits > 1008)
+            message.append(format("Message of type %s should be at least 56 bits long; not %d.", messageType, numberOfBits));
+
+        if (message.length() > 0) {
+            if (numberOfBits >= 38)
+                message.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().getMMSI()));
+
+            throw new InvalidMessage(message.toString());
+        }
     }
 
     public final AISMessageType getMessageType() {
