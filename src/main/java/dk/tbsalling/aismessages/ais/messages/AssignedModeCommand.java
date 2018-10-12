@@ -18,9 +18,13 @@ package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
+import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
+import java.util.stream.IntStream;
+
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
+import static java.lang.String.format;
 
 /**
  * used by a base station with control authority to configure the scheduling of
@@ -47,7 +51,23 @@ public class AssignedModeCommand extends AISMessage {
         super(nmeaMessages, bitString);
     }
 
+    @Override
     protected void checkAISMessage() {
+        super.checkAISMessage();
+
+        final StringBuffer errorMessage = new StringBuffer();
+
+        final int numberOfBits = getNumberOfBits();
+
+        if (IntStream.of(96, 144).noneMatch(l -> numberOfBits == l))
+            errorMessage.append(format("Message of type %s should be exactly 96 or 144 bits long; not %d.", getMessageType(), numberOfBits));
+
+        if (errorMessage.length() > 0) {
+            if (numberOfBits >= 38)
+                errorMessage.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().getMMSI()));
+
+            throw new InvalidMessage(errorMessage.toString());
+        }
     }
 
     public final AISMessageType getMessageType() {

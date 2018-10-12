@@ -18,9 +18,13 @@ package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
+import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
+import java.util.stream.IntStream;
+
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
+import static java.lang.String.format;
 
 /**
  * a receipt acknowledgement to the senders of a previous messages of type 6.
@@ -41,7 +45,23 @@ public class BinaryAcknowledge extends AISMessage {
         super(nmeaMessages, bitString);
     }
 
+    @Override
     protected void checkAISMessage() {
+        super.checkAISMessage();
+
+        final StringBuffer errorMessage = new StringBuffer();
+
+        final int numberOfBits = getNumberOfBits();
+
+        if (IntStream.of(72, 104, 136, 168).noneMatch(l -> numberOfBits == l))
+            errorMessage.append(format("Message of type %s should be exactly 72, 104, 136 or 168 bits long; not %d.", getMessageType(), numberOfBits));
+
+        if (errorMessage.length() > 0) {
+            if (numberOfBits >= 38)
+                errorMessage.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().getMMSI()));
+
+            throw new InvalidMessage(errorMessage.toString());
+        }
     }
 
     public final AISMessageType getMessageType() {

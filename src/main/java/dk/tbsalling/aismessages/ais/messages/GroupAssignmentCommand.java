@@ -16,16 +16,12 @@
 
 package dk.tbsalling.aismessages.ais.messages;
 
-import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
-import dk.tbsalling.aismessages.ais.messages.types.ReportingInterval;
-import dk.tbsalling.aismessages.ais.messages.types.ShipType;
-import dk.tbsalling.aismessages.ais.messages.types.StationType;
-import dk.tbsalling.aismessages.ais.messages.types.TxRxMode;
+import dk.tbsalling.aismessages.ais.messages.types.*;
+import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
-import static dk.tbsalling.aismessages.ais.Decoders.FLOAT_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.STRING_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
+import static dk.tbsalling.aismessages.ais.Decoders.*;
+import static java.lang.String.format;
 
 /**
  * intended to be broadcast by a competent authority (an AIS network-control
@@ -45,7 +41,23 @@ public class GroupAssignmentCommand extends AISMessage {
         super(nmeaMessages, bitString);
     }
 
+    @Override
     protected void checkAISMessage() {
+        super.checkAISMessage();
+
+        final StringBuffer errorMessage = new StringBuffer();
+
+        final int numberOfBits = getNumberOfBits();
+
+        if (numberOfBits != 160)
+            errorMessage.append(format("Message of type %s should be at exactly 160 bits long; not %d.", getMessageType(), numberOfBits));
+
+        if (errorMessage.length() > 0) {
+            if (numberOfBits >= 38)
+                errorMessage.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().getMMSI()));
+
+            throw new InvalidMessage(errorMessage.toString());
+        }
     }
 
     public final AISMessageType getMessageType() {

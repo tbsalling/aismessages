@@ -87,9 +87,6 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         if (getMessageType() != nmeaMessageType) {
             throw new UnsupportedMessageType(nmeaMessageType.getCode());
         }
-        if (!isValid()) {
-             throw new InvalidMessage("Invalid AIS message");
-        }
         checkAISMessage();
     }
 
@@ -101,13 +98,6 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         AISMessageType nmeaMessageType = decodeMessageType();
         if (getMessageType() != nmeaMessageType) {
             throw new UnsupportedMessageType(nmeaMessageType.getCode());
-        }
-        if (!isValid()) {
-            StringBuffer sb = new StringBuffer();
-            for (NMEAMessage nmeaMessage : nmeaMessages) {
-                sb.append(nmeaMessage);
-            }
-            throw new InvalidMessage("Invalid AIS message: " + sb.toString());
         }
         checkAISMessage();
     }
@@ -191,7 +181,23 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         return hasGetters;
     }
 
-    protected abstract void checkAISMessage();
+    protected void checkAISMessage() {
+        StringBuffer message = new StringBuffer();
+
+        final String bitString = getBitString();
+
+        if (bitString.length() < 6)
+            message.append(String.format("Message is too short to determine message type: %d bits.", bitString.length()));
+
+        final int messageType = Integer.parseInt(bitString.substring(0, 6), 2);
+        if (messageType < AISMessageType.MINIMUM_CODE || messageType > AISMessageType.MAXIMUM_CODE)
+            message.append(String.format("Unsupported message type: %d.", messageType));
+        else if (messageType != getMessageType().getCode())
+            message.append(String.format("Expected message type: %d, not %d.", getMessageType().getCode(), messageType));
+
+        if (message.length() > 0)
+            throw new InvalidMessage(message.toString());
+    }
 
     public NMEAMessage[] getNmeaMessages() {
         return nmeaMessages;
@@ -401,177 +407,20 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         return aisMessageConstructor.apply(nmeaMessages, bitString);
     }
 
+    private Boolean isValid = null;
+
     public boolean isValid() {
-        final String bitString = getBitString();
-
-        if (bitString.length() < 6) {
-            LOG.warning("Message is too short: " + bitString.length() + " bits.");
-            return Boolean.FALSE;
+        if (isValid == null) {
+            try {
+                checkAISMessage();
+                isValid = Boolean.TRUE;
+            } catch (RuntimeException e) {
+                LOG.warning(e.getMessage());
+                isValid = Boolean.FALSE;
+            }
         }
 
-        int messageType = Integer.parseInt(bitString.substring(0, 6), 2);
-        if (messageType < AISMessageType.MINIMUM_CODE || messageType > AISMessageType.MAXIMUM_CODE) {
-            LOG.warning("Unsupported message type: " + messageType);
-            return Boolean.FALSE;
-        }
-
-        int actualMessageLength = bitString.length();
-        switch (messageType) {
-            case 1:
-                if (actualMessageLength != 168) {
-                    LOG.warning("Message type 1: Illegal message length: " + bitString.length() + " bits.");
-                    return Boolean.FALSE;
-                }
-                break;
-            case 2:
-                if (actualMessageLength != 168) {
-                    LOG.warning("Message type 2: Illegal message length: " + bitString.length() + " bits.");
-                    return Boolean.FALSE;
-                }
-                break;
-            case 3:
-                if (actualMessageLength != 168) {
-                    LOG.warning("Message type 3: Illegal message length: " + bitString.length() + " bits.");
-                    return Boolean.FALSE;
-                }
-                break;
-            case 4:
-                if (actualMessageLength != 168) return Boolean.FALSE;
-                break;
-            case 5:
-                if (actualMessageLength != 424 && actualMessageLength != 422) {
-                    LOG.warning("Message type 5: Illegal message length: " + bitString.length() + " bits.");
-                    return Boolean.FALSE;
-                }
-                break;
-            case 6:
-                if (actualMessageLength > 1008) {
-                    LOG.warning("Message type 6: Illegal message length: " + bitString.length() + " bits.");
-                    return Boolean.FALSE;
-                }
-                break;
-            case 7:
-                if (actualMessageLength != 72 && actualMessageLength != 104 && actualMessageLength != 136 && actualMessageLength != 168) {
-                    LOG.warning("Message type 7: Illegal message length: " + bitString.length() + " bits.");
-                    return Boolean.FALSE;
-                }
-                break;
-            case 8:
-                if (actualMessageLength > 1008) {
-                    LOG.warning("Message type 8: Illegal message length: " + bitString.length() + " bits.");
-                    return Boolean.FALSE;
-                }
-                break;
-            case 9:
-                if (actualMessageLength != 168) {
-                    LOG.warning("Message type 9: Illegal message length: " + bitString.length() + " bits.");
-                    return Boolean.FALSE;
-                }
-                break;
-            case 10:
-                if (actualMessageLength != 72) {
-                    LOG.warning("Message type 10: Illegal message length: " + bitString.length() + " bits.");
-                    return Boolean.FALSE;
-                }
-                break;
-            case 11:
-            	if (actualMessageLength != 168) return Boolean.FALSE;
-                break;
-            case 12:
-                if (actualMessageLength > 1008) {
-                    LOG.warning("Message type 12: Illegal message length: " + bitString.length() + " bits.");
-                    return Boolean.FALSE;
-                }
-                break;
-            case 13:
-                if (actualMessageLength != 72 && actualMessageLength != 104 && actualMessageLength != 136 && actualMessageLength != 168) {
-                    LOG.warning("Message type 13: Illegal message length: " + bitString.length() + " bits.");
-                    return Boolean.FALSE;
-                }
-                break;
-            case 14:
-                if (actualMessageLength > 1008) {
-                    LOG.warning("Message type 14: Illegal message length: " + bitString.length() + " bits.");
-                    return Boolean.FALSE;
-                }
-                break;
-            case 15:
-                if (actualMessageLength != 88 && actualMessageLength != 110 && actualMessageLength != 112 && actualMessageLength != 160) return Boolean.FALSE;
-                break;
-            case 16:
-                if (actualMessageLength != 96 && actualMessageLength != 144) {
-                    LOG.warning("Message type 16: Illegal message length: " + bitString.length() + " bits.");
-                    return Boolean.FALSE;
-                }
-                break;
-            case 17:
-                if (actualMessageLength < 80 || actualMessageLength > 816) {
-                    LOG.warning("Message type 17: Illegal message length: " + bitString.length() + " bits.");
-                    return Boolean.FALSE;
-                }
-                break;
-            case 18:
-                if (actualMessageLength != 168) {
-                    LOG.warning("Message type 18: Illegal message length: " + bitString.length() + " bits.");
-                    return Boolean.FALSE;
-                }
-                break;
-            case 19:
-                if (actualMessageLength != 312) {
-                    LOG.warning("Message type 19: Illegal message length: " + bitString.length() + " bits.");
-                    return Boolean.FALSE;
-                }
-                break;
-            case 20:
-                if (actualMessageLength < 72 || actualMessageLength > 160) {
-                    LOG.warning("Message type 20: Illegal message length: " + bitString.length() + " bits.");
-                    return Boolean.FALSE;
-                }
-                break;
-            case 21:
-                if (actualMessageLength < 272  || actualMessageLength > 360) {
-                    LOG.warning("Message type 21: Illegal message length: " + bitString.length() + " bits.");
-                    return Boolean.FALSE;
-                }
-                break;
-            case 22:
-                if (actualMessageLength != 168) {
-                    LOG.warning("Message type 22: Illegal message length: " + bitString.length() + " bits.");
-                    return Boolean.FALSE;
-                }
-                break;
-            case 23:
-                if (actualMessageLength != 160) {
-                    LOG.warning("Message type 23: Illegal message length: " + bitString.length() + " bits.");
-                    return Boolean.FALSE;
-                }
-                break;
-            case 24:
-                if (actualMessageLength != 160 && actualMessageLength != 168 && actualMessageLength != 158 ) {
-                    LOG.warning("Message type 24: Illegal message length: " + bitString.length() + " bits.");
-                    return Boolean.FALSE;
-                }
-                break;
-            case 25:
-                if (actualMessageLength > 168) {
-                    LOG.warning("Message type 25: Illegal message length: " + bitString.length() + " bits.");
-                    return Boolean.FALSE;
-                }
-                break;
-            case 26:
-            	// ??
-                break;
-            case 27:
-                if (actualMessageLength != 96 && actualMessageLength != 168) {
-                    LOG.warning("Message type 27: Illegal message length: " + bitString.length() + " bits.");
-                    return Boolean.FALSE;
-                }
-                break;
-            default:
-                return Boolean.FALSE;
-        }
-
-        return Boolean.TRUE;
+        return isValid.booleanValue();
     }
 
     /** Decode an encoded six-bit string into a binary string of 0's and 1's */

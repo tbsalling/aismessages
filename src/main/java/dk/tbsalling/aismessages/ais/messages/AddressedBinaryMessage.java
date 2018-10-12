@@ -19,11 +19,13 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.messages.asm.ApplicationSpecificMessage;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
+import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import java.lang.ref.WeakReference;
 
 import static dk.tbsalling.aismessages.ais.Decoders.*;
+import static java.lang.String.format;
 
 /**
  * an addressed point-to-point message with unspecified binary payload. The St.
@@ -45,7 +47,29 @@ public class AddressedBinaryMessage extends AISMessage {
         super(nmeaMessages, bitString);
     }
 
+    @Override
     protected void checkAISMessage() {
+        super.checkAISMessage();
+
+        final int numberOfBits = getNumberOfBits();
+        final StringBuffer message = new StringBuffer();
+
+        if (numberOfBits <= 72) {
+            message.append(format("Message of type %s should be at least 72 bits long; not %d.", getMessageType(), numberOfBits));
+
+            if (numberOfBits >= 40)
+                message.append(format(" Unparseable binary payload: \"%s\".", getBits(40, numberOfBits)));
+        }
+
+        if (numberOfBits > 1008)
+            message.append(format("Message of type %s should be at most 1008 bits long; not %d.", getMessageType(), numberOfBits));
+
+        if (message.length() > 0) {
+            if (numberOfBits >= 38)
+                message.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().getMMSI()));
+
+            throw new InvalidMessage(message.toString());
+        }
     }
 
     public final AISMessageType getMessageType() {

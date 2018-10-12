@@ -17,18 +17,11 @@
 package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.exceptions.UnsupportedMessageType;
-import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
-import dk.tbsalling.aismessages.ais.messages.types.IMO;
-import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
-import dk.tbsalling.aismessages.ais.messages.types.ShipType;
-import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
+import dk.tbsalling.aismessages.ais.messages.types.*;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
-import static dk.tbsalling.aismessages.ais.Decoders.BOOLEAN_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.STRING_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_FLOAT_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
+import static dk.tbsalling.aismessages.ais.Decoders.*;
 
 /**
  * Message has a total of 424 bits, occupying two AIVDM sentences. In practice,
@@ -57,7 +50,7 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
         }
         final int numberOfBits = getNumberOfBits();
         if (numberOfBits != 424 && numberOfBits != 422) {
-            throw new InvalidMessage("Message of type " + messageType + " expected to be 424 bits long; not " + numberOfBits);
+            throw new InvalidMessage("Message of type " + messageType + " expected to be 422 or 424 bits long; not " + numberOfBits);
         }
     }
 

@@ -16,7 +16,6 @@
 
 package dk.tbsalling.aismessages.ais.messages;
 
-import dk.tbsalling.aismessages.ais.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.ais.messages.asm.ApplicationSpecificMessage;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
@@ -48,30 +47,27 @@ public class BinaryBroadcastMessage extends AISMessage {
         super(nmeaMessages, bitString);
     }
 
+    @Override
     protected void checkAISMessage() {
-        final AISMessageType messageType = getMessageType();
-        if (messageType != AISMessageType.BinaryBroadcastMessage)
-            throw new UnsupportedMessageType(messageType.getCode());
+        super.checkAISMessage();
+
+        final StringBuffer errorMessage = new StringBuffer();
 
         final int numberOfBits = getNumberOfBits();
 
-        StringBuffer message = new StringBuffer();
-
         if (numberOfBits <= 56) {
-            message.append(format("Message of type %s should be at least 56 bits long; not %d.", messageType, numberOfBits));
+            errorMessage.append(format("Message of type %s should be at least 56 bits long; not %d.", getMessageType(), numberOfBits));
 
             if (numberOfBits >= 40)
-                message.append(format(" Unparseable binary payload: \"%s\".", getBits(40, numberOfBits)));
-        }
+                errorMessage.append(format(" Unparseable binary payload: \"%s\".", getBits(40, numberOfBits)));
+        } else if (numberOfBits > 1008)
+            errorMessage.append(format("Message of type %s should be at least 56 bits long; not %d.", getMessageType(), numberOfBits));
 
-        if (numberOfBits > 1008)
-            message.append(format("Message of type %s should be at least 56 bits long; not %d.", messageType, numberOfBits));
-
-        if (message.length() > 0) {
+        if (errorMessage.length() > 0) {
             if (numberOfBits >= 38)
-                message.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().getMMSI()));
+                errorMessage.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().getMMSI()));
 
-            throw new InvalidMessage(message.toString());
+            throw new InvalidMessage(errorMessage.toString());
         }
     }
 
