@@ -83,10 +83,11 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         requireNonNull(nmeaMessages);
         check(nmeaMessages);
         this.nmeaMessages = nmeaMessages;
+
         AISMessageType nmeaMessageType = decodeMessageType();
-        if (getMessageType() != nmeaMessageType) {
+        if (getMessageType() != nmeaMessageType)
             throw new UnsupportedMessageType(nmeaMessageType.getCode());
-        }
+
         checkAISMessage();
     }
 
@@ -181,6 +182,12 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         return hasGetters;
     }
 
+    /**
+     * This method performs a rudimentary sanity check of the AIS data payload contained in the NMEA sentence(s).
+     * These tests are mainly based on bitwise message length, even though other types of tests may occur.
+     *
+     * @throws InvalidMessage if the AIS payload of the NMEAmessage(s) is invalid.
+     */
     protected void checkAISMessage() {
         StringBuffer message = new StringBuffer();
 
@@ -291,7 +298,8 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
      * attach metadata.
      * @param metadata Meta data
      * @param nmeaMessages NMEA messages
-     * @return AISMessage
+     * @throws InvalidMessage if the AIS payload of the NMEAmessage(s) is invalid
+     * @return AISMessage the AIS message
      */
     public static AISMessage create(Metadata metadata, NMEAMessage... nmeaMessages) {
         AISMessage aisMessage = create(nmeaMessages);
@@ -302,7 +310,8 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
     /**
      * Create proper type of AISMessage from 1..n NMEA messages.
      * @param nmeaMessages NMEA messages
-     * @return AIS message
+     * @throws InvalidMessage if the AIS payload of the NMEAmessage(s) is invalid
+     * @return AISMessage the AIS message
      */
     public static AISMessage create(NMEAMessage... nmeaMessages) {
         BiFunction<NMEAMessage[], String, AISMessage> aisMessageConstructor;
@@ -405,22 +414,6 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         }
 
         return aisMessageConstructor.apply(nmeaMessages, bitString);
-    }
-
-    private Boolean isValid = null;
-
-    public boolean isValid() {
-        if (isValid == null) {
-            try {
-                checkAISMessage();
-                isValid = Boolean.TRUE;
-            } catch (RuntimeException e) {
-                LOG.warning(e.getMessage());
-                isValid = Boolean.FALSE;
-            }
-        }
-
-        return isValid.booleanValue();
     }
 
     /** Decode an encoded six-bit string into a binary string of 0's and 1's */
