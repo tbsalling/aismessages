@@ -33,7 +33,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.BiFunction;
-import java.util.logging.Logger;
 import java.util.stream.Stream;
 
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
