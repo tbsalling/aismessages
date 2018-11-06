@@ -1,5 +1,7 @@
 language: java
 sudo: false
+jdk:
+  - oraclejdk9
 deploy:
   provider: releases
   api_key:
@@ -10,4 +12,3 @@ deploy:
     repo: tbsalling/aismessages
     tags: true
     all_branches: true
-
