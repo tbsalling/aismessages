@@ -2,16 +2,16 @@
  * AISMessages
  * - a java-based library for decoding of AIS messages from digital VHF radio traffic related
  * to maritime navigation and safety in compliance with ITU 1371.
- * 
+ *
  * (C) Copyright 2011-2013 by S-Consult ApS, DK31327490, http://s-consult.dk, Denmark.
- * 
+ *
  * Released under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
  * For details of this license see the nearby LICENCE-full file, visit http://creativecommons.org/licenses/by-nc-sa/3.0/
  * or send a letter to Creative Commons, 171 Second Street, Suite 300, San Francisco, California, 94105, USA.
- * 
+ *
  * NOT FOR COMMERCIAL USE!
  * Contact sales@s-consult.dk to obtain a commercially licensed version of this software.
- * 
+ *
  */
 
 package dk.tbsalling.aismessages.ais.messages;
@@ -22,9 +22,6 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
-import java.beans.IntrospectionException;
-import java.beans.Introspector;
-import java.beans.PropertyDescriptor;
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
@@ -37,16 +34,18 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.BiFunction;
 import java.util.logging.Logger;
+import java.util.stream.Stream;
 
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
+import static java.lang.reflect.Modifier.isPublic;
 import static java.util.Objects.requireNonNull;
 
 /**
  * The AISMessage class models a complete and self-contained AIS message.
- *
+ * <p>
  * If the AISMessage was created from received NMEA strings, then the original
  * NMEA strings are cached, together with the decoded values of the message.
- *
+ * <p>
  * Lazy extraction of values.
  *
  * @author tbsalling
@@ -62,15 +61,21 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         System.err.print("\n" + "AISMessages v" + VERSION + " // Copyright (c) 2011- by S-Consult ApS, Denmark, CVR DK31327490. http://s-consult.dk.\n" + "\n" + "This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License. To view a copy of\n" + "this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/ or send a letter to Creative Commons, 171 Second Street,\n" + "Suite 300, San Francisco, California, 94105, USA.\n" + "\n" + "NOT FOR COMMERCIAL USE!\n" + "Contact sales@s-consult.dk to obtain commercially licensed software.\n" + "\n");
     }
 
-    /** The NMEA messages which represent this AIS message */
+    /**
+     * The NMEA messages which represent this AIS message
+     */
     private NMEAMessage[] nmeaMessages;
 
     private Metadata metadata;
 
-    /** Payload expanded to string of 0's and 1's. Use weak reference to allow GC anytime. */
+    /**
+     * Payload expanded to string of 0's and 1's. Use weak reference to allow GC anytime.
+     */
     private transient WeakReference<String> bitString = new WeakReference<>(null);
 
-    /** Length of bitString */
+    /**
+     * Length of bitString
+     */
     private transient int numberOfBits = -1;
 
     private transient Integer repeatIndicator;
@@ -109,6 +114,7 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
 
     /**
      * Compute a SHA-1 message digest of this AISmessage. Suitable for e.g. doublet discovery and filtering.
+     *
      * @return Message digest
      * @throws NoSuchAlgorithmException if SHA-1 algorithm is not accessible
      */
@@ -123,45 +129,44 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
     /**
      * @return a map of data field name and values.
      */
-    public  Map<String, Object> dataFields() {
-        HashMap<String,Object> map = new HashMap<>();
-        try {
-            PropertyDescriptor[] propertyDescriptors = Introspector.getBeanInfo(this.getClass()).getPropertyDescriptors();
-            for (PropertyDescriptor propertyDescriptor : propertyDescriptors) {
-                if (!"class".equals(propertyDescriptor.getName())) {
-                    Method readMethod = propertyDescriptor.getReadMethod();
-
-                    Class<?> returnType = readMethod.getReturnType();
-                    if (isComplexType(returnType)) {
-                        Object complexValue = readMethod.invoke(this);
-                        if (complexValue != null) {
-                            PropertyDescriptor[] propertyDescriptors2 = Introspector.getBeanInfo(returnType).getPropertyDescriptors();
-                            for (PropertyDescriptor pd2 : propertyDescriptors2) {
-                                if (!"class".equals(pd2.getName()))
-                                    map.put(propertyDescriptor.getName() + "." + pd2.getName(), pd2.getReadMethod().invoke(complexValue));
-                            }
-                        }
-                    } else if (Class.class.equals(returnType)) {
-                        Object value = readMethod.invoke(this);
-                        map.put(propertyDescriptor.getName(), ((Class) value).getSimpleName());
-                    } else {
-                        Object value = readMethod.invoke(this);
-                        if (value != null)
-                            if (returnType.isEnum())
-                                map.put(propertyDescriptor.getName(), value.toString());
-                            else
-                                map.put(propertyDescriptor.getName(), value);
-                    }
-                }
-            }
-        } catch (IntrospectionException e) {
-            e.printStackTrace();
-        } catch (InvocationTargetException e) {
-            e.printStackTrace();
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        }
+    public Map<String, Object> dataFields() {
+        HashMap<String, Object> map = new HashMap<>();
+        callGetters(map, null, this);
         return map;
+    }
+
+    private void callGetters(Map getterValues, String prefix, Object o) {
+        Method[] methods = o.getClass().getMethods();
+
+        Stream.of(methods)
+                .filter(m -> m.getName().startsWith("get"))
+                .filter(m -> !m.getName().equals("getClass"))
+                .filter(m -> m.getParameterCount() == 0)
+                .filter(m -> isPublic(m.getModifiers()))
+                .forEach(m -> {
+                    try {
+                        String propertyName = addPrefix(prefix, decapitalize(m.getName().substring(3)));
+                        Class<?> returnType = m.getReturnType();
+
+                        if (isComplexType(returnType)) {
+                            callGetters(getterValues, propertyName, m.invoke(o));
+                        } else if (Class.class.equals(returnType)) {
+                            Object value = m.invoke(o);
+                            getterValues.put(propertyName, ((Class) value).getSimpleName());
+                        } else {
+                            Object value = m.invoke(o);
+                            if (value != null)
+                                if (returnType.isEnum())
+                                    getterValues.put(propertyName, value.toString());
+                                else
+                                    getterValues.put(propertyName, value);
+                        }
+                    } catch (IllegalAccessException e) {
+                        e.printStackTrace();
+                    } catch (InvocationTargetException e) {
+                        e.printStackTrace();
+                    }
+                });
     }
 
     private boolean isComplexType(Class<?> clazz) {
@@ -169,17 +174,34 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
             return false;
         String classname = clazz.getName();
         if (!classname.contains(".") || !classname.startsWith("dk.tbsalling.aismessages.ais.messages.types.")) {
-          return false;
+            return false;
         }
 
-        boolean hasGetters = false;
-        try {
-            hasGetters = Introspector.getBeanInfo(clazz).getPropertyDescriptors().length > 0;
-        } catch (IntrospectionException e) {
-            e.printStackTrace();
+        return Stream.of(clazz.getMethods())
+                .filter(m -> m.getName().startsWith("get"))
+                .filter(m -> m.getParameterCount() == 0)
+                .filter(m -> isPublic(m.getModifiers()))
+                .findAny()
+                .isPresent();
+    }
+
+    private static String decapitalize(String string) {
+        if (string != null) {
+            if (!string.equals(string.toUpperCase())) {
+                char c[] = string.toCharArray();
+                c[0] = Character.toLowerCase(c[0]);
+                string = new String(c);
+            }
         }
 
-        return hasGetters;
+        return string;
+    }
+
+    private static String addPrefix(String prefix, String string) {
+        if (prefix == null || prefix.isEmpty() || prefix.trim().isEmpty())
+            return string;
+        else
+            return String.format("%s.%s", prefix, string);
     }
 
     /**
@@ -213,28 +235,28 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
     public abstract AISMessageType getMessageType();
 
     @SuppressWarnings("unused")
-	public final Metadata getMetadata() {
-		return metadata;
-	}
+    public final Metadata getMetadata() {
+        return metadata;
+    }
 
     @SuppressWarnings("unused")
-	public final void setMetadata(Metadata metadata) {
-		this.metadata = metadata;
-	}
+    public final void setMetadata(Metadata metadata) {
+        this.metadata = metadata;
+    }
 
-	private AISMessageType decodeMessageType() {
+    private AISMessageType decodeMessageType() {
         return AISMessageType.fromInteger(Integer.parseInt(getBits(0, 6), 2));
-	}
+    }
 
     @SuppressWarnings("unused")
-	public final Integer getRepeatIndicator() {
+    public final Integer getRepeatIndicator() {
         return getDecodedValue(() -> repeatIndicator, value -> repeatIndicator = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(6, 8)));
-	}
+    }
 
     @SuppressWarnings("unused")
-	public final MMSI getSourceMmsi() {
+    public final MMSI getSourceMmsi() {
         return getDecodedValue(() -> sourceMmsi, value -> sourceMmsi = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(8, 38))));
-	}
+    }
 
     @Override
     public String toString() {
@@ -254,16 +276,16 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         }
         return b;
     }
-    
+
     protected String getZeroBitStuffedString(int endIndex) {
         String b = getBitString();
-		if (b.length()-endIndex < 0){
-	        StringBuffer c = new StringBuffer(b);
-			for (int i = b.length()-endIndex; i < 0; i++) {
-				c  = c.append("0");
-			}
-			b = c.toString();
-		}
+        if (b.length() - endIndex < 0) {
+            StringBuffer c = new StringBuffer(b);
+            for (int i = b.length() - endIndex; i < 0; i++) {
+                c = c.append("0");
+            }
+            b = c.toString();
+        }
         return b;
     }
 
@@ -271,7 +293,7 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         return getZeroBitStuffedString(endIndex).substring(beginIndex, endIndex);
     }
 
-    protected int getNumberOfBits() {	
+    protected int getNumberOfBits() {
         if (numberOfBits < 0) {
             numberOfBits = getBitString().length();
         }
@@ -296,10 +318,11 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
     /**
      * Create proper type of AISMessage from 1..n NMEA messages, and
      * attach metadata.
-     * @param metadata Meta data
+     *
+     * @param metadata     Meta data
      * @param nmeaMessages NMEA messages
-     * @throws InvalidMessage if the AIS payload of the NMEAmessage(s) is invalid
      * @return AISMessage the AIS message
+     * @throws InvalidMessage if the AIS payload of the NMEAmessage(s) is invalid
      */
     public static AISMessage create(Metadata metadata, NMEAMessage... nmeaMessages) {
         AISMessage aisMessage = create(nmeaMessages);
@@ -309,9 +332,10 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
 
     /**
      * Create proper type of AISMessage from 1..n NMEA messages.
+     *
      * @param nmeaMessages NMEA messages
-     * @throws InvalidMessage if the AIS payload of the NMEAmessage(s) is invalid
      * @return AISMessage the AIS message
+     * @throws InvalidMessage if the AIS payload of the NMEAmessage(s) is invalid
      */
     public static AISMessage create(NMEAMessage... nmeaMessages) {
         BiFunction<NMEAMessage[], String, AISMessage> aisMessageConstructor;
@@ -416,18 +440,21 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         return aisMessageConstructor.apply(nmeaMessages, bitString);
     }
 
-    /** Decode an encoded six-bit string into a binary string of 0's and 1's */
+    /**
+     * Decode an encoded six-bit string into a binary string of 0's and 1's
+     */
     private static String toBitString(String encodedString, Integer paddingBits) {
         StringBuilder bitString = new StringBuilder();
         int n = encodedString.length();
-        for (int i=0; i<n; i++) {
-            String c = encodedString.substring(i, i+1);
+        for (int i = 0; i < n; i++) {
+            String c = encodedString.substring(i, i + 1);
             bitString.append(charToSixBit.get(c));
         }
         return bitString.substring(0, bitString.length() - paddingBits);
     }
 
     private final static Map<String, String> charToSixBit = new TreeMap<>();
+
     static {
         charToSixBit.put("0", "000000"); // 0
         charToSixBit.put("1", "000001"); // 1
@@ -511,7 +538,7 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
     @Override
     public int hashCode() {
         int result = metadata != null ? metadata.hashCode() : 0;
-        result = 31*result + getBitString().hashCode();
+        result = 31 * result + getBitString().hashCode();
         return result;
     }
 }

@@ -74,6 +74,8 @@ public class AidToNavigationReportTest {
         Map<String, Object> dataFields = aisMessage.dataFields();
 
         assertNotNull(dataFields);
+        dataFields.forEach((k,v) -> System.out.format("%s=%s\n", k, v));
+
         assertEquals(22, dataFields.size());
 
         assertEquals("AidToNavigationReport", dataFields.get("messageType"));
