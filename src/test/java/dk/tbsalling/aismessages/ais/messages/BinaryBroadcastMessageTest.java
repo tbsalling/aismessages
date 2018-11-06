@@ -77,7 +77,7 @@ public class BinaryBroadcastMessageTest {
         assertEquals(Float.valueOf(80.0f), inlandMessage.getLengthOfShip());
         assertEquals(Float.valueOf(8.2f), inlandMessage.getBeamOfShip());
         assertEquals(Integer.valueOf(8020), inlandMessage.getShipOrCombinationType());
-        assertEquals(Integer.valueOf(0), inlandMessage.getHarzardousCargo());
+        assertEquals(Integer.valueOf(0), inlandMessage.getHazardousCargo());
         assertEquals(Float.valueOf(0.0f), inlandMessage.getDraught());
         assertEquals(Integer.valueOf(2), inlandMessage.getLoaded());
         assertEquals(Integer.valueOf(1), inlandMessage.getQualityOfSpeedInformation());
@@ -106,7 +106,7 @@ public class BinaryBroadcastMessageTest {
         assertEquals(Float.valueOf(110.0f), inlandMessage.getLengthOfShip());
         assertEquals(Float.valueOf(12.0f), inlandMessage.getBeamOfShip());
         assertEquals(Integer.valueOf(8030), inlandMessage.getShipOrCombinationType());
-        assertEquals(Integer.valueOf(5), inlandMessage.getHarzardousCargo());
+        assertEquals(Integer.valueOf(5), inlandMessage.getHazardousCargo());
         assertEquals(Float.valueOf(0.0f), inlandMessage.getDraught());
         assertEquals(Integer.valueOf(0), inlandMessage.getLoaded());
         assertEquals(Integer.valueOf(0), inlandMessage.getQualityOfSpeedInformation());

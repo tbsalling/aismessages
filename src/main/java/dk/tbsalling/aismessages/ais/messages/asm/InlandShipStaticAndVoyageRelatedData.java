@@ -25,8 +25,8 @@ public class InlandShipStaticAndVoyageRelatedData extends ApplicationSpecificMes
         return getDecodedValue(() -> shipOrCombinationType, value -> shipOrCombinationType = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(71, 85)));
     }
 
-    public Integer getHarzardousCargo() {
-        return getDecodedValue(() -> harzardousCargo, value -> harzardousCargo = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(85, 88)));
+    public Integer getHazardousCargo() {
+        return getDecodedValue(() -> hazardousCargo, value -> hazardousCargo = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(85, 88)));
     }
 
     public Float getDraught() {
@@ -53,7 +53,7 @@ public class InlandShipStaticAndVoyageRelatedData extends ApplicationSpecificMes
     private transient Float lengthOfShip;
     private transient Float beamOfShip;
     private transient Integer shipOrCombinationType;
-    private transient Integer harzardousCargo;
+    private transient Integer hazardousCargo;
     private transient Float draught;
     private transient Integer loaded;
     private transient Integer qualityOfSpeedInformation;
