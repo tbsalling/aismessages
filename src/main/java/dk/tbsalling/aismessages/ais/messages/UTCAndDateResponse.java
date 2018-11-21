@@ -18,11 +18,11 @@ package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
+import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
-import static dk.tbsalling.aismessages.ais.Decoders.BOOLEAN_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.FLOAT_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
+import static dk.tbsalling.aismessages.ais.Decoders.*;
+import static java.lang.String.format;
 
 @SuppressWarnings("serial")
 public class UTCAndDateResponse extends AISMessage {
@@ -35,7 +35,23 @@ public class UTCAndDateResponse extends AISMessage {
         super(nmeaMessages, bitString);
     }
 
+    @Override
     protected void checkAISMessage() {
+        super.checkAISMessage();
+
+        final StringBuffer errorMessage = new StringBuffer();
+
+        final int numberOfBits = getNumberOfBits();
+
+        if (numberOfBits != 168)
+            errorMessage.append(format("Message of type %s should be at exactly 168 bits long; not %d.", getMessageType(), numberOfBits));
+
+        if (errorMessage.length() > 0) {
+            if (numberOfBits >= 38)
+                errorMessage.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().getMMSI()));
+
+            throw new InvalidMessage(errorMessage.toString());
+        }
     }
 
     public final AISMessageType getMessageType() {

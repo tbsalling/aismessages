@@ -29,9 +29,6 @@ public class PositionReportClassAResponseToInterrogation extends PositionReport 
         super(nmeaMessages, bitString);
     }
 
-    protected void checkAISMessage() {
-    }
-
     @Override
     public String toString() {
         return "PositionReportClassAResponseToInterrogation{" +

@@ -9,9 +9,7 @@ import org.junit.Test;
 
 import java.util.Map;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.*;
 
 public class AidToNavigationReportTest {
 
@@ -76,7 +74,7 @@ public class AidToNavigationReportTest {
         Map<String, Object> dataFields = aisMessage.dataFields();
 
         assertNotNull(dataFields);
-        assertEquals(23, dataFields.size());
+        assertEquals(22, dataFields.size());
 
         assertEquals("AidToNavigationReport", dataFields.get("messageType"));
         assertEquals(0, dataFields.get("repeatIndicator"));
@@ -99,7 +97,6 @@ public class AidToNavigationReportTest {
         assertEquals(false, dataFields.get("assignedMode"));
         assertEquals(0, dataFields.get("spare1"));
         assertEquals(0, dataFields.get("spare2"));
-        assertEquals(true, dataFields.get("valid"));
 
         assertFalse(dataFields.containsKey("nameExtension"));
         assertFalse(dataFields.containsKey("class"));

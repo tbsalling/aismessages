@@ -37,9 +37,6 @@ public class PositionReportClassAScheduled extends PositionReport {
         super(nmeaMessages, bitString);
     }
 
-    protected void checkAISMessage() {
-    }
-
     @Override
     public String toString() {
         return "PositionReportClassAScheduled{" +

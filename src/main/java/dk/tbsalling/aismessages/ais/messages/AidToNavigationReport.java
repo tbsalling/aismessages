@@ -19,13 +19,11 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.AidType;
 import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
+import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
-import static dk.tbsalling.aismessages.ais.Decoders.BIT_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.BOOLEAN_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.FLOAT_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.STRING_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
+import static dk.tbsalling.aismessages.ais.Decoders.*;
+import static java.lang.String.format;
 
 /**
  * Identification and location message to be emitted by aids to navigation such as buoys and lighthouses.
@@ -43,7 +41,22 @@ public class AidToNavigationReport extends AISMessage {
         super(nmeaMessages, bitString);
     }
 
+    @Override
     protected void checkAISMessage() {
+        super.checkAISMessage();
+
+        final StringBuffer errorMessage = new StringBuffer();
+
+        final int numberOfBits = getNumberOfBits();
+        if (numberOfBits < 272 || numberOfBits > 360)
+            errorMessage.append(format("Message of type %s should be 272-360 bits long; not %d.", getMessageType(), numberOfBits));
+
+        if (errorMessage.length() > 0) {
+            if (numberOfBits >= 38)
+                errorMessage.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().getMMSI()));
+
+            throw new InvalidMessage(errorMessage.toString());
+        }
     }
 
     public final AISMessageType getMessageType() {

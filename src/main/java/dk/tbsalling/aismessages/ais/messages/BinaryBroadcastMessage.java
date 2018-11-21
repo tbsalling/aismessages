@@ -16,11 +16,16 @@
 
 package dk.tbsalling.aismessages.ais.messages;
 
+import dk.tbsalling.aismessages.ais.messages.asm.ApplicationSpecificMessage;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+
+import java.lang.ref.WeakReference;
 
 import static dk.tbsalling.aismessages.ais.Decoders.BIT_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
+import static java.lang.String.format;
 
 /**
  * broadcast message with unspecified binary payload. The St. Lawrence Seaway
@@ -42,7 +47,28 @@ public class BinaryBroadcastMessage extends AISMessage {
         super(nmeaMessages, bitString);
     }
 
+    @Override
     protected void checkAISMessage() {
+        super.checkAISMessage();
+
+        final StringBuffer errorMessage = new StringBuffer();
+
+        final int numberOfBits = getNumberOfBits();
+
+        if (numberOfBits <= 56) {
+            errorMessage.append(format("Message of type %s should be at least 56 bits long; not %d.", getMessageType(), numberOfBits));
+
+            if (numberOfBits >= 40)
+                errorMessage.append(format(" Unparseable binary payload: \"%s\".", getBits(40, numberOfBits)));
+        } else if (numberOfBits > 1008)
+            errorMessage.append(format("Message of type %s should be at least 56 bits long; not %d.", getMessageType(), numberOfBits));
+
+        if (errorMessage.length() > 0) {
+            if (numberOfBits >= 38)
+                errorMessage.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().getMMSI()));
+
+            throw new InvalidMessage(errorMessage.toString());
+        }
     }
 
     public final AISMessageType getMessageType() {
@@ -66,8 +92,25 @@ public class BinaryBroadcastMessage extends AISMessage {
 
     @SuppressWarnings("unused")
 	public String getBinaryData() {
-        return getDecodedValue(() -> binaryData, value -> binaryData = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(56, getNumberOfBits())));
+        return getDecodedValueByWeakReference(() -> binaryData, value -> binaryData = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(56, getNumberOfBits())));
 	}
+
+    @SuppressWarnings("unused")
+    public ApplicationSpecificMessage getApplicationSpecificMessage() {
+        ApplicationSpecificMessage asm = this.applicationSpecificMessage == null ? null : this.applicationSpecificMessage.get();
+        if (asm == null) {
+            asm = ApplicationSpecificMessage.create(getDesignatedAreaCode(), getFunctionalId(), getBinaryData());
+            applicationSpecificMessage = new WeakReference<>(asm);
+        }
+
+        if (asm.getDesignatedAreaCode() != this.getDesignatedAreaCode().intValue())
+            throw new IllegalStateException("Implementation error: DAC of AISMessage does not match ASM: " + asm.getDesignatedAreaCode() + " " + this.getDesignatedAreaCode());
+
+        if (asm.getFunctionalId() != this.getFunctionalId().intValue())
+            throw new IllegalStateException("Implementation error: FI of AISMessage does not match ASM: " + asm.getFunctionalId() + " " + this.getFunctionalId());
+
+        return asm;
+    }
 
     @Override
     public String toString() {
@@ -83,5 +126,6 @@ public class BinaryBroadcastMessage extends AISMessage {
     private transient Integer spare;
     private transient Integer designatedAreaCode;
 	private transient Integer functionalId;
-	private transient String binaryData;
+    private transient WeakReference<String> binaryData;
+	private transient WeakReference<ApplicationSpecificMessage> applicationSpecificMessage;
 }
