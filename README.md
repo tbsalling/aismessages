@@ -9,6 +9,8 @@ navigation and safety messages compliant with ITU 1371 (NMEA armoured AIS messag
 It exhibits lazy decoding and fully decodes tens of thousands of NMEA armoured AIS messages per second per CPU
 core on an Intel i7-based laptop.
 
+If you are new to AIS you can read a short introduction to it on [my blog](https://tbsalling.dk/2018/09/01/an-introduction-to-ais/). 
+
 Other AIS projects
 ---
 In addition to AISmessages, its sister project [AISutils](https://github.com/tbsalling/aisutils) offers higher level functionality such as Tracking and Filtering using AISmessages as a foundation.
@@ -33,6 +35,12 @@ There are several demos, intros, and public appearances of AISmessages; like for
 
 1. See a simple demo applications in the source code in the `dk.tbsalling.aismessages.demo` package (view via 
 [Github](https://github.com/tbsalling/aismessages/tree/master/src/main/java/dk/tbsalling/aismessages/demo)). 
+
+1. AISMessages is used by Pronto, which enables the Port of Rotterdam to optimize port calls and vessel opterations. Watch it on [Youtube](https://youtu.be/0JpowdbL8xM):<br>
+[![IMAGE ALT TEXT HERE](https://i.ytimg.com/vi/0JpowdbL8xM/hqdefault.jpg?sqp=-oaymwEXCNACELwBSFryq4qpAwkIARUAAIhCGAE=&rs=AOn4CLDxh5uSoxSj-rIiO4ysun8Ir0iWag)](https://youtu.be/0JpowdbL8xM)
+
+1. AISMessages is used by Shiptracker ([https://shiptracker.portofrotterdam.com](https://shiptracker.portofrotterdam.com)), which enables Port of Rotterdam to show its customers the current position and ETA of ships scheduled to arrive in the port.<br>
+[![IMAGE ALT TEXT HERE](http://tbsalling.dk/wp-content/uploads/2018/11/PoR-Pronto.png)](https://shiptracker.portofrotterdam.com)
 
 Programmatic usage
 ---
