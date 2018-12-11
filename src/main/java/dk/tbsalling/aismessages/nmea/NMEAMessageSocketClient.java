@@ -26,6 +26,7 @@ import java.util.function.Consumer;
 
 import static java.lang.System.Logger.Level.INFO;
 
+@Deprecated
 public class NMEAMessageSocketClient {
 
 	private static final System.Logger LOG = System.getLogger(NMEAMessageSocketClient.class.getName());

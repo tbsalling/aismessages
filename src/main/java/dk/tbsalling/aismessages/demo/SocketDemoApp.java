@@ -24,6 +24,7 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.function.Consumer;
 
+@Deprecated
 public class SocketDemoApp implements Consumer<AISMessage> {
 
     @Override
