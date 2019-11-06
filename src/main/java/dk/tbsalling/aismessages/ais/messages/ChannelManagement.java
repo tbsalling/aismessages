@@ -96,7 +96,7 @@ public class ChannelManagement extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Float getSouthWestLatitude() {
-        return getDecodedValue(() -> southWestLatitude, value -> southWestLatitude = value, () -> !getAddressed(), () -> FLOAT_DECODER.apply(getBits(122, 138)) / 10f);
+        return getDecodedValue(() -> southWestLatitude, value -> southWestLatitude = value, () -> !getAddressed(), () -> FLOAT_DECODER.apply(getBits(122, 139)) / 10f);
 	}
 
     @SuppressWarnings("unused")
