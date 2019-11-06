@@ -47,3 +47,5 @@ data/sfbay/
 .metadata/
 .settings/
 bin/
+/HOWTO Release.txt
+/release.properties
