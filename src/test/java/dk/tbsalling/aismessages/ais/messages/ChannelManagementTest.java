@@ -1,7 +1,5 @@
 package dk.tbsalling.aismessages.ais.messages;
 
-import dk.tbsalling.aismessages.ais.messages.asm.ApplicationSpecificMessage;
-import dk.tbsalling.aismessages.ais.messages.asm.NumberOfPersonsOnBoard;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
