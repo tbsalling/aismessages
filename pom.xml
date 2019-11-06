@@ -4,7 +4,7 @@
 	<groupId>dk.tbsalling</groupId>
 	<artifactId>aismessages</artifactId>
 	<packaging>jar</packaging>
-	<version>3.0.4-SNAPSHOT</version>
+	<version>3.0.3-SNAPSHOT</version>
 	<name>aismessages</name>
 	<description>AISMessages is a light-weight and high-performing software library for decoding AIS messages related to maritime navigation and safety.</description>
 	<url>http://tbsalling.dk</url>
@@ -16,7 +16,6 @@
  	</parent>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-		<maven.javadoc.failOnError>false</maven.javadoc.failOnError>
 	</properties>
 	<licenses>
 		<license>
