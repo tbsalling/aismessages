@@ -25,10 +25,7 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
-import static dk.tbsalling.aismessages.ais.Decoders.BOOLEAN_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.STRING_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_FLOAT_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
+import static dk.tbsalling.aismessages.ais.Decoders.*;
 
 /**
  * Message has a total of 424 bits, occupying two AIVDM sentences. In practice,
@@ -146,7 +143,7 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
 	}
 
     /**
-     * The vessel AIS ETA, with the year filled in based on the metadata received time.
+     * @return The vessel AIS ETA, with the year filled in based on the metadata received time.
      * If the AIS Month and day are the received date or later, the first calendar date after the received is used for the year.
      * Unavailable hour (24) or minute (60) will be treated as 0
      * Examples:

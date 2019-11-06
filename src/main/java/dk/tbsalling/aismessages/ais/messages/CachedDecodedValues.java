@@ -16,6 +16,7 @@ public interface CachedDecodedValues {
      * @param refGetter A getter which gets the weak reference to be used as cache
      * @param refSetter A setter to set the weak reference caching the decoded value.
      * @param decoder A supplier which can extract the decoded value from a bit string.
+     * @param condition Only return a non-null value if this condition is true.
      * @param <T> The return type.
      * @return The decoded (and now cached) value.
      */
@@ -39,6 +40,7 @@ public interface CachedDecodedValues {
      *
      * @param getter A getter which gets previously decoded values of this property.
      * @param setter A setter which stores or caches the decoded value
+     * @param condition Only return a non-null value if this condition is true.
      * @param decoder A supplier which can extract the decoded value from a bit string.
      * @param <T> The return type.
      * @return The decoded value.
