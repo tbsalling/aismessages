@@ -180,6 +180,11 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
         return getDecodedValue(() -> assigned, value -> assigned = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(307, 308)));
 	}
 
+    @SuppressWarnings("unused")
+    public String getRegionalReserved3() {
+        return getDecodedValue(() -> regionalReserved1, value -> regionalReserved1 = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(308, 312)));
+    }
+
     @Override
     public String toString() {
         return "ExtendedClassBEquipmentPositionReport{" +
