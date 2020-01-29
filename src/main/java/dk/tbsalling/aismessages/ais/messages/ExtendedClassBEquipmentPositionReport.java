@@ -72,7 +72,7 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
 
     @SuppressWarnings("unused")
 	public Float getSpeedOverGround() {
-        return getDecodedValue(() -> speedOverGround, value -> speedOverGround = value, () -> Boolean.TRUE, () -> UNSIGNED_FLOAT_DECODER.apply(getBits(46, 55)) / 10f);
+        return getDecodedValue(() -> speedOverGround, value -> speedOverGround = value, () -> Boolean.TRUE, () -> UNSIGNED_FLOAT_DECODER.apply(getBits(46, 56)) / 10f);
 	}
 
     @SuppressWarnings("unused")
