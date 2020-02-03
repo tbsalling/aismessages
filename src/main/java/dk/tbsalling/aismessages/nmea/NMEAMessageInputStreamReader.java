@@ -26,8 +26,13 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Queue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import static java.lang.System.Logger.Level.*;
 
@@ -35,22 +40,46 @@ public class NMEAMessageInputStreamReader {
 
 	private static final System.Logger LOG = System.getLogger(NMEAMessageInputStreamReader.class.getName());
 
+	public NMEAMessageInputStreamReader(List<String> nmeaStrings, Consumer<? super NMEAMessage> nmeaMessageHandler) {
+		Objects.requireNonNull(nmeaStrings, "nmeaStrings cannot be null.");
+		Objects.requireNonNull(nmeaMessageHandler, "nmeaMessageHandler cannot be null.");
+
+		if (nmeaStrings instanceof Queue)
+			this.stringSupplier = () -> ((Queue<String>) nmeaStrings).poll();
+		else {
+			final Queue<String> nmeaStringsQueue = new LinkedList<>(nmeaStrings);
+			this.stringSupplier = () -> nmeaStringsQueue.poll();
+		}
+
+		this.nmeaMessageHandler = nmeaMessageHandler;
+	}
+
 	public NMEAMessageInputStreamReader(InputStream inputStream, Consumer<? super NMEAMessage> nmeaMessageHandler) {
 		this.nmeaMessageHandler = nmeaMessageHandler;
-		this.inputStream = inputStream;
+
+		InputStreamReader reader = new InputStreamReader(inputStream, Charset.defaultCharset());
+		BufferedReader bufferedReader = new BufferedReader(reader);
+		this.stringSupplier = () -> {
+			try {
+				return bufferedReader.readLine();
+			} catch (IOException e) {
+				throw new RuntimeException(e.getMessage(), e);
+			}
+		};
 	}
 
 	public final void requestStop() {
 		this.stopRequested.set(true);
 	}
 
-	public void run() throws IOException {
-	    LOG.log(INFO, "NMEAMessageInputStreamReader running.");
+	public void run() {
+		LOG.log(INFO, "NMEAMessageInputStreamReader running.");
 
-		InputStreamReader reader = new InputStreamReader(inputStream, Charset.defaultCharset());
-		BufferedReader bufferedReader = new BufferedReader(reader);
 		String string;
-		while ((string = bufferedReader.readLine()) != null && !isStopRequested()) {
+		while ((string = stringSupplier.get()) != null) {
+			if (isStopRequested())
+				break;
+
 			try {
 				NMEAMessage nmea = NMEAMessage.fromString(string);
 				nmeaMessageHandler.accept(nmea);
@@ -72,6 +101,6 @@ public class NMEAMessageInputStreamReader {
 	}
 
 	private final AtomicBoolean stopRequested = new AtomicBoolean(false);
-	private final InputStream inputStream;
+	private final Supplier<String> stringSupplier;
 	private final Consumer<? super NMEAMessage> nmeaMessageHandler;
 }

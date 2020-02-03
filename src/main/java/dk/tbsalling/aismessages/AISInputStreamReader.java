@@ -20,8 +20,8 @@ import dk.tbsalling.aismessages.ais.messages.AISMessage;
 import dk.tbsalling.aismessages.nmea.NMEAMessageHandler;
 import dk.tbsalling.aismessages.nmea.NMEAMessageInputStreamReader;
 
-import java.io.IOException;
 import java.io.InputStream;
+import java.util.List;
 import java.util.function.Consumer;
 
 /**
@@ -35,22 +35,27 @@ import java.util.function.Consumer;
  */
 public class AISInputStreamReader {
 
-	public AISInputStreamReader(InputStream inputStream, Consumer<? super AISMessage> aisMessageConsumer) {
+    public AISInputStreamReader(List<String> stringQueue, Consumer<? super AISMessage> aisMessageConsumer) {
+        this.nmeaMessageHandler = new NMEAMessageHandler("SRC", aisMessageConsumer);
+        this.nmeaMessageInputStreamReader = new NMEAMessageInputStreamReader(stringQueue, this.nmeaMessageHandler::accept);
+    }
+
+    public AISInputStreamReader(InputStream inputStream, Consumer<? super AISMessage> aisMessageConsumer) {
         this.nmeaMessageHandler = new NMEAMessageHandler("SRC", aisMessageConsumer);
         this.nmeaMessageInputStreamReader = new NMEAMessageInputStreamReader(inputStream, this.nmeaMessageHandler::accept);
-	}
+    }
 
-	public final void requestStop() {
-		this.nmeaMessageInputStreamReader.requestStop();
-	}
+    public final void requestStop() {
+        this.nmeaMessageInputStreamReader.requestStop();
+    }
 
     public final boolean isStopRequested() {
         return this.nmeaMessageInputStreamReader.isStopRequested();
     }
 
-    public void run() throws IOException {
+    public void run() {
         this.nmeaMessageInputStreamReader.run();
-	}
+    }
 
     private final NMEAMessageHandler nmeaMessageHandler;
 	private final NMEAMessageInputStreamReader nmeaMessageInputStreamReader;
