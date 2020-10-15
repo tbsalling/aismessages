@@ -1,19 +1,11 @@
 package dk.tbsalling.aismessages.ais.messages;
 
-import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
-import dk.tbsalling.aismessages.ais.messages.types.CommunicationState;
-import dk.tbsalling.aismessages.ais.messages.types.MMSI;
-import dk.tbsalling.aismessages.ais.messages.types.ManeuverIndicator;
-import dk.tbsalling.aismessages.ais.messages.types.NavigationStatus;
-import dk.tbsalling.aismessages.ais.messages.types.SOTDMACommunicationState;
-import dk.tbsalling.aismessages.ais.messages.types.SyncState;
+import dk.tbsalling.aismessages.ais.messages.types.*;
+import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class PositionReportClassAScheduledTest {
 
@@ -41,6 +33,11 @@ public class PositionReportClassAScheduledTest {
         assertEquals((Integer) 186, message.getTrueHeading());
         assertEquals(ManeuverIndicator.NotAvailable, message.getSpecialManeuverIndicator());
         assertFalse(message.getRaimFlag());
+    }
+
+    @Test(expected = InvalidMessage.class)
+    public void detectInvalidMessage() {
+        AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,13chv900160wps@GF<FlHCjR0<0ht2cv3i,0*1A"));
     }
 
     @Test
