@@ -6,6 +6,7 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
 import dk.tbsalling.aismessages.ais.messages.types.ShipType;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 import org.junit.Test;
 
 import java.security.NoSuchAlgorithmException;
@@ -57,10 +58,10 @@ public class ShipAndVoyageDataTest {
     @Test
     public void canDecode2() {
         ZonedDateTime now = ZonedDateTime.of(2010, 12, 31, 23, 59, 59, 0, ZoneOffset.UTC);
-        AISMessage aisMessage = AISMessage.create(new Metadata("Test", now.toInstant()),
-            NMEAMessage.fromString("!AIVDM,2,1,0,B,539S:k40000000c3G04PPh63<00000000080000o1PVG2uGD:00000000000,0*34"),
-            NMEAMessage.fromString("!AIVDM,2,2,0,B,00000000000,2*27")
-        );
+        NMEATagBlock tag = NMEATagBlock.fromString("\\c:1609841515,s:my dearest AIS base station*6E\\");
+        AISMessage aisMessage = AISMessage.create(new Metadata("Test", now.toInstant()), tag,
+                NMEAMessage.fromString("!AIVDM,2,1,0,B,539S:k40000000c3G04PPh63<00000000080000o1PVG2uGD:00000000000,0*34"),
+                NMEAMessage.fromString("!AIVDM,2,2,0,B,00000000000,2*27"));
 
         System.out.println(aisMessage.toString());
 
