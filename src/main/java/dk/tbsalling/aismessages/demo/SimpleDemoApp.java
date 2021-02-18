@@ -121,7 +121,9 @@ public class SimpleDemoApp {
         "!AIVDM,1,1,,A,15?ECL001=G<wHPEON52>QeH08JK,0*47\n" +
         "!AIVDM,1,1,,B,13:112002?o@FNbDS=Ntu:EF00ST,0*3C\n" +
         "!AIVDM,1,1,,A,15>gpr001sG=AnHDjb>V3TwF08Jd,0*72\n" +
-        "!AIVDM,1,1,,A,152SGj001to?TvlEg4`H?6UL08Jo,0*36"
+        "!AIVDM,1,1,,A,152SGj001to?TvlEg4`H?6UL08Jo,0*36\n" +
+        "\\c:1609841515,s:r3669961*78\\!AIVDM,1,1,,A,13ukmN7@0<0pRcHPTkn4P33f0000,0*58\n" +
+        "\\c:1609841515,s:r3669961,g:1-2-1234*0E\\!AIVDM,1,1,,A,13ukmN7@0<0pRcHPTkn4P33f0000,0*58\n"
     );
 
 }

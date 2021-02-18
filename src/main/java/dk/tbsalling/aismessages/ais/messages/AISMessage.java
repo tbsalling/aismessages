@@ -21,6 +21,7 @@ import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
@@ -67,6 +68,7 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
     private NMEAMessage[] nmeaMessages;
 
     private Metadata metadata;
+    private NMEATagBlock nmeaTagBlock;
 
     /**
      * Payload expanded to string of 0's and 1's. Use weak reference to allow GC anytime.
@@ -244,6 +246,15 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         this.metadata = metadata;
     }
 
+    public final void setTagBlock(NMEATagBlock nmeaTagBlock) {
+        this.nmeaTagBlock = nmeaTagBlock;
+    }
+
+    @SuppressWarnings("unused")
+    public final NMEATagBlock getNmeaTagBlock() {
+        return nmeaTagBlock;
+    }
+
     private AISMessageType decodeMessageType() {
         return AISMessageType.fromInteger(Integer.parseInt(getBits(0, 6), 2));
     }
@@ -265,7 +276,18 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
                 ", metadata=" + metadata +
                 ", repeatIndicator=" + getRepeatIndicator() +
                 ", sourceMmsi=" + getSourceMmsi() +
-                '}';
+                '}' + tagBlockToString();
+    }
+
+    public String tagBlockToString() {
+        String tagBlockMessage;
+        if (nmeaTagBlock != null) {
+            tagBlockMessage = String.valueOf(nmeaTagBlock);
+
+        } else {
+            tagBlockMessage = "";
+        }
+        return tagBlockMessage;
     }
 
     protected String getBitString() {
@@ -320,12 +342,14 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
      * attach metadata.
      *
      * @param metadata     Meta data
+     * @param nmeaTagBlock NMEA Tag Block
      * @param nmeaMessages NMEA messages
      * @return AISMessage the AIS message
      * @throws InvalidMessage if the AIS payload of the NMEAmessage(s) is invalid
      */
-    public static AISMessage create(Metadata metadata, NMEAMessage... nmeaMessages) {
+    public static AISMessage create(Metadata metadata, NMEATagBlock nmeaTagBlock, NMEAMessage... nmeaMessages) {
         AISMessage aisMessage = create(nmeaMessages);
+        aisMessage.setTagBlock(nmeaTagBlock);
         aisMessage.setMetadata(metadata);
         return aisMessage;
     }
