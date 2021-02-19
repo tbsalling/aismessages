@@ -18,8 +18,11 @@ package dk.tbsalling.aismessages.nmea.messages;
 
 import dk.tbsalling.aismessages.nmea.exceptions.NMEAParseException;
 import dk.tbsalling.aismessages.nmea.exceptions.UnsupportedMessageType;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import java.io.Serializable;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /*
  * AISMessages
@@ -48,12 +51,12 @@ public class NMEAMessage implements Serializable {
         String messageType = getMessageType();
 
         if(messageType == null || messageType.length() != 5) return false;
-		
+
 		String type = messageType.substring(2);
 		if (! ("VDM".equals(type) || "VDO".equals(type))) {
 			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -112,19 +115,24 @@ public class NMEAMessage implements Serializable {
 		return rawMessage;
 	}
 
-	private NMEAMessage(String rawMessage) {
+    public NMEATagBlock getTagBlock() {
+        return tagBlock;
+    }
+
+    private NMEAMessage(String rawMessage) {
         this.rawMessage = rawMessage;
         validate();
 	}
 
 	private void validate() {
-        // !AIVDM,1,1,,B,15MvlfPOh2G?nwbEdVDsnSTR00S?,0*41
+        parseNMEATagBlockString();
 
-		if(!isValid()) {
-			throw new UnsupportedMessageType(getMessageType());
-		}
-
+	    // !AIVDM,1,1,,B,15MvlfPOh2G?nwbEdVDsnSTR00S?,0*41
         final String nmeaMessageRegExp = "^!.*\\*[0-9A-Fa-f]{2}$";
+
+        if(!isValid()) {
+            throw new UnsupportedMessageType(getMessageType());
+        }
 
         if (! rawMessage.matches(nmeaMessageRegExp))
             throw new NMEAParseException(rawMessage, "Message does not comply with regexp \"" + nmeaMessageRegExp + "\"");
@@ -136,6 +144,21 @@ public class NMEAMessage implements Serializable {
         String msg1[] = msg[6].split("\\*");
         if (msg1.length != 2)
             throw new NMEAParseException(rawMessage, "Expected checksum fields to start with *");
+    }
+
+    private void parseNMEATagBlockString() {
+	    final String nmeaTagBlockRegEx = "^\\\\.*\\*[0-9A-Fa-f]{2}\\\\";
+
+        Pattern pattern = Pattern.compile(nmeaTagBlockRegEx);
+        Matcher matcher = pattern.matcher(rawMessage);
+        if (matcher.lookingAt())  {
+            String nmeaTagBlockString = rawMessage.substring(matcher.start(), matcher.end());
+            this.tagBlock = NMEATagBlock.fromString(nmeaTagBlockString);
+            this.rawMessage = this.rawMessage.substring(matcher.end());
+        }
+        else {
+            this.tagBlock = null;
+        }
     }
 
     @Override
@@ -166,5 +189,6 @@ public class NMEAMessage implements Serializable {
 		return s == null || s.trim().length() == 0;
 	}
 
-	private final String rawMessage;
+	private String rawMessage;
+	private NMEATagBlock tagBlock;
 }

@@ -3,6 +3,7 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.exceptions.NMEAParseException;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 import org.junit.Test;
 
 import java.io.ByteArrayOutputStream;
@@ -29,14 +30,15 @@ public class AISMessageTest {
         String source = "test";
         Instant time = Instant.now();
         NMEAMessage nmea = NMEAMessage.fromString("!AIVDM,1,1,,A,13aEOK?P00PD2wVMdLDRhgvL289?,0*26");
+        NMEATagBlock tag = NMEATagBlock.fromString("\\c:1609841515,s:my dearest AIS base station*6E\\");
 
         Metadata meta1 = new Metadata(source, time);
         Metadata meta2 = new Metadata(source, time);
         Metadata meta3 = new Metadata(source, time.plusMillis(1000));
 
-        AISMessage ais1 = AISMessage.create(meta1, nmea);
-        AISMessage ais2 = AISMessage.create(meta2, nmea);
-        AISMessage ais3 = AISMessage.create(meta3, nmea);
+        AISMessage ais1 = AISMessage.create(meta1, tag, nmea);
+        AISMessage ais2 = AISMessage.create(meta2, tag, nmea);
+        AISMessage ais3 = AISMessage.create(meta3, tag, nmea);
 
         assertEquals(meta1, meta2);
         assertNotEquals(meta1, meta3);

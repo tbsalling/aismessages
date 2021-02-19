@@ -51,7 +51,7 @@ public class NMEAMessageHandler implements Consumer<NMEAMessage> {
             addAisMessageReceiver(aisMessageReceiver);
         }
     }
-    
+
     /**
      * Receive a single NMEA amoured AIS string
      * @param nmeaMessage the NMEAMessage to handle.
@@ -59,19 +59,19 @@ public class NMEAMessageHandler implements Consumer<NMEAMessage> {
     @Override
     public void accept(NMEAMessage nmeaMessage) {
 		LOG.log(DEBUG, "Received for processing: " + nmeaMessage.getRawMessage());
-		
+
 		if (! nmeaMessage.isValid()) {
 			LOG.log(WARNING, "NMEA message is invalid: " + nmeaMessage.toString());
 			return;
 		}
-		
+
 		int numberOfFragments = nmeaMessage.getNumberOfFragments();
 		if (numberOfFragments <= 0) {
 			LOG.log(WARNING, "NMEA message is invalid: " + nmeaMessage.toString());
 			messageFragments.clear();
 		} else if (numberOfFragments == 1) {
 			LOG.log(DEBUG, "Handling unfragmented NMEA message");
-            AISMessage aisMessage = AISMessage.create(new Metadata(source), nmeaMessage);
+            AISMessage aisMessage = AISMessage.create(new Metadata(source), nmeaMessage.getTagBlock(), nmeaMessage);
             sendToAisMessageReceivers(aisMessage);
 			messageFragments.clear();
 		} else {
@@ -86,7 +86,7 @@ public class NMEAMessageHandler implements Consumer<NMEAMessage> {
 			} else {
 				int expectedFragmentNumber = messageFragments.size() + 1;
 				LOG.log(DEBUG, "Expected fragment number is: " + expectedFragmentNumber + ": " + nmeaMessage.getRawMessage());
-				
+
 				if (expectedFragmentNumber != fragmentNumber) {
 					LOG.log(DEBUG, "Expected fragment number " + expectedFragmentNumber + "; not " + fragmentNumber + ": " + nmeaMessage.getRawMessage());
 					messageFragments.clear();
@@ -95,7 +95,7 @@ public class NMEAMessageHandler implements Consumer<NMEAMessage> {
 					LOG.log(DEBUG, "nmeaMessage.getNumberOfFragments(): " + nmeaMessage.getNumberOfFragments());
 					LOG.log(DEBUG, "messageFragments.size(): " + messageFragments.size());
 					if (nmeaMessage.getNumberOfFragments() == messageFragments.size()) {
-                        AISMessage aisMessage = AISMessage.create(new Metadata(source), messageFragments.toArray(new NMEAMessage[messageFragments.size()]));
+                        AISMessage aisMessage = AISMessage.create(new Metadata(source), nmeaMessage.getTagBlock(), messageFragments.toArray(new NMEAMessage[messageFragments.size()]));
                         sendToAisMessageReceivers(aisMessage);
 						messageFragments.clear();
 					} else
