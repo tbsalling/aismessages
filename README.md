@@ -56,6 +56,8 @@ if you have an InputStream serving data like this:
     !AIVDM,1,1,,A,15N7th0P00ISsi4A5I?:fgvP2<40,0*06
     !AIVDM,1,1,,A,15NIEcP000ISrjPA8tEIBq<P089=,0*63
     !AIVDM,1,1,,B,15MuS0PP00IS00HA8gEtSgvN0<3U,0*61
+    \c:1609841515,s:r3669961*78\!AIVDM,1,1,,A,13ukmN7@0<0pRcHPTkn4P33f0000,0*58
+    \c:1609841515,s:r3669961,g:1-2-1234*0E\!AIVDM,1,1,,A,13ukmN7@0<0pRcHPTkn4P33f0000,0*58
 ```
 
 then you can decode it into Java POJO's of type AISMessage like this:
@@ -80,8 +82,8 @@ then you can decode it into Java POJO's of type AISMessage like this:
     }
 ```
 
-The third argument to the `AISInputStreamReader` constructor is a `Consumer<? super AISMessage>` which consumes decoded
-AIS messages in the form of `AISMessage` objects.
+The second argument to the `AISInputStreamReader` constructor (`aisMessage -> System.out.println(aisMessage)`) is a 
+`Consumer<? super AISMessage>` which consumes decoded AIS messages in the form of `AISMessage` objects.
 
 `AISMessage` has several subclasses - one for each type of AIS message, which can be decoded. For instance an AIS
 message of type 5 "Static and voyage related data" are represented by objects of class `ShipAndVoyageData` as shown here
@@ -90,22 +92,14 @@ in fragments:
 ```java
 public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
    ...
-
-	public IMO getImo() { ...}
-
-	public String getCallsign() { ...}
-
-	public String getShipName() { ...}
-
-	public ShipType getShipType() { ...}
-
-	public Integer getToBow() { ...}
-
-	public Integer getToStern() { ...}
-
-	public Integer getToStarboard() { ...}
-
-	public Integer getToPort() { ...}
+   public IMO getImo() { ... }
+   public String getCallsign() { ... }
+   public String getShipName() { ... }
+   public ShipType getShipType() { ... }
+   public Integer getToBow() { ... }
+   public Integer getToStern() { ... }
+   public Integer getToStarboard() { ... }
+   public Integer getToPort() { ... }
    ...
 }
 ```
