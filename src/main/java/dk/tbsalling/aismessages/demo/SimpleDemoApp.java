@@ -24,15 +24,15 @@ import java.io.InputStream;
 
 public class SimpleDemoApp {
 
-    public void runDemo() throws IOException {
+    public void runDemo() {
 
         InputStream inputStream = new ByteArrayInputStream(demoNmeaStrings.getBytes());
 
-		System.out.println("AISMessages Demo App");
-		System.out.println("--------------------");
+        System.out.println("AISMessages Demo App");
+        System.out.println("--------------------");
 
         AISInputStreamReader streamReader = new AISInputStreamReader(inputStream, aisMessage ->
-            System.out.println("Received AIS message from MMSI " + aisMessage.getSourceMmsi().getMMSI() + ": " + aisMessage)
+                System.out.println("Received AIS message from MMSI " + aisMessage.getSourceMmsi().getMMSI() + ": " + aisMessage)
         );
 
         streamReader.run();
