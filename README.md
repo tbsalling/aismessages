@@ -129,7 +129,7 @@ License
 ---
 AISmessages is released under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported (CC BY-NC-SA 3.0)
 license - which means that it is free for non-commercial use. For full license details see the
-[LICENSE-full](./LICENSE-full) file.
+[LICENSE-full](LICENSE-full) file.
 
 To obtain a commercial license and/or commercial support contact
 [Thomas Borg Salling](mailto:tbsalling@tbsalling.dk?subject=[GitHub]%20AISmessages%20license).
