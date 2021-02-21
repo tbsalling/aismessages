@@ -80,23 +80,56 @@ then you can decode it into Java POJO's of type AISMessage like this:
     }
 ```
 
-Read more in the wiki - [https://github.com/tbsalling/aismessages/wiki](https://github.com/tbsalling/aismessages/wiki).
+The third argument to the `AISInputStreamReader` constructor is a `Consumer<? super AISMessage>` which consumes decoded
+AIS messages in the form of `AISMessage` objects.
 
-You do not need to compile AISmessages yourself. It is available in Maven Central. So if you are using Maven, 
-all you need to do is add these lines to your pom.xml:
+`AISMessage` has several subclasses - one for each type of AIS message, which can be decoded. For instance an AIS
+message of type 5 "Static and voyage related data" are represented by objects of class `ShipAndVoyageData` as shown here
+in fragments:
 
-``` xml
-	<dependency>
-	    <groupId>dk.tbsalling</groupId>
-	    <artifactId>aismessages</artifactId>
-	    <version>2.2.1</version>
-	</dependency>
+```java
+public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
+   ...
+
+	public IMO getImo() { ...}
+
+	public String getCallsign() { ...}
+
+	public String getShipName() { ...}
+
+	public ShipType getShipType() { ...}
+
+	public Integer getToBow() { ...}
+
+	public Integer getToStern() { ...}
+
+	public Integer getToStarboard() { ...}
+
+	public Integer getToPort() { ...}
+   ...
+}
 ```
 
+Obtaining AISmessages
 ---
+You do not need to compile AISmessages yourself. It is available in Maven Central. So if you are using Maven, all you
+need to do is add these lines to your pom.xml:
 
-**Important compiler note!** Due to a [compiler bug](https://bugs.openjdk.java.net/browse/JDK-8062253) in JDK 8u20, 8u25, and 8u31
-AISmessages can only be compiled with older or newer JDK 8 versions than these faulty ones. The project is confirmed to build with
-Oracle JDK 1.8.0_66.
+``` xml
+...
+<dependency>
+    <groupId>dk.tbsalling</groupId>
+    <artifactId>aismessages</artifactId>
+    <version>3.4.0</version>
+</dependency>
+...
+```
 
+License
 ---
+AISmessages is released under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported (CC BY-NC-SA 3.0)
+license - which means that it is free for non-commercial use. For full license details see the
+[LICENSE-full](./LICENSE-full) file.
+
+To obtain a commercial license and/or commercial support contact
+[Thomas Borg Salling](mailto:tbsalling@tbsalling.dk?subject=[GitHub]%20AISmessages%20license).
