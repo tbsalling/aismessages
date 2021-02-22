@@ -342,6 +342,21 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
      * attach metadata.
      *
      * @param metadata     Meta data
+     * @param nmeaMessages NMEA messages
+     * @return AISMessage the AIS message
+     * @throws InvalidMessage if the AIS payload of the NMEAmessage(s) is invalid
+     */
+    public static AISMessage create(Metadata metadata, NMEAMessage... nmeaMessages) {
+        AISMessage aisMessage = create(nmeaMessages);
+        aisMessage.setMetadata(metadata);
+        return aisMessage;
+    }
+
+    /**
+     * Create proper type of AISMessage from 1..n NMEA messages, and
+     * attach metadata.
+     *
+     * @param metadata     Meta data
      * @param nmeaTagBlock NMEA Tag Block
      * @param nmeaMessages NMEA messages
      * @return AISMessage the AIS message
