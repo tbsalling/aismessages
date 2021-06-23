@@ -7,8 +7,7 @@ import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import org.junit.Ignore;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.*;
 
 public class ClassBCSStaticDataReportTest {
 
@@ -43,6 +42,38 @@ public class ClassBCSStaticDataReportTest {
         AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
+    }
+
+    @Test
+    public void canDecode_partAB() {
+        String partA = "!AIVDM,1,1,,A,H42O55i18tMET00000000000000,2*6D";
+        String partB = "!AIVDM,1,1,,A,H42O55lti4hhhilD3nink000?050,0*40";
+
+        NMEAMessage nmeaMessageA = NMEAMessage.fromString(partA);
+        NMEAMessage nmeaMessageB = NMEAMessage.fromString(partB);
+
+        AISMessage aisMessagePartA = AISMessage.create(nmeaMessageA);
+        AISMessage aisMessagePartB = AISMessage.create(nmeaMessageB);
+
+        System.out.println(aisMessagePartA.toString());
+        assertTrue(aisMessagePartA instanceof ClassBCSStaticDataReport);
+        assertEquals(24, aisMessagePartA.getMessageType().getCode().intValue());
+        assertEquals(0, ((ClassBCSStaticDataReport) aisMessagePartA).getPartNumber().intValue());
+        assertEquals(271041815, aisMessagePartA.getSourceMmsi().getMMSI().intValue());
+        assertEquals("PROGUY", ((ClassBCSStaticDataReport) aisMessagePartA).getShipName());
+
+        System.out.println(aisMessagePartB.toString());
+        assertTrue(aisMessagePartB instanceof ClassBCSStaticDataReport);
+        assertEquals(24, aisMessagePartB.getMessageType().getCode().intValue());
+        assertEquals(1, ((ClassBCSStaticDataReport) aisMessagePartB).getPartNumber().intValue());
+        assertEquals(271041815, aisMessagePartB.getSourceMmsi().getMMSI().intValue());
+        assertEquals(60, ((ClassBCSStaticDataReport) aisMessagePartB).getShipType().getCode().intValue());
+        assertEquals("1D00014", ((ClassBCSStaticDataReport) aisMessagePartB).getVendorId());
+        assertEquals("TC6163", ((ClassBCSStaticDataReport) aisMessagePartB).getCallsign());
+        assertEquals(0, ((ClassBCSStaticDataReport) aisMessagePartB).getToBow().intValue());
+        assertEquals(15, ((ClassBCSStaticDataReport) aisMessagePartB).getToStern().intValue());
+        assertEquals(0, ((ClassBCSStaticDataReport) aisMessagePartB).getToPort().intValue());
+        assertEquals(5, ((ClassBCSStaticDataReport) aisMessagePartB).getToStarboard().intValue());
     }
 
 }
