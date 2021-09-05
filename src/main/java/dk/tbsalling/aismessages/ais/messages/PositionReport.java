@@ -74,8 +74,7 @@ public abstract class PositionReport extends AISMessage implements ExtendedDynam
 
     @SuppressWarnings("unused")
 	public Integer getRateOfTurn() {
-        // TODO Square-root
-        return getDecodedValue(() -> rateOfTurn, value -> rateOfTurn = value, () -> Boolean.TRUE, () -> INTEGER_DECODER.apply(getBits(42, 50)));
+        return getDecodedValue(() -> rateOfTurn, value -> rateOfTurn = value, () -> Boolean.TRUE, () -> {int rot = INTEGER_DECODER.apply(getBits(42, 50));return (int) (Math.signum(rot) * Math.pow(rot / 4.733, 2));});
 	}
 
     @SuppressWarnings("unused")
@@ -125,7 +124,7 @@ public abstract class PositionReport extends AISMessage implements ExtendedDynam
 
     @SuppressWarnings("unused")
 	public Integer getTrueHeading() {
-        return getDecodedValue(() -> trueHeading, value -> trueHeading = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(128, 137)));
+        return getDecodedValue(() -> trueHeading, value -> trueHeading = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(128, 137)) );
 	}
 
     @SuppressWarnings("unused")
