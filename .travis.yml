@@ -12,3 +12,7 @@ deploy:
     repo: tbsalling/aismessages
     tags: true
     all_branches: true
+
+cache:
+  directories:
+  - $HOME/.m2
