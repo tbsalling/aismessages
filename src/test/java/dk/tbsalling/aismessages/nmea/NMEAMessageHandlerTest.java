@@ -8,7 +8,9 @@ import org.jmock.Expectations;
 import org.jmock.Mockery;
 import org.jmock.integration.junit4.JUnit4Mockery;
 import org.junit.BeforeClass;
+import org.junit.FixMethodOrder;
 import org.junit.Test;
+import org.junit.runners.MethodSorters;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
@@ -16,12 +18,14 @@ import java.util.function.Consumer;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
+@FixMethodOrder(MethodSorters.NAME_ASCENDING)
 public class NMEAMessageHandlerTest {
     private final static Mockery context = new JUnit4Mockery();
 
     private static Consumer<AISMessage> aisMessageHandler;
     private static NMEAMessageHandler aisMessageReceiver;
 
+    @SuppressWarnings("unchecked")
     @BeforeClass
     public static void setUp() {
         aisMessageHandler = (Consumer<AISMessage>) context.mock(Consumer.class);
@@ -29,7 +33,7 @@ public class NMEAMessageHandlerTest {
     }
 
     @Test
-    public void canHandleUnfragmentedMessageReceived() {
+    public void a_canHandleUnfragmentedMessageReceived() {
         NMEAMessage unfragmentedNMEAMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A");
 
         final ArgumentCaptor<AISMessage> aisMessage = new ArgumentCaptor<>();
@@ -44,7 +48,7 @@ public class NMEAMessageHandlerTest {
     }
 
     @Test
-    public void canHandleFragmentedMessageReceived() {
+    public void b_canHandleFragmentedMessageReceived() {
         NMEAMessage fragmentedNMEAMessage1 = NMEAMessage.fromString("!AIVDM,2,1,3,B,55DA><02=6wpPuID000qTf059@DlU<00000000171lMDD4q20LmDp3hB,0*27");
         NMEAMessage fragmentedNMEAMessage2 = NMEAMessage.fromString("!AIVDM,2,2,3,B,p=Mh00000000000,2*4C");
 
@@ -61,7 +65,7 @@ public class NMEAMessageHandlerTest {
     }
 
     @Test
-    public void canFlushEmpty() {
+    public void c_canFlushEmpty() {
         NMEAMessage unfragmentedNMEAMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A");
         NMEAMessage fragmentedNMEAMessage1 = NMEAMessage.fromString("!AIVDM,2,1,3,B,55DA><02=6wpPuID000qTf059@DlU<00000000171lMDD4q20LmDp3hB,0*27");
         NMEAMessage fragmentedNMEAMessage2 = NMEAMessage.fromString("!AIVDM,2,2,3,B,p=Mh00000000000,2*4C");
@@ -83,7 +87,7 @@ public class NMEAMessageHandlerTest {
     }
 
     @Test
-    public void canFlushUnhandled() {
+    public void d_canFlushUnhandled() {
         NMEAMessage unfragmentedNMEAMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A");
         NMEAMessage fragmentedNMEAMessage1 = NMEAMessage.fromString("!AIVDM,2,1,3,B,55DA><02=6wpPuID000qTf059@DlU<00000000171lMDD4q20LmDp3hB,0*27");
 
