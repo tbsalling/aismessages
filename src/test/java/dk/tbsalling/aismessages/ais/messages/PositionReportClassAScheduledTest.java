@@ -3,9 +3,9 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.messages.types.*;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class PositionReportClassAScheduledTest {
 
@@ -35,9 +35,9 @@ public class PositionReportClassAScheduledTest {
         assertFalse(message.getRaimFlag());
     }
 
-    @Test(expected = InvalidMessage.class)
+    @Test
     public void detectInvalidMessage() {
-        AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,13chv900160wps@GF<FlHCjR0<0ht2cv3i,0*1A"));
+        assertThrows(InvalidMessage.class, () -> AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,13chv900160wps@GF<FlHCjR0<0ht2cv3i,0*1A")));
     }
 
     @Test

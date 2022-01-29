@@ -5,10 +5,10 @@ import dk.tbsalling.aismessages.ais.messages.asm.NumberOfPersonsOnBoard;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AddressedBinaryMessageTest {
 

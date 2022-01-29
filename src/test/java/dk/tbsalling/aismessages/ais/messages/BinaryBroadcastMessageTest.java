@@ -7,10 +7,9 @@ import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class BinaryBroadcastMessageTest {
 
@@ -114,14 +113,9 @@ public class BinaryBroadcastMessageTest {
         assertEquals(Integer.valueOf(0), inlandMessage.getQualityOfHeadingInformation());
     }
 
-
-    @Test(expected = InvalidMessage.class)
+    @Test
     public void failsWithInvalidMessageWhenDecodingShortMessage() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,83aDCr@,0*5F"));
-        BinaryBroadcastMessage binaryBroadcastMessage = (BinaryBroadcastMessage) aisMessage;
-
-        ApplicationSpecificMessage asm = binaryBroadcastMessage.getApplicationSpecificMessage();
-
-        System.out.println(aisMessage);
+        assertThrows(InvalidMessage.class, () -> AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,83aDCr@,0*5F")));
     }
+
 }

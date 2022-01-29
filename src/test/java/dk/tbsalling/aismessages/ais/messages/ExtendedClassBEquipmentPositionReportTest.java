@@ -3,11 +3,11 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import static dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice.Gps;
 import static dk.tbsalling.aismessages.ais.messages.types.ShipType.Fishing;
-import static org.junit.Assert.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class ExtendedClassBEquipmentPositionReportTest {
 

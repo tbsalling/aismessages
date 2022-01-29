@@ -1,8 +1,8 @@
 package dk.tbsalling.aismessages.nmea;
 
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
-import org.junit.BeforeClass;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -17,7 +17,7 @@ public class NMEAMessageInputStreamReaderTest {
 
     private static Consumer<NMEAMessage> nmeaMessageHandler;
 
-    @BeforeClass
+    @BeforeAll
     public static void setUp() {
         nmeaMessageHandler = new NMEAMessageHandler("TEST");
     }

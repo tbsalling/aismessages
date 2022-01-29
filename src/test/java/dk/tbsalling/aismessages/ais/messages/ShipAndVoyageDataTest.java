@@ -1,23 +1,16 @@
 package dk.tbsalling.aismessages.ais.messages;
 
-import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
-import dk.tbsalling.aismessages.ais.messages.types.IMO;
-import dk.tbsalling.aismessages.ais.messages.types.MMSI;
-import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
-import dk.tbsalling.aismessages.ais.messages.types.ShipType;
+import dk.tbsalling.aismessages.ais.messages.types.*;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.security.NoSuchAlgorithmException;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class ShipAndVoyageDataTest {
 

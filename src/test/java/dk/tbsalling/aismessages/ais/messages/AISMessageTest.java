@@ -4,7 +4,7 @@ import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.exceptions.NMEAParseException;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -12,7 +12,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.time.Instant;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class AISMessageTest {
 
@@ -65,14 +65,14 @@ public class AISMessageTest {
         assertNotEquals(ais1, ais3);
     }
 
-    @Test(expected = InvalidMessage.class)
+    @Test
     public void canHandleEmptyMessage() {
-        AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,00,4*21"));
+        assertThrows(InvalidMessage.class, () -> AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,00,4*21")));
     }
 
-    @Test(expected = NMEAParseException.class)
+    @Test
     public void canHandleUnparsableNMEAMessage() {
-        AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,13K6th002u9@8P0DEVv2M1up02Pl,0*740008,2*09"));
+        assertThrows(NMEAParseException.class, () -> AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,13K6th002u9@8P0DEVv2M1up02Pl,0*740008,2*09")));
     }
 
     @Test

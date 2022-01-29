@@ -6,27 +6,27 @@ import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.test.helpers.ArgumentCaptor;
 import org.jmock.Expectations;
 import org.jmock.Mockery;
-import org.jmock.integration.junit4.JUnit4Mockery;
-import org.junit.BeforeClass;
-import org.junit.FixMethodOrder;
-import org.junit.Test;
-import org.junit.runners.MethodSorters;
+import org.jmock.junit5.JUnit5Mockery;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 
 import java.util.ArrayList;
 import java.util.function.Consumer;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-@FixMethodOrder(MethodSorters.NAME_ASCENDING)
+@TestMethodOrder(MethodOrderer.MethodName.class)
 public class NMEAMessageHandlerTest {
-    private final static Mockery context = new JUnit4Mockery();
+    private final static Mockery context = new JUnit5Mockery();
 
     private static Consumer<AISMessage> aisMessageHandler;
     private static NMEAMessageHandler aisMessageReceiver;
 
     @SuppressWarnings("unchecked")
-    @BeforeClass
+    @BeforeAll
     public static void setUp() {
         aisMessageHandler = (Consumer<AISMessage>) context.mock(Consumer.class);
         aisMessageReceiver = new NMEAMessageHandler("TEST", aisMessageHandler);
