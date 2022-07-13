@@ -81,9 +81,14 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
     }
 
     @SuppressWarnings("unused")
-	public Boolean getPositionAccurate() {
-        return getDecodedValue(() -> positionAccurate, value -> positionAccurate = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(56, 57)));
+	public Boolean getPositionAccuracy() {
+        return getDecodedValue(() -> positionAccuracy, value -> positionAccuracy = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(56, 57)));
 	}
+
+    @SuppressWarnings("unused")
+    public Boolean getPositionAccurate() {
+        return getPositionAccuracy();
+    }
 
     @SuppressWarnings("unused")
 	public Float getLatitude() {
@@ -191,7 +196,7 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
                 "messageType=" + getMessageType() +
                 ", regionalReserved1='" + getRegionalReserved1() + '\'' +
                 ", speedOverGround=" + getSpeedOverGround() +
-                ", positionAccurate=" + getPositionAccurate() +
+                ", positionAccuracy=" + getPositionAccuracy() +
                 ", latitude=" + getLatitude() +
                 ", longitude=" + getLongitude() +
                 ", courseOverGround=" + getCourseOverGround() +
@@ -213,7 +218,7 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
 
     private transient String regionalReserved1;
     private transient Float speedOverGround;
-    private transient Boolean positionAccurate;
+    private transient Boolean positionAccuracy;
     private transient Float latitude;
     private transient Float longitude;
     private transient Float courseOverGround;
