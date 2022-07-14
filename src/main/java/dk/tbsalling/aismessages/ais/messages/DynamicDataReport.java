@@ -28,4 +28,5 @@ public interface DynamicDataReport extends DataReport {
 	Integer getRawSpeedOverGround();
 	Float getCourseOverGround();
 	Integer getRawCourseOverGround();
+	Boolean getPositionAccuracy();
 }

@@ -79,9 +79,14 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
     }
 
     @SuppressWarnings("unused")
-	public Boolean getPositionAccurate() {
-        return getDecodedValue(() -> positionAccurate, value -> positionAccurate = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(60, 61)));
+	public Boolean getPositionAccuracy() {
+        return getDecodedValue(() -> positionAccuracy, value -> positionAccuracy = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(60, 61)));
 	}
+
+    @SuppressWarnings("unused")
+    public Boolean getPositionAccurate() {
+        return getPositionAccuracy();
+    }
 
     @SuppressWarnings("unused")
 	public Float getLongitude() {
@@ -149,7 +154,7 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
                 "messageType=" + getMessageType() +
                 ", altitude=" + getAltitude() +
                 ", speed=" + getSpeedOverGround() +
-                ", positionAccurate=" + getPositionAccurate() +
+                ", positionAccuracy=" + getPositionAccuracy() +
                 ", latitude=" + getLatitude() +
                 ", longitude=" + getLongitude() +
                 ", courseOverGround=" + getCourseOverGround() +
@@ -164,7 +169,7 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
 
     private transient Integer altitude;
 	private transient Float speed;
-	private transient Boolean positionAccurate;
+	private transient Boolean positionAccuracy;
 	private transient Float latitude;
 	private transient Float longitude;
 	private transient Float courseOverGround;
