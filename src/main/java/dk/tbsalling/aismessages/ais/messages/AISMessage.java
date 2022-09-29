@@ -56,7 +56,7 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
 
     private transient static final System.Logger LOG = System.getLogger(AISMessage.class.getName());
 
-    public transient static final String VERSION = "3.2.1";
+    public transient static final String VERSION = "3.2.5";
 
     static {
         System.err.print("\n" + "AISMessages v" + VERSION + " // Copyright (c) 2011- by S-Consult ApS, Denmark, CVR DK31327490. http://tbsalling.dk.\n" + "\n" + "This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License. To view a copy of\n" + "this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/ or send a letter to Creative Commons, 171 Second Street,\n" + "Suite 300, San Francisco, California, 94105, USA.\n" + "\n" + "NOT FOR COMMERCIAL USE!\n" + "Contact Thomas Borg Salling <tbsalling@tbsalling.dk> to obtain commercially licensed software.\n" + "\n");
