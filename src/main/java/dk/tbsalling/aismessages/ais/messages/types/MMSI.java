@@ -17,6 +17,7 @@
 package dk.tbsalling.aismessages.ais.messages.types;
 
 import java.io.Serializable;
+import java.util.Objects;
 
 @SuppressWarnings("serial")
 public class MMSI implements Serializable {
@@ -24,19 +25,34 @@ public class MMSI implements Serializable {
 	public MMSI(int mmsi) {
 		this.mmsi = mmsi;
 	}
-	
-	public static MMSI valueOf(int mmsi) {
-		return new MMSI(mmsi);
-	}
-	
-	@Override
-	public String toString() {
-		return "MMSI [mmsi=" + mmsi + "]";
-	}
 
-	public Integer getMMSI() {
-	    return Integer.valueOf(mmsi);
-	}
+    public static MMSI valueOf(int mmsi) {
+        return new MMSI(mmsi);
+    }
+
+    @Override
+    public String toString() {
+        return "MMSI [mmsi=" + mmsi + "]";
+    }
+
+    @Deprecated(forRemoval = true)
+    public Integer getMMSI() {
+        return Integer.valueOf(mmsi);
+    }
+
+    public int intValue() {
+        return mmsi;
+    }
+
+    public String as9DigitString() {
+        String mmsiAsString = String.format("%09d", mmsi);
+
+        int n = mmsiAsString.length();
+        if (n != 9)
+            throw new IllegalStateException("mmsi " + mmsi + " as 9-digit string has length " + n + ", not 9.");
+
+        return mmsiAsString;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -52,7 +68,7 @@ public class MMSI implements Serializable {
 
     @Override
     public int hashCode() {
-        return mmsi;
+        return Objects.hashCode(mmsi);
     }
 
     private final int mmsi;
