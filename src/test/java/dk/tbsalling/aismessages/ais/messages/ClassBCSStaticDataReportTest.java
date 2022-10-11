@@ -45,6 +45,22 @@ public class ClassBCSStaticDataReportTest {
     }
 
     @Test
+    @Disabled
+    public void canDecode_githubIssue47() {
+        String msg = "!AIVDM,1,1,,,H7tKep@H>0u8<PTB222222222200,2*01";
+        NMEAMessage nmeaMessage = NMEAMessage.fromString(msg);
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+
+        System.out.println(aisMessage.toString());
+
+        assertTrue(aisMessage instanceof ClassBCSStaticDataReport);
+        assertEquals(24, aisMessage.getMessageType().getCode().intValue());
+        assertEquals(0, ((ClassBCSStaticDataReport) aisMessage).getPartNumber().intValue());
+        assertEquals(533130721, aisMessage.getSourceMmsi().getMMSI().intValue());
+        assertEquals("FC ORCHID", ((ClassBCSStaticDataReport) aisMessage).getShipName());
+    }
+
+    @Test
     public void canDecode_partAB() {
         String partA = "!AIVDM,1,1,,A,H42O55i18tMET00000000000000,2*6D";
         String partB = "!AIVDM,1,1,,A,H42O55lti4hhhilD3nink000?050,0*40";

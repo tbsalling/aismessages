@@ -48,8 +48,8 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
 
         final int numberOfBits = getNumberOfBits();
 
-        if (IntStream.of(158, 160, 168).noneMatch(l -> numberOfBits == l))
-            errorMessage.append(format("Message of type %s should be exactly 158, 160 or 168 bits long; not %d.", getMessageType(), numberOfBits));
+        if (IntStream.of(158, 160, 166, 168).noneMatch(l -> numberOfBits == l))
+            errorMessage.append(format("Message of type %s should be exactly 158, 160, 166 or 168 bits long; not %d.", getMessageType(), numberOfBits));
 
         if (errorMessage.length() > 0) {
             if (numberOfBits >= 38)
