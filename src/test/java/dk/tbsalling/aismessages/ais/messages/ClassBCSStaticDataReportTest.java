@@ -45,7 +45,6 @@ public class ClassBCSStaticDataReportTest {
     }
 
     @Test
-    @Disabled
     public void canDecode_githubIssue47() {
         String msg = "!AIVDM,1,1,,,H7tKep@H>0u8<PTB222222222200,2*01";
         NMEAMessage nmeaMessage = NMEAMessage.fromString(msg);
