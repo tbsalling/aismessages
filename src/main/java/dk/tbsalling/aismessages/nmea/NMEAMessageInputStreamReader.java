@@ -32,6 +32,7 @@ import java.util.Objects;
 import java.util.Queue;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Supplier;
 
 import static java.lang.System.Logger.Level.*;
@@ -40,8 +41,9 @@ public class NMEAMessageInputStreamReader {
 
 	private static final System.Logger LOG = System.getLogger(NMEAMessageInputStreamReader.class.getName());
 
-	public NMEAMessageInputStreamReader(List<String> nmeaStrings, Consumer<? super NMEAMessage> nmeaMessageHandler) {
+	public NMEAMessageInputStreamReader(List<String> nmeaStrings, Function<String, String> nmeaStringPreProcessor, Consumer<? super NMEAMessage> nmeaMessageHandler) {
 		Objects.requireNonNull(nmeaStrings, "nmeaStrings cannot be null.");
+		Objects.requireNonNull(nmeaStringPreProcessor, "nmeaStringPreProcessor cannot be null.");
 		Objects.requireNonNull(nmeaMessageHandler, "nmeaMessageHandler cannot be null.");
 
 		if (nmeaStrings instanceof Queue)
@@ -51,11 +53,17 @@ public class NMEAMessageInputStreamReader {
 			this.stringSupplier = () -> nmeaStringsQueue.poll();
 		}
 
+		this.nmeaMessagePreProcessor = nmeaStringPreProcessor;
 		this.nmeaMessageHandler = nmeaMessageHandler;
 	}
 
-	public NMEAMessageInputStreamReader(InputStream inputStream, Consumer<? super NMEAMessage> nmeaMessageHandler) {
+	public NMEAMessageInputStreamReader(List<String> nmeaStrings, Consumer<? super NMEAMessage> nmeaMessageHandler) {
+		this(nmeaStrings, Function.identity(), nmeaMessageHandler);
+	}
+
+	public NMEAMessageInputStreamReader(InputStream inputStream, Function<String, String> nmeaStringPreProcessor, Consumer<? super NMEAMessage> nmeaMessageHandler) {
 		this.nmeaMessageHandler = nmeaMessageHandler;
+		this.nmeaMessagePreProcessor = nmeaStringPreProcessor;
 
 		InputStreamReader reader = new InputStreamReader(inputStream, Charset.defaultCharset());
 		BufferedReader bufferedReader = new BufferedReader(reader);
@@ -66,6 +74,10 @@ public class NMEAMessageInputStreamReader {
 				throw new RuntimeException(e.getMessage(), e);
 			}
 		};
+	}
+
+	public NMEAMessageInputStreamReader(InputStream inputStream, Consumer<? super NMEAMessage> nmeaMessageHandler) {
+		this(inputStream, Function.identity(), nmeaMessageHandler);
 	}
 
 	public final void requestStop() {
@@ -79,6 +91,8 @@ public class NMEAMessageInputStreamReader {
 		while ((string = stringSupplier.get()) != null) {
 			if (isStopRequested())
 				break;
+
+			string = nmeaMessagePreProcessor.apply(string);
 
 			try {
 				NMEAMessage nmea = NMEAMessage.fromString(string);
@@ -102,5 +116,6 @@ public class NMEAMessageInputStreamReader {
 
 	private final AtomicBoolean stopRequested = new AtomicBoolean(false);
 	private final Supplier<String> stringSupplier;
+	private final Function<String, String> nmeaMessagePreProcessor;
 	private final Consumer<? super NMEAMessage> nmeaMessageHandler;
 }

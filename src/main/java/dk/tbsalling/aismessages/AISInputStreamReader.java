@@ -23,6 +23,7 @@ import dk.tbsalling.aismessages.nmea.NMEAMessageInputStreamReader;
 import java.io.InputStream;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 /**
  * AISMessageInputStreamReader is the main entry point into the program loop
@@ -43,6 +44,11 @@ public class AISInputStreamReader {
     public AISInputStreamReader(InputStream inputStream, Consumer<? super AISMessage> aisMessageConsumer) {
         this.nmeaMessageHandler = new NMEAMessageHandler("SRC", aisMessageConsumer);
         this.nmeaMessageInputStreamReader = new NMEAMessageInputStreamReader(inputStream, this.nmeaMessageHandler::accept);
+    }
+
+    public AISInputStreamReader(InputStream inputStream, Function<String, String> nmeaStringPreProcessor, Consumer<? super AISMessage> aisMessageConsumer) {
+        this.nmeaMessageHandler = new NMEAMessageHandler("SRC", aisMessageConsumer);
+        this.nmeaMessageInputStreamReader = new NMEAMessageInputStreamReader(inputStream, nmeaStringPreProcessor, this.nmeaMessageHandler::accept);
     }
 
     public final void requestStop() {
