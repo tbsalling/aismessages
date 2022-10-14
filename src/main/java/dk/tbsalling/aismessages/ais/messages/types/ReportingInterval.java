@@ -34,11 +34,11 @@ public enum ReportingInterval {
 	FutureUse4(14),
 	FutureUse5(15);
 
-	ReportingInterval(Integer code) {
+	ReportingInterval(int code) {
 		this.code = code;
 	}
 	
-	public Integer getCode() {
+	public int getCode() {
 		return code;
 	}
 
@@ -46,12 +46,12 @@ public enum ReportingInterval {
 	    return toString();
 	}
 
-	private final Integer code;
+	private final int code;
 
 	public static ReportingInterval fromInteger(Integer integer) {
 		if (integer != null) {
 			for (ReportingInterval b : ReportingInterval.values()) {
-				if (integer.equals(b.code)) {
+				if (integer.intValue() == b.code) {
 					return b;
 				}
 			}

@@ -22,11 +22,11 @@ public enum TxRxMode {
 	TxBRxAB(2),
 	FutureUse(3);
 
-	TxRxMode(Integer code) {
+	TxRxMode(int code) {
 		this.code = code;
 	}
 	
-	public Integer getCode() {
+	public int getCode() {
 		return code;
 	}
 
@@ -34,12 +34,12 @@ public enum TxRxMode {
 	    return toString();
 	}
 
-	private final Integer code;
+	private final int code;
 
 	public static TxRxMode fromInteger(Integer integer) {
 		if (integer != null) {
 			for (TxRxMode b : TxRxMode.values()) {
-				if (integer.equals(b.code)) {
+				if (integer.intValue() == b.code) {
 					return b;
 				}
 			}

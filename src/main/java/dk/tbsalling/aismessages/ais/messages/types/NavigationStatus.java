@@ -34,11 +34,11 @@ public enum NavigationStatus {
 	SartMobOrEpirb(14),
 	Undefined(15);
 
-	NavigationStatus(Integer code) {
+	NavigationStatus(int code) {
 		this.code = code;
 	}
 	
-	public Integer getCode() {
+	public int getCode() {
 		return code;
 	}
 
@@ -46,12 +46,12 @@ public enum NavigationStatus {
 	    return toString();
 	}
 
-	private final Integer code;
+	private final int code;
 
 	public static NavigationStatus fromInteger(Integer integer) {
 		if (integer != null) {
 			for (NavigationStatus b : NavigationStatus.values()) {
-				if (integer.equals(b.code)) {
+				if (integer.intValue() == b.code) {
 					return b;
 				}
 			}

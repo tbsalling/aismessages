@@ -27,11 +27,11 @@ public enum PositionFixingDevice {
 	Surveyed(7),
 	Galileo(8);
 
-	PositionFixingDevice(Integer code) {
+	PositionFixingDevice(int code) {
 		this.code = code;
 	}
 	
-	public Integer getCode() {
+	public int getCode() {
 		return code;
 	}
 
@@ -39,12 +39,12 @@ public enum PositionFixingDevice {
 	    return toString();
 	}
 
-	private final Integer code;
+	private final int code;
 
 	public static PositionFixingDevice fromInteger(Integer integer) {
 		if (integer != null) {
 			for (PositionFixingDevice b : PositionFixingDevice.values()) {
-				if (integer.equals(b.code)) {
+				if (integer.intValue() == b.code) {
 					return b;
 				}
 			}

@@ -50,9 +50,17 @@ public class IMO implements Serializable {
 		return "IMO [imo=" + imo + "]";
 	}
 
+    /**
+     * @deprecated Use {@link #intValue()} instead.
+     */
+    @Deprecated(forRemoval = true)
     public Integer getIMO() {
 	    return imo;
 	}
+
+    public int intValue() {
+        return imo;
+    }
 
 	private final int imo;
 }

@@ -22,11 +22,11 @@ public enum SyncState {
 	BaseDirect(2),
 	BaseIndirect(3);
 
-	SyncState(Integer code) {
+	SyncState(int code) {
 		this.code = code;
 	}
 	
-	public Integer getCode() {
+	public int getCode() {
 		return code;
 	}
 
@@ -34,12 +34,12 @@ public enum SyncState {
 	    return toString();
 	}
 
-	private final Integer code;
+	private final int code;
 
 	public static SyncState fromInteger(Integer integer) {
 		if (integer != null) {
 			for (SyncState b : SyncState.values()) {
-				if (integer.equals(b.code)) {
+				if (integer.intValue() == b.code) {
 					return b;
 				}
 			}

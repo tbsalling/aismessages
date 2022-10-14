@@ -34,11 +34,11 @@ public enum StationType {
 	FutureUse4(14),
 	FutureUse5(15);
 	
-	StationType(Integer code) {
+	StationType(int code) {
 		this.code = code;
 	}
 	
-	public Integer getCode() {
+	public int getCode() {
 		return code;
 	}
 
@@ -46,12 +46,12 @@ public enum StationType {
 	    return toString();
 	}
 
-	private final Integer code;
+	private final int code;
 
 	public static StationType fromInteger(Integer integer) {
 		if (integer != null) {
 			for (StationType b : StationType.values()) {
-				if (integer.equals(b.code)) {
+				if (integer.intValue() == b.code) {
 					return b;
 				}
 			}

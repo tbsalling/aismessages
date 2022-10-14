@@ -50,11 +50,11 @@ public enum AidType {
 	SpecialMark(30),
 	LightVessel(31);
 
-	AidType(Integer code) {
+	AidType(int code) {
 		this.code = code;
 	}
 	
-	public Integer getCode() {
+	public int getCode() {
 		return code;
 	}
 
@@ -62,12 +62,12 @@ public enum AidType {
 	    return toString();
 	}
 
-	private final Integer code;
+	private final int code;
 
 	public static AidType fromInteger(Integer integer) {
 		if (integer != null) {
 			for (AidType b : AidType.values()) {
-				if (integer.equals(b.code)) {
+				if (integer.intValue() == b.code) {
 					return b;
 				}
 			}

@@ -21,11 +21,11 @@ public enum ManeuverIndicator {
 	NoSpecialManeuver(1),
 	SpecialManeuver(2);
 
-	ManeuverIndicator(Integer code) {
+	ManeuverIndicator(int code) {
 		this.code = code;
 	}
 	
-	public Integer getCode() {
+	public int getCode() {
 		return code;
 	}
 
@@ -33,12 +33,12 @@ public enum ManeuverIndicator {
 	    return toString();
 	}
 
-	private final Integer code;
+	private final int code;
 
 	public static ManeuverIndicator fromInteger(Integer integer) {
 		if (integer != null) {
 			for (ManeuverIndicator b : ManeuverIndicator.values()) {
-				if (integer.equals(b.code)) {
+				if (integer.intValue() == b.code) {
 					return b;
 				}
 			}

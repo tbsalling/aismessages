@@ -87,11 +87,11 @@ public enum ShipType {
 	OtherFuture4(98),
 	OtherNoAdditionalInfo(99);
 
-	ShipType(Integer code) {
+	ShipType(int code) {
 		this.code = code;
 	}
 	
-	public Integer getCode() {
+	public int getCode() {
 		return code;
 	}
 
@@ -99,12 +99,12 @@ public enum ShipType {
 	    return toString();
 	}
 
-	private final Integer code;
+	private final int code;
 
 	public static ShipType fromInteger(Integer integer) {
 		if (integer != null) {
 			for (ShipType b : ShipType.values()) {
-				if (integer.equals(b.code)) {
+				if (integer.intValue() == b.code) {
 					return b;
 				}
 			}

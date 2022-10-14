@@ -50,11 +50,11 @@ public enum AISMessageType {
 	public final static int MINIMUM_CODE = 1;
 	public final static int MAXIMUM_CODE = 27;
 
-	AISMessageType(Integer code) {
+	AISMessageType(int code) {
 		this.code = code;
 	}
 
-	public Integer getCode() {
+	public int getCode() {
 		return code;
 	}
 
@@ -65,7 +65,7 @@ public enum AISMessageType {
 	public static AISMessageType fromInteger(Integer integer) {
 		if (integer != null) {
 			for (AISMessageType b : AISMessageType.values()) {
-				if (integer.equals(b.code)) {
+				if (integer.intValue() == b.code) {
 					return b;
 				}
 			}
@@ -73,5 +73,5 @@ public enum AISMessageType {
 		return null;
 	}
 
-	private final Integer code;
+	private final int code;
 }
