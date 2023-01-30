@@ -65,4 +65,5 @@ public class AISInputStreamReader {
 
     private final NMEAMessageHandler nmeaMessageHandler;
 	private final NMEAMessageInputStreamReader nmeaMessageInputStreamReader;
+
 }
