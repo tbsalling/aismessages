@@ -17,6 +17,7 @@ import java.util.function.Consumer;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class NMEAMessageHandlerTest {
@@ -105,5 +106,24 @@ public class NMEAMessageHandlerTest {
         assertNotNull(flush);
         assertEquals(1, flush.size());
         assertEquals(fragmentedNMEAMessage1, flush.get(0));
+    }
+
+    @Test
+    public void canHandleInvalidFragmentMessageReceived() {
+        NMEAMessage invalidFragmentNMEAMessage = NMEAMessage.fromString("!AIVDM,,1,,B,13cpFJ0P0100`lE4IIvW8@Ow`052p,0*53");
+
+        final ArgumentCaptor<AISMessage> aisMessage = new ArgumentCaptor<>();
+
+        context.checking(new Expectations() {{
+            oneOf(aisMessageHandler).accept(with(aisMessage.getMatcher()));
+        }});
+
+        aisMessageReceiver.accept(invalidFragmentNMEAMessage);
+
+        ArrayList<NMEAMessage> flush = aisMessageReceiver.flush();
+
+        assertNotNull(flush);
+        assertEquals(0, flush.size());
+        assertDoesNotThrow(() -> {});
     }
 }
