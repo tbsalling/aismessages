@@ -69,19 +69,19 @@ public class NMEAMessage implements Serializable {
     @SuppressWarnings("unused")
     public Integer getNumberOfFragments() {
         String[] msg = rawMessage.split(",");
-        return isBlank(msg[1]) ? null : Integer.valueOf(msg[1]);
+        return isBlank(msg[1]) ? 0 : Integer.parseInt(msg[1]);
 	}
 
     @SuppressWarnings("unused")
     public Integer getFragmentNumber() {
         String[] msg = rawMessage.split(",");
-        return isBlank(msg[2]) ? null : Integer.valueOf(msg[2]);
+        return isBlank(msg[2]) ? 0 : Integer.parseInt(msg[2]);
 	}
 
     @SuppressWarnings("unused")
     public Integer getSequenceNumber() {
         String[] msg = rawMessage.split(",");
-        return isBlank(msg[3]) ? null : Integer.valueOf(msg[3]);
+        return isBlank(msg[3]) ? 0 : Integer.parseInt(msg[3]);
 	}
 
     @SuppressWarnings("unused")
@@ -100,14 +100,14 @@ public class NMEAMessage implements Serializable {
     public Integer getFillBits() {
         String[] msg = rawMessage.split(",");
         String msg1[] = msg[6].split("\\*");
-        return isBlank(msg1[0]) ? null : Integer.valueOf(msg1[0]);
+        return isBlank(msg1[0]) ? 0 : Integer.parseInt(msg1[0]);
 	}
 
     @SuppressWarnings("unused")
     public Integer getChecksum() {
         String[] msg = rawMessage.split(",");
         String msg1[] = msg[6].split("\\*");
-		return isBlank(msg1[1]) ? null : Integer.valueOf(msg1[1], 16);
+		return isBlank(msg1[1]) ? 0 : Integer.valueOf(msg1[1], 16);
 	}
 
     @SuppressWarnings("unused")
