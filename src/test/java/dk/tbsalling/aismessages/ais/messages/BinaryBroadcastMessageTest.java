@@ -114,6 +114,18 @@ public class BinaryBroadcastMessageTest {
     }
 
     @Test
+    public void canDecodeDac265Fi1EmptyPayload() {
+        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,83n30vi2@@,4*69"));
+        System.out.println(aisMessage.toString());
+
+        assertTrue(aisMessage instanceof BinaryBroadcastMessage);
+        BinaryBroadcastMessage binaryBroadcastMessage = (BinaryBroadcastMessage) aisMessage;
+        assertEquals(265, binaryBroadcastMessage.getDesignatedAreaCode());
+        assertEquals(1, binaryBroadcastMessage.getFunctionalId());
+        assertEquals("", binaryBroadcastMessage.getBinaryData());
+    }
+
+    @Test
     public void failsWithInvalidMessageWhenDecodingShortMessage() {
         assertThrows(InvalidMessage.class, () -> AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,83aDCr@,0*5F")));
     }

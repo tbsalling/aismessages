@@ -55,7 +55,7 @@ public class BinaryBroadcastMessage extends AISMessage {
 
         final int numberOfBits = getNumberOfBits();
 
-        if (numberOfBits <= 56) {
+        if (numberOfBits < 56) {
             errorMessage.append(format("Message of type %s should be at least 56 bits long; not %d.", getMessageType(), numberOfBits));
 
             if (numberOfBits >= 40)
