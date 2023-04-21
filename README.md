@@ -123,9 +123,10 @@ need to do is add these lines to your pom.xml:
 
 License
 ---
-AISmessages is released under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported (CC BY-NC-SA 3.0)
+AISmessages is released under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA
+4.0)
 license - which means that it is free for non-commercial use. For full license details see the
-[LICENSE-full](LICENSE-full) file.
+[LICENSE-full](LICENSE.txt) file or read [the summary](LICENSE-summary.md).
 
 To obtain a commercial license and/or commercial support contact
-[Thomas Borg Salling](mailto:tbsalling@tbsalling.dk?subject=[GitHub]%20AISmessages%20license).
+[Thomas Borg Salling](mailto:tbsalling@tbsalling.dk?subject=[GitHub]%20AISmessages%20license) - tbsalling@tbsalling.dk.
