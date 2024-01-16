@@ -8,6 +8,7 @@ import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import org.junit.jupiter.api.Test;
 
 import java.util.Map;
+import java.util.UUID;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -76,7 +77,7 @@ public class AidToNavigationReportTest {
         assertNotNull(dataFields);
         dataFields.forEach((k,v) -> System.out.format("%s=%s\n", k, v));
 
-        assertEquals(22, dataFields.size());
+        assertEquals(25, dataFields.size());
 
         assertEquals("AidToNavigationReport", dataFields.get("messageType"));
         assertEquals(0, dataFields.get("repeatIndicator"));
@@ -99,9 +100,10 @@ public class AidToNavigationReportTest {
         assertEquals(false, dataFields.get("assignedMode"));
         assertEquals(0, dataFields.get("spare1"));
         assertEquals(0, dataFields.get("spare2"));
+        assertNull(dataFields.get("nameExtension"));
 
-        assertFalse(dataFields.containsKey("nameExtension"));
         assertFalse(dataFields.containsKey("class"));
+        assertFalse(dataFields.containsKey(UUID.randomUUID().toString()));
     }
 
 }
