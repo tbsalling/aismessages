@@ -143,6 +143,13 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         return map;
     }
 
+    /**
+     * Retrieves the values of all getter methods for the given object and stores them in a map.
+     *
+     * @param getterValues the map to store the getter values in
+     * @param prefix       the prefix to be added to the property name in the map
+     * @param o            the object to retrieve the getter values from
+     */
     private void callGetters(Map getterValues, String prefix, Object o) {
         Method[] methods = o.getClass().getMethods();
 
@@ -184,6 +191,12 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
                 });
     }
 
+    /**
+     * Checks if the given class is a complex type.
+     *
+     * @param clazz the class to be checked
+     * @return true if the class is a complex type, false otherwise
+     */
     private boolean isComplexType(Class<?> clazz) {
         if (clazz.isArray() || clazz.isEnum())
             return false;
@@ -200,6 +213,12 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
                 .isPresent();
     }
 
+    /**
+     * Converts the first character of the input string to lowercase.
+     *
+     * @param string the string to be decapitalized
+     * @return the decapitalized string
+     */
     private static String decapitalize(String string) {
         if (string != null) {
             if (!string.equals(string.toUpperCase())) {
@@ -212,6 +231,13 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         return string;
     }
 
+    /**
+     * Adds a prefix to a given string.
+     *
+     * @param prefix the prefix to be added
+     * @param string the string to add the prefix to
+     * @return the string with the prefix added, or the original string if the prefix is empty or null
+     */
     private static String addPrefix(String prefix, String string) {
         if (prefix == null || prefix.isEmpty() || prefix.trim().isEmpty())
             return string;
@@ -272,11 +298,22 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         return AISMessageType.fromInteger(Integer.parseInt(getBits(0, 6), 2));
     }
 
+    /**
+     * Retrieves the repeat indicator value of the AIS message.
+     *
+     * @return The repeat indicator value.
+     */
     @SuppressWarnings("unused")
     public final Integer getRepeatIndicator() {
         return getDecodedValue(() -> repeatIndicator, value -> repeatIndicator = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(6, 8)));
     }
 
+    /**
+     * Retrieves the source MMSI (Maritime Mobile Service Identity) of the AIS message.
+     * The source MMSI uniquely identifies the transmitting vessel or maritime entity.
+     *
+     * @return The source MMSI.
+     */
     @SuppressWarnings("unused")
     public final MMSI getSourceMmsi() {
         return getDecodedValue(() -> sourceMmsi, value -> sourceMmsi = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(8, 38))));
@@ -292,6 +329,11 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
                 '}' + tagBlockToString();
     }
 
+    /**
+     * Converts the NMEA tag block to a string representation.
+     *
+     * @return The string representation of the NMEA tag block, or an empty string if it is null.
+     */
     public String tagBlockToString() {
         String tagBlockMessage;
         if (nmeaTagBlock != null) {
@@ -303,6 +345,12 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         return tagBlockMessage;
     }
 
+    /**
+     * Retrieves the bit string representation of the AIS message payload.
+     * If the bit string has not been computed yet, it decodes the payload from the NMEA messages and stores it.
+     *
+     * @return The bit string representation of the AIS message payload.
+     */
     protected String getBitString() {
         String b = bitString.get();
         if (b == null) {
@@ -312,6 +360,12 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         return b;
     }
 
+    /**
+     * Returns a zero bit-stuffed string based on the given endIndex.
+     *
+     * @param endIndex The index where the string should end.
+     * @return The zero bit-stuffed string.
+     */
     protected String getZeroBitStuffedString(int endIndex) {
         String b = getBitString();
         if (b.length() - endIndex < 0) {
@@ -324,10 +378,23 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         return b;
     }
 
+    /**
+     * Retrieves a substring of the zero bit-stuffed string based on the given beginIndex and endIndex.
+     *
+     * @param beginIndex The starting index (inclusive) of the substring.
+     * @param endIndex   The ending index (exclusive) of the substring.
+     * @return The substring of the zero bit-stuffed string.
+     */
     public String getBits(int beginIndex, int endIndex) {
         return getZeroBitStuffedString(endIndex).substring(beginIndex, endIndex);
     }
 
+    /**
+     * Retrieves the number of bits in the AIS message payload.
+     * If the number of bits has not been computed yet, it calculates it based on the bit string representation of the payload.
+     *
+     * @return The number of bits in the AIS message payload.
+     */
     protected int getNumberOfBits() {
         if (numberOfBits < 0) {
             numberOfBits = getBitString().length();
@@ -335,6 +402,12 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         return numberOfBits;
     }
 
+    /**
+     * Decodes the payload of the given NMEAMessages into a binary string representation.
+     *
+     * @param nmeaMessages the NMEAMessages to decode. Can be one or more messages.
+     * @return the binary string representation of the decoded payload.
+     */
     protected static String decodePayloadToBitString(NMEAMessage... nmeaMessages) {
         StringBuilder sixBitEncodedPayload = new StringBuilder();
         int fillBits = -1;
@@ -492,6 +565,11 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         return aisMessageConstructor.apply(nmeaMessages, bitString);
     }
 
+    /**
+     * Checks if the message is valid.
+     *
+     * @return true if the message is valid, false otherwise
+     */
     public boolean isValid() {
         final String bitString = getBitString();
 
@@ -665,7 +743,13 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         return Boolean.TRUE;
     }
 
-    /** Decode an encoded six-bit string into a binary string of 0's and 1's */
+    /**
+     * Converts a six-bit encoded string to a binary string representation.
+     *
+     * @param encodedString the six-bit encoded string to convert
+     * @param paddingBits   the number of padding bits in the string
+     * @return the binary string representation of the six-bit encoded string
+     */
     private static String toBitString(String encodedString, Integer paddingBits) {
         StringBuilder bitString = new StringBuilder();
         int n = encodedString.length();
