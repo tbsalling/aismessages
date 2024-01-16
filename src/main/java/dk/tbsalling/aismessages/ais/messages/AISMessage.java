@@ -41,14 +41,21 @@ import static java.lang.reflect.Modifier.isPublic;
 import static java.util.Objects.requireNonNull;
 
 /**
- * The AISMessage class models a complete and self-contained AIS message.
- * <p>
- * If the AISMessage was created from received NMEA strings, then the original
- * NMEA strings are cached, together with the decoded values of the message.
- * <p>
- * Lazy extraction of values.
+ * The AISMessage class represents an AIS message, which is a standardized format for transmitting maritime data.
+ * It contains methods for creating, manipulating, and decoding AIS messages.
  *
- * @author tbsalling
+ * AIS messages can be created from NMEA messages or directly from bit strings. They can also be serialized to
+ * a printable string format.  If the AISMessage was created from received NMEA strings, then the original
+ * NMEA strings are cached, together with the decoded values of the message.
+ *
+ * This class provides methods for checking the validity of the AIS message payload, as well as computing message
+ * digests for filtering and doublet discovery.
+ *
+ * The class also includes methods for getting and setting various fields of the AIS message, such as metadata,
+ * tag block, repeat indicator, and source MMSI.
+ *
+ * Subclasses of AISMessage represent specific types of AIS messages, providing additional methods and fields
+ * specific to that message type.
  */
 @SuppressWarnings("serial")
 public abstract class AISMessage implements Serializable, CachedDecodedValues {
