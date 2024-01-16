@@ -30,7 +30,6 @@ import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.function.BiFunction;
@@ -132,7 +131,7 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
      * @return a map of data field name and values.
      */
     public Map<String, Object> dataFields() {
-        HashMap<String, Object> map = new HashMap<>();
+        Map<String, Object> map = new TreeMap<>();
         callGetters(map, null, this);
         return map;
     }
@@ -151,17 +150,24 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
                         Class<?> returnType = m.getReturnType();
 
                         if (isComplexType(returnType)) {
-                            callGetters(getterValues, propertyName, m.invoke(o));
+                            var nestedObject = m.invoke(o);
+                            if (nestedObject == null)
+                                getterValues.put(propertyName, null);
+                            else
+                                callGetters(getterValues, propertyName, nestedObject);
                         } else if (Class.class.equals(returnType)) {
                             Object value = m.invoke(o);
                             getterValues.put(propertyName, ((Class) value).getSimpleName());
                         } else {
                             Object value = m.invoke(o);
-                            if (value != null)
+                            if (value != null) {
                                 if (returnType.isEnum())
                                     getterValues.put(propertyName, value.toString());
                                 else
                                     getterValues.put(propertyName, value);
+                            } else {
+                                getterValues.put(propertyName, null);
+                            }
                         }
                     } catch (IllegalAccessException e) {
                         e.printStackTrace();

@@ -11,6 +11,7 @@ import java.io.IOException;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.time.Instant;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -117,6 +118,31 @@ public class AISMessageTest {
         assertEquals(2, nmeaMessages.length);
         assertEquals("!BSVDM,2,1,5,A,5:02Ih01WrRsEH57J20H5P8u8N222222222222167H66663k085QBS1H,0*55", nmeaMessages[0].getRawMessage());
         assertEquals("!BSVDM,2,2,5,A,888888888888880,2*38", nmeaMessages[1].getRawMessage());
+    }
+
+    @Test
+    public void checkDataFields() {
+        // Arrange
+        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,702;bCSdToR`,0*34"));
+
+        // Act
+        Map<String, Object> dataFields = aisMessage.dataFields();
+
+        // Assert
+        assertEquals(16, dataFields.size());
+        assertEquals("BinaryAcknowledge", dataFields.get("messageType"));
+        assertNull(dataFields.get("metadata"));
+        assertEquals(992271914, dataFields.get("mmsi1.MMSI"));
+        assertNull(dataFields.get("mmsi2"));
+        assertNull(dataFields.get("mmsi3"));
+        assertNull(dataFields.get("mmsi4"));
+        assertEquals(1, dataFields.get("numOfAcks"));
+        assertEquals(0, dataFields.get("repeatIndicator"));
+        assertEquals(0, dataFields.get("sequence1"));
+        assertNull(dataFields.get("sequence2"));
+        assertNull(dataFields.get("sequence3"));
+        assertNull(dataFields.get("sequence4"));
+        assertEquals(2288206, dataFields.get("sourceMmsi.MMSI"));
     }
 
     private boolean isSerializable(Object object) {
