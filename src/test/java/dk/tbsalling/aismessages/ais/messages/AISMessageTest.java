@@ -28,7 +28,7 @@ public class AISMessageTest {
         String source = "test";
         Instant time = Instant.now();
         NMEAMessage nmea = NMEAMessage.fromString("!AIVDM,1,1,,A,13aEOK?P00PD2wVMdLDRhgvL289?,0*26");
-        NMEATagBlock tag = NMEATagBlock.fromString("\\c:1609841515,s:my dearest AIS base station*6E\\");
+        NMEATagBlock tag = NMEATagBlock.fromString("\\c:1705510832,s:43574,i:<S>S</S><O>XEE</O><T>A:1705510832 G:1 I:1705510887 D:1705510892 F:1641</T><Q>32</Q>*38\\");
 
         Metadata meta1 = new Metadata(source, time);
         Metadata meta2 = new Metadata(source, time);
