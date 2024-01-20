@@ -76,9 +76,9 @@ public class NMEATagBlock {
         String[] parameters = parameterString.split(",");
         parameterMap = new HashMap<>();
         for (String parameter : parameters) {
-            String[] code = parameter.split(":");
+            String[] code = parameter.split(":", 2);
             if (code.length != 2)
-                throw new NMEAParseException(rawMessage, "Parameter code and its value has to be separator by colon(:)");
+                throw new NMEAParseException(rawMessage, "Parameter code and its value has to be separated by colon(:)");
             if (TAGBlockParameterCodeType.contains(code[0])) {
                 NMEATagBlockParameterCode nmeaTagBlockParameterCode = NMEATagBlockParameterCode.fromString(TAGBlockParameterCodeType.valueOf(code[0]), code[1]);
                 parameterMap.put(nmeaTagBlockParameterCode.getCode() , nmeaTagBlockParameterCode);
