@@ -4,7 +4,7 @@
 	<groupId>dk.tbsalling</groupId>
 	<artifactId>aismessages</artifactId>
 	<packaging>jar</packaging>
-	<version>3.4.3-SNAPSHOT</version>
+	<version>3.5.0</version>
 	<name>aismessages</name>
 	<description>AISMessages is a light-weight and high-performing software library for decoding AIS messages related to
 		maritime navigation and safety.
@@ -163,6 +163,6 @@
 		<connection>scm:git:https://tbsalling@github.com/tbsalling/aismessages.git</connection>
 		<url>scm:git:https://tbsalling@github.com/tbsalling/aismessages.git</url>
 		<developerConnection>scm:git:https://tbsalling@github.com/tbsalling/aismessages.git</developerConnection>
-	  <tag>HEAD</tag>
+	  <tag>aismessages-3.5.0</tag>
   </scm>
 </project>
