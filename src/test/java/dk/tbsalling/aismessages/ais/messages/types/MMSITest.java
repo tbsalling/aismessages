@@ -21,4 +21,11 @@ public class MMSITest {
         assertThrows(IllegalStateException.class, () -> MMSI.valueOf(1234567890).as9DigitString());
     }
 
+    @Test
+    void as9DigitStringLenient() {
+        assertEquals("000000000", MMSI.valueOf(0).as9DigitStringLenient());
+        assertEquals("000123456", MMSI.valueOf(123456).as9DigitStringLenient());
+        assertEquals("1234567890", MMSI.valueOf(1234567890).as9DigitStringLenient());
+    }
+
 }

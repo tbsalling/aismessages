@@ -47,14 +47,31 @@ public class MMSI implements Serializable {
         return mmsi;
     }
 
+    /**
+     * Returns the MMSI as a 9-digit string.
+     * If the MMSI is not exactly 9 digits long, an exception is thrown.
+     *
+     * @return the MMSI as a 9-digit string, padded with leading zeros.
+     * @throws IllegalStateException if the MMSI is not exactly 9 digits long.
+     */
     public String as9DigitString() {
-        String mmsiAsString = String.format("%09d", mmsi);
+        String mmsiAsString = as9DigitStringLenient();
 
         int n = mmsiAsString.length();
         if (n != 9)
             throw new IllegalStateException("mmsi " + mmsi + " as 9-digit string has length " + n + ", not 9.");
 
         return mmsiAsString;
+    }
+
+    /**
+     * Returns the MMSI as a 9-digit string, but does not throw an exception if the length is not 9.
+     * This is useful for cases where the MMSI might be longer than 9 digits, such as in StandardSARAircraftPositionReport messages.
+     *
+     * @return the MMSI as a 9-digit string, padded with leading zeros.
+     */
+    public String as9DigitStringLenient() {
+        return String.format("%09d", mmsi);
     }
 
     @Override
