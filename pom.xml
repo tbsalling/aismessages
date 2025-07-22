@@ -64,7 +64,14 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
-				<version>3.5.0</version>
+				<version>3.10.1</version>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<phase>verify</phase>
+						<goals><goal>jar</goal></goals>
+					</execution>
+				</executions>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -82,6 +89,7 @@
 				<executions>
 					<execution>
 						<id>attach-sources</id>
+						<phase>verify</phase>
 						<goals>
 							<goal>jar</goal>
 						</goals>
