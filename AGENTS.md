@@ -8,6 +8,9 @@ This repository is a Java project built with Maven. When collaborating with any 
 - **Source code:** `src/main/java`
 - **Tests:** `src/test/java`
 - **Key packages:** AIS message decoder in `dk.tbsalling.aismessages`; demos in `dk.tbsalling.aismessages.demo`
+- **Library characteristics:** The core decoder is intentionally light-weight, zero-dependency, and tuned for
+  ultra-efficient, lazy decoding of NMEA armoured AIS messages.
+- **Distribution:** Published on Maven Central (`dk.tbsalling:aismessages`).
 
 ## Using AI Agents Effectively
 
@@ -29,6 +32,8 @@ This repository is a Java project built with Maven. When collaborating with any 
 4. **Minimal diffs:**
    - Focus on single concerns per change
    - Ask for diffs that apply cleanly
+   - Avoid altering lines when the only differences are whitespace so git history remains meaningful
+   - When inserting new lines, match the existing indentation style within the file
 
 5. **Tight feedback loop:**
    - Run tests after changes
