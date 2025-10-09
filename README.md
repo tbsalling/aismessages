@@ -6,15 +6,10 @@ Introduction
 AISmessages is a Java-based light-weight, zero-dependency, and ultra-efficient message decoder for maritime
 navigation and safety messages compliant with ITU 1371 (NMEA armoured AIS messages).
 
-Requirements
----
-* Java Development Kit (JDK) 25 or newer
-* Maven 3.9.11+ (included via the Maven Wrapper `./mvnw`)
-
 It exhibits lazy decoding and fully decodes tens of thousands of NMEA armoured AIS messages per second per CPU
 core on an Intel i7-based laptop.
 
-For more than 10 years AISmessages has been used in production in many systems and solutions all over the world.
+For more than 15 years AISmessages has been used in production in many systems and solutions all over the world.
 
 If you are new to AIS you can read a short introduction to it on [my blog](https://tbsalling.dk/2018/09/01/an-introduction-to-ais/). 
 
@@ -125,6 +120,11 @@ need to do is add these lines to your pom.xml:
 </dependency>
 ...
 ```
+
+Requirements
+---
+* Java Development Kit (JDK) 25 or newer
+* Maven 3.9.11+ (included via the Maven Wrapper `./mvnw`)
 
 License
 ---
