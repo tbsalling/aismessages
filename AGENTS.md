@@ -24,9 +24,11 @@ This repository is a Java project built with Maven. When collaborating with any 
    - Review and agree on plans before code changes  
    - Request unified diffs
 
-3. **Minimal diffs:**  
-   - Focus on single concerns per change  
+3. **Minimal diffs:**
+   - Focus on single concerns per change
    - Ask for diffs that apply cleanly
+   - Avoid altering lines when the only differences are whitespace so git history remains meaningful
+   - When inserting new lines, match the existing indentation style within the file
 
 4. **Tight feedback loop:**  
    - Run tests after changes  
