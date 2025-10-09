@@ -6,6 +6,11 @@ Introduction
 AISmessages is a Java-based light-weight, zero-dependency, and ultra-efficient message decoder for maritime
 navigation and safety messages compliant with ITU 1371 (NMEA armoured AIS messages).
 
+Requirements
+---
+* Java Development Kit (JDK) 25 or newer
+* Maven 3.9.11+ (included via the Maven Wrapper `./mvnw`)
+
 It exhibits lazy decoding and fully decodes tens of thousands of NMEA armoured AIS messages per second per CPU
 core on an Intel i7-based laptop.
 

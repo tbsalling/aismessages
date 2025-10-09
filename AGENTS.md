@@ -11,25 +11,30 @@ This repository is a Java project built with Maven. When collaborating with any 
 
 ## Using AI Agents Effectively
 
-1. **Share context:**  
-   - State your task clearly  
-   - Provide relevant files/snippets  
+1. **Share context:**
+   - State your task clearly
+   - Provide relevant files/snippets
    - Specify build/test commands
 
-2. **Structured prompts:**  
-   - Break tasks into steps  
-   - Review and agree on plans before code changes  
+2. **Structured prompts:**
+   - Break tasks into steps
+   - Review and agree on plans before code changes
    - Request unified diffs
 
-3. **Minimal diffs:**  
-   - Focus on single concerns per change  
+3. **Planning files:**
+   - For any medium or large task, capture the agreed-upon plan in a `planning.md` file before implementing code changes.
+   - Store planning files under `planning/<task-name>/planning.md` (create the folder if it does not exist).
+   - Keep each planning file short (1-2 pages) and include sections for context, goals, milestones, and open questions.
+
+4. **Minimal diffs:**
+   - Focus on single concerns per change
    - Ask for diffs that apply cleanly
 
-4. **Tight feedback loop:**  
-   - Run tests after changes  
+5. **Tight feedback loop:**
+   - Run tests after changes
    - Report errors or failures
 
-5. **Document changes:**  
+6. **Document changes:**
    - Update docs or comments when behavior changes
 
 ## Build & Test
