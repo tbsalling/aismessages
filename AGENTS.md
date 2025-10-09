@@ -10,7 +10,7 @@ This repository is a Java project built with Maven. When collaborating with any 
 - **Key packages:** AIS message decoder in `dk.tbsalling.aismessages`; demos in `dk.tbsalling.aismessages.demo`
 - **Library characteristics:** The core decoder is intentionally light-weight, zero-dependency, and tuned for
   ultra-efficient, lazy decoding of NMEA armoured AIS messages.
-- **Distribution:** Published on Maven Central (`dk.tbsalling:aismessages`, latest published version 3.4.0).
+- **Distribution:** Published on Maven Central (`dk.tbsalling:aismessages`).
 
 ## Using AI Agents Effectively
 
