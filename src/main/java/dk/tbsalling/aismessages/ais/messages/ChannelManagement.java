@@ -20,8 +20,6 @@ import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.TxRxMode;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
-import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
-import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import static java.lang.String.format;
 
@@ -31,14 +29,13 @@ public class ChannelManagement extends AISMessage {
     /**
      * Constructor accepting pre-parsed values for true immutability.
      */
-    protected ChannelManagement(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
-                                int repeatIndicator, MMSI sourceMmsi,
+    protected ChannelManagement(Metadata metadata, int repeatIndicator, MMSI sourceMmsi,
                                 int channelA, int channelB, TxRxMode transmitReceiveMode, boolean power,
                                 Float northEastLongitude, Float northEastLatitude,
                                 Float southWestLongitude, Float southWestLatitude,
                                 MMSI destinationMmsi1, MMSI destinationMmsi2,
                                 boolean addressed, boolean bandA, boolean bandB, int zoneSize) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        super(metadata, repeatIndicator, sourceMmsi);
         this.channelA = channelA;
         this.channelB = channelB;
         this.transmitReceiveMode = transmitReceiveMode;

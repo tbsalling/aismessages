@@ -1,5 +1,8 @@
 package dk.tbsalling.aismessages.ais.messages;
 
+import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+
 import java.io.Serializable;
 import java.time.Instant;
 
@@ -7,13 +10,34 @@ import java.time.Instant;
 public class Metadata implements Serializable {
 
     public Metadata(String source) {
-        this.source = source;
-        this.received = Instant.now();
+        this(null, null, null, source, Instant.now());
     }
 
     public Metadata(String source, Instant received) {
+        this(null, null, null, source, received);
+    }
+
+    public Metadata(NMEAMessage[] nmeaMessages, String bitString, NMEATagBlock nmeaTagBlock, String source, Instant received) {
+        this.nmeaMessages = nmeaMessages;
+        this.bitString = bitString;
+        this.nmeaTagBlock = nmeaTagBlock;
         this.source = source;
         this.received = received;
+    }
+
+    @SuppressWarnings("unused")
+    public NMEAMessage[] getNmeaMessages() {
+        return nmeaMessages;
+    }
+
+    @SuppressWarnings("unused")
+    public String getBitString() {
+        return bitString;
+    }
+
+    @SuppressWarnings("unused")
+    public NMEATagBlock getNmeaTagBlock() {
+        return nmeaTagBlock;
     }
 
     @SuppressWarnings("unused")
@@ -24,11 +48,6 @@ public class Metadata implements Serializable {
     public Instant getReceived() {
         return received;
     }
-
-    @SuppressWarnings("unused")
-	public String getCategory() {
-		return category;
-	}
 
     @SuppressWarnings("unused")
 	public String getDecoderVersion() {
@@ -61,11 +80,11 @@ public class Metadata implements Serializable {
         return result;
     }
 
-    // TODO Add decoder version from maven
 	// TODO Add decode status and error descriptions
 	private final static String decoderVersion = AISMessage.VERSION;
-	private final static String category = "AIS";
-
-	private final String source;
+    private final String source;
     private final Instant received;
+    private final NMEATagBlock nmeaTagBlock;
+    private final NMEAMessage[] nmeaMessages;
+    private final String bitString;
 }

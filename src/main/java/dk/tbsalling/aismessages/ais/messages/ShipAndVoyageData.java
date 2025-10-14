@@ -19,8 +19,6 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.*;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
-import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
-import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -40,10 +38,7 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
     /**
      * Constructor accepting pre-parsed values for true immutability.
      *
-     * @param nmeaMessages         the NMEA messages
-     * @param bitString            the binary string representation
      * @param metadata             the metadata
-     * @param nmeaTagBlock         the NMEA tag block
      * @param repeatIndicator      the pre-parsed repeat indicator
      * @param sourceMmsi           the pre-parsed source MMSI
      * @param imo                  the IMO number
@@ -64,14 +59,13 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
      * @param dataTerminalReady    the data terminal ready flag
      * @param rawDraught           the raw draught value
      */
-    protected ShipAndVoyageData(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
-                                int repeatIndicator, MMSI sourceMmsi,
+    protected ShipAndVoyageData(Metadata metadata, int repeatIndicator, MMSI sourceMmsi,
                                 IMO imo, String callsign, String shipName, ShipType shipType,
                                 int toBow, int toStern, int toPort, int toStarboard,
                                 PositionFixingDevice positionFixingDevice,
                                 int etaMonth, int etaDay, int etaHour, int etaMinute,
                                 float draught, String destination, boolean dataTerminalReady, int rawDraught) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        super(metadata, repeatIndicator, sourceMmsi);
         this.imo = imo;
         this.callsign = callsign;
         this.shipName = shipName;
@@ -201,7 +195,7 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
     @SuppressWarnings("unused")
 	public Optional<ZonedDateTime> getEtaAfterReceived() {
         Metadata meta = this.getMetadata();
-        ZonedDateTime received = (meta == null) ? null : meta.getReceived().atZone(ZoneOffset.UTC);
+        ZonedDateTime received = (meta == null || meta.getReceived() == null) ? null : meta.getReceived().atZone(ZoneOffset.UTC);
         if(received == null) {
             return Optional.empty();
         }

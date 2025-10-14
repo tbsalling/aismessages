@@ -19,8 +19,6 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
-import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
-import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import static java.lang.String.format;
 
@@ -40,13 +38,12 @@ public class DataLinkManagement extends AISMessage {
     /**
      * Constructor accepting pre-parsed values for true immutability.
      */
-    protected DataLinkManagement(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
-                                 int repeatIndicator, MMSI sourceMmsi,
+    protected DataLinkManagement(Metadata metadata, int repeatIndicator, MMSI sourceMmsi,
                                  int offsetNumber1, int reservedSlots1, int timeout1, int increment1,
                                  Integer offsetNumber2, Integer reservedSlots2, Integer timeout2, Integer increment2,
                                  Integer offsetNumber3, Integer reservedSlots3, Integer timeout3, Integer increment3,
                                  Integer offsetNumber4, Integer reservedSlots4, Integer timeout4, Integer increment4) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        super(metadata, repeatIndicator, sourceMmsi);
         this.offsetNumber1 = offsetNumber1;
         this.reservedSlots1 = reservedSlots1;
         this.timeout1 = timeout1;

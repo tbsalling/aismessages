@@ -20,8 +20,6 @@ import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
-import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
-import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import static java.lang.String.format;
 
@@ -31,12 +29,11 @@ public class UTCAndDateResponse extends AISMessage {
     /**
      * Constructor accepting pre-parsed values for true immutability.
      */
-    protected UTCAndDateResponse(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
-                                 int repeatIndicator, MMSI sourceMmsi,
+    protected UTCAndDateResponse(Metadata metadata, int repeatIndicator, MMSI sourceMmsi,
                                  int year, int month, int day, int hour, int minute, int second,
                                  boolean positionAccurate, float latitude, float longitude,
                                  PositionFixingDevice positionFixingDevice, boolean raimFlag) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        super(metadata, repeatIndicator, sourceMmsi);
         this.year = year;
         this.month = month;
         this.day = day;

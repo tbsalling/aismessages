@@ -21,8 +21,6 @@ package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.*;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
-import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
-import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import static java.lang.String.format;
 
@@ -36,10 +34,7 @@ public abstract class PositionReport extends AISMessage implements ExtendedDynam
     /**
      * Constructor accepting pre-parsed values for true immutability.
      *
-     * @param nmeaMessages             the NMEA messages
-     * @param bitString                the binary string representation
      * @param metadata                 the metadata
-     * @param nmeaTagBlock             the NMEA tag block
      * @param repeatIndicator          the pre-parsed repeat indicator
      * @param sourceMmsi               the pre-parsed source MMSI
      * @param navigationStatus         the navigation status
@@ -60,14 +55,13 @@ public abstract class PositionReport extends AISMessage implements ExtendedDynam
      * @param rawLongitude             the raw longitude value
      * @param rawCourseOverGround      the raw course over ground value
      */
-    protected PositionReport(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
-                             int repeatIndicator, MMSI sourceMmsi,
+    protected PositionReport(Metadata metadata, int repeatIndicator, MMSI sourceMmsi,
                              NavigationStatus navigationStatus, int rateOfTurn, float speedOverGround,
                              boolean positionAccuracy, float latitude, float longitude,
                              float courseOverGround, int trueHeading, int second,
                              ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState,
                              int rawRateOfTurn, int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        super(metadata, repeatIndicator, sourceMmsi);
         this.navigationStatus = navigationStatus;
         this.rateOfTurn = rateOfTurn;
         this.speedOverGround = speedOverGround;

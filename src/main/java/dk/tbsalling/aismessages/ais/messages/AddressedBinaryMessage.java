@@ -20,8 +20,6 @@ import dk.tbsalling.aismessages.ais.messages.asm.ApplicationSpecificMessage;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
-import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
-import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import static java.lang.String.format;
 
@@ -40,12 +38,11 @@ public class AddressedBinaryMessage extends AISMessage {
     /**
      * Constructor accepting pre-parsed values for true immutability.
      */
-    protected AddressedBinaryMessage(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
-                                     int repeatIndicator, MMSI sourceMmsi,
+    protected AddressedBinaryMessage(Metadata metadata, int repeatIndicator, MMSI sourceMmsi,
                                      int sequenceNumber, MMSI destinationMmsi, boolean retransmit, int spare,
                                      int designatedAreaCode, int functionalId, String binaryData,
                                      ApplicationSpecificMessage applicationSpecificMessage) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        super(metadata, repeatIndicator, sourceMmsi);
         this.sequenceNumber = sequenceNumber;
         this.destinationMmsi = destinationMmsi;
         this.retransmit = retransmit;

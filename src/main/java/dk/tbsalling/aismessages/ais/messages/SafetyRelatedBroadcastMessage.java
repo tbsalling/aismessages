@@ -19,8 +19,6 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
-import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
-import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import static java.lang.String.format;
 
@@ -30,10 +28,9 @@ public class SafetyRelatedBroadcastMessage extends AISMessage {
     /**
      * Constructor accepting pre-parsed values for true immutability.
      */
-    protected SafetyRelatedBroadcastMessage(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
-                                            int repeatIndicator, MMSI sourceMmsi,
+    protected SafetyRelatedBroadcastMessage(Metadata metadata, int repeatIndicator, MMSI sourceMmsi,
                                             int spare, String text) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        super(metadata, repeatIndicator, sourceMmsi);
         this.spare = spare;
         this.text = text;
     }

@@ -20,8 +20,6 @@ import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
-import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
-import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import static java.lang.String.format;
 
@@ -31,14 +29,13 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
     /**
      * Constructor accepting pre-parsed values for true immutability.
      */
-    protected StandardSARAircraftPositionReport(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
-                                                int repeatIndicator, MMSI sourceMmsi,
+    protected StandardSARAircraftPositionReport(Metadata metadata, int repeatIndicator, MMSI sourceMmsi,
                                                 int altitude, float speed, boolean positionAccuracy,
                                                 float latitude, float longitude, float courseOverGround,
                                                 int second, String regionalReserved, boolean dataTerminalReady,
                                                 boolean assigned, boolean raimFlag, String radioStatus,
                                                 int rawSpeedOverGround, int rawLongitude, int rawLatitude, int rawCourseOverGround) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        super(metadata, repeatIndicator, sourceMmsi);
         this.altitude = altitude;
         this.speed = speed;
         this.positionAccuracy = positionAccuracy;

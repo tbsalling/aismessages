@@ -19,8 +19,6 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
-import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
-import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import java.util.stream.IntStream;
 
@@ -37,12 +35,11 @@ public class Interrogation extends AISMessage {
     /**
      * Constructor accepting pre-parsed values for true immutability.
      */
-    protected Interrogation(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
-                            int repeatIndicator, MMSI sourceMmsi,
+    protected Interrogation(Metadata metadata, int repeatIndicator, MMSI sourceMmsi,
                             MMSI interrogatedMmsi1, Integer type1_1, Integer offset1_1,
                             Integer type1_2, Integer offset1_2,
                             MMSI interrogatedMmsi2, Integer type2_1, Integer offset2_1) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        super(metadata, repeatIndicator, sourceMmsi);
         this.interrogatedMmsi1 = interrogatedMmsi1;
         this.type1_1 = type1_1;
         this.offset1_1 = offset1_1;

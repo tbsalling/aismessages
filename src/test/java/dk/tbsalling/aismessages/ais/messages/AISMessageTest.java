@@ -160,7 +160,7 @@ public class AISMessageTest {
         // Assert
         assertEquals(16, dataFields.size());
         assertEquals("BinaryAcknowledge", dataFields.get("messageType"));
-        assertNull(dataFields.get("metadata"));
+        assertNotNull(dataFields.get("metadata"));  // Metadata is now always present (contains nmeaMessages, bitString, etc.)
         assertEquals(992271914, dataFields.get("mmsi1.MMSI"));
         assertNull(dataFields.get("mmsi2"));
         assertNull(dataFields.get("mmsi3"));

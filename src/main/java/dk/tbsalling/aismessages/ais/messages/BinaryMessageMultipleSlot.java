@@ -18,8 +18,6 @@ package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
-import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
-import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 @SuppressWarnings("serial")
 public class BinaryMessageMultipleSlot extends AISMessage {
@@ -27,11 +25,10 @@ public class BinaryMessageMultipleSlot extends AISMessage {
     /**
      * Constructor accepting pre-parsed values for true immutability.
      */
-    protected BinaryMessageMultipleSlot(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
-                                        int repeatIndicator, MMSI sourceMmsi,
+    protected BinaryMessageMultipleSlot(Metadata metadata, int repeatIndicator, MMSI sourceMmsi,
                                         boolean addressed, boolean structured, MMSI destinationMmsi,
                                         int applicationId, String data) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        super(metadata, repeatIndicator, sourceMmsi);
         this.addressed = addressed;
         this.structured = structured;
         this.destinationMmsi = destinationMmsi;

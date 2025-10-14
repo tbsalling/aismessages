@@ -5,8 +5,6 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.NavigationStatus;
 import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
-import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
-import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import java.util.stream.IntStream;
 
@@ -18,13 +16,12 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
     /**
      * Constructor accepting pre-parsed values for true immutability.
      */
-    protected LongRangeBroadcastMessage(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
-                                        int repeatIndicator, MMSI sourceMmsi,
+    protected LongRangeBroadcastMessage(Metadata metadata, int repeatIndicator, MMSI sourceMmsi,
                                         boolean positionAccuracy, boolean raim, NavigationStatus navigationStatus,
                                         float latitude, float longitude, int speed, int course,
                                         int positionLatency, int spare,
                                         int rawLongitude, int rawLatitude, int rawSpeedOverGround, int rawCourseOverGround) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        super(metadata, repeatIndicator, sourceMmsi);
         this.positionAccuracy = positionAccuracy;
         this.raim = raim;
         this.navigationStatus = navigationStatus;

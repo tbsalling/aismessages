@@ -19,8 +19,6 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
-import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
-import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import java.util.stream.IntStream;
 
@@ -32,14 +30,13 @@ public class SafetyRelatedAcknowledge extends AISMessage {
     /**
      * Constructor accepting pre-parsed values for true immutability.
      */
-    protected SafetyRelatedAcknowledge(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
-                                       int repeatIndicator, MMSI sourceMmsi,
+    protected SafetyRelatedAcknowledge(Metadata metadata, int repeatIndicator, MMSI sourceMmsi,
                                        int spare, MMSI mmsi1, int sequence1,
                                        MMSI mmsi2, Integer sequence2,
                                        MMSI mmsi3, Integer sequence3,
                                        MMSI mmsi4, Integer sequence4,
                                        int numOfAcks) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        super(metadata, repeatIndicator, sourceMmsi);
         this.spare = spare;
         this.mmsi1 = mmsi1;
         this.sequence1 = sequence1;
