@@ -11,13 +11,16 @@ public class BinaryMessageMultipleSlotTest {
 
     @Test
     public void canDecode() {
-        AISMessage aisMessage = AISMessage.create(
-                NMEAMessage.fromString("!AIVDM,2,1,4,A,J6SUcDh0000000000000000000000000000000000000000000000000000,0*0E"),
-                NMEAMessage.fromString("!AIVDM,2,2,4,A,00000000000,2*23")
-        );
+        // Arrange
+        NMEAMessage nmeaMessage1 = NMEAMessage.fromString("!AIVDM,2,1,4,A,J6SUcDh0000000000000000000000000000000000000000000000000000,0*0E");
+        NMEAMessage nmeaMessage2 = NMEAMessage.fromString("!AIVDM,2,2,4,A,00000000000,2*23");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage1, nmeaMessage2);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.BinaryMessageMultipleSlot, aisMessage.getMessageType());
         BinaryMessageMultipleSlot message = (BinaryMessageMultipleSlot) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
@@ -32,13 +35,16 @@ public class BinaryMessageMultipleSlotTest {
 
     @Test
     public void canDecodeAlternative() {
-        AISMessage aisMessage = AISMessage.create(
-                NMEAMessage.fromString("!AIVDM,2,1,1,A,J5NJP<82<mN1<tn4GfOl1lTp8h6000000000000000000000000000000000,0*38"),
-                NMEAMessage.fromString("!AIVDM,2,2,1,A,00000000000,2*26")
-        );
+        // Arrange
+        NMEAMessage nmeaMessage1 = NMEAMessage.fromString("!AIVDM,2,1,1,A,J5NJP<82<mN1<tn4GfOl1lTp8h6000000000000000000000000000000000,0*38");
+        NMEAMessage nmeaMessage2 = NMEAMessage.fromString("!AIVDM,2,2,1,A,00000000000,2*26");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage1, nmeaMessage2);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.BinaryMessageMultipleSlot, aisMessage.getMessageType());
         BinaryMessageMultipleSlot message = (BinaryMessageMultipleSlot) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());

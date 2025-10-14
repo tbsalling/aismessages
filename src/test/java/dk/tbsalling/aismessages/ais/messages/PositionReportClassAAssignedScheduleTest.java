@@ -38,10 +38,15 @@ public class PositionReportClassAAssignedScheduleTest {
 		COMMUNICATION_SLOT_OFFSET	2320
 		*/
 
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,24RjBV0028o:pnNEBeU<pJF>0PT@,0*3F"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,24RjBV0028o:pnNEBeU<pJF>0PT@,0*3F");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.PositionReportClassAAssignedSchedule, aisMessage.getMessageType());
         assertEquals((Integer) 0, aisMessage.getRepeatIndicator());
         PositionReportClassAAssignedSchedule message = (PositionReportClassAAssignedSchedule) aisMessage;

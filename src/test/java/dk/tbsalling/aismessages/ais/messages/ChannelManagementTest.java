@@ -11,10 +11,15 @@ public class ChannelManagementTest {
 
     @Test
     public void canDecode() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,F030p:j2N2P5aJR0r;6f3rj10000,0*11"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,F030p:j2N2P5aJR0r;6f3rj10000,0*11");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.ChannelManagement, aisMessage.getMessageType());
         ChannelManagement message = (ChannelManagement) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());

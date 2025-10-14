@@ -12,10 +12,15 @@ public class DataLinkManagementTest {
 
     @Test
     public void canDecodeShortVariant1() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,Dh3Ovk1UAN>4,0*0A"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,Dh3Ovk1UAN>4,0*0A");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.DataLinkManagement, aisMessage.getMessageType());
         DataLinkManagement message = (DataLinkManagement) aisMessage;
         assertEquals(Integer.valueOf(3), message.getRepeatIndicator());
@@ -36,10 +41,15 @@ public class DataLinkManagementTest {
 
     @Test
     public void canDecodeShortVariant2() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,Dh3Ovk1cEN>4,0*3B"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,Dh3Ovk1cEN>4,0*3B");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.DataLinkManagement, aisMessage.getMessageType());
         DataLinkManagement message = (DataLinkManagement) aisMessage;
         assertEquals(Integer.valueOf(3), message.getRepeatIndicator());

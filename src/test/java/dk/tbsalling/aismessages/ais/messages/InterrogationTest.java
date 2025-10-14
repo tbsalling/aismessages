@@ -12,10 +12,15 @@ public class InterrogationTest {
 
     @Test
     public void canDecodeShortVariant() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,?h3Ovk1GOPph000,2*53"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,?h3Ovk1GOPph000,2*53");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.Interrogation, aisMessage.getMessageType());
         Interrogation message = (Interrogation) aisMessage;
         assertEquals(Integer.valueOf(3), message.getRepeatIndicator());

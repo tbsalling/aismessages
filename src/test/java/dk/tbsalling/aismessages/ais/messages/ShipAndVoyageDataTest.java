@@ -16,13 +16,16 @@ public class ShipAndVoyageDataTest {
 
     @Test
     public void canDecode1() {
-        AISMessage aisMessage = AISMessage.create(
-            NMEAMessage.fromString("!AIVDM,2,1,3,A,55MuUD02;EFUL@CO;W@lU=<U=<U10V1HuT4LE:1DC@T>B4kC0DliSp=t,0*14"),
-            NMEAMessage.fromString("!AIVDM,2,2,3,A,888888888888880,2*27")
-        );
+        // Arrange
+        NMEAMessage nmeaMessage1 = NMEAMessage.fromString("!AIVDM,2,1,3,A,55MuUD02;EFUL@CO;W@lU=<U=<U10V1HuT4LE:1DC@T>B4kC0DliSp=t,0*14");
+        NMEAMessage nmeaMessage2 = NMEAMessage.fromString("!AIVDM,2,2,3,A,888888888888880,2*27");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage1, nmeaMessage2);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.ShipAndVoyageRelatedData, aisMessage.getMessageType());
         ShipAndVoyageData message = (ShipAndVoyageData) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
@@ -50,14 +53,18 @@ public class ShipAndVoyageDataTest {
 
     @Test
     public void canDecode2() {
+        // Arrange
         ZonedDateTime now = ZonedDateTime.of(2010, 12, 31, 23, 59, 59, 0, ZoneOffset.UTC);
         NMEATagBlock tag = NMEATagBlock.fromString("\\c:1609841515,s:my dearest AIS base station*6E\\");
-        AISMessage aisMessage = AISMessage.create(new Metadata("Test", now.toInstant()), tag,
-                NMEAMessage.fromString("!AIVDM,2,1,0,B,539S:k40000000c3G04PPh63<00000000080000o1PVG2uGD:00000000000,0*34"),
-                NMEAMessage.fromString("!AIVDM,2,2,0,B,00000000000,2*27"));
+        NMEAMessage nmeaMessage1 = NMEAMessage.fromString("!AIVDM,2,1,0,B,539S:k40000000c3G04PPh63<00000000080000o1PVG2uGD:00000000000,0*34");
+        NMEAMessage nmeaMessage2 = NMEAMessage.fromString("!AIVDM,2,2,0,B,00000000000,2*27");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(new Metadata("Test", now.toInstant()), tag, nmeaMessage1, nmeaMessage2);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.ShipAndVoyageRelatedData, aisMessage.getMessageType());
         ShipAndVoyageData message = (ShipAndVoyageData) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
@@ -84,30 +91,29 @@ public class ShipAndVoyageDataTest {
 
     @Test
     public void digest() throws NoSuchAlgorithmException {
+        // Arrange
         String expectedDigest = "2ca6350a33d7b19f0ef49799aa96dd61da9e081e";
+        NMEAMessage nmeaMessage1 = NMEAMessage.fromString("!AIVDM,2,1,0,B,539S:k40000000c3G04PPh63<00000000080000o1PVG2uGD:00000000000,0*34");
+        NMEAMessage nmeaMessage2 = NMEAMessage.fromString("!AIVDM,2,2,0,B,00000000000,2*27");
 
-        AISMessage aisMessage = AISMessage.create(
-            NMEAMessage.fromString("!AIVDM,2,1,0,B,539S:k40000000c3G04PPh63<00000000080000o1PVG2uGD:00000000000,0*34"),
-            NMEAMessage.fromString("!AIVDM,2,2,0,B,00000000000,2*27")
-        );
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage1, nmeaMessage2);
         byte[] digest = aisMessage.digest();
         String digestAsString = String.format("%040x", new java.math.BigInteger(1, digest));
+
+        // Assert
         assertEquals(expectedDigest, digestAsString);
 
         // Change line 1
-        aisMessage = AISMessage.create(
-            NMEAMessage.fromString("!AIVDM,2,1,0,B,539S:k40000000c3G04PPh63<00000000080000o1PVG2uGD:00000000001,0*34"),
-            NMEAMessage.fromString("!AIVDM,2,2,0,B,00000000000,2*27")
-        );
+        NMEAMessage nmeaMessage1b = NMEAMessage.fromString("!AIVDM,2,1,0,B,539S:k40000000c3G04PPh63<00000000080000o1PVG2uGD:00000000001,0*34");
+        aisMessage = AISMessage.create(nmeaMessage1b, nmeaMessage2);
         digest = aisMessage.digest();
         digestAsString = String.format("%040x", new java.math.BigInteger(1, digest));
         assertNotEquals(expectedDigest, digestAsString);
 
         // Change line 2
-        aisMessage = AISMessage.create(
-            NMEAMessage.fromString("!AIVDM,2,1,0,B,539S:k40000000c3G04PPh63<00000000080000o1PVG2uGD:00000000000,0*34"),
-            NMEAMessage.fromString("!AIVDM,2,2,0,B,00000000001,2*27")
-        );
+        NMEAMessage nmeaMessage2b = NMEAMessage.fromString("!AIVDM,2,2,0,B,00000000001,2*27");
+        aisMessage = AISMessage.create(nmeaMessage1, nmeaMessage2b);
         digest = aisMessage.digest();
         digestAsString = String.format("%040x", new java.math.BigInteger(1, digest));
         assertNotEquals(expectedDigest, digestAsString);

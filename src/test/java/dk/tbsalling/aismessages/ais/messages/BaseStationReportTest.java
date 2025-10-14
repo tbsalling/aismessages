@@ -10,10 +10,15 @@ public class BaseStationReportTest {
 
     @Test
     public void canDecode() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,4h3Ovk1udp6I9o>jPHEdjdW000S:,0*0C"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,4h3Ovk1udp6I9o>jPHEdjdW000S:,0*0C");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.BaseStationReport, aisMessage.getMessageType());
         assertEquals((Integer) 3, aisMessage.getRepeatIndicator());
         BaseStationReport message = (BaseStationReport) aisMessage;
@@ -33,10 +38,15 @@ public class BaseStationReportTest {
 
     @Test
     public void canDecodeCommunicationState() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,400TcdiuiT7VDR>3nIfr6>i00000,0*78"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,400TcdiuiT7VDR>3nIfr6>i00000,0*78");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.BaseStationReport, aisMessage.getMessageType());
         assertEquals((Integer) 0, aisMessage.getRepeatIndicator());
         BaseStationReport message = (BaseStationReport) aisMessage;

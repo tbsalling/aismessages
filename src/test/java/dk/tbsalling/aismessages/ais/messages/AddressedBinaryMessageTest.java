@@ -14,10 +14,15 @@ public class AddressedBinaryMessageTest {
 
     @Test
     public void canDecode() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!ABVDM,1,1,,B,63M@g840SJL`01lSk09w1IMK?00100803Pp03g8p001pTaIK00,4*56"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!ABVDM,1,1,,B,63M@g840SJL`01lSk09w1IMK?00100803Pp03g8p001pTaIK00,4*56");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.AddressedBinaryMessage, aisMessage.getMessageType());
         AddressedBinaryMessage message = (AddressedBinaryMessage) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
@@ -30,9 +35,15 @@ public class AddressedBinaryMessageTest {
 
     @Test
     public void canDecodeAsmNumberOfPersonsOnboard() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,63bump80OEGr06P060,4*79"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,63bump80OEGr06P060,4*79");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertTrue(aisMessage instanceof AddressedBinaryMessage);
         AddressedBinaryMessage addressedBinaryMessage = (AddressedBinaryMessage) aisMessage;
         assertEquals(1, addressedBinaryMessage.getDesignatedAreaCode().intValue());

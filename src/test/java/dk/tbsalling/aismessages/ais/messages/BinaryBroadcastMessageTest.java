@@ -15,10 +15,15 @@ public class BinaryBroadcastMessageTest {
 
     @Test
     public void canDecode() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,85MwpKiKf:MPiQa:ofV@v2mQTfB26oEtbEVqh4j1QDQPHjhpkNJ3,0*11"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,85MwpKiKf:MPiQa:ofV@v2mQTfB26oEtbEVqh4j1QDQPHjhpkNJ3,0*11");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.BinaryBroadcastMessage, aisMessage.getMessageType());
         BinaryBroadcastMessage message = (BinaryBroadcastMessage) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
@@ -31,10 +36,15 @@ public class BinaryBroadcastMessageTest {
 
     @Test
     public void canDecodeUnknownApplicationSpecificMessage() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,8@30oni?1j020@00,0*23"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,8@30oni?1j020@00,0*23");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(316, ((BinaryBroadcastMessage) aisMessage).getDesignatedAreaCode().intValue());
         assertEquals(7, ((BinaryBroadcastMessage) aisMessage).getFunctionalId().intValue());
         assertEquals(UnknownApplicationSpecificMessage.class, ((BinaryBroadcastMessage) aisMessage).getApplicationSpecificMessage().getClass());
@@ -42,13 +52,16 @@ public class BinaryBroadcastMessageTest {
 
     @Test
     public void canDecodeMultiSentenceUnknownApplicationSpecificMessage() {
-        AISMessage aisMessage = AISMessage.create(
-                NMEAMessage.fromString("!AIVDM,2,1,8,A,803Iw60F14m1CPH4mDT4RDi@000003RP9iHb@001irBQ0@4gAaI00000261Q,0*04"),
-                NMEAMessage.fromString("!AIVDM,2,2,8,A,pGp07IiTPi@BkU5pSwrrbs8219RW=R19RV=R19RVER19RVKtDb>jq20000>4,0*47")
-        );
+        // Arrange
+        NMEAMessage nmeaMessage1 = NMEAMessage.fromString("!AIVDM,2,1,8,A,803Iw60F14m1CPH4mDT4RDi@000003RP9iHb@001irBQ0@4gAaI00000261Q,0*04");
+        NMEAMessage nmeaMessage2 = NMEAMessage.fromString("!AIVDM,2,2,8,A,pGp07IiTPi@BkU5pSwrrbs8219RW=R19RV=R19RVER19RVKtDb>jq20000>4,0*47");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage1, nmeaMessage2);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(88, ((BinaryBroadcastMessage) aisMessage).getDesignatedAreaCode().intValue());
         assertEquals(4, ((BinaryBroadcastMessage) aisMessage).getFunctionalId().intValue());
         assertEquals(UnknownApplicationSpecificMessage.class, ((BinaryBroadcastMessage) aisMessage).getApplicationSpecificMessage().getClass());
@@ -57,9 +70,15 @@ public class BinaryBroadcastMessageTest {
 
     @Test
     public void canDecodeDac200Fi10InlandShipStaticAndVoyageRelatedData1() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,839udkPj2d<dteLMt1T0a?bP01L0,0*79"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,839udkPj2d<dteLMt1T0a?bP01L0,0*79");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertTrue(aisMessage instanceof BinaryBroadcastMessage);
         BinaryBroadcastMessage binaryBroadcastMessage = (BinaryBroadcastMessage) aisMessage;
         assertEquals(200, binaryBroadcastMessage.getDesignatedAreaCode().intValue());
@@ -86,9 +105,15 @@ public class BinaryBroadcastMessageTest {
 
     @Test
     public void canDecodeDac200Fi10InlandShipStaticAndVoyageRelatedData2() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,83aDCr@j2P000000029Pt?cm0000,0*5F"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,83aDCr@j2P000000029Pt?cm0000,0*5F");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertTrue(aisMessage instanceof BinaryBroadcastMessage);
         BinaryBroadcastMessage binaryBroadcastMessage = (BinaryBroadcastMessage) aisMessage;
         assertEquals(200, binaryBroadcastMessage.getDesignatedAreaCode().intValue());
@@ -115,9 +140,15 @@ public class BinaryBroadcastMessageTest {
 
     @Test
     public void canDecodeDac265Fi1EmptyPayload() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,83n30vi2@@,4*69"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,83n30vi2@@,4*69");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertTrue(aisMessage instanceof BinaryBroadcastMessage);
         BinaryBroadcastMessage binaryBroadcastMessage = (BinaryBroadcastMessage) aisMessage;
         assertEquals(265, binaryBroadcastMessage.getDesignatedAreaCode());
@@ -127,7 +158,11 @@ public class BinaryBroadcastMessageTest {
 
     @Test
     public void failsWithInvalidMessageWhenDecodingShortMessage() {
-        assertThrows(InvalidMessage.class, () -> AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,83aDCr@,0*5F")));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,83aDCr@,0*5F");
+
+        // Act & Assert
+        assertThrows(InvalidMessage.class, () -> AISMessage.create(nmeaMessage));
     }
 
 }

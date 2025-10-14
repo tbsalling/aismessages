@@ -16,10 +16,15 @@ public class AidToNavigationReportTest {
 
     @Test
     public void canDecode1() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDO,1,1,,A,E>lt;Lqaps0h3V:@;4a:@0b7W005J`6Dq9e<000003v010,4*7E"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDO,1,1,,A,E>lt;Lqaps0h3V:@;4a:@0b7W005J`6Dq9e<000003v010,4*7E");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.AidToNavigationReport, aisMessage.getMessageType());
         assertEquals((Integer) 0, aisMessage.getRepeatIndicator());
         AidToNavigationReport message = (AidToNavigationReport) aisMessage;
@@ -44,9 +49,15 @@ public class AidToNavigationReportTest {
 
     @Test
     public void canDecode2() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDO,1,1,,A,E>lt;MIas0h3V:@;4a::h0b7W005Jh4nq:3l800003v010,4*08"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDO,1,1,,A,E>lt;MIas0h3V:@;4a::h0b7W005Jh4nq:3l800003v010,4*08");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.AidToNavigationReport, aisMessage.getMessageType());
         assertEquals((Integer) 0, aisMessage.getRepeatIndicator());
         AidToNavigationReport message = (AidToNavigationReport) aisMessage;
@@ -71,9 +82,14 @@ public class AidToNavigationReportTest {
 
     @Test
     public void testDataFields() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDO,1,1,,A,E>lt;MIas0h3V:@;4a::h0b7W005Jh4nq:3l800003v010,4*08"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDO,1,1,,A,E>lt;MIas0h3V:@;4a::h0b7W005Jh4nq:3l800003v010,4*08");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
         Map<String, Object> dataFields = aisMessage.dataFields();
 
+        // Assert
         assertNotNull(dataFields);
         dataFields.forEach((k,v) -> System.out.format("%s=%s\n", k, v));
 

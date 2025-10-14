@@ -10,10 +10,15 @@ public class StandardClassBCSPositionReportTest {
 
     @Test
     public void canDecode1() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,B5NJ;PP005l4ot5Isbl03wsUkP06,0*76"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,B5NJ;PP005l4ot5Isbl03wsUkP06,0*76");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.StandardClassBCSPositionReport, aisMessage.getMessageType());
         StandardClassBCSPositionReport message = (StandardClassBCSPositionReport) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
@@ -43,10 +48,15 @@ public class StandardClassBCSPositionReportTest {
 
     @Test
     public void canDecode2() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,B>1VUFP00vK`auV0eUulKwv0RJGT,0*09"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,B>1VUFP00vK`auV0eUulKwv0RJGT,0*09");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.StandardClassBCSPositionReport, aisMessage.getMessageType());
         StandardClassBCSPositionReport message = (StandardClassBCSPositionReport) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
@@ -71,10 +81,15 @@ public class StandardClassBCSPositionReportTest {
 
     @Test
     public void canDecodeITDMACommunicationState() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,B6CdCm0t3`tba35f@V9faHi7kP06,0*58"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,B6CdCm0t3`tba35f@V9faHi7kP06,0*58");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.StandardClassBCSPositionReport, aisMessage.getMessageType());
         StandardClassBCSPositionReport message = (StandardClassBCSPositionReport) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());

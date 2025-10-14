@@ -12,10 +12,15 @@ public class BinaryAcknowledgeMessageTest {
 
     @Test
     public void canDecode() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,702;bCSdToR`,0*34"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,702;bCSdToR`,0*34");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.BinaryAcknowledge, aisMessage.getMessageType());
         BinaryAcknowledge message = (BinaryAcknowledge) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());

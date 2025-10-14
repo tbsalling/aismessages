@@ -4,16 +4,21 @@ import dk.tbsalling.aismessages.ais.messages.types.*;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class GroupAssignmentCommandTest {
 
     @Test
     public void canDecode() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,G02:Kn01R`sn@291nj600000900,2*12"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,G02:Kn01R`sn@291nj600000900,2*12");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.GroupAssignmentCommand, aisMessage.getMessageType());
         GroupAssignmentCommand message = (GroupAssignmentCommand) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
@@ -33,10 +38,15 @@ public class GroupAssignmentCommandTest {
 
     @Test
     public void canDecodeAlternative() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,G02:Kn01R`sn@291nj600000900,2*12"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,G02:Kn01R`sn@291nj600000900,2*12");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.GroupAssignmentCommand, aisMessage.getMessageType());
         GroupAssignmentCommand message = (GroupAssignmentCommand) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());

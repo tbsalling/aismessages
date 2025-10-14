@@ -15,10 +15,15 @@ public class PositionReportClassAResponseToInterrogationTest {
 
     @Test
     public void canDecode() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,34RjBV0028o:pnNEBeU<pJF>0PT@,0*3F"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,34RjBV0028o:pnNEBeU<pJF>0PT@,0*3F");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.PositionReportClassAResponseToInterrogation, aisMessage.getMessageType());
         assertEquals(0, aisMessage.getRepeatIndicator());
         PositionReportClassAResponseToInterrogation message = (PositionReportClassAResponseToInterrogation) aisMessage;
@@ -42,10 +47,15 @@ public class PositionReportClassAResponseToInterrogationTest {
 
     @Test
     public void canDecode2() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,3:U70chP@7LrG1SjrgmKF8uh00vP,0*56"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,3:U70chP@7LrG1SjrgmKF8uh00vP,0*56");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.PositionReportClassAResponseToInterrogation, aisMessage.getMessageType());
         assertEquals(0, aisMessage.getRepeatIndicator());
         PositionReportClassAResponseToInterrogation message = (PositionReportClassAResponseToInterrogation) aisMessage;
@@ -69,9 +79,15 @@ public class PositionReportClassAResponseToInterrogationTest {
 
     @Test
     public void digest() throws NoSuchAlgorithmException {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,34RjBV0028o:pnNEBeU<pJF>0PT@,0*3F"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,34RjBV0028o:pnNEBeU<pJF>0PT@,0*3F");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
         byte[] digest = aisMessage.digest();
         String digestAsString = String.format("%040x", new java.math.BigInteger(1, digest));
+
+        // Assert
         assertEquals("673ac3b20886868cafe7376e05092bf625f00b75", digestAsString);
     }
 }

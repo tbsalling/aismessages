@@ -12,10 +12,15 @@ public class LongRangeBroadcastMessageTest {
 
     @Test
     public void canDecode1() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,KC5E2b@U19PFdLbMuc5=ROv62<7m,0*16"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,KC5E2b@U19PFdLbMuc5=ROv62<7m,0*16");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.LongRangeBroadcastMessage, aisMessage.getMessageType());
         assertEquals((Integer) 1, aisMessage.getRepeatIndicator());
         assertEquals(MMSI.valueOf(206914217), aisMessage.getSourceMmsi());
@@ -34,10 +39,15 @@ public class LongRangeBroadcastMessageTest {
 
     @Test
     public void canDecode2() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,K5DfMB9FLsM?P00d,0*70"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,K5DfMB9FLsM?P00d,0*70");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.LongRangeBroadcastMessage, aisMessage.getMessageType());
         assertEquals((Integer) 0, aisMessage.getRepeatIndicator());
         assertEquals(MMSI.valueOf(357277000), aisMessage.getSourceMmsi());

@@ -19,12 +19,23 @@ public class AISMessageTest {
 
     @Test
     public void testEquals() {
-          assertEquals(AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,13AkSB0000PhAmJPoTMoiQFT0D1:,0*5E")), AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,13AkSB0000PhAmJPoTMoiQFT0D1:,0*5E")));
-          assertNotEquals(AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,13AkSB0000PhAmJPoTMoiQFT0D1:,0*5E")), AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,13AkSB0000PhAmHPoTNcp1Fp0D17,0*00")));
+        // Arrange
+        NMEAMessage nmeaMessage1 = NMEAMessage.fromString("!AIVDM,1,1,,B,13AkSB0000PhAmJPoTMoiQFT0D1:,0*5E");
+        NMEAMessage nmeaMessage2 = NMEAMessage.fromString("!AIVDM,1,1,,A,13AkSB0000PhAmHPoTNcp1Fp0D17,0*00");
+
+        // Act
+        AISMessage aisMessage1 = AISMessage.create(nmeaMessage1);
+        AISMessage aisMessage2 = AISMessage.create(nmeaMessage1);
+        AISMessage aisMessage3 = AISMessage.create(nmeaMessage2);
+
+        // Assert
+        assertEquals(aisMessage1, aisMessage2);
+        assertNotEquals(aisMessage1, aisMessage3);
     }
 
     @Test
     public void testEqualsWithMetadataAndTagBlock() {
+        // Arrange
         String source = "test";
         Instant time = Instant.now();
         NMEAMessage nmea = NMEAMessage.fromString("!AIVDM,1,1,,A,13aEOK?P00PD2wVMdLDRhgvL289?,0*26");
@@ -34,10 +45,12 @@ public class AISMessageTest {
         Metadata meta2 = new Metadata(source, time);
         Metadata meta3 = new Metadata(source, time.plusMillis(1000));
 
+        // Act
         AISMessage ais1 = AISMessage.create(meta1, tag, nmea);
         AISMessage ais2 = AISMessage.create(meta2, tag, nmea);
         AISMessage ais3 = AISMessage.create(meta3, tag, nmea);
 
+        // Assert
         assertEquals(meta1, meta2);
         assertNotEquals(meta1, meta3);
 
@@ -47,6 +60,7 @@ public class AISMessageTest {
 
     @Test
     public void testEqualsWithMetadata() {
+        // Arrange
         String source = "test";
         Instant time = Instant.now();
         NMEAMessage nmea = NMEAMessage.fromString("!AIVDM,1,1,,A,13aEOK?P00PD2wVMdLDRhgvL289?,0*26");
@@ -55,10 +69,12 @@ public class AISMessageTest {
         Metadata meta2 = new Metadata(source, time);
         Metadata meta3 = new Metadata(source, time.plusMillis(1000));
 
+        // Act
         AISMessage ais1 = AISMessage.create(meta1, nmea);
         AISMessage ais2 = AISMessage.create(meta2, nmea);
         AISMessage ais3 = AISMessage.create(meta3, nmea);
 
+        // Assert
         assertEquals(meta1, meta2);
         assertNotEquals(meta1, meta3);
 
@@ -68,51 +84,63 @@ public class AISMessageTest {
 
     @Test
     public void canHandleEmptyMessage() {
-        assertThrows(InvalidMessage.class, () -> AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,00,4*21")));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,00,4*21");
+
+        // Act & Assert
+        assertThrows(InvalidMessage.class, () -> AISMessage.create(nmeaMessage));
     }
 
     @Test
     public void canHandleUnparsableNMEAMessage() {
-        assertThrows(NMEAParseException.class, () -> AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,13K6th002u9@8P0DEVv2M1up02Pl,0*740008,2*09")));
+        // Arrange & Act & Assert
+        assertThrows(NMEAParseException.class, () -> {
+            NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,13K6th002u9@8P0DEVv2M1up02Pl,0*740008,2*09");
+            AISMessage.create(nmeaMessage);
+        });
     }
 
     @Test
     public void isSerializable() {
+        // Arrange & Act & Assert
         // Type 1
-        assertTrue(isSerializable(AISMessage.create(
-            NMEAMessage.fromString("!BSVDM,1,1,,A,1:02Ih001U0d=V:Op85<2aT>0<0F,0*3B")
-        )));
+        NMEAMessage nmeaMessage1 = NMEAMessage.fromString("!BSVDM,1,1,,A,1:02Ih001U0d=V:Op85<2aT>0<0F,0*3B");
+        assertTrue(isSerializable(AISMessage.create(nmeaMessage1)));
 
         // Type 4
-        assertTrue(isSerializable(AISMessage.create(
-            NMEAMessage.fromString("!AIVDM,1,1,,B,4h3Ovk1udp6I9o>jPHEdjdW000S:,0*0C")
-        )));
+        NMEAMessage nmeaMessage4 = NMEAMessage.fromString("!AIVDM,1,1,,B,4h3Ovk1udp6I9o>jPHEdjdW000S:,0*0C");
+        assertTrue(isSerializable(AISMessage.create(nmeaMessage4)));
 
         // Type 5
-        assertTrue(isSerializable(AISMessage.create(
-            NMEAMessage.fromString("!BSVDM,2,1,5,A,5:02Ih01WrRsEH57J20H5P8u8N222222222222167H66663k085QBS1H,0*55"),
-            NMEAMessage.fromString("!BSVDM,2,2,5,A,888888888888880,2*38")
-        )));
+        NMEAMessage nmeaMessage5a = NMEAMessage.fromString("!BSVDM,2,1,5,A,5:02Ih01WrRsEH57J20H5P8u8N222222222222167H66663k085QBS1H,0*55");
+        NMEAMessage nmeaMessage5b = NMEAMessage.fromString("!BSVDM,2,2,5,A,888888888888880,2*38");
+        assertTrue(isSerializable(AISMessage.create(nmeaMessage5a, nmeaMessage5b)));
     }
 
     @Test
     public void canReturnRawNmeaMessages() {
-        // Test one-liner
-        AISMessage aisMessage = AISMessage.create(
-            NMEAMessage.fromString("!BSVDM,1,1,,A,1:02Ih001U0d=V:Op85<2aT>0<0F,0*3B")
-        );
+        // Arrange
+        NMEAMessage nmeaMessage1 = NMEAMessage.fromString("!BSVDM,1,1,,A,1:02Ih001U0d=V:Op85<2aT>0<0F,0*3B");
 
+        // Act
+        // Test one-liner
+        AISMessage aisMessage = AISMessage.create(nmeaMessage1);
+
+        // Assert
         NMEAMessage[] nmeaMessages = aisMessage.getNmeaMessages();
         assertNotNull(nmeaMessages);
         assertEquals(1, nmeaMessages.length);
         assertEquals("!BSVDM,1,1,,A,1:02Ih001U0d=V:Op85<2aT>0<0F,0*3B", nmeaMessages[0].getRawMessage());
 
-        // Test two-liner
-        aisMessage =AISMessage.create(
-            NMEAMessage.fromString("!BSVDM,2,1,5,A,5:02Ih01WrRsEH57J20H5P8u8N222222222222167H66663k085QBS1H,0*55"),
-            NMEAMessage.fromString("!BSVDM,2,2,5,A,888888888888880,2*38")
-        );
+        // Arrange
+        NMEAMessage nmeaMessage2a = NMEAMessage.fromString("!BSVDM,2,1,5,A,5:02Ih01WrRsEH57J20H5P8u8N222222222222167H66663k085QBS1H,0*55");
+        NMEAMessage nmeaMessage2b = NMEAMessage.fromString("!BSVDM,2,2,5,A,888888888888880,2*38");
 
+        // Act
+        // Test two-liner
+        aisMessage = AISMessage.create(nmeaMessage2a, nmeaMessage2b);
+
+        // Assert
         nmeaMessages = aisMessage.getNmeaMessages();
         assertNotNull(nmeaMessages);
         assertEquals(2, nmeaMessages.length);
@@ -123,9 +151,10 @@ public class AISMessageTest {
     @Test
     public void checkDataFields() {
         // Arrange
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,702;bCSdToR`,0*34"));
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,702;bCSdToR`,0*34");
 
         // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
         Map<String, Object> dataFields = aisMessage.dataFields();
 
         // Assert

@@ -11,10 +11,15 @@ public class BinaryMessageSingleSlotTest {
 
     @Test
     public void canDecode() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,I6SWo?8P00a3PKpEKEVj0?vNP<65,0*73"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,I6SWo?8P00a3PKpEKEVj0?vNP<65,0*73");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.BinaryMessageSingleSlot, aisMessage.getMessageType());
         BinaryMessageSingleSlot message = (BinaryMessageSingleSlot) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
@@ -28,10 +33,15 @@ public class BinaryMessageSingleSlotTest {
 
     @Test
     public void canDecodeAlternative() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,I6SW6D5P00a3PO8>KUV00?vNP<65,0*0E"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,I6SW6D5P00a3PO8>KUV00?vNP<65,0*0E");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.BinaryMessageSingleSlot, aisMessage.getMessageType());
         BinaryMessageSingleSlot message = (BinaryMessageSingleSlot) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());

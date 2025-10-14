@@ -13,10 +13,15 @@ public class ClassBCSStaticDataReportTest {
 
     @Test
     public void canDecode() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,H5NLOjTUG5CD=1BG46mqhj0P7130,0*78"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,H5NLOjTUG5CD=1BG46mqhj0P7130,0*78");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.ClassBCSStaticDataReport, aisMessage.getMessageType());
         ClassBCSStaticDataReport message = (ClassBCSStaticDataReport) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
@@ -37,8 +42,11 @@ public class ClassBCSStaticDataReportTest {
     @Test
     @Disabled
     public void canDecode_githubIssue38() {
+        // Arrange
         String msg = "!AIVDM,1,1,,B,H3m9T21HTe<H`u8B22222222220,0*0F";
         NMEAMessage nmeaMessage = NMEAMessage.fromString(msg);
+
+        // Act
         AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
@@ -46,12 +54,16 @@ public class ClassBCSStaticDataReportTest {
 
     @Test
     public void canDecode_githubIssue47() {
+        // Arrange
         String msg = "!AIVDM,1,1,,,H7tKep@H>0u8<PTB222222222200,2*01";
         NMEAMessage nmeaMessage = NMEAMessage.fromString(msg);
+
+        // Act
         AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertTrue(aisMessage instanceof ClassBCSStaticDataReport);
         assertEquals(24, aisMessage.getMessageType().getCode());
         assertEquals(0, ((ClassBCSStaticDataReport) aisMessage).getPartNumber().intValue());
@@ -61,15 +73,18 @@ public class ClassBCSStaticDataReportTest {
 
     @Test
     public void canDecode_partAB() {
+        // Arrange
         String partA = "!AIVDM,1,1,,A,H42O55i18tMET00000000000000,2*6D";
         String partB = "!AIVDM,1,1,,A,H42O55lti4hhhilD3nink000?050,0*40";
 
         NMEAMessage nmeaMessageA = NMEAMessage.fromString(partA);
         NMEAMessage nmeaMessageB = NMEAMessage.fromString(partB);
 
+        // Act
         AISMessage aisMessagePartA = AISMessage.create(nmeaMessageA);
         AISMessage aisMessagePartB = AISMessage.create(nmeaMessageB);
 
+        // Assert
         System.out.println(aisMessagePartA.toString());
         assertTrue(aisMessagePartA instanceof ClassBCSStaticDataReport);
         assertEquals(24, aisMessagePartA.getMessageType().getCode());

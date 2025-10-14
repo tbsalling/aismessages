@@ -5,16 +5,22 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class SafetyRelatedAcknowledgeTest {
 
     @Test
     public void canDecodeWithOneAck() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,=39UOj0jFs9R,0*17"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,=39UOj0jFs9R,0*17");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.SafetyRelatedAcknowledge, aisMessage.getMessageType());
         SafetyRelatedAcknowledge message = (SafetyRelatedAcknowledge) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
@@ -33,10 +39,15 @@ public class SafetyRelatedAcknowledgeTest {
 
     @Test
     public void canDecodeWithMultipleAcks() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,=8157oQGOv9f,0*0F"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,=8157oQGOv9f,0*0F");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.SafetyRelatedAcknowledge, aisMessage.getMessageType());
         SafetyRelatedAcknowledge message = (SafetyRelatedAcknowledge) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());

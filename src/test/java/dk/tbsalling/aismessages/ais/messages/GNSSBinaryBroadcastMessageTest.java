@@ -5,16 +5,22 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class GNSSBinaryBroadcastMessageTest {
 
     @Test
     public void canDecodeMinimal() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,A02VqLPA4I6C07h5Ed1h,0*43"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,A02VqLPA4I6C07h5Ed1h,0*43");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.GNSSBinaryBroadcastMessage, aisMessage.getMessageType());
         GNSSBinaryBroadcastMessage message = (GNSSBinaryBroadcastMessage) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
@@ -34,10 +40,15 @@ public class GNSSBinaryBroadcastMessageTest {
 
     @Test
     public void canDecodeWithBinaryData() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,A02VqLPA4I6C07h5Ed1h<OrsubtH0000000000S@gN10kGJp,0*0E"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,A02VqLPA4I6C07h5Ed1h<OrsubtH0000000000S@gN10kGJp,0*0E");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.GNSSBinaryBroadcastMessage, aisMessage.getMessageType());
         GNSSBinaryBroadcastMessage message = (GNSSBinaryBroadcastMessage) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());

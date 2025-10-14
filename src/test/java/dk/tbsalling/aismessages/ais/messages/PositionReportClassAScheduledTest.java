@@ -11,10 +11,15 @@ public class PositionReportClassAScheduledTest {
 
     @Test
     public void canDecode() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,13@nePh01>PjcO4PGReoJEmL0HJg,0*67"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,13@nePh01>PjcO4PGReoJEmL0HJg,0*67");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.PositionReportClassAScheduled, aisMessage.getMessageType());
         assertEquals((Integer) 0, aisMessage.getRepeatIndicator());
         PositionReportClassAScheduled message = (PositionReportClassAScheduled) aisMessage;
@@ -37,15 +42,24 @@ public class PositionReportClassAScheduledTest {
 
     @Test
     public void detectInvalidMessage() {
-        assertThrows(InvalidMessage.class, () -> AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,13chv900160wps@GF<FlHCjR0<0ht2cv3i,0*1A")));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,13chv900160wps@GF<FlHCjR0<0ht2cv3i,0*1A");
+
+        // Act & Assert
+        assertThrows(InvalidMessage.class, () -> AISMessage.create(nmeaMessage));
     }
 
     @Test
     public void canDecodeCommunicationState() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,A,17OoHr?P009qtlQd6T<0<?wN041P,0*01"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,17OoHr?P009qtlQd6T<0<?wN041P,0*01");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.PositionReportClassAScheduled, aisMessage.getMessageType());
         assertEquals((Integer) 0, aisMessage.getRepeatIndicator());
         PositionReportClassAScheduled message = (PositionReportClassAScheduled) aisMessage;

@@ -12,10 +12,15 @@ public class UTCAndDateResponseTest {
 
     @Test
     public void canDecode() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,;4R33:1uUK2F`q?mOt@@GoQ00000,0*5D"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,;4R33:1uUK2F`q?mOt@@GoQ00000,0*5D");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.UTCAndDateResponse, aisMessage.getMessageType());
         UTCAndDateResponse message = (UTCAndDateResponse) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
@@ -35,10 +40,15 @@ public class UTCAndDateResponseTest {
 
     @Test
     public void canDecodeAlternative() {
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString("!AIVDM,1,1,,B,;5MtFGQua>0:=I25ih?rVc100000,0*69"));
+        // Arrange
+        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,;5MtFGQua>0:=I25ih?rVc100000,0*69");
+
+        // Act
+        AISMessage aisMessage = AISMessage.create(nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
+        // Assert
         assertEquals(AISMessageType.UTCAndDateResponse, aisMessage.getMessageType());
         UTCAndDateResponse message = (UTCAndDateResponse) aisMessage;
         assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
