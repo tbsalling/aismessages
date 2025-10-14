@@ -49,3 +49,5 @@ data/sfbay/
 bin/
 /HOWTO Release.txt
 /release.properties
+.DS_Store
+/.claude/
