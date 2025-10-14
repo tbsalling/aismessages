@@ -47,7 +47,7 @@ public class IMO implements Serializable {
 
     @Override
 	public String toString() {
-		return "IMO [imo=" + imo + "]";
+        return "IMO [imo=%d]".formatted(imo);
 	}
 
     /**

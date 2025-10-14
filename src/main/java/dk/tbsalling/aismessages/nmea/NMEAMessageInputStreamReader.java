@@ -97,13 +97,13 @@ public class NMEAMessageInputStreamReader {
 			try {
 				NMEAMessage nmea = NMEAMessage.fromString(string);
 				nmeaMessageHandler.accept(nmea);
-				LOG.log(DEBUG, "Received: " + nmea.toString());
+                LOG.log(DEBUG, "Received: %s".formatted(nmea.toString()));
 			} catch (InvalidMessage invalidMessageException) {
-				LOG.log(WARNING, "Received invalid AIS message: \"" + string + "\"");
+                LOG.log(WARNING, "Received invalid AIS message: \"%s\"".formatted(string));
 			} catch (UnsupportedMessageType unsupportedMessageTypeException) {
-				LOG.log(WARNING, "Received unsupported NMEA message: \"" + string + "\"");
+                LOG.log(WARNING, "Received unsupported NMEA message: \"%s\"".formatted(string));
 			} catch (NMEAParseException parseException) {
-				LOG.log(WARNING, "Received non-compliant NMEA message: \"" + string + "\"");
+                LOG.log(WARNING, "Received non-compliant NMEA message: \"%s\"".formatted(string));
 			}
 		}
 

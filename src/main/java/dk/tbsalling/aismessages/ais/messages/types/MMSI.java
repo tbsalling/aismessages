@@ -32,7 +32,7 @@ public class MMSI implements Serializable {
 
     @Override
     public String toString() {
-        return "MMSI [mmsi=" + mmsi + "]";
+        return "MMSI [mmsi=%d]".formatted(mmsi);
     }
 
     /**
@@ -59,7 +59,7 @@ public class MMSI implements Serializable {
 
         int n = mmsiAsString.length();
         if (n != 9)
-            throw new IllegalStateException("mmsi " + mmsi + " as 9-digit string has length " + n + ", not 9.");
+            throw new IllegalStateException("mmsi %d as 9-digit string has length %d, not 9.".formatted(mmsi, n));
 
         return mmsiAsString;
     }

@@ -128,12 +128,7 @@ public class Decoders {
         Integer hour = UNSIGNED_INTEGER_DECODER.apply(bitString.substring(9, 14));
         Integer minute = UNSIGNED_INTEGER_DECODER.apply(bitString.substring(14, 20));
 
-        String monthAsString = month<10 ? "0"+month : ""+month;
-        String dayAsString = day<10 ? "0"+day : ""+day;
-        String hourAsString = hour<10 ? "0"+hour : ""+hour;
-        String minuteAsString = minute<10 ? "0"+minute : ""+minute;
-
-        return dayAsString + "-" + monthAsString + " " + hourAsString + ":" + minuteAsString;
+        return "%02d-%02d %02d:%02d".formatted(day, month, hour, minute);
     };
 
     public static final Function<String, String> STRING_DECODER = bitString -> {

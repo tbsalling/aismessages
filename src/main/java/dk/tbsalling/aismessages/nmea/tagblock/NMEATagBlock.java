@@ -62,7 +62,7 @@ public class NMEATagBlock {
         final String nmeaTagBlockRegEx = "^\\\\.*\\*[0-9A-Fa-f]{2}\\\\$";
 
         if (! rawMessage.matches(nmeaTagBlockRegEx))
-            throw new NMEAParseException(rawMessage, "Message does not comply with regexp \"" + nmeaTagBlockRegEx + "\"");
+            throw new NMEAParseException(rawMessage, "Message does not comply with regexp \"%s\"".formatted(nmeaTagBlockRegEx));
 
         String rawMessageCleaned = rawMessage.substring(1, rawMessage.length() - 1);
         String[] msg = rawMessageCleaned.split("\\*");

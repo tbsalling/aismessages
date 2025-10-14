@@ -585,13 +585,13 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         final String bitString = getBitString();
 
         if (bitString.length() < 6) {
-            LOG.log(WARNING,"Message is too short: " + bitString.length() + " bits.");
+            LOG.log(WARNING, "Message is too short: %d bits.".formatted(bitString.length()));
             return Boolean.FALSE;
         }
 
         int messageType = Integer.parseInt(bitString.substring(0, 6), 2);
         if (messageType < AISMessageType.MINIMUM_CODE || messageType > AISMessageType.MAXIMUM_CODE) {
-            LOG.log(WARNING,"Unsupported message type: " + messageType);
+            LOG.log(WARNING, "Unsupported message type: %d".formatted(messageType));
             return Boolean.FALSE;
         }
 
@@ -599,19 +599,19 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         switch (messageType) {
             case 1:
                 if (actualMessageLength != 168) {
-                    LOG.log(WARNING,"Message type 1: Illegal message length: " + bitString.length() + " bits.");
+                    LOG.log(WARNING, "Message type 1: Illegal message length: %d bits.".formatted(bitString.length()));
                     return Boolean.FALSE;
                 }
                 break;
             case 2:
                 if (actualMessageLength != 168) {
-                    LOG.log(WARNING,"Message type 2: Illegal message length: " + bitString.length() + " bits.");
+                    LOG.log(WARNING, "Message type 2: Illegal message length: %d bits.".formatted(bitString.length()));
                     return Boolean.FALSE;
                 }
                 break;
             case 3:
                 if (actualMessageLength != 168) {
-                    LOG.log(WARNING,"Message type 3: Illegal message length: " + bitString.length() + " bits.");
+                    LOG.log(WARNING, "Message type 3: Illegal message length: %d bits.".formatted(bitString.length()));
                     return Boolean.FALSE;
                 }
                 break;
@@ -620,37 +620,37 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
                 break;
             case 5:
                 if (actualMessageLength != 424 && actualMessageLength != 422) {
-                    LOG.log(WARNING,"Message type 5: Illegal message length: " + bitString.length() + " bits.");
+                    LOG.log(WARNING, "Message type 5: Illegal message length: %d bits.".formatted(bitString.length()));
                     return Boolean.FALSE;
                 }
                 break;
             case 6:
                 if (actualMessageLength > 1008) {
-                    LOG.log(WARNING,"Message type 6: Illegal message length: " + bitString.length() + " bits.");
+                    LOG.log(WARNING, "Message type 6: Illegal message length: %d bits.".formatted(bitString.length()));
                     return Boolean.FALSE;
                 }
                 break;
             case 7:
                 if (actualMessageLength != 72 && actualMessageLength != 104 && actualMessageLength != 136 && actualMessageLength != 168) {
-                    LOG.log(WARNING,"Message type 7: Illegal message length: " + bitString.length() + " bits.");
+                    LOG.log(WARNING, "Message type 7: Illegal message length: %d bits.".formatted(bitString.length()));
                     return Boolean.FALSE;
                 }
                 break;
             case 8:
                 if (actualMessageLength > 1008) {
-                    LOG.log(WARNING,"Message type 8: Illegal message length: " + bitString.length() + " bits.");
+                    LOG.log(WARNING, "Message type 8: Illegal message length: %d bits.".formatted(bitString.length()));
                     return Boolean.FALSE;
                 }
                 break;
             case 9:
                 if (actualMessageLength != 168) {
-                    LOG.log(WARNING,"Message type 9: Illegal message length: " + bitString.length() + " bits.");
+                    LOG.log(WARNING, "Message type 9: Illegal message length: %d bits.".formatted(bitString.length()));
                     return Boolean.FALSE;
                 }
                 break;
             case 10:
                 if (actualMessageLength != 72) {
-                    LOG.log(WARNING,"Message type 10: Illegal message length: " + bitString.length() + " bits.");
+                    LOG.log(WARNING, "Message type 10: Illegal message length: %d bits.".formatted(bitString.length()));
                     return Boolean.FALSE;
                 }
                 break;
@@ -659,19 +659,19 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
                 break;
             case 12:
                 if (actualMessageLength > 1008) {
-                    LOG.log(WARNING,"Message type 12: Illegal message length: " + bitString.length() + " bits.");
+                    LOG.log(WARNING, "Message type 12: Illegal message length: %d bits.".formatted(bitString.length()));
                     return Boolean.FALSE;
                 }
                 break;
             case 13:
                 if (actualMessageLength != 72 && actualMessageLength != 104 && actualMessageLength != 136 && actualMessageLength != 168) {
-                    LOG.log(WARNING,"Message type 13: Illegal message length: " + bitString.length() + " bits.");
+                    LOG.log(WARNING, "Message type 13: Illegal message length: %d bits.".formatted(bitString.length()));
                     return Boolean.FALSE;
                 }
                 break;
             case 14:
                 if (actualMessageLength > 1008) {
-                    LOG.log(WARNING,"Message type 14: Illegal message length: " + bitString.length() + " bits.");
+                    LOG.log(WARNING, "Message type 14: Illegal message length: %d bits.".formatted(bitString.length()));
                     return Boolean.FALSE;
                 }
                 break;
@@ -680,61 +680,61 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
                 break;
             case 16:
                 if (actualMessageLength != 96 && actualMessageLength != 144) {
-                    LOG.log(WARNING,"Message type 16: Illegal message length: " + bitString.length() + " bits.");
+                    LOG.log(WARNING, "Message type 16: Illegal message length: %d bits.".formatted(bitString.length()));
                     return Boolean.FALSE;
                 }
                 break;
             case 17:
                 if (actualMessageLength < 80 || actualMessageLength > 816) {
-                    LOG.log(WARNING,"Message type 17: Illegal message length: " + bitString.length() + " bits.");
+                    LOG.log(WARNING, "Message type 17: Illegal message length: %d bits.".formatted(bitString.length()));
                     return Boolean.FALSE;
                 }
                 break;
             case 18:
                 if (actualMessageLength != 168) {
-                    LOG.log(WARNING,"Message type 18: Illegal message length: " + bitString.length() + " bits.");
+                    LOG.log(WARNING, "Message type 18: Illegal message length: %d bits.".formatted(bitString.length()));
                     return Boolean.FALSE;
                 }
                 break;
             case 19:
                 if (actualMessageLength != 312) {
-                    LOG.log(WARNING,"Message type 19: Illegal message length: " + bitString.length() + " bits.");
+                    LOG.log(WARNING, "Message type 19: Illegal message length: %d bits.".formatted(bitString.length()));
                     return Boolean.FALSE;
                 }
                 break;
             case 20:
                 if (actualMessageLength < 72 || actualMessageLength > 160) {
-                    LOG.log(WARNING,"Message type 20: Illegal message length: " + bitString.length() + " bits.");
+                    LOG.log(WARNING, "Message type 20: Illegal message length: %d bits.".formatted(bitString.length()));
                     return Boolean.FALSE;
                 }
                 break;
             case 21:
                 if (actualMessageLength < 272  || actualMessageLength > 360) {
-                    LOG.log(WARNING,"Message type 21: Illegal message length: " + bitString.length() + " bits.");
+                    LOG.log(WARNING, "Message type 21: Illegal message length: %d bits.".formatted(bitString.length()));
                     return Boolean.FALSE;
                 }
                 break;
             case 22:
                 if (actualMessageLength != 168) {
-                    LOG.log(WARNING,"Message type 22: Illegal message length: " + bitString.length() + " bits.");
+                    LOG.log(WARNING, "Message type 22: Illegal message length: %d bits.".formatted(bitString.length()));
                     return Boolean.FALSE;
                 }
                 break;
             case 23:
                 if (actualMessageLength != 160) {
-                    LOG.log(WARNING,"Message type 23: Illegal message length: " + bitString.length() + " bits.");
+                    LOG.log(WARNING, "Message type 23: Illegal message length: %d bits.".formatted(bitString.length()));
                     return Boolean.FALSE;
                 }
                 break;
             case 24:
                 if (actualMessageLength != 160 && actualMessageLength != 168 && actualMessageLength != 158 ) {
-                    LOG.log(WARNING,"Message type 24: Illegal message length: " + bitString.length() + " bits.");
+                    LOG.log(WARNING, "Message type 24: Illegal message length: %d bits.".formatted(bitString.length()));
                     return Boolean.FALSE;
                 }
                 break;
             case 25:
                 if (actualMessageLength > 168) {
-                    LOG.log(WARNING,"Message type 25: Illegal message length: " + bitString.length() + " bits.");
+                    LOG.log(WARNING, "Message type 25: Illegal message length: %d bits.".formatted(bitString.length()));
                     return Boolean.FALSE;
                 }
                 break;
@@ -743,7 +743,7 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
                 break;
             case 27:
                 if (actualMessageLength != 96 && actualMessageLength != 168) {
-                    LOG.log(WARNING,"Message type 27: Illegal message length: " + bitString.length() + " bits.");
+                    LOG.log(WARNING, "Message type 27: Illegal message length: %d bits.".formatted(bitString.length()));
                     return Boolean.FALSE;
                 }
                 break;
