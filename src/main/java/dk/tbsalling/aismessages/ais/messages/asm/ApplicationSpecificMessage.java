@@ -19,27 +19,19 @@ public abstract class ApplicationSpecificMessage implements Serializable, Cached
     public static ApplicationSpecificMessage create(int designatedAreaCode, int functionalId, String binaryData) {
         requireNonNull(binaryData);
 
-        ApplicationSpecificMessage asm = null;
-
-        if (designatedAreaCode == 1) {
-            switch (functionalId) {
-                case 20:
-                    asm = new BerthingData(designatedAreaCode, functionalId, binaryData);
-                    break;
-                case 24:
-                    asm = new ExtendedShipStaticAndVoyageRelatedData(designatedAreaCode, functionalId, binaryData);
-                    break;
-                case 40:
-                    asm = new NumberOfPersonsOnBoard(designatedAreaCode, functionalId, binaryData);
-                    break;
-            }
-        } else if (designatedAreaCode == 200) {
-            switch (functionalId) {
-                case 10:
-                    asm = new InlandShipStaticAndVoyageRelatedData(designatedAreaCode, functionalId, binaryData);
-                    break;
-            }
-        }
+        ApplicationSpecificMessage asm = switch (designatedAreaCode) {
+            case 1 -> switch (functionalId) {
+                case 20 -> new BerthingData(designatedAreaCode, functionalId, binaryData);
+                case 24 -> new ExtendedShipStaticAndVoyageRelatedData(designatedAreaCode, functionalId, binaryData);
+                case 40 -> new NumberOfPersonsOnBoard(designatedAreaCode, functionalId, binaryData);
+                default -> null;
+            };
+            case 200 -> switch (functionalId) {
+                case 10 -> new InlandShipStaticAndVoyageRelatedData(designatedAreaCode, functionalId, binaryData);
+                default -> null;
+            };
+            default -> null;
+        };
 
         if (asm == null)
             asm = new UnknownApplicationSpecificMessage(designatedAreaCode, functionalId, binaryData);

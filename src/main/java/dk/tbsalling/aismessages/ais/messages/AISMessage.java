@@ -474,104 +474,47 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
      * @throws InvalidMessage if the AIS payload of the NMEAmessage(s) is invalid
      */
     public static AISMessage create(NMEAMessage... nmeaMessages) {
-        BiFunction<NMEAMessage[], String, AISMessage> aisMessageConstructor;
-
         String bitString = decodePayloadToBitString(nmeaMessages);
         AISMessageType messageType = AISMessageType.fromInteger(Integer.parseInt(bitString.substring(0, 6), 2));
 
-        if (messageType != null) {
-            switch (messageType) {
-                case ShipAndVoyageRelatedData:
-                    aisMessageConstructor = ShipAndVoyageData::new;
-                    break;
-                case PositionReportClassAScheduled:
-                    aisMessageConstructor = PositionReportClassAScheduled::new;
-                    break;
-                case PositionReportClassAAssignedSchedule:
-                    aisMessageConstructor = PositionReportClassAAssignedSchedule::new;
-                    break;
-                case PositionReportClassAResponseToInterrogation:
-                    aisMessageConstructor = PositionReportClassAResponseToInterrogation::new;
-                    break;
-                case BaseStationReport:
-                    aisMessageConstructor = BaseStationReport::new;
-                    break;
-                case AddressedBinaryMessage:
-                    aisMessageConstructor = AddressedBinaryMessage::new;
-                    break;
-                case BinaryAcknowledge:
-                    aisMessageConstructor = BinaryAcknowledge::new;
-                    break;
-                case BinaryBroadcastMessage:
-                    aisMessageConstructor = BinaryBroadcastMessage::new;
-                    break;
-                case StandardSARAircraftPositionReport:
-                    aisMessageConstructor = StandardSARAircraftPositionReport::new;
-                    break;
-                case UTCAndDateInquiry:
-                    aisMessageConstructor = UTCAndDateInquiry::new;
-                    break;
-                case UTCAndDateResponse:
-                    aisMessageConstructor = UTCAndDateResponse::new;
-                    break;
-                case AddressedSafetyRelatedMessage:
-                    aisMessageConstructor = AddressedSafetyRelatedMessage::new;
-                    break;
-                case SafetyRelatedAcknowledge:
-                    aisMessageConstructor = SafetyRelatedAcknowledge::new;
-                    break;
-                case SafetyRelatedBroadcastMessage:
-                    aisMessageConstructor = SafetyRelatedBroadcastMessage::new;
-                    break;
-                case Interrogation:
-                    aisMessageConstructor = Interrogation::new;
-                    break;
-                case AssignedModeCommand:
-                    aisMessageConstructor = AssignedModeCommand::new;
-                    break;
-                case GNSSBinaryBroadcastMessage:
-                    aisMessageConstructor = GNSSBinaryBroadcastMessage::new;
-                    break;
-                case StandardClassBCSPositionReport:
-                    aisMessageConstructor = StandardClassBCSPositionReport::new;
-                    break;
-                case ExtendedClassBEquipmentPositionReport:
-                    aisMessageConstructor = ExtendedClassBEquipmentPositionReport::new;
-                    break;
-                case DataLinkManagement:
-                    aisMessageConstructor = DataLinkManagement::new;
-                    break;
-                case AidToNavigationReport:
-                    aisMessageConstructor = AidToNavigationReport::new;
-                    break;
-                case ChannelManagement:
-                    aisMessageConstructor = ChannelManagement::new;
-                    break;
-                case GroupAssignmentCommand:
-                    aisMessageConstructor = GroupAssignmentCommand::new;
-                    break;
-                case ClassBCSStaticDataReport:
-                    aisMessageConstructor = ClassBCSStaticDataReport::new;
-                    break;
-                case BinaryMessageSingleSlot:
-                    aisMessageConstructor = BinaryMessageSingleSlot::new;
-                    break;
-                case BinaryMessageMultipleSlot:
-                    aisMessageConstructor = BinaryMessageMultipleSlot::new;
-                    break;
-                case LongRangeBroadcastMessage:
-                    aisMessageConstructor = LongRangeBroadcastMessage::new;
-                    break;
-                default:
-                    throw new UnsupportedMessageType(messageType.getCode());
-            }
-        } else {
-            StringBuffer sb = new StringBuffer();
+        if (messageType == null) {
+            StringBuilder sb = new StringBuilder();
             for (NMEAMessage nmeaMessage : nmeaMessages) {
                 sb.append(nmeaMessage);
             }
-            throw new InvalidMessage("Cannot extract message type from NMEA message: " + sb.toString());
+            throw new InvalidMessage("Cannot extract message type from NMEA message: %s".formatted(sb.toString()));
         }
+
+        BiFunction<NMEAMessage[], String, AISMessage> aisMessageConstructor = switch (messageType) {
+            case ShipAndVoyageRelatedData -> ShipAndVoyageData::new;
+            case PositionReportClassAScheduled -> PositionReportClassAScheduled::new;
+            case PositionReportClassAAssignedSchedule -> PositionReportClassAAssignedSchedule::new;
+            case PositionReportClassAResponseToInterrogation -> PositionReportClassAResponseToInterrogation::new;
+            case BaseStationReport -> BaseStationReport::new;
+            case AddressedBinaryMessage -> AddressedBinaryMessage::new;
+            case BinaryAcknowledge -> BinaryAcknowledge::new;
+            case BinaryBroadcastMessage -> BinaryBroadcastMessage::new;
+            case StandardSARAircraftPositionReport -> StandardSARAircraftPositionReport::new;
+            case UTCAndDateInquiry -> UTCAndDateInquiry::new;
+            case UTCAndDateResponse -> UTCAndDateResponse::new;
+            case AddressedSafetyRelatedMessage -> AddressedSafetyRelatedMessage::new;
+            case SafetyRelatedAcknowledge -> SafetyRelatedAcknowledge::new;
+            case SafetyRelatedBroadcastMessage -> SafetyRelatedBroadcastMessage::new;
+            case Interrogation -> Interrogation::new;
+            case AssignedModeCommand -> AssignedModeCommand::new;
+            case GNSSBinaryBroadcastMessage -> GNSSBinaryBroadcastMessage::new;
+            case StandardClassBCSPositionReport -> StandardClassBCSPositionReport::new;
+            case ExtendedClassBEquipmentPositionReport -> ExtendedClassBEquipmentPositionReport::new;
+            case DataLinkManagement -> DataLinkManagement::new;
+            case AidToNavigationReport -> AidToNavigationReport::new;
+            case ChannelManagement -> ChannelManagement::new;
+            case GroupAssignmentCommand -> GroupAssignmentCommand::new;
+            case ClassBCSStaticDataReport -> ClassBCSStaticDataReport::new;
+            case BinaryMessageSingleSlot -> BinaryMessageSingleSlot::new;
+            case BinaryMessageMultipleSlot -> BinaryMessageMultipleSlot::new;
+            case LongRangeBroadcastMessage -> LongRangeBroadcastMessage::new;
+            default -> throw new UnsupportedMessageType(messageType.getCode());
+        };
 
         return aisMessageConstructor.apply(nmeaMessages, bitString);
     }
