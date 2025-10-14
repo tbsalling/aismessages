@@ -252,7 +252,7 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
      * @throws InvalidMessage if the AIS payload of the NMEAmessage(s) is invalid.
      */
     protected void checkAISMessage() {
-        StringBuffer message = new StringBuffer();
+        StringBuilder message = new StringBuilder();
 
         final String bitString = getBitString();
 
@@ -369,7 +369,7 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
     protected String getZeroBitStuffedString(int endIndex) {
         String b = getBitString();
         if (b.length() - endIndex < 0) {
-            StringBuffer c = new StringBuffer(b);
+            StringBuilder c = new StringBuilder(b);
             for (int i = b.length() - endIndex; i < 0; i++) {
                 c = c.append("0");
             }

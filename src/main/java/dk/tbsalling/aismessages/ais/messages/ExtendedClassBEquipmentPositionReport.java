@@ -41,7 +41,7 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
     protected void checkAISMessage() {
         super.checkAISMessage();
 
-        final StringBuffer errorMessage = new StringBuffer();
+        final StringBuilder errorMessage = new StringBuilder();
 
         final int numberOfBits = getNumberOfBits();
 

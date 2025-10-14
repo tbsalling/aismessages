@@ -52,7 +52,7 @@ public class AddressedBinaryMessage extends AISMessage {
         super.checkAISMessage();
 
         final int numberOfBits = getNumberOfBits();
-        final StringBuffer message = new StringBuffer();
+        final StringBuilder message = new StringBuilder();
 
         if (numberOfBits <= 72) {
             message.append(format("Message of type %s should be at least 72 bits long; not %d.", getMessageType(), numberOfBits));

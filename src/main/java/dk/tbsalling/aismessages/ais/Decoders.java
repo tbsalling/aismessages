@@ -137,7 +137,7 @@ public class Decoders {
     };
 
     public static final Function<String, String> STRING_DECODER = bitString -> {
-            StringBuffer stringBuffer = new StringBuffer();
+        StringBuilder stringBuffer = new StringBuilder();
             String remainingBits = bitString;
             while (remainingBits.length() >= 6) {
                 String b = remainingBits.substring(0, 6);

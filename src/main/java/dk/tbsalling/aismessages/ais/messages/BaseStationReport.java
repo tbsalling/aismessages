@@ -47,7 +47,7 @@ public class BaseStationReport extends AISMessage {
     protected void checkAISMessage() {
         super.checkAISMessage();
 
-        final StringBuffer errorMessage = new StringBuffer();
+        final StringBuilder errorMessage = new StringBuilder();
 
         final int numberOfBits = getNumberOfBits();
 

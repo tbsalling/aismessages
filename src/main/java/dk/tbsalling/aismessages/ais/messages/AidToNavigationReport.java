@@ -45,7 +45,7 @@ public class AidToNavigationReport extends AISMessage {
     protected void checkAISMessage() {
         super.checkAISMessage();
 
-        final StringBuffer errorMessage = new StringBuffer();
+        final StringBuilder errorMessage = new StringBuilder();
 
         final int numberOfBits = getNumberOfBits();
         if (numberOfBits < 272 || numberOfBits > 360)
