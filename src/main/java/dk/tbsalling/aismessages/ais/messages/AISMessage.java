@@ -22,6 +22,7 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import dk.tbsalling.aismessages.version.Version;
 
 import java.io.Serializable;
 import java.lang.ref.WeakReference;
@@ -62,11 +63,11 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
 
     private transient static final System.Logger LOG = System.getLogger(AISMessage.class.getName());
 
-    public transient static final String VERSION = "3.4.1";
+    public transient static final String VERSION = Version.VERSION;
 
     static {
         System.err.print("""
-                
+
                 AISMessages v%s // Copyright (c) 2011- by S-Consult ApS, Denmark, CVR DK31327490. http://tbsalling.dk.
                 
                 This work is licensed under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License. To view a copy of
@@ -76,7 +77,9 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
                 NOT FOR COMMERCIAL USE!
                 Contact Thomas Borg Salling <tbsalling@tbsalling.dk> to obtain commercially licensed software.
                 
-                """.formatted(VERSION));
+                Compiled %s for Java %s.
+                
+                """.formatted(Version.VERSION, Version.BUILD_TIMESTAMP, Version.JAVA_VERSION));
     }
 
     /**

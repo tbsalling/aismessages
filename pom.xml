@@ -4,7 +4,7 @@
 	<groupId>dk.tbsalling</groupId>
 	<artifactId>aismessages</artifactId>
 	<packaging>jar</packaging>
-	<version>3.5.1</version>
+    <version>4.0.0-SNAPSHOT</version>
 	<name>aismessages</name>
 	<description>AISMessages is a light-weight and high-performing software library for decoding AIS messages related to
 		maritime navigation and safety.
@@ -12,6 +12,9 @@
 	<url>http://tbsalling.dk</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.build.timestamp.format>yyyy-MM-dd'T'HH:mm:ss'Z'</maven.build.timestamp.format>
+        <build.timestamp>${maven.build.timestamp}</build.timestamp>
+        <maven.compiler.release>21</maven.compiler.release>
 	</properties>
 	<licenses>
 		<license>
@@ -27,6 +30,24 @@
 	<build>
 		<plugins>
 			<plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>templating-maven-plugin</artifactId>
+                <version>3.0.0</version>
+                <executions>
+                    <execution>
+                        <id>generate-version-class</id>
+                        <goals>
+                            <goal>filter-sources</goal>
+                        </goals>
+                        <configuration>
+                            <sourceDirectory>${project.basedir}/src/main/java-templates</sourceDirectory>
+                            <outputDirectory>${project.build.directory}/generated-sources/java-templates
+                            </outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
 				<version>3.2.6</version>
@@ -57,7 +78,7 @@
 				<artifactId>maven-compiler-plugin</artifactId>
                 <version>3.14.1</version>
 				<configuration>
-                    <release>21</release>
+                    <release>${maven.compiler.release}</release>
 				</configuration>
 			</plugin>
 			<plugin>
