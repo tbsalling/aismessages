@@ -100,7 +100,7 @@ public class NMEATagBlock {
         this.text = parameterMap.containsKey(TAGBlockParameterCodeType.t)
                 ? parameterMap.get(TAGBlockParameterCodeType.t).getValue() : null;
 
-        this.checksum = isBlank(checkSum) ? null : Integer.valueOf(checkSum, 16);
+        this.checksum = (checkSum == null || checkSum.isBlank()) ? null : Integer.valueOf(checkSum, 16);
         this.rawMessage = rawMessage;
         this.valid = validate(parameterString);
         if (!valid)
@@ -114,10 +114,6 @@ public class NMEATagBlock {
         }
 
         return checksum == this.checksum;
-    }
-
-    private final static boolean isBlank(String s) {
-        return s == null || s.trim().length() == 0;
     }
 
     @Override
