@@ -16,12 +16,14 @@
 
 package dk.tbsalling.aismessages.ais.messages;
 
-import dk.tbsalling.aismessages.ais.messages.types.*;
+import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.ais.messages.types.CommunicationState;
+import dk.tbsalling.aismessages.ais.messages.types.MMSI;
+import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
-import static dk.tbsalling.aismessages.ais.Decoders.*;
 import static java.lang.String.format;
 
 /**
@@ -34,36 +36,6 @@ import static java.lang.String.format;
 @SuppressWarnings("serial")
 public class StandardClassBCSPositionReport extends AISMessage implements ExtendedDynamicDataReport {
 
-    protected StandardClassBCSPositionReport(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
-
-        // Eagerly decode all mandatory fields
-        this.regionalReserved1 = BIT_DECODER.apply(getBits(38, 46));
-        this.speedOverGround = UNSIGNED_FLOAT_DECODER.apply(getBits(46, 56)) / 10f;
-        this.positionAccuracy = BOOLEAN_DECODER.apply(getBits(56, 57));
-        this.longitude = FLOAT_DECODER.apply(getBits(57, 85)) / 600000f;
-        this.latitude = FLOAT_DECODER.apply(getBits(85, 112)) / 600000f;
-        this.courseOverGround = UNSIGNED_FLOAT_DECODER.apply(getBits(112, 124)) / 10f;
-        this.trueHeading = UNSIGNED_INTEGER_DECODER.apply(getBits(124, 133));
-        this.second = UNSIGNED_INTEGER_DECODER.apply(getBits(133, 139));
-        this.regionalReserved2 = BIT_DECODER.apply(getBits(139, 141));
-        this.csUnit = BOOLEAN_DECODER.apply(getBits(141, 142));
-        this.display = BOOLEAN_DECODER.apply(getBits(142, 143));
-        this.dsc = BOOLEAN_DECODER.apply(getBits(143, 144));
-        this.band = BOOLEAN_DECODER.apply(getBits(144, 145));
-        this.message22 = BOOLEAN_DECODER.apply(getBits(145, 146));
-        this.assigned = BOOLEAN_DECODER.apply(getBits(146, 147));
-        this.raimFlag = BOOLEAN_DECODER.apply(getBits(147, 148));
-        this.commStateSelectorFlag = BOOLEAN_DECODER.apply(getBits(148, 149));
-
-        // Communication state depends on selector flag
-        if (!this.commStateSelectorFlag) {
-            this.communicationState = SOTDMACommunicationState.fromBitString(getBits(149, 168));
-        } else {
-            this.communicationState = ITDMACommunicationState.fromBitString(getBits(149, 168));
-        }
-    }
-
     /**
      * Constructor accepting pre-parsed values for true immutability.
      */
@@ -74,7 +46,8 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
                                              float courseOverGround, int trueHeading, int second,
                                              String regionalReserved2, boolean csUnit, boolean display, boolean dsc, boolean band,
                                              boolean message22, boolean assigned, boolean raimFlag, boolean commStateSelectorFlag,
-                                             CommunicationState communicationState) {
+                                             CommunicationState communicationState,
+                                             int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround) {
         super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
         this.regionalReserved1 = regionalReserved1;
         this.speedOverGround = speedOverGround;
@@ -94,6 +67,10 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
         this.raimFlag = raimFlag;
         this.commStateSelectorFlag = commStateSelectorFlag;
         this.communicationState = communicationState;
+        this.rawSpeedOverGround = rawSpeedOverGround;
+        this.rawLatitude = rawLatitude;
+        this.rawLongitude = rawLongitude;
+        this.rawCourseOverGround = rawCourseOverGround;
     }
 
     @Override
@@ -136,7 +113,7 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
 
     @SuppressWarnings("unused")
     public int getRawSpeedOverGround() {
-        return UNSIGNED_INTEGER_DECODER.apply(getBits(46, 56));
+        return rawSpeedOverGround;
     }
 
     @SuppressWarnings("unused")
@@ -156,7 +133,7 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
 
     @SuppressWarnings("unused")
     public int getRawLatitude() {
-        return INTEGER_DECODER.apply(getBits(85, 112));
+        return rawLatitude;
     }
 
     @SuppressWarnings("unused")
@@ -166,7 +143,7 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
 
     @SuppressWarnings("unused")
     public int getRawLongitude() {
-        return INTEGER_DECODER.apply(getBits(57, 85));
+        return rawLongitude;
     }
 
     @SuppressWarnings("unused")
@@ -176,7 +153,7 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
 
     @SuppressWarnings("unused")
     public int getRawCourseOverGround() {
-        return UNSIGNED_INTEGER_DECODER.apply(getBits(112, 124));
+        return rawCourseOverGround;
     }
 
     @SuppressWarnings("unused")
@@ -281,5 +258,9 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
     private final boolean raimFlag;
     private final boolean commStateSelectorFlag;
     private final CommunicationState communicationState;
+    private final int rawSpeedOverGround;
+    private final int rawLatitude;
+    private final int rawLongitude;
+    private final int rawCourseOverGround;
 
 }

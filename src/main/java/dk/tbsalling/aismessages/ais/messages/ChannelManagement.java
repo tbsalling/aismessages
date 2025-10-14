@@ -23,38 +23,10 @@ import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
-import static dk.tbsalling.aismessages.ais.Decoders.*;
 import static java.lang.String.format;
 
 @SuppressWarnings("serial")
 public class ChannelManagement extends AISMessage {
-
-    protected ChannelManagement(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
-        this.channelA = UNSIGNED_INTEGER_DECODER.apply(getBits(40, 52));
-        this.channelB = UNSIGNED_INTEGER_DECODER.apply(getBits(52, 64));
-        this.transmitReceiveMode = TxRxMode.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(64, 68)));
-        this.power = BOOLEAN_DECODER.apply(getBits(68, 69));
-        this.addressed = BOOLEAN_DECODER.apply(getBits(139, 140));
-        if (!addressed) {
-            this.northEastLongitude = FLOAT_DECODER.apply(getBits(69, 87)) / 10f;
-            this.northEastLatitude = FLOAT_DECODER.apply(getBits(87, 104)) / 10f;
-            this.southWestLongitude = FLOAT_DECODER.apply(getBits(104, 122)) / 10f;
-            this.southWestLatitude = FLOAT_DECODER.apply(getBits(122, 139)) / 10f;
-            this.destinationMmsi1 = null;
-            this.destinationMmsi2 = null;
-        } else {
-            this.northEastLongitude = null;
-            this.northEastLatitude = null;
-            this.southWestLongitude = null;
-            this.southWestLatitude = null;
-            this.destinationMmsi1 = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(69, 99)));
-            this.destinationMmsi2 = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(104, 134)));
-        }
-        this.bandA = BOOLEAN_DECODER.apply(getBits(140, 141));
-        this.bandB = BOOLEAN_DECODER.apply(getBits(141, 142));
-        this.zoneSize = UNSIGNED_INTEGER_DECODER.apply(getBits(142, 145));
-    }
 
     /**
      * Constructor accepting pre-parsed values for true immutability.

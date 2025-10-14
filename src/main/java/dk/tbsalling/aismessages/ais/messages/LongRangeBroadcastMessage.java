@@ -10,26 +10,10 @@ import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import java.util.stream.IntStream;
 
-import static dk.tbsalling.aismessages.ais.Decoders.*;
 import static java.lang.String.format;
 
 @SuppressWarnings("serial")
 public class LongRangeBroadcastMessage extends AISMessage implements DynamicDataReport {
-
-    protected LongRangeBroadcastMessage(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
-
-        // Eagerly decode all mandatory fields
-        this.positionAccuracy = BOOLEAN_DECODER.apply(getBits(38, 39));
-        this.raim = BOOLEAN_DECODER.apply(getBits(39, 40));
-        this.navigationStatus = NavigationStatus.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 44)));
-        this.longitude = FLOAT_DECODER.apply(getBits(44, 62)) / 600f;
-        this.latitude = FLOAT_DECODER.apply(getBits(62, 79)) / 600f;
-        this.speed = UNSIGNED_INTEGER_DECODER.apply(getBits(79, 85));
-        this.course = UNSIGNED_INTEGER_DECODER.apply(getBits(85, 94));
-        this.positionLatency = UNSIGNED_INTEGER_DECODER.apply(getBits(94, 95));
-        this.spare = UNSIGNED_INTEGER_DECODER.apply(getBits(95, 96));
-    }
 
     /**
      * Constructor accepting pre-parsed values for true immutability.
@@ -38,7 +22,8 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
                                         int repeatIndicator, MMSI sourceMmsi,
                                         boolean positionAccuracy, boolean raim, NavigationStatus navigationStatus,
                                         float latitude, float longitude, int speed, int course,
-                                        int positionLatency, int spare) {
+                                        int positionLatency, int spare,
+                                        int rawLongitude, int rawLatitude, int rawSpeedOverGround, int rawCourseOverGround) {
         super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
         this.positionAccuracy = positionAccuracy;
         this.raim = raim;
@@ -49,6 +34,10 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
         this.course = course;
         this.positionLatency = positionLatency;
         this.spare = spare;
+        this.rawLongitude = rawLongitude;
+        this.rawLatitude = rawLatitude;
+        this.rawSpeedOverGround = rawSpeedOverGround;
+        this.rawCourseOverGround = rawCourseOverGround;
     }
 
     @Override
@@ -104,7 +93,7 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
 
     @SuppressWarnings("unused")
     public int getRawLongitude() {
-        return INTEGER_DECODER.apply(getBits(44, 62));
+        return rawLongitude;
     }
 
     @SuppressWarnings("unused")
@@ -114,7 +103,7 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
 
     @SuppressWarnings("unused")
     public int getRawLatitude() {
-        return INTEGER_DECODER.apply(getBits(62, 79));
+        return rawLatitude;
     }
 
     /**
@@ -127,7 +116,7 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
 
     @SuppressWarnings("unused")
     public int getRawSpeedOverGround() {
-        return UNSIGNED_INTEGER_DECODER.apply(getBits(79, 85));
+        return rawSpeedOverGround;
     }
 
     /**
@@ -140,7 +129,7 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
 
     @SuppressWarnings("unused")
     public int getRawCourseOverGround() {
-        return UNSIGNED_INTEGER_DECODER.apply(getBits(85, 94));
+        return rawCourseOverGround;
     }
 
     /**
@@ -181,4 +170,8 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
     private final int course;
     private final int positionLatency;
     private final int spare;
+    private final int rawLongitude;
+    private final int rawLatitude;
+    private final int rawSpeedOverGround;
+    private final int rawCourseOverGround;
 }

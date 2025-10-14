@@ -21,37 +21,10 @@ import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
-import static dk.tbsalling.aismessages.ais.Decoders.*;
 import static java.lang.String.format;
 
 @SuppressWarnings("serial")
 public class ExtendedClassBEquipmentPositionReport extends AISMessage implements ExtendedDynamicDataReport {
-
-    protected ExtendedClassBEquipmentPositionReport(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
-
-        // Eagerly decode all fields
-        this.regionalReserved1 = BIT_DECODER.apply(getBits(38, 46));
-        this.speedOverGround = UNSIGNED_FLOAT_DECODER.apply(getBits(46, 56)) / 10f;
-        this.positionAccuracy = BOOLEAN_DECODER.apply(getBits(56, 57));
-        this.longitude = FLOAT_DECODER.apply(getBits(57, 85)) / 600000f;
-        this.latitude = FLOAT_DECODER.apply(getBits(85, 112)) / 600000f;
-        this.courseOverGround = UNSIGNED_FLOAT_DECODER.apply(getBits(112, 124)) / 10f;
-        this.trueHeading = UNSIGNED_INTEGER_DECODER.apply(getBits(124, 133));
-        this.second = UNSIGNED_INTEGER_DECODER.apply(getBits(133, 139));
-        this.regionalReserved2 = BIT_DECODER.apply(getBits(139, 143));
-        this.shipName = STRING_DECODER.apply(getBits(143, 263));
-        this.shipType = ShipType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(263, 271)));
-        this.toBow = UNSIGNED_INTEGER_DECODER.apply(getBits(271, 280));
-        this.toStern = UNSIGNED_INTEGER_DECODER.apply(getBits(280, 289));
-        this.toPort = UNSIGNED_INTEGER_DECODER.apply(getBits(289, 295));
-        this.toStarboard = UNSIGNED_INTEGER_DECODER.apply(getBits(295, 301));
-        this.positionFixingDevice = PositionFixingDevice.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(301, 305)));
-        this.raimFlag = BOOLEAN_DECODER.apply(getBits(305, 306));
-        this.dataTerminalReady = BOOLEAN_DECODER.apply(getBits(306, 307));
-        this.assigned = BOOLEAN_DECODER.apply(getBits(307, 308));
-        this.regionalReserved3 = BIT_DECODER.apply(getBits(308, 312));
-    }
 
     /**
      * Constructor accepting pre-parsed values for true immutability.
@@ -63,7 +36,8 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
                                                     int second, String regionalReserved2, String shipName, ShipType shipType,
                                                     int toBow, int toStern, int toPort, int toStarboard,
                                                     PositionFixingDevice positionFixingDevice, boolean raimFlag,
-                                                    boolean dataTerminalReady, boolean assigned, String regionalReserved3) {
+                                                    boolean dataTerminalReady, boolean assigned, String regionalReserved3,
+                                                    int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround) {
         super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
         this.regionalReserved1 = regionalReserved1;
         this.speedOverGround = speedOverGround;
@@ -85,6 +59,10 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
         this.dataTerminalReady = dataTerminalReady;
         this.assigned = assigned;
         this.regionalReserved3 = regionalReserved3;
+        this.rawSpeedOverGround = rawSpeedOverGround;
+        this.rawLatitude = rawLatitude;
+        this.rawLongitude = rawLongitude;
+        this.rawCourseOverGround = rawCourseOverGround;
     }
 
     @Override
@@ -127,7 +105,7 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
 
     @SuppressWarnings("unused")
     public int getRawSpeedOverGround() {
-        return UNSIGNED_INTEGER_DECODER.apply(getBits(46, 55));
+        return rawSpeedOverGround;
     }
 
     @SuppressWarnings("unused")
@@ -147,7 +125,7 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
 
     @SuppressWarnings("unused")
     public int getRawLatitude() {
-        return INTEGER_DECODER.apply(getBits(85, 112));
+        return rawLatitude;
     }
 
     @SuppressWarnings("unused")
@@ -157,7 +135,7 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
 
     @SuppressWarnings("unused")
     public int getRawLongitude() {
-        return INTEGER_DECODER.apply(getBits(57, 85));
+        return rawLongitude;
     }
 
     @SuppressWarnings("unused")
@@ -167,7 +145,7 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
 
     @SuppressWarnings("unused")
     public int getRawCourseOverGround() {
-        return UNSIGNED_INTEGER_DECODER.apply(getBits(112, 124));
+        return rawCourseOverGround;
     }
 
     @SuppressWarnings("unused")
@@ -286,4 +264,8 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
     private final boolean dataTerminalReady;
     private final boolean assigned;
     private final String regionalReserved3;
+    private final int rawSpeedOverGround;
+    private final int rawLatitude;
+    private final int rawLongitude;
+    private final int rawCourseOverGround;
 }

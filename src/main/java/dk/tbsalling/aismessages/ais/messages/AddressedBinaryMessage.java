@@ -23,7 +23,6 @@ import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
-import static dk.tbsalling.aismessages.ais.Decoders.*;
 import static java.lang.String.format;
 
 /**
@@ -37,20 +36,6 @@ import static java.lang.String.format;
  */
 @SuppressWarnings("serial")
 public class AddressedBinaryMessage extends AISMessage {
-
-    protected AddressedBinaryMessage(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
-
-        // Eagerly decode all fields
-        this.sequenceNumber = UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40));
-        this.destinationMmsi = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70)));
-        this.retransmit = BOOLEAN_DECODER.apply(getBits(70, 71));
-        this.spare = UNSIGNED_INTEGER_DECODER.apply(getBits(71, 72));
-        this.designatedAreaCode = UNSIGNED_INTEGER_DECODER.apply(getBits(72, 82));
-        this.functionalId = UNSIGNED_INTEGER_DECODER.apply(getBits(82, 88));
-        this.binaryData = BIT_DECODER.apply(getBits(88, getNumberOfBits()));
-        this.applicationSpecificMessage = ApplicationSpecificMessage.create(designatedAreaCode, functionalId, binaryData);
-    }
 
     /**
      * Constructor accepting pre-parsed values for true immutability.
@@ -82,7 +67,7 @@ public class AddressedBinaryMessage extends AISMessage {
             message.append(format("Message of type %s should be at least 72 bits long; not %d.", getMessageType(), numberOfBits));
 
             if (numberOfBits >= 40)
-                message.append(format(" Unparseable binary payload: \"%s\".", getBits(40, numberOfBits)));
+                message.append(format(" Unparseable binary payload: \"%s\".", getBitString().substring(40, Math.min(numberOfBits, getBitString().length()))));
         }
 
         if (numberOfBits > 1008)

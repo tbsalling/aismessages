@@ -24,51 +24,10 @@ import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import java.util.stream.IntStream;
 
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
 import static java.lang.String.format;
 
 @SuppressWarnings("serial")
 public class SafetyRelatedAcknowledge extends AISMessage {
-
-    protected SafetyRelatedAcknowledge(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
-        this.spare = UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40));
-        this.mmsi1 = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70)));
-        this.sequence1 = UNSIGNED_INTEGER_DECODER.apply(getBits(70, 72));
-        if (getNumberOfBits() > 72) {
-            this.mmsi2 = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(72, 102)));
-            this.sequence2 = UNSIGNED_INTEGER_DECODER.apply(getBits(102, 104));
-        } else {
-            this.mmsi2 = null;
-            this.sequence2 = null;
-        }
-        if (getNumberOfBits() > 104) {
-            this.mmsi3 = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(104, 134)));
-            this.sequence3 = UNSIGNED_INTEGER_DECODER.apply(getBits(134, 136));
-        } else {
-            this.mmsi3 = null;
-            this.sequence3 = null;
-        }
-        if (getNumberOfBits() > 136) {
-            this.mmsi4 = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(136, 166)));
-            this.sequence4 = UNSIGNED_INTEGER_DECODER.apply(getBits(166, 168));
-        } else {
-            this.mmsi4 = null;
-            this.sequence4 = null;
-        }
-        final int numberOfBits = getNumberOfBits();
-        int acks = 1;
-        if (numberOfBits > 72) {
-            acks++;
-        }
-        if (numberOfBits > 104) {
-            acks++;
-        }
-        if (numberOfBits > 136) {
-            acks++;
-        }
-        this.numOfAcks = acks;
-    }
 
     /**
      * Constructor accepting pre-parsed values for true immutability.

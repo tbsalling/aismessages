@@ -24,7 +24,6 @@ import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
-import static dk.tbsalling.aismessages.ais.Decoders.*;
 import static java.lang.String.format;
 
 /**
@@ -34,47 +33,6 @@ import static java.lang.String.format;
  */
 @SuppressWarnings("serial")
 public class AidToNavigationReport extends AISMessage {
-
-    protected AidToNavigationReport(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
-
-        // Eagerly decode all fields
-        this.aidType = AidType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(38, 43)));
-        this.name = STRING_DECODER.apply(getBits(43, 163));
-        this.positionAccurate = BOOLEAN_DECODER.apply(getBits(163, 164));
-        this.longitude = FLOAT_DECODER.apply(getBits(164, 192)) / 600000f;
-        this.latitude = FLOAT_DECODER.apply(getBits(192, 219)) / 600000f;
-        this.toBow = UNSIGNED_INTEGER_DECODER.apply(getBits(219, 228));
-        this.toStern = UNSIGNED_INTEGER_DECODER.apply(getBits(228, 237));
-        this.toPort = UNSIGNED_INTEGER_DECODER.apply(getBits(237, 243));
-        this.toStarboard = UNSIGNED_INTEGER_DECODER.apply(getBits(243, 249));
-        this.positionFixingDevice = PositionFixingDevice.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(249, 253)));
-        this.second = UNSIGNED_INTEGER_DECODER.apply(getBits(253, 259));
-        this.offPosition = BOOLEAN_DECODER.apply(getBits(259, 260));
-        this.regionalUse = BIT_DECODER.apply(getBits(260, 268));
-        this.raimFlag = BOOLEAN_DECODER.apply(getBits(268, 269));
-        this.virtualAid = BOOLEAN_DECODER.apply(getBits(269, 270));
-        this.assignedMode = BOOLEAN_DECODER.apply(getBits(270, 271));
-        this.spare1 = UNSIGNED_INTEGER_DECODER.apply(getBits(271, 272));
-
-        // Optional fields for messages >= 272 bits
-        if (getNumberOfBits() >= 272) {
-            int extraBits = getNumberOfBits() - 272;
-            int extraChars = extraBits / 6;
-            int extraBitsOfChars = extraChars * 6;
-            if (extraBits > 0) {
-                this.nameExtension = STRING_DECODER.apply(getBits(272, 272 + extraBitsOfChars));
-                this.spare2 = (extraBits == extraBitsOfChars) ? 0 : UNSIGNED_INTEGER_DECODER.apply(getBits(272 + extraBitsOfChars, getNumberOfBits()));
-            } else {
-                // Exactly 272 bits - no extension
-                this.nameExtension = null;
-                this.spare2 = 0;
-            }
-        } else {
-            this.nameExtension = null;
-            this.spare2 = null;
-        }
-    }
 
     /**
      * Constructor accepting pre-parsed values for true immutability.

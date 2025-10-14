@@ -21,7 +21,6 @@ import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
-import static dk.tbsalling.aismessages.ais.Decoders.*;
 import static java.lang.String.format;
 
 /**
@@ -33,23 +32,6 @@ import static java.lang.String.format;
  */
 @SuppressWarnings("serial")
 public class GroupAssignmentCommand extends AISMessage {
-
-    protected GroupAssignmentCommand(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
-
-        // Eagerly decode all mandatory fields
-        this.spare1 = STRING_DECODER.apply(getBits(38, 40));
-        this.northEastLongitude = FLOAT_DECODER.apply(getBits(40, 58)) / 10f;
-        this.northEastLatitude = FLOAT_DECODER.apply(getBits(58, 75)) / 10f;
-        this.southWestLongitude = FLOAT_DECODER.apply(getBits(75, 93)) / 10f;
-        this.southWestLatitude = FLOAT_DECODER.apply(getBits(93, 110)) / 10f;
-        this.stationType = StationType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(110, 114)));
-        this.shipType = ShipType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(114, 122)));
-        this.spare2 = STRING_DECODER.apply(getBits(122, 160));
-        this.transmitReceiveMode = TxRxMode.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(166, 168)));
-        this.reportingInterval = ReportingInterval.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(168, 172)));
-        this.quietTime = UNSIGNED_INTEGER_DECODER.apply(getBits(172, 176));
-    }
 
     /**
      * Constructor accepting pre-parsed values for true immutability.

@@ -24,7 +24,6 @@ import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
-import static dk.tbsalling.aismessages.ais.Decoders.*;
 import static java.lang.String.format;
 
 /**
@@ -33,33 +32,6 @@ import static java.lang.String.format;
  */
 @SuppressWarnings("serial")
 public abstract class PositionReport extends AISMessage implements ExtendedDynamicDataReport {
-
-    protected PositionReport(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
-
-        // Eagerly decode all fields
-        this.navigationStatus = NavigationStatus.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(38, 42)));
-        int rot = INTEGER_DECODER.apply(getBits(42, 50));
-        this.rateOfTurn = (int) (Math.signum(rot) * Math.pow(rot / 4.733, 2));
-        this.speedOverGround = UNSIGNED_FLOAT_DECODER.apply(getBits(50, 60)) / 10f;
-        this.positionAccuracy = BOOLEAN_DECODER.apply(getBits(60, 61));
-        this.longitude = FLOAT_DECODER.apply(getBits(61, 89)) / 600000f;
-        this.latitude = FLOAT_DECODER.apply(getBits(89, 116)) / 600000f;
-        this.courseOverGround = UNSIGNED_FLOAT_DECODER.apply(getBits(116, 128)) / 10f;
-        this.trueHeading = UNSIGNED_INTEGER_DECODER.apply(getBits(128, 137));
-        this.second = UNSIGNED_INTEGER_DECODER.apply(getBits(137, 143));
-        this.specialManeuverIndicator = ManeuverIndicator.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(143, 145)));
-        this.raimFlag = BOOLEAN_DECODER.apply(getBits(148, 149));
-
-        // Communication state depends on the concrete class type
-        if (this instanceof PositionReportClassAScheduled || this instanceof PositionReportClassAAssignedSchedule) {
-            this.communicationState = SOTDMACommunicationState.fromBitString(getBits(149, 168));
-        } else if (this instanceof PositionReportClassAResponseToInterrogation) {
-            this.communicationState = ITDMACommunicationState.fromBitString(getBits(149, 168));
-        } else {
-            this.communicationState = null;
-        }
-    }
 
     /**
      * Constructor accepting pre-parsed values for true immutability.
@@ -82,13 +54,19 @@ public abstract class PositionReport extends AISMessage implements ExtendedDynam
      * @param specialManeuverIndicator the special maneuver indicator
      * @param raimFlag                 the RAIM flag
      * @param communicationState       the communication state
+     * @param rawRateOfTurn            the raw rate of turn value
+     * @param rawSpeedOverGround       the raw speed over ground value
+     * @param rawLatitude              the raw latitude value
+     * @param rawLongitude             the raw longitude value
+     * @param rawCourseOverGround      the raw course over ground value
      */
     protected PositionReport(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
                              int repeatIndicator, MMSI sourceMmsi,
                              NavigationStatus navigationStatus, int rateOfTurn, float speedOverGround,
                              boolean positionAccuracy, float latitude, float longitude,
                              float courseOverGround, int trueHeading, int second,
-                             ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState) {
+                             ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState,
+                             int rawRateOfTurn, int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround) {
         super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
         this.navigationStatus = navigationStatus;
         this.rateOfTurn = rateOfTurn;
@@ -102,6 +80,11 @@ public abstract class PositionReport extends AISMessage implements ExtendedDynam
         this.specialManeuverIndicator = specialManeuverIndicator;
         this.raimFlag = raimFlag;
         this.communicationState = communicationState;
+        this.rawRateOfTurn = rawRateOfTurn;
+        this.rawSpeedOverGround = rawSpeedOverGround;
+        this.rawLatitude = rawLatitude;
+        this.rawLongitude = rawLongitude;
+        this.rawCourseOverGround = rawCourseOverGround;
     }
 
     @Override
@@ -139,13 +122,18 @@ public abstract class PositionReport extends AISMessage implements ExtendedDynam
 	}
 
     @SuppressWarnings("unused")
+    public int getRawRateOfTurn() {
+        return rawRateOfTurn;
+    }
+
+    @SuppressWarnings("unused")
     public float getSpeedOverGround() {
         return speedOverGround;
 	}
 
     @SuppressWarnings("unused")
     public int getRawSpeedOverGround() {
-        return UNSIGNED_INTEGER_DECODER.apply(getBits(50, 60));
+        return rawSpeedOverGround;
     }
 
     @SuppressWarnings("unused")
@@ -160,7 +148,7 @@ public abstract class PositionReport extends AISMessage implements ExtendedDynam
 
     @SuppressWarnings("unused")
     public int getRawLatitude() {
-        return INTEGER_DECODER.apply(getBits(89, 116));
+        return rawLatitude;
     }
 
     @SuppressWarnings("unused")
@@ -170,7 +158,7 @@ public abstract class PositionReport extends AISMessage implements ExtendedDynam
 
     @SuppressWarnings("unused")
     public int getRawLongitude() {
-        return INTEGER_DECODER.apply(getBits(61, 89));
+        return rawLongitude;
     }
 
     @SuppressWarnings("unused")
@@ -180,7 +168,7 @@ public abstract class PositionReport extends AISMessage implements ExtendedDynam
 
     @SuppressWarnings("unused")
     public int getRawCourseOverGround() {
-        return UNSIGNED_INTEGER_DECODER.apply(getBits(116, 128));
+        return rawCourseOverGround;
     }
 
     @SuppressWarnings("unused")
@@ -237,4 +225,9 @@ public abstract class PositionReport extends AISMessage implements ExtendedDynam
     private final ManeuverIndicator specialManeuverIndicator;
     private final boolean raimFlag;
     private final CommunicationState communicationState;
+    private final int rawRateOfTurn;
+    private final int rawSpeedOverGround;
+    private final int rawLatitude;
+    private final int rawLongitude;
+    private final int rawCourseOverGround;
 }

@@ -26,38 +26,10 @@ import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import java.util.stream.IntStream;
 
-import static dk.tbsalling.aismessages.ais.Decoders.STRING_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
 import static java.lang.String.format;
 
 @SuppressWarnings("serial")
 public class ClassBCSStaticDataReport extends AISMessage implements StaticDataReport {
-
-    protected ClassBCSStaticDataReport(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
-        this.partNumber = UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40));
-        if (partNumber == 0) {
-            this.shipName = STRING_DECODER.apply(getBits(40, 160));
-            this.shipType = null;
-            this.vendorId = null;
-            this.callsign = null;
-            this.toBow = null;
-            this.toStern = null;
-            this.toStarboard = null;
-            this.toPort = null;
-            this.mothershipMmsi = null;
-        } else {
-            this.shipName = null;
-            this.shipType = ShipType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 48)));
-            this.vendorId = STRING_DECODER.apply(getBits(48, 90));
-            this.callsign = STRING_DECODER.apply(getBits(90, 132));
-            this.toBow = UNSIGNED_INTEGER_DECODER.apply(getBits(132, 141));
-            this.toStern = UNSIGNED_INTEGER_DECODER.apply(getBits(141, 150));
-            this.toStarboard = UNSIGNED_INTEGER_DECODER.apply(getBits(156, 162));
-            this.toPort = UNSIGNED_INTEGER_DECODER.apply(getBits(150, 156));
-            this.mothershipMmsi = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(132, 162)));
-        }
-    }
 
     /**
      * Constructor accepting pre-parsed values for true immutability.

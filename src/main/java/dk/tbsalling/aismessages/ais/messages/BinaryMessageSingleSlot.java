@@ -22,19 +22,10 @@ import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
-import static dk.tbsalling.aismessages.ais.Decoders.*;
 import static java.lang.String.format;
 
 @SuppressWarnings("serial")
 public class BinaryMessageSingleSlot extends AISMessage {
-
-    protected BinaryMessageSingleSlot(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
-        this.destinationIndicator = BOOLEAN_DECODER.apply(getBits(38, 39));
-        this.binaryDataFlag = BOOLEAN_DECODER.apply(getBits(39, 40));
-        this.destinationMMSI = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70)));
-        this.binaryData = BIT_DECODER.apply(getBits(40, 168));
-    }
 
     /**
      * Constructor accepting pre-parsed values for true immutability.

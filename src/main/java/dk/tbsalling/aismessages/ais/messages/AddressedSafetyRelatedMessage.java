@@ -22,23 +22,10 @@ import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
-import static dk.tbsalling.aismessages.ais.Decoders.*;
 import static java.lang.String.format;
 
 @SuppressWarnings("serial")
 public class AddressedSafetyRelatedMessage extends AISMessage {
-
-    protected AddressedSafetyRelatedMessage(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
-
-        // Eagerly decode all fields
-        this.sequenceNumber = UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40));
-        this.destinationMmsi = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70)));
-        this.retransmit = BOOLEAN_DECODER.apply(getBits(70, 71));
-        this.spare = UNSIGNED_INTEGER_DECODER.apply(getBits(71, 72));
-        int extraBitsOfChars = ((getNumberOfBits() - 72) / 6) * 6;
-        this.text = STRING_DECODER.apply(getBits(72, 72 + extraBitsOfChars));
-    }
 
     /**
      * Constructor accepting pre-parsed values for true immutability.

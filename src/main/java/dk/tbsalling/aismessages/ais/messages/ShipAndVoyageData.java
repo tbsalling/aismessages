@@ -26,8 +26,6 @@ import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
-import static dk.tbsalling.aismessages.ais.Decoders.*;
-
 /**
  * Message has a total of 424 bits, occupying two AIVDM sentences. In practice,
  * the information in these fields (especially ETA and destination) is not
@@ -38,28 +36,6 @@ import static dk.tbsalling.aismessages.ais.Decoders.*;
  */
 @SuppressWarnings("serial")
 public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
-
-    protected ShipAndVoyageData(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
-
-        // Eagerly decode all fields
-        this.imo = IMO.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70)));
-        this.callsign = STRING_DECODER.apply(getBits(70, 112));
-        this.shipName = STRING_DECODER.apply(getBits(112, 232));
-        this.shipType = ShipType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(232, 240)));
-        this.toBow = UNSIGNED_INTEGER_DECODER.apply(getBits(240, 249));
-        this.toStern = UNSIGNED_INTEGER_DECODER.apply(getBits(249, 258));
-        this.toPort = UNSIGNED_INTEGER_DECODER.apply(getBits(258, 264));
-        this.toStarboard = UNSIGNED_INTEGER_DECODER.apply(getBits(264, 270));
-        this.positionFixingDevice = PositionFixingDevice.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(270, 274)));
-        this.etaMonth = UNSIGNED_INTEGER_DECODER.apply(getBits(274, 278));
-        this.etaDay = UNSIGNED_INTEGER_DECODER.apply(getBits(278, 283));
-        this.etaHour = UNSIGNED_INTEGER_DECODER.apply(getBits(283, 288));
-        this.etaMinute = UNSIGNED_INTEGER_DECODER.apply(getBits(288, 294));
-        this.draught = UNSIGNED_FLOAT_DECODER.apply(getBits(294, 302)) / 10f;
-        this.destination = STRING_DECODER.apply(getBits(302, 422));
-        this.dataTerminalReady = BOOLEAN_DECODER.apply(getBits(422, 423));
-    }
 
     /**
      * Constructor accepting pre-parsed values for true immutability.
@@ -86,6 +62,7 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
      * @param draught              the draught
      * @param destination          the destination
      * @param dataTerminalReady    the data terminal ready flag
+     * @param rawDraught           the raw draught value
      */
     protected ShipAndVoyageData(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
                                 int repeatIndicator, MMSI sourceMmsi,
@@ -93,7 +70,7 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
                                 int toBow, int toStern, int toPort, int toStarboard,
                                 PositionFixingDevice positionFixingDevice,
                                 int etaMonth, int etaDay, int etaHour, int etaMinute,
-                                float draught, String destination, boolean dataTerminalReady) {
+                                float draught, String destination, boolean dataTerminalReady, int rawDraught) {
         super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
         this.imo = imo;
         this.callsign = callsign;
@@ -111,6 +88,7 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
         this.draught = draught;
         this.destination = destination;
         this.dataTerminalReady = dataTerminalReady;
+        this.rawDraught = rawDraught;
     }
 
     @Override
@@ -252,7 +230,7 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
 
     @SuppressWarnings("unused")
     public int getRawDraught() {
-        return UNSIGNED_INTEGER_DECODER.apply(getBits(294, 302));
+        return rawDraught;
     }
 
     @SuppressWarnings("unused")
@@ -301,4 +279,5 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
     private final float draught;
     private final String destination;
     private final boolean dataTerminalReady;
+    private final int rawDraught;
 }

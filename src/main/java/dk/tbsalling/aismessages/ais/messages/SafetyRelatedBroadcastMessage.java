@@ -22,19 +22,10 @@ import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
-import static dk.tbsalling.aismessages.ais.Decoders.STRING_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
 import static java.lang.String.format;
 
 @SuppressWarnings("serial")
 public class SafetyRelatedBroadcastMessage extends AISMessage {
-
-    protected SafetyRelatedBroadcastMessage(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
-        this.spare = UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40));
-        int extraBitsOfChars = ((getNumberOfBits() - 40) / 6) * 6;
-        this.text = STRING_DECODER.apply(getBits(40, 40 + extraBitsOfChars));
-    }
 
     /**
      * Constructor accepting pre-parsed values for true immutability.

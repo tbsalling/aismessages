@@ -22,19 +22,17 @@ import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 @SuppressWarnings("serial")
 public class PositionReportClassAResponseToInterrogation extends PositionReport {
-    protected PositionReportClassAResponseToInterrogation(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
-    }
-
     protected PositionReportClassAResponseToInterrogation(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
                                                           int repeatIndicator, MMSI sourceMmsi,
                                                           NavigationStatus navigationStatus, int rateOfTurn, float speedOverGround,
                                                           boolean positionAccuracy, float latitude, float longitude,
                                                           float courseOverGround, int trueHeading, int second,
-                                                          ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState) {
+                                                          ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState,
+                                                          int rawRateOfTurn, int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround) {
         super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi,
                 navigationStatus, rateOfTurn, speedOverGround, positionAccuracy, latitude, longitude,
-                courseOverGround, trueHeading, second, specialManeuverIndicator, raimFlag, communicationState);
+                courseOverGround, trueHeading, second, specialManeuverIndicator, raimFlag, communicationState,
+                rawRateOfTurn, rawSpeedOverGround, rawLatitude, rawLongitude, rawCourseOverGround);
     }
 
     @Override

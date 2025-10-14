@@ -34,7 +34,6 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.stream.Stream;
 
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
 import static java.lang.System.Logger.Level.WARNING;
 import static java.lang.reflect.Modifier.isPublic;
 import static java.util.Objects.requireNonNull;
@@ -111,25 +110,6 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         this.sourceMmsi = null;
     }
 
-    protected AISMessage(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
-        requireNonNull(nmeaMessages);
-        check(nmeaMessages);
-        this.nmeaMessages = nmeaMessages;
-        this.bitString = bitString;
-        this.numberOfBits = bitString.length();
-        this.metadata = metadata;
-        this.nmeaTagBlock = nmeaTagBlock;
-
-        // Eagerly decode repeatIndicator and sourceMmsi
-        this.repeatIndicator = UNSIGNED_INTEGER_DECODER.apply(getBits(6, 8));
-        this.sourceMmsi = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(8, 38)));
-
-        AISMessageType nmeaMessageType = decodeMessageType();
-        if (getMessageType() != nmeaMessageType)
-            throw new UnsupportedMessageType(nmeaMessageType.getCode());
-
-        checkAISMessage();
-    }
 
     /**
      * Constructor that accepts pre-parsed values, enabling true immutability.
@@ -153,10 +133,6 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         this.nmeaTagBlock = nmeaTagBlock;
         this.repeatIndicator = repeatIndicator;
         this.sourceMmsi = sourceMmsi;
-
-        AISMessageType nmeaMessageType = decodeMessageType();
-        if (getMessageType() != nmeaMessageType)
-            throw new UnsupportedMessageType(nmeaMessageType.getCode());
 
         checkAISMessage();
     }
@@ -330,9 +306,6 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         return nmeaTagBlock;
     }
 
-    private AISMessageType decodeMessageType() {
-        return AISMessageType.fromInteger(Integer.parseInt(getBits(0, 6), 2));
-    }
 
     /**
      * Retrieves the repeat indicator value of the AIS message.
@@ -390,34 +363,6 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         return bitString;
     }
 
-    /**
-     * Returns a zero bit-stuffed string based on the given endIndex.
-     *
-     * @param endIndex The index where the string should end.
-     * @return The zero bit-stuffed string.
-     */
-    protected String getZeroBitStuffedString(int endIndex) {
-        String b = getBitString();
-        if (b.length() - endIndex < 0) {
-            StringBuilder c = new StringBuilder(b);
-            for (int i = b.length() - endIndex; i < 0; i++) {
-                c = c.append("0");
-            }
-            b = c.toString();
-        }
-        return b;
-    }
-
-    /**
-     * Retrieves a substring of the zero bit-stuffed string based on the given beginIndex and endIndex.
-     *
-     * @param beginIndex The starting index (inclusive) of the substring.
-     * @param endIndex   The ending index (exclusive) of the substring.
-     * @return The substring of the zero bit-stuffed string.
-     */
-    public String getBits(int beginIndex, int endIndex) {
-        return getZeroBitStuffedString(endIndex).substring(beginIndex, endIndex);
-    }
 
     /**
      * Retrieves the number of bits in the AIS message payload.
@@ -484,43 +429,70 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
             throw new InvalidMessage("Cannot extract message type from NMEA message: %s".formatted(sb.toString()));
         }
 
-        @FunctionalInterface
-        interface AISMessageConstructor {
-            AISMessage create(NMEAMessage[] messages, String bits, Metadata meta, NMEATagBlock tag);
-        }
+        // Use BitStringParser to parse the message
+        BitStringParser parser = new BitStringParser(bitString);
 
-        AISMessageConstructor aisMessageConstructor = switch (messageType) {
-            case ShipAndVoyageRelatedData -> ShipAndVoyageData::new;
-            case PositionReportClassAScheduled -> PositionReportClassAScheduled::new;
-            case PositionReportClassAAssignedSchedule -> PositionReportClassAAssignedSchedule::new;
-            case PositionReportClassAResponseToInterrogation -> PositionReportClassAResponseToInterrogation::new;
-            case BaseStationReport -> BaseStationReport::new;
-            case AddressedBinaryMessage -> AddressedBinaryMessage::new;
-            case BinaryAcknowledge -> BinaryAcknowledge::new;
-            case BinaryBroadcastMessage -> BinaryBroadcastMessage::new;
-            case StandardSARAircraftPositionReport -> StandardSARAircraftPositionReport::new;
-            case UTCAndDateInquiry -> UTCAndDateInquiry::new;
-            case UTCAndDateResponse -> UTCAndDateResponse::new;
-            case AddressedSafetyRelatedMessage -> AddressedSafetyRelatedMessage::new;
-            case SafetyRelatedAcknowledge -> SafetyRelatedAcknowledge::new;
-            case SafetyRelatedBroadcastMessage -> SafetyRelatedBroadcastMessage::new;
-            case Interrogation -> Interrogation::new;
-            case AssignedModeCommand -> AssignedModeCommand::new;
-            case GNSSBinaryBroadcastMessage -> GNSSBinaryBroadcastMessage::new;
-            case StandardClassBCSPositionReport -> StandardClassBCSPositionReport::new;
-            case ExtendedClassBEquipmentPositionReport -> ExtendedClassBEquipmentPositionReport::new;
-            case DataLinkManagement -> DataLinkManagement::new;
-            case AidToNavigationReport -> AidToNavigationReport::new;
-            case ChannelManagement -> ChannelManagement::new;
-            case GroupAssignmentCommand -> GroupAssignmentCommand::new;
-            case ClassBCSStaticDataReport -> ClassBCSStaticDataReport::new;
-            case BinaryMessageSingleSlot -> BinaryMessageSingleSlot::new;
-            case BinaryMessageMultipleSlot -> BinaryMessageMultipleSlot::new;
-            case LongRangeBroadcastMessage -> LongRangeBroadcastMessage::new;
+        // Parse common fields from all messages
+        int repeatIndicator = parser.getUnsignedInt(6, 8);
+        MMSI sourceMmsi = MMSI.valueOf(parser.getUnsignedInt(8, 38));
+
+        return switch (messageType) {
+            case ShipAndVoyageRelatedData ->
+                    AISMessageFactory.createShipAndVoyageData(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi);
+            case PositionReportClassAScheduled ->
+                    AISMessageFactory.createPositionReportClassAScheduled(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi, messageType);
+            case PositionReportClassAAssignedSchedule ->
+                    AISMessageFactory.createPositionReportClassAAssignedSchedule(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi, messageType);
+            case PositionReportClassAResponseToInterrogation ->
+                    AISMessageFactory.createPositionReportClassAResponseToInterrogation(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi, messageType);
+            case BaseStationReport ->
+                    AISMessageFactory.createBaseStationReport(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi);
+            case AddressedBinaryMessage ->
+                    AISMessageFactory.createAddressedBinaryMessage(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi);
+            case BinaryAcknowledge ->
+                    AISMessageFactory.createBinaryAcknowledge(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi);
+            case BinaryBroadcastMessage ->
+                    AISMessageFactory.createBinaryBroadcastMessage(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi);
+            case StandardSARAircraftPositionReport ->
+                    AISMessageFactory.createStandardSARAircraftPositionReport(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi);
+            case UTCAndDateInquiry ->
+                    AISMessageFactory.createUTCAndDateInquiry(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi);
+            case UTCAndDateResponse ->
+                    AISMessageFactory.createUTCAndDateResponse(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi);
+            case AddressedSafetyRelatedMessage ->
+                    AISMessageFactory.createAddressedSafetyRelatedMessage(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi);
+            case SafetyRelatedAcknowledge ->
+                    AISMessageFactory.createSafetyRelatedAcknowledge(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi);
+            case SafetyRelatedBroadcastMessage ->
+                    AISMessageFactory.createSafetyRelatedBroadcastMessage(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi);
+            case Interrogation ->
+                    AISMessageFactory.createInterrogation(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi);
+            case AssignedModeCommand ->
+                    AISMessageFactory.createAssignedModeCommand(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi);
+            case GNSSBinaryBroadcastMessage ->
+                    AISMessageFactory.createGNSSBinaryBroadcastMessage(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi);
+            case StandardClassBCSPositionReport ->
+                    AISMessageFactory.createStandardClassBCSPositionReport(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi);
+            case ExtendedClassBEquipmentPositionReport ->
+                    AISMessageFactory.createExtendedClassBEquipmentPositionReport(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi);
+            case DataLinkManagement ->
+                    AISMessageFactory.createDataLinkManagement(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi);
+            case AidToNavigationReport ->
+                    AISMessageFactory.createAidToNavigationReport(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi);
+            case ChannelManagement ->
+                    AISMessageFactory.createChannelManagement(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi);
+            case GroupAssignmentCommand ->
+                    AISMessageFactory.createGroupAssignmentCommand(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi);
+            case ClassBCSStaticDataReport ->
+                    AISMessageFactory.createClassBCSStaticDataReport(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi);
+            case BinaryMessageSingleSlot ->
+                    AISMessageFactory.createBinaryMessageSingleSlot(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi);
+            case BinaryMessageMultipleSlot ->
+                    AISMessageFactory.createBinaryMessageMultipleSlot(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi);
+            case LongRangeBroadcastMessage ->
+                    AISMessageFactory.createLongRangeBroadcastMessage(nmeaMessages, bitString, metadata, nmeaTagBlock, parser, repeatIndicator, sourceMmsi);
             default -> throw new UnsupportedMessageType(messageType.getCode());
         };
-
-        return aisMessageConstructor.create(nmeaMessages, bitString, metadata, nmeaTagBlock);
     }
 
     /**

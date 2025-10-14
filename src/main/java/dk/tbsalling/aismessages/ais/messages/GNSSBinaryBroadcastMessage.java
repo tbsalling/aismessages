@@ -22,7 +22,6 @@ import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
-import static dk.tbsalling.aismessages.ais.Decoders.*;
 import static java.lang.String.format;
 
 /**
@@ -34,35 +33,6 @@ import static java.lang.String.format;
  */
 @SuppressWarnings("serial")
 public class GNSSBinaryBroadcastMessage extends AISMessage {
-
-    protected GNSSBinaryBroadcastMessage(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
-
-        // Always decode mandatory fields (bits 38-80)
-        this.spare1 = UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40));
-        this.longitude = FLOAT_DECODER.apply(getBits(40, 58)) / 10f;
-        this.latitude = FLOAT_DECODER.apply(getBits(58, 75)) / 10f;
-        this.spare2 = UNSIGNED_INTEGER_DECODER.apply(getBits(75, 80));
-
-        // Conditional fields (> 80 bits)
-        if (getNumberOfBits() > 80) {
-            this.mType = UNSIGNED_INTEGER_DECODER.apply(getBits(80, 86));
-            this.stationId = UNSIGNED_INTEGER_DECODER.apply(getBits(86, 96));
-            this.zCount = UNSIGNED_INTEGER_DECODER.apply(getBits(96, 109));
-            this.sequenceNumber = UNSIGNED_INTEGER_DECODER.apply(getBits(109, 112));
-            this.numOfWords = UNSIGNED_INTEGER_DECODER.apply(getBits(112, 117));
-            this.health = UNSIGNED_INTEGER_DECODER.apply(getBits(117, 120));
-            this.binaryData = BIT_DECODER.apply(getBits(80, getNumberOfBits()));
-        } else {
-            this.mType = null;
-            this.stationId = null;
-            this.zCount = null;
-            this.sequenceNumber = null;
-            this.numOfWords = null;
-            this.health = null;
-            this.binaryData = null;
-        }
-    }
 
     /**
      * Constructor accepting pre-parsed values for true immutability.

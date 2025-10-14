@@ -23,29 +23,10 @@ import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
-import static dk.tbsalling.aismessages.ais.Decoders.*;
 import static java.lang.String.format;
 
 @SuppressWarnings("serial")
 public class StandardSARAircraftPositionReport extends AISMessage implements DynamicDataReport {
-
-    protected StandardSARAircraftPositionReport(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
-
-        // Eagerly decode all mandatory fields
-        this.altitude = UNSIGNED_INTEGER_DECODER.apply(getBits(38, 50));
-        this.speed = UNSIGNED_INTEGER_DECODER.apply(getBits(50, 60));
-        this.positionAccuracy = BOOLEAN_DECODER.apply(getBits(60, 61));
-        this.longitude = FLOAT_DECODER.apply(getBits(61, 89)) / 600000f;
-        this.latitude = FLOAT_DECODER.apply(getBits(89, 116)) / 600000f;
-        this.courseOverGround = UNSIGNED_FLOAT_DECODER.apply(getBits(116, 128)) / 10f;
-        this.second = UNSIGNED_INTEGER_DECODER.apply(getBits(128, 134));
-        this.regionalReserved = BIT_DECODER.apply(getBits(134, 142));
-        this.dataTerminalReady = BOOLEAN_DECODER.apply(getBits(142, 143));
-        this.assigned = BOOLEAN_DECODER.apply(getBits(146, 147));
-        this.raimFlag = BOOLEAN_DECODER.apply(getBits(147, 148));
-        this.radioStatus = BIT_DECODER.apply(getBits(148, 168));
-    }
 
     /**
      * Constructor accepting pre-parsed values for true immutability.
@@ -55,7 +36,8 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
                                                 int altitude, float speed, boolean positionAccuracy,
                                                 float latitude, float longitude, float courseOverGround,
                                                 int second, String regionalReserved, boolean dataTerminalReady,
-                                                boolean assigned, boolean raimFlag, String radioStatus) {
+                                                boolean assigned, boolean raimFlag, String radioStatus,
+                                                int rawSpeedOverGround, int rawLongitude, int rawLatitude, int rawCourseOverGround) {
         super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
         this.altitude = altitude;
         this.speed = speed;
@@ -69,6 +51,10 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
         this.assigned = assigned;
         this.raimFlag = raimFlag;
         this.radioStatus = radioStatus;
+        this.rawSpeedOverGround = rawSpeedOverGround;
+        this.rawLongitude = rawLongitude;
+        this.rawLatitude = rawLatitude;
+        this.rawCourseOverGround = rawCourseOverGround;
     }
 
     @Override
@@ -111,7 +97,7 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
 
     @SuppressWarnings("unused")
     public int getRawSpeedOverGround() {
-        return UNSIGNED_INTEGER_DECODER.apply(getBits(50, 60));
+        return rawSpeedOverGround;
     }
 
     @SuppressWarnings("unused")
@@ -131,7 +117,7 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
 
     @SuppressWarnings("unused")
     public int getRawLongitude() {
-        return INTEGER_DECODER.apply(getBits(61, 89));
+        return rawLongitude;
     }
 
     @SuppressWarnings("unused")
@@ -141,7 +127,7 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
 
     @SuppressWarnings("unused")
     public int getRawLatitude() {
-        return INTEGER_DECODER.apply(getBits(89, 116));
+        return rawLatitude;
     }
 
     @SuppressWarnings("unused")
@@ -151,7 +137,7 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
 
     @SuppressWarnings("unused")
     public int getRawCourseOverGround() {
-        return UNSIGNED_INTEGER_DECODER.apply(getBits(116, 128));
+        return rawCourseOverGround;
     }
 
     @SuppressWarnings("unused")
@@ -215,5 +201,9 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
     private final boolean assigned;
     private final boolean raimFlag;
     private final String radioStatus;
+    private final int rawSpeedOverGround;
+    private final int rawLongitude;
+    private final int rawLatitude;
+    private final int rawCourseOverGround;
 
 }

@@ -23,8 +23,6 @@ import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
-import static dk.tbsalling.aismessages.ais.Decoders.BIT_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
 import static java.lang.String.format;
 
 /**
@@ -38,15 +36,6 @@ import static java.lang.String.format;
  */
 @SuppressWarnings("serial")
 public class BinaryBroadcastMessage extends AISMessage {
-
-    protected BinaryBroadcastMessage(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
-        this.spare = UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40));
-        this.designatedAreaCode = UNSIGNED_INTEGER_DECODER.apply(getBits(40, 50));
-        this.functionalId = UNSIGNED_INTEGER_DECODER.apply(getBits(50, 56));
-        this.binaryData = BIT_DECODER.apply(getBits(56, getNumberOfBits()));
-        this.applicationSpecificMessage = ApplicationSpecificMessage.create(designatedAreaCode, functionalId, binaryData);
-    }
 
     /**
      * Constructor accepting pre-parsed values for true immutability.
@@ -75,7 +64,7 @@ public class BinaryBroadcastMessage extends AISMessage {
             errorMessage.append(format("Message of type %s should be at least 56 bits long; not %d.", getMessageType(), numberOfBits));
 
             if (numberOfBits >= 40)
-                errorMessage.append(format(" Unparseable binary payload: \"%s\".", getBits(40, numberOfBits)));
+                errorMessage.append(format(" Unparseable binary payload: \"%s\".", getBitString().substring(40, Math.min(numberOfBits, getBitString().length()))));
         } else if (numberOfBits > 1008)
             errorMessage.append(format("Message of type %s should be at least 56 bits long; not %d.", getMessageType(), numberOfBits));
 

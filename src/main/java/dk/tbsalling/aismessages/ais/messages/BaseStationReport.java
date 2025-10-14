@@ -24,7 +24,6 @@ import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
-import static dk.tbsalling.aismessages.ais.Decoders.*;
 import static java.lang.String.format;
 
 /**
@@ -34,24 +33,6 @@ import static java.lang.String.format;
  */
 @SuppressWarnings("serial")
 public class BaseStationReport extends AISMessage {
-
-    protected BaseStationReport(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
-
-        // Eagerly decode all fields
-        this.year = UNSIGNED_INTEGER_DECODER.apply(getBits(38, 52));
-        this.month = UNSIGNED_INTEGER_DECODER.apply(getBits(52, 56));
-        this.day = UNSIGNED_INTEGER_DECODER.apply(getBits(56, 61));
-        this.hour = UNSIGNED_INTEGER_DECODER.apply(getBits(61, 66));
-        this.minute = UNSIGNED_INTEGER_DECODER.apply(getBits(66, 72));
-        this.second = UNSIGNED_INTEGER_DECODER.apply(getBits(72, 78));
-        this.positionAccurate = BOOLEAN_DECODER.apply(getBits(78, 79));
-        this.longitude = FLOAT_DECODER.apply(getBits(79, 107)) / 600000f;
-        this.latitude = FLOAT_DECODER.apply(getBits(107, 134)) / 600000f;
-        this.positionFixingDevice = PositionFixingDevice.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(134, 138)));
-        this.raimFlag = BOOLEAN_DECODER.apply(getBits(148, 149));
-        this.communicationState = SOTDMACommunicationState.fromBitString(getBits(149, 168));
-    }
 
     /**
      * Constructor accepting pre-parsed values for true immutability.

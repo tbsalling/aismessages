@@ -21,19 +21,8 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
-import static dk.tbsalling.aismessages.ais.Decoders.*;
-
 @SuppressWarnings("serial")
 public class BinaryMessageMultipleSlot extends AISMessage {
-
-    protected BinaryMessageMultipleSlot(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
-        this.addressed = BOOLEAN_DECODER.apply(getBits(38, 39));
-        this.structured = BOOLEAN_DECODER.apply(getBits(39, 40));
-        this.destinationMmsi = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70)));
-        this.applicationId = UNSIGNED_INTEGER_DECODER.apply(getBits(70, 86));
-        this.data = BIT_DECODER.apply(getBits(86, 86 + 1004 + 1));
-    }
 
     /**
      * Constructor accepting pre-parsed values for true immutability.

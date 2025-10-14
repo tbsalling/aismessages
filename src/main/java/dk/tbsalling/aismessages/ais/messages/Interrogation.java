@@ -24,7 +24,6 @@ import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import java.util.stream.IntStream;
 
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
 import static java.lang.String.format;
 
 /**
@@ -34,35 +33,6 @@ import static java.lang.String.format;
  */
 @SuppressWarnings("serial")
 public class Interrogation extends AISMessage {
-
-    protected Interrogation(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
-
-        // Always decode mandatory fields (bits 40-88)
-        this.interrogatedMmsi1 = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70)));
-        this.type1_1 = UNSIGNED_INTEGER_DECODER.apply(getBits(70, 76));
-        this.offset1_1 = UNSIGNED_INTEGER_DECODER.apply(getBits(76, 88));
-
-        // Conditional fields (> 88 bits)
-        if (getNumberOfBits() > 88) {
-            this.type1_2 = UNSIGNED_INTEGER_DECODER.apply(getBits(90, 96));
-            this.offset1_2 = UNSIGNED_INTEGER_DECODER.apply(getBits(96, 108));
-        } else {
-            this.type1_2 = null;
-            this.offset1_2 = null;
-        }
-
-        // Conditional fields (>= 110 bits)
-        if (getNumberOfBits() >= 110) {
-            this.interrogatedMmsi2 = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(110, 140)));
-            this.type2_1 = UNSIGNED_INTEGER_DECODER.apply(getBits(140, 146));
-            this.offset2_1 = UNSIGNED_INTEGER_DECODER.apply(getBits(146, 158));
-        } else {
-            this.interrogatedMmsi2 = null;
-            this.type2_1 = null;
-            this.offset2_1 = null;
-        }
-    }
 
     /**
      * Constructor accepting pre-parsed values for true immutability.

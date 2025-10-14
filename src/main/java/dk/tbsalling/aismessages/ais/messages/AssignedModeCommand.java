@@ -24,7 +24,6 @@ import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import java.util.stream.IntStream;
 
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
 import static java.lang.String.format;
 
 /**
@@ -36,26 +35,6 @@ import static java.lang.String.format;
  * @author tbsalling
  */
 public class AssignedModeCommand extends AISMessage {
-
-    protected AssignedModeCommand(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
-        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
-
-        // Eagerly decode all fields
-        this.destinationMmsiA = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70)));
-        this.offsetA = UNSIGNED_INTEGER_DECODER.apply(getBits(70, 82));
-        this.incrementA = UNSIGNED_INTEGER_DECODER.apply(getBits(82, 92));
-
-        // Optional fields for 144-bit messages
-        if (getNumberOfBits() >= 144) {
-            this.destinationMmsiB = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(92, 122)));
-            this.offsetB = UNSIGNED_INTEGER_DECODER.apply(getBits(122, 134));
-            this.incrementB = UNSIGNED_INTEGER_DECODER.apply(getBits(134, 144));
-        } else {
-            this.destinationMmsiB = null;
-            this.offsetB = null;
-            this.incrementB = null;
-        }
-    }
 
     /**
      * Constructor accepting pre-parsed values for true immutability.
