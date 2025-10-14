@@ -1,6 +1,7 @@
 package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.NavigationStatus;
 import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
@@ -28,6 +29,26 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
         this.course = UNSIGNED_INTEGER_DECODER.apply(getBits(85, 94));
         this.positionLatency = UNSIGNED_INTEGER_DECODER.apply(getBits(94, 95));
         this.spare = UNSIGNED_INTEGER_DECODER.apply(getBits(95, 96));
+    }
+
+    /**
+     * Constructor accepting pre-parsed values for true immutability.
+     */
+    protected LongRangeBroadcastMessage(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
+                                        int repeatIndicator, MMSI sourceMmsi,
+                                        boolean positionAccuracy, boolean raim, NavigationStatus navigationStatus,
+                                        float latitude, float longitude, int speed, int course,
+                                        int positionLatency, int spare) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        this.positionAccuracy = positionAccuracy;
+        this.raim = raim;
+        this.navigationStatus = navigationStatus;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.speed = speed;
+        this.course = course;
+        this.positionLatency = positionLatency;
+        this.spare = spare;
     }
 
     @Override

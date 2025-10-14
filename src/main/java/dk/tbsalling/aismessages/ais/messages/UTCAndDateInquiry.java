@@ -35,6 +35,16 @@ public class UTCAndDateInquiry extends AISMessage {
         this.destinationMmsi = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70)));
     }
 
+    /**
+     * Constructor accepting pre-parsed values for true immutability.
+     */
+    protected UTCAndDateInquiry(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
+                                int repeatIndicator, MMSI sourceMmsi,
+                                MMSI destinationMmsi) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        this.destinationMmsi = destinationMmsi;
+    }
+
     @Override
     protected void checkAISMessage() {
         super.checkAISMessage();

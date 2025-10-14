@@ -64,6 +64,25 @@ public class Interrogation extends AISMessage {
         }
     }
 
+    /**
+     * Constructor accepting pre-parsed values for true immutability.
+     */
+    protected Interrogation(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
+                            int repeatIndicator, MMSI sourceMmsi,
+                            MMSI interrogatedMmsi1, Integer type1_1, Integer offset1_1,
+                            Integer type1_2, Integer offset1_2,
+                            MMSI interrogatedMmsi2, Integer type2_1, Integer offset2_1) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        this.interrogatedMmsi1 = interrogatedMmsi1;
+        this.type1_1 = type1_1;
+        this.offset1_1 = offset1_1;
+        this.type1_2 = type1_2;
+        this.offset1_2 = offset1_2;
+        this.interrogatedMmsi2 = interrogatedMmsi2;
+        this.type2_1 = type2_1;
+        this.offset2_1 = offset2_1;
+    }
+
     @Override
     protected void checkAISMessage() {
         super.checkAISMessage();

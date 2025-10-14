@@ -61,6 +61,58 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
         this.dataTerminalReady = BOOLEAN_DECODER.apply(getBits(422, 423));
     }
 
+    /**
+     * Constructor accepting pre-parsed values for true immutability.
+     *
+     * @param nmeaMessages         the NMEA messages
+     * @param bitString            the binary string representation
+     * @param metadata             the metadata
+     * @param nmeaTagBlock         the NMEA tag block
+     * @param repeatIndicator      the pre-parsed repeat indicator
+     * @param sourceMmsi           the pre-parsed source MMSI
+     * @param imo                  the IMO number
+     * @param callsign             the callsign
+     * @param shipName             the ship name
+     * @param shipType             the ship type
+     * @param toBow                distance to bow
+     * @param toStern              distance to stern
+     * @param toPort               distance to port
+     * @param toStarboard          distance to starboard
+     * @param positionFixingDevice the position fixing device
+     * @param etaMonth             the ETA month
+     * @param etaDay               the ETA day
+     * @param etaHour              the ETA hour
+     * @param etaMinute            the ETA minute
+     * @param draught              the draught
+     * @param destination          the destination
+     * @param dataTerminalReady    the data terminal ready flag
+     */
+    protected ShipAndVoyageData(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
+                                int repeatIndicator, MMSI sourceMmsi,
+                                IMO imo, String callsign, String shipName, ShipType shipType,
+                                int toBow, int toStern, int toPort, int toStarboard,
+                                PositionFixingDevice positionFixingDevice,
+                                int etaMonth, int etaDay, int etaHour, int etaMinute,
+                                float draught, String destination, boolean dataTerminalReady) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        this.imo = imo;
+        this.callsign = callsign;
+        this.shipName = shipName;
+        this.shipType = shipType;
+        this.toBow = toBow;
+        this.toStern = toStern;
+        this.toPort = toPort;
+        this.toStarboard = toStarboard;
+        this.positionFixingDevice = positionFixingDevice;
+        this.etaMonth = etaMonth;
+        this.etaDay = etaDay;
+        this.etaHour = etaHour;
+        this.etaMinute = etaMinute;
+        this.draught = draught;
+        this.destination = destination;
+        this.dataTerminalReady = dataTerminalReady;
+    }
+
     @Override
     protected void checkAISMessage() {
         final AISMessageType messageType = getMessageType();

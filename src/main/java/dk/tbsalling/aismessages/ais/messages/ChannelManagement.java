@@ -56,6 +56,33 @@ public class ChannelManagement extends AISMessage {
         this.zoneSize = UNSIGNED_INTEGER_DECODER.apply(getBits(142, 145));
     }
 
+    /**
+     * Constructor accepting pre-parsed values for true immutability.
+     */
+    protected ChannelManagement(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
+                                int repeatIndicator, MMSI sourceMmsi,
+                                int channelA, int channelB, TxRxMode transmitReceiveMode, boolean power,
+                                Float northEastLongitude, Float northEastLatitude,
+                                Float southWestLongitude, Float southWestLatitude,
+                                MMSI destinationMmsi1, MMSI destinationMmsi2,
+                                boolean addressed, boolean bandA, boolean bandB, int zoneSize) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        this.channelA = channelA;
+        this.channelB = channelB;
+        this.transmitReceiveMode = transmitReceiveMode;
+        this.power = power;
+        this.northEastLongitude = northEastLongitude;
+        this.northEastLatitude = northEastLatitude;
+        this.southWestLongitude = southWestLongitude;
+        this.southWestLatitude = southWestLatitude;
+        this.destinationMmsi1 = destinationMmsi1;
+        this.destinationMmsi2 = destinationMmsi2;
+        this.addressed = addressed;
+        this.bandA = bandA;
+        this.bandB = bandB;
+        this.zoneSize = zoneSize;
+    }
+
     @Override
     protected void checkAISMessage() {
         super.checkAISMessage();

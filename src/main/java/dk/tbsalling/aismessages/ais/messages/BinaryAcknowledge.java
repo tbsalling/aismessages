@@ -79,6 +79,29 @@ public class BinaryAcknowledge extends AISMessage {
         this.numOfAcks = acks;
     }
 
+    /**
+     * Constructor accepting pre-parsed values for true immutability.
+     */
+    protected BinaryAcknowledge(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
+                                int repeatIndicator, MMSI sourceMmsi,
+                                int spare, MMSI mmsi1, int sequence1,
+                                MMSI mmsi2, Integer sequence2,
+                                MMSI mmsi3, Integer sequence3,
+                                MMSI mmsi4, Integer sequence4,
+                                int numOfAcks) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        this.spare = spare;
+        this.mmsi1 = mmsi1;
+        this.sequence1 = sequence1;
+        this.mmsi2 = mmsi2;
+        this.sequence2 = sequence2;
+        this.mmsi3 = mmsi3;
+        this.sequence3 = sequence3;
+        this.mmsi4 = mmsi4;
+        this.sequence4 = sequence4;
+        this.numOfAcks = numOfAcks;
+    }
+
     @Override
     protected void checkAISMessage() {
         super.checkAISMessage();

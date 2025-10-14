@@ -64,6 +64,38 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
         }
     }
 
+    /**
+     * Constructor accepting pre-parsed values for true immutability.
+     */
+    protected StandardClassBCSPositionReport(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
+                                             int repeatIndicator, MMSI sourceMmsi,
+                                             String regionalReserved1, float speedOverGround,
+                                             boolean positionAccuracy, float latitude, float longitude,
+                                             float courseOverGround, int trueHeading, int second,
+                                             String regionalReserved2, boolean csUnit, boolean display, boolean dsc, boolean band,
+                                             boolean message22, boolean assigned, boolean raimFlag, boolean commStateSelectorFlag,
+                                             CommunicationState communicationState) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        this.regionalReserved1 = regionalReserved1;
+        this.speedOverGround = speedOverGround;
+        this.positionAccuracy = positionAccuracy;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.courseOverGround = courseOverGround;
+        this.trueHeading = trueHeading;
+        this.second = second;
+        this.regionalReserved2 = regionalReserved2;
+        this.csUnit = csUnit;
+        this.display = display;
+        this.dsc = dsc;
+        this.band = band;
+        this.message22 = message22;
+        this.assigned = assigned;
+        this.raimFlag = raimFlag;
+        this.commStateSelectorFlag = commStateSelectorFlag;
+        this.communicationState = communicationState;
+    }
+
     @Override
     protected void checkAISMessage() {
         super.checkAISMessage();

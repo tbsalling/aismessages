@@ -17,6 +17,7 @@
 package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
@@ -44,6 +45,30 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
         this.assigned = BOOLEAN_DECODER.apply(getBits(146, 147));
         this.raimFlag = BOOLEAN_DECODER.apply(getBits(147, 148));
         this.radioStatus = BIT_DECODER.apply(getBits(148, 168));
+    }
+
+    /**
+     * Constructor accepting pre-parsed values for true immutability.
+     */
+    protected StandardSARAircraftPositionReport(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
+                                                int repeatIndicator, MMSI sourceMmsi,
+                                                int altitude, float speed, boolean positionAccuracy,
+                                                float latitude, float longitude, float courseOverGround,
+                                                int second, String regionalReserved, boolean dataTerminalReady,
+                                                boolean assigned, boolean raimFlag, String radioStatus) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        this.altitude = altitude;
+        this.speed = speed;
+        this.positionAccuracy = positionAccuracy;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.courseOverGround = courseOverGround;
+        this.second = second;
+        this.regionalReserved = regionalReserved;
+        this.dataTerminalReady = dataTerminalReady;
+        this.assigned = assigned;
+        this.raimFlag = raimFlag;
+        this.radioStatus = radioStatus;
     }
 
     @Override

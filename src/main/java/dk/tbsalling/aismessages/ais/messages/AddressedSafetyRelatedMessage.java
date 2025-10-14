@@ -40,6 +40,21 @@ public class AddressedSafetyRelatedMessage extends AISMessage {
         this.text = STRING_DECODER.apply(getBits(72, 72 + extraBitsOfChars));
     }
 
+    /**
+     * Constructor accepting pre-parsed values for true immutability.
+     */
+    protected AddressedSafetyRelatedMessage(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
+                                            int repeatIndicator, MMSI sourceMmsi,
+                                            int sequenceNumber, MMSI destinationMmsi,
+                                            boolean retransmit, int spare, String text) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        this.sequenceNumber = sequenceNumber;
+        this.destinationMmsi = destinationMmsi;
+        this.retransmit = retransmit;
+        this.spare = spare;
+        this.text = text;
+    }
+
     @Override
     protected void checkAISMessage() {
         super.checkAISMessage();

@@ -16,10 +16,7 @@
 
 package dk.tbsalling.aismessages.ais.messages;
 
-import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
-import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
-import dk.tbsalling.aismessages.ais.messages.types.ShipType;
-import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
+import dk.tbsalling.aismessages.ais.messages.types.*;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
@@ -54,6 +51,40 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
         this.dataTerminalReady = BOOLEAN_DECODER.apply(getBits(306, 307));
         this.assigned = BOOLEAN_DECODER.apply(getBits(307, 308));
         this.regionalReserved3 = BIT_DECODER.apply(getBits(308, 312));
+    }
+
+    /**
+     * Constructor accepting pre-parsed values for true immutability.
+     */
+    protected ExtendedClassBEquipmentPositionReport(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
+                                                    int repeatIndicator, MMSI sourceMmsi,
+                                                    String regionalReserved1, float speedOverGround, boolean positionAccuracy,
+                                                    float latitude, float longitude, float courseOverGround, int trueHeading,
+                                                    int second, String regionalReserved2, String shipName, ShipType shipType,
+                                                    int toBow, int toStern, int toPort, int toStarboard,
+                                                    PositionFixingDevice positionFixingDevice, boolean raimFlag,
+                                                    boolean dataTerminalReady, boolean assigned, String regionalReserved3) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        this.regionalReserved1 = regionalReserved1;
+        this.speedOverGround = speedOverGround;
+        this.positionAccuracy = positionAccuracy;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.courseOverGround = courseOverGround;
+        this.trueHeading = trueHeading;
+        this.second = second;
+        this.regionalReserved2 = regionalReserved2;
+        this.shipName = shipName;
+        this.shipType = shipType;
+        this.toBow = toBow;
+        this.toStern = toStern;
+        this.toPort = toPort;
+        this.toStarboard = toStarboard;
+        this.positionFixingDevice = positionFixingDevice;
+        this.raimFlag = raimFlag;
+        this.dataTerminalReady = dataTerminalReady;
+        this.assigned = assigned;
+        this.regionalReserved3 = regionalReserved3;
     }
 
     @Override

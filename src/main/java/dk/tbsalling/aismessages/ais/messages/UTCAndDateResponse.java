@@ -17,6 +17,7 @@
 package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
@@ -43,6 +44,28 @@ public class UTCAndDateResponse extends AISMessage {
         this.latitude = FLOAT_DECODER.apply(getBits(107, 134)) / 600000f;
         this.positionFixingDevice = PositionFixingDevice.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(134, 138)));
         this.raimFlag = BOOLEAN_DECODER.apply(getBits(148, 149));
+    }
+
+    /**
+     * Constructor accepting pre-parsed values for true immutability.
+     */
+    protected UTCAndDateResponse(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
+                                 int repeatIndicator, MMSI sourceMmsi,
+                                 int year, int month, int day, int hour, int minute, int second,
+                                 boolean positionAccurate, float latitude, float longitude,
+                                 PositionFixingDevice positionFixingDevice, boolean raimFlag) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        this.year = year;
+        this.month = month;
+        this.day = day;
+        this.hour = hour;
+        this.minute = minute;
+        this.second = second;
+        this.positionAccurate = positionAccurate;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.positionFixingDevice = positionFixingDevice;
+        this.raimFlag = raimFlag;
     }
 
     @Override

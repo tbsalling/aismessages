@@ -36,6 +36,20 @@ public class BinaryMessageSingleSlot extends AISMessage {
         this.binaryData = BIT_DECODER.apply(getBits(40, 168));
     }
 
+    /**
+     * Constructor accepting pre-parsed values for true immutability.
+     */
+    protected BinaryMessageSingleSlot(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
+                                      int repeatIndicator, MMSI sourceMmsi,
+                                      boolean destinationIndicator, boolean binaryDataFlag,
+                                      MMSI destinationMMSI, String binaryData) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        this.destinationIndicator = destinationIndicator;
+        this.binaryDataFlag = binaryDataFlag;
+        this.destinationMMSI = destinationMMSI;
+        this.binaryData = binaryData;
+    }
+
     @Override
     protected void checkAISMessage() {
         super.checkAISMessage();

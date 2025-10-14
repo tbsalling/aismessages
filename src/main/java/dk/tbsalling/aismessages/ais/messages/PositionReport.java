@@ -61,6 +61,49 @@ public abstract class PositionReport extends AISMessage implements ExtendedDynam
         }
     }
 
+    /**
+     * Constructor accepting pre-parsed values for true immutability.
+     *
+     * @param nmeaMessages             the NMEA messages
+     * @param bitString                the binary string representation
+     * @param metadata                 the metadata
+     * @param nmeaTagBlock             the NMEA tag block
+     * @param repeatIndicator          the pre-parsed repeat indicator
+     * @param sourceMmsi               the pre-parsed source MMSI
+     * @param navigationStatus         the navigation status
+     * @param rateOfTurn               the rate of turn (calculated from raw value)
+     * @param speedOverGround          the speed over ground
+     * @param positionAccuracy         the position accuracy flag
+     * @param latitude                 the latitude
+     * @param longitude                the longitude
+     * @param courseOverGround         the course over ground
+     * @param trueHeading              the true heading
+     * @param second                   the timestamp second
+     * @param specialManeuverIndicator the special maneuver indicator
+     * @param raimFlag                 the RAIM flag
+     * @param communicationState       the communication state
+     */
+    protected PositionReport(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
+                             int repeatIndicator, MMSI sourceMmsi,
+                             NavigationStatus navigationStatus, int rateOfTurn, float speedOverGround,
+                             boolean positionAccuracy, float latitude, float longitude,
+                             float courseOverGround, int trueHeading, int second,
+                             ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        this.navigationStatus = navigationStatus;
+        this.rateOfTurn = rateOfTurn;
+        this.speedOverGround = speedOverGround;
+        this.positionAccuracy = positionAccuracy;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.courseOverGround = courseOverGround;
+        this.trueHeading = trueHeading;
+        this.second = second;
+        this.specialManeuverIndicator = specialManeuverIndicator;
+        this.raimFlag = raimFlag;
+        this.communicationState = communicationState;
+    }
+
     @Override
     protected void checkAISMessage() {
         super.checkAISMessage();

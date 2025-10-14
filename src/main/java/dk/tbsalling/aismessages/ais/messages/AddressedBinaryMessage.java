@@ -52,6 +52,25 @@ public class AddressedBinaryMessage extends AISMessage {
         this.applicationSpecificMessage = ApplicationSpecificMessage.create(designatedAreaCode, functionalId, binaryData);
     }
 
+    /**
+     * Constructor accepting pre-parsed values for true immutability.
+     */
+    protected AddressedBinaryMessage(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
+                                     int repeatIndicator, MMSI sourceMmsi,
+                                     int sequenceNumber, MMSI destinationMmsi, boolean retransmit, int spare,
+                                     int designatedAreaCode, int functionalId, String binaryData,
+                                     ApplicationSpecificMessage applicationSpecificMessage) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        this.sequenceNumber = sequenceNumber;
+        this.destinationMmsi = destinationMmsi;
+        this.retransmit = retransmit;
+        this.spare = spare;
+        this.designatedAreaCode = designatedAreaCode;
+        this.functionalId = functionalId;
+        this.binaryData = binaryData;
+        this.applicationSpecificMessage = applicationSpecificMessage;
+    }
+
     @Override
     protected void checkAISMessage() {
         super.checkAISMessage();

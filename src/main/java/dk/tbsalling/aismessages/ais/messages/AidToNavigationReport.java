@@ -18,6 +18,7 @@ package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.AidType;
+import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
@@ -73,6 +74,40 @@ public class AidToNavigationReport extends AISMessage {
             this.nameExtension = null;
             this.spare2 = null;
         }
+    }
+
+    /**
+     * Constructor accepting pre-parsed values for true immutability.
+     */
+    protected AidToNavigationReport(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
+                                    int repeatIndicator, MMSI sourceMmsi,
+                                    AidType aidType, String name, boolean positionAccurate,
+                                    float latitude, float longitude,
+                                    int toBow, int toStern, int toPort, int toStarboard,
+                                    PositionFixingDevice positionFixingDevice, int second,
+                                    boolean offPosition, String regionalUse, boolean raimFlag,
+                                    boolean virtualAid, boolean assignedMode, int spare1,
+                                    String nameExtension, Integer spare2) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        this.aidType = aidType;
+        this.name = name;
+        this.positionAccurate = positionAccurate;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.toBow = toBow;
+        this.toStern = toStern;
+        this.toPort = toPort;
+        this.toStarboard = toStarboard;
+        this.positionFixingDevice = positionFixingDevice;
+        this.second = second;
+        this.offPosition = offPosition;
+        this.regionalUse = regionalUse;
+        this.raimFlag = raimFlag;
+        this.virtualAid = virtualAid;
+        this.assignedMode = assignedMode;
+        this.spare1 = spare1;
+        this.nameExtension = nameExtension;
+        this.spare2 = spare2;
     }
 
     @Override

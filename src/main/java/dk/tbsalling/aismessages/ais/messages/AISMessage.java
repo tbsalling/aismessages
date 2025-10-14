@@ -131,6 +131,36 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         checkAISMessage();
     }
 
+    /**
+     * Constructor that accepts pre-parsed values, enabling true immutability.
+     * This constructor eliminates the need for subclasses to call getBits() during construction.
+     *
+     * @param nmeaMessages    the NMEA messages
+     * @param bitString       the binary string representation
+     * @param metadata        the metadata
+     * @param nmeaTagBlock    the NMEA tag block
+     * @param repeatIndicator the pre-parsed repeat indicator
+     * @param sourceMmsi      the pre-parsed source MMSI
+     */
+    protected AISMessage(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
+                         int repeatIndicator, MMSI sourceMmsi) {
+        requireNonNull(nmeaMessages);
+        check(nmeaMessages);
+        this.nmeaMessages = nmeaMessages;
+        this.bitString = bitString;
+        this.numberOfBits = bitString.length();
+        this.metadata = metadata;
+        this.nmeaTagBlock = nmeaTagBlock;
+        this.repeatIndicator = repeatIndicator;
+        this.sourceMmsi = sourceMmsi;
+
+        AISMessageType nmeaMessageType = decodeMessageType();
+        if (getMessageType() != nmeaMessageType)
+            throw new UnsupportedMessageType(nmeaMessageType.getCode());
+
+        checkAISMessage();
+    }
+
     private static void check(NMEAMessage[] nmeaMessages) {
         // TODO sanity check NMEA messages
     }

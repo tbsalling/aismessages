@@ -18,6 +18,7 @@ package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.asm.ApplicationSpecificMessage;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
@@ -45,6 +46,21 @@ public class BinaryBroadcastMessage extends AISMessage {
         this.functionalId = UNSIGNED_INTEGER_DECODER.apply(getBits(50, 56));
         this.binaryData = BIT_DECODER.apply(getBits(56, getNumberOfBits()));
         this.applicationSpecificMessage = ApplicationSpecificMessage.create(designatedAreaCode, functionalId, binaryData);
+    }
+
+    /**
+     * Constructor accepting pre-parsed values for true immutability.
+     */
+    protected BinaryBroadcastMessage(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
+                                     int repeatIndicator, MMSI sourceMmsi,
+                                     Integer spare, Integer designatedAreaCode, Integer functionalId,
+                                     String binaryData, ApplicationSpecificMessage applicationSpecificMessage) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        this.spare = spare;
+        this.designatedAreaCode = designatedAreaCode;
+        this.functionalId = functionalId;
+        this.binaryData = binaryData;
+        this.applicationSpecificMessage = applicationSpecificMessage;
     }
 
     @Override

@@ -57,6 +57,22 @@ public class AssignedModeCommand extends AISMessage {
         }
     }
 
+    /**
+     * Constructor accepting pre-parsed values for true immutability.
+     */
+    protected AssignedModeCommand(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
+                                  int repeatIndicator, MMSI sourceMmsi,
+                                  MMSI destinationMmsiA, Integer offsetA, Integer incrementA,
+                                  MMSI destinationMmsiB, Integer offsetB, Integer incrementB) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        this.destinationMmsiA = destinationMmsiA;
+        this.offsetA = offsetA;
+        this.incrementA = incrementA;
+        this.destinationMmsiB = destinationMmsiB;
+        this.offsetB = offsetB;
+        this.incrementB = incrementB;
+    }
+
     @Override
     protected void checkAISMessage() {
         super.checkAISMessage();

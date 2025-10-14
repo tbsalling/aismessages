@@ -16,7 +16,7 @@
 
 package dk.tbsalling.aismessages.ais.messages;
 
-import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.ais.messages.types.*;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
@@ -24,6 +24,17 @@ import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 public class PositionReportClassAAssignedSchedule extends PositionReport {
     protected PositionReportClassAAssignedSchedule(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
         super(nmeaMessages, bitString, metadata, nmeaTagBlock);
+    }
+
+    protected PositionReportClassAAssignedSchedule(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
+                                                   int repeatIndicator, MMSI sourceMmsi,
+                                                   NavigationStatus navigationStatus, int rateOfTurn, float speedOverGround,
+                                                   boolean positionAccuracy, float latitude, float longitude,
+                                                   float courseOverGround, int trueHeading, int second,
+                                                   ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi,
+                navigationStatus, rateOfTurn, speedOverGround, positionAccuracy, latitude, longitude,
+                courseOverGround, trueHeading, second, specialManeuverIndicator, raimFlag, communicationState);
     }
 
     @Override

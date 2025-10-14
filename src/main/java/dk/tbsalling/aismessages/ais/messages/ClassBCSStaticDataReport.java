@@ -59,6 +59,28 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
         }
     }
 
+    /**
+     * Constructor accepting pre-parsed values for true immutability.
+     */
+    protected ClassBCSStaticDataReport(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock,
+                                       int repeatIndicator, MMSI sourceMmsi,
+                                       int partNumber, String shipName, ShipType shipType,
+                                       String vendorId, String callsign,
+                                       Integer toBow, Integer toStern, Integer toStarboard, Integer toPort,
+                                       MMSI mothershipMmsi) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock, repeatIndicator, sourceMmsi);
+        this.partNumber = partNumber;
+        this.shipName = shipName;
+        this.shipType = shipType;
+        this.vendorId = vendorId;
+        this.callsign = callsign;
+        this.toBow = toBow;
+        this.toStern = toStern;
+        this.toStarboard = toStarboard;
+        this.toPort = toPort;
+        this.mothershipMmsi = mothershipMmsi;
+    }
+
     @Override
     protected void checkAISMessage() {
         super.checkAISMessage();
