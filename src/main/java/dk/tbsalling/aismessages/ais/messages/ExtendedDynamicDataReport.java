@@ -20,6 +20,7 @@
 package dk.tbsalling.aismessages.ais.messages;
 
 public interface ExtendedDynamicDataReport extends DynamicDataReport {
-	Integer getTrueHeading();
-	Integer getSecond();
+    int getTrueHeading();
+
+    int getSecond();
 }

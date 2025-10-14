@@ -103,7 +103,7 @@ public class BinaryAcknowledge extends AISMessage {
     }
 
     @SuppressWarnings("unused")
-	public Integer getSpare() {
+    public int getSpare() {
         return spare;
 	}
 
@@ -113,7 +113,7 @@ public class BinaryAcknowledge extends AISMessage {
 	}
 
     @SuppressWarnings("unused")
-	public Integer getSequence1() {
+    public int getSequence1() {
         return sequence1;
 	}
 
@@ -148,7 +148,7 @@ public class BinaryAcknowledge extends AISMessage {
 	}
 
     @SuppressWarnings("unused")
-	public Integer getNumOfAcks() {
+    public int getNumOfAcks() {
         return numOfAcks;
 	}
 
@@ -169,14 +169,14 @@ public class BinaryAcknowledge extends AISMessage {
                 "} " + super.toString();
     }
 
-    private final Integer spare;
+    private final int spare;
     private final MMSI mmsi1;
-    private final Integer sequence1;
+    private final int sequence1;
     private final MMSI mmsi2;
     private final Integer sequence2;
     private final MMSI mmsi3;
     private final Integer sequence3;
     private final MMSI mmsi4;
     private final Integer sequence4;
-    private final Integer numOfAcks;
+    private final int numOfAcks;
 }

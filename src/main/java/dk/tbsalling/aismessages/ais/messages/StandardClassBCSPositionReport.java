@@ -57,7 +57,7 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
         this.commStateSelectorFlag = BOOLEAN_DECODER.apply(getBits(148, 149));
 
         // Communication state depends on selector flag
-        if (this.commStateSelectorFlag == Boolean.FALSE) {
+        if (!this.commStateSelectorFlag) {
             this.communicationState = SOTDMACommunicationState.fromBitString(getBits(149, 168));
         } else {
             this.communicationState = ITDMACommunicationState.fromBitString(getBits(149, 168));
@@ -98,62 +98,62 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
 	}
 
     @SuppressWarnings("unused")
-	public Float getSpeedOverGround() {
+    public float getSpeedOverGround() {
         return speedOverGround;
 	}
 
     @SuppressWarnings("unused")
-    public Integer getRawSpeedOverGround() {
+    public int getRawSpeedOverGround() {
         return UNSIGNED_INTEGER_DECODER.apply(getBits(46, 56));
     }
 
     @SuppressWarnings("unused")
-	public Boolean getPositionAccuracy() {
+    public boolean getPositionAccuracy() {
         return positionAccuracy;
 	}
 
     @SuppressWarnings("unused")
-    public Boolean getPositionAccurate() {
+    public boolean getPositionAccurate() {
         return getPositionAccuracy();
     }
 
     @SuppressWarnings("unused")
-	public Float getLatitude() {
+    public float getLatitude() {
         return latitude;
 	}
 
     @SuppressWarnings("unused")
-    public Integer getRawLatitude() {
+    public int getRawLatitude() {
         return INTEGER_DECODER.apply(getBits(85, 112));
     }
 
     @SuppressWarnings("unused")
-	public Float getLongitude() {
+    public float getLongitude() {
         return longitude;
 	}
 
     @SuppressWarnings("unused")
-    public Integer getRawLongitude() {
+    public int getRawLongitude() {
         return INTEGER_DECODER.apply(getBits(57, 85));
     }
 
     @SuppressWarnings("unused")
-	public Float getCourseOverGround() {
+    public float getCourseOverGround() {
         return courseOverGround;
 	}
 
     @SuppressWarnings("unused")
-    public Integer getRawCourseOverGround() {
+    public int getRawCourseOverGround() {
         return UNSIGNED_INTEGER_DECODER.apply(getBits(112, 124));
     }
 
     @SuppressWarnings("unused")
-	public Integer getTrueHeading() {
+    public int getTrueHeading() {
         return trueHeading;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getSecond() {
+    public int getSecond() {
         return second;
 	}
 
@@ -163,41 +163,41 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
 	}
 
     @SuppressWarnings("unused")
-	public Boolean getCsUnit() {
+    public boolean getCsUnit() {
         return csUnit;
 	}
 
     @SuppressWarnings("unused")
-	public Boolean getDisplay() {
+    public boolean getDisplay() {
         return display;
 	}
 
     @SuppressWarnings("unused")
-	public Boolean getDsc() {
+    public boolean getDsc() {
         return dsc;
 	}
 
     @SuppressWarnings("unused")
-	public Boolean getBand() {
+    public boolean getBand() {
         return band;
 	}
 
     @SuppressWarnings("unused")
-	public Boolean getMessage22() {
+    public boolean getMessage22() {
         return message22;
 	}
 
     @SuppressWarnings("unused")
-	public Boolean getAssigned() {
+    public boolean getAssigned() {
         return assigned;
 	}
 
     @SuppressWarnings("unused")
-	public Boolean getRaimFlag() {
+    public boolean getRaimFlag() {
         return raimFlag;
 	}
 
-    public Boolean getCommunicationStateSelectorFlag() {
+    public boolean getCommunicationStateSelectorFlag() {
         return commStateSelectorFlag;
     }
 
@@ -232,22 +232,22 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
     }
 
     private final String regionalReserved1;
-    private final Float speedOverGround;
-    private final Boolean positionAccuracy;
-    private final Float latitude;
-    private final Float longitude;
-    private final Float courseOverGround;
-    private final Integer trueHeading;
-    private final Integer second;
+    private final float speedOverGround;
+    private final boolean positionAccuracy;
+    private final float latitude;
+    private final float longitude;
+    private final float courseOverGround;
+    private final int trueHeading;
+    private final int second;
     private final String regionalReserved2;
-    private final Boolean csUnit;
-    private final Boolean display;
-    private final Boolean dsc;
-    private final Boolean band;
-    private final Boolean message22;
-    private final Boolean assigned;
-    private final Boolean raimFlag;
-    private final Boolean commStateSelectorFlag;
+    private final boolean csUnit;
+    private final boolean display;
+    private final boolean dsc;
+    private final boolean band;
+    private final boolean message22;
+    private final boolean assigned;
+    private final boolean raimFlag;
+    private final boolean commStateSelectorFlag;
     private final CommunicationState communicationState;
 
 }

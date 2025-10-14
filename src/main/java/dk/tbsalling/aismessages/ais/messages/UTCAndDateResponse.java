@@ -69,47 +69,47 @@ public class UTCAndDateResponse extends AISMessage {
     }
 
     @SuppressWarnings("unused")
-	public Integer getYear() {
+    public int getYear() {
         return year;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getMonth() {
+    public int getMonth() {
         return month;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getDay() {
+    public int getDay() {
         return day;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getHour() {
+    public int getHour() {
         return hour;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getMinute() {
+    public int getMinute() {
         return minute;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getSecond() {
+    public int getSecond() {
         return second;
 	}
 
     @SuppressWarnings("unused")
-	public Boolean getPositionAccurate() {
+    public boolean getPositionAccurate() {
         return positionAccurate;
 	}
 
     @SuppressWarnings("unused")
-	public Float getLatitude() {
+    public float getLatitude() {
         return latitude;
 	}
 
     @SuppressWarnings("unused")
-	public Float getLongitude() {
+    public float getLongitude() {
         return longitude;
 	}
 
@@ -119,7 +119,7 @@ public class UTCAndDateResponse extends AISMessage {
 	}
 
     @SuppressWarnings("unused")
-	public Boolean getRaimFlag() {
+    public boolean getRaimFlag() {
         return raimFlag;
 	}
 
@@ -141,15 +141,15 @@ public class UTCAndDateResponse extends AISMessage {
                 "} " + super.toString();
     }
 
-    private final Integer year;
-    private final Integer month;
-    private final Integer day;
-    private final Integer hour;
-    private final Integer minute;
-    private final Integer second;
-    private final Boolean positionAccurate;
-    private final Float latitude;
-    private final Float longitude;
+    private final int year;
+    private final int month;
+    private final int day;
+    private final int hour;
+    private final int minute;
+    private final int second;
+    private final boolean positionAccurate;
+    private final float latitude;
+    private final float longitude;
     private final PositionFixingDevice positionFixingDevice;
-    private final Boolean raimFlag;
+    private final boolean raimFlag;
 }

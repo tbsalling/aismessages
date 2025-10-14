@@ -88,7 +88,7 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
     }
 
     @SuppressWarnings("unused")
-	public Integer getPartNumber() {
+    public int getPartNumber() {
         return partNumber;
 	}
 
@@ -113,23 +113,23 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
 	}
 
     @SuppressWarnings("unused")
-	public Integer getToBow() {
-        return toBow;
+    public int getToBow() {
+        return toBow != null ? toBow : 0;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getToStern() {
-        return toStern;
+    public int getToStern() {
+        return toStern != null ? toStern : 0;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getToStarboard() {
-        return toStarboard;
+    public int getToStarboard() {
+        return toStarboard != null ? toStarboard : 0;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getToPort() {
-        return toPort;
+    public int getToPort() {
+        return toPort != null ? toPort : 0;
 	}
 
     @SuppressWarnings("unused")
@@ -154,7 +154,7 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
                 "} " + super.toString();
     }
 
-    private final Integer partNumber;
+    private final int partNumber;
     private final String shipName;
     private final ShipType shipType;
     private final String vendorId;

@@ -82,7 +82,7 @@ public class AddressedBinaryMessage extends AISMessage {
     }
 
     @SuppressWarnings("unused")
-    public Integer getSequenceNumber() {
+    public int getSequenceNumber() {
         return sequenceNumber;
 	}
 
@@ -92,22 +92,22 @@ public class AddressedBinaryMessage extends AISMessage {
 	}
 
     @SuppressWarnings("unused")
-	public Boolean getRetransmit() {
+    public boolean getRetransmit() {
         return retransmit;
 	}
 
     @SuppressWarnings("unused")
-    public Integer getSpare() {
+    public int getSpare() {
         return spare;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getDesignatedAreaCode() {
+    public int getDesignatedAreaCode() {
         return designatedAreaCode;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getFunctionalId() {
+    public int getFunctionalId() {
         return functionalId;
 	}
 
@@ -135,12 +135,12 @@ public class AddressedBinaryMessage extends AISMessage {
                 "} " + super.toString();
     }
 
-    private final Integer sequenceNumber;
+    private final int sequenceNumber;
     private final MMSI destinationMmsi;
-    private final Boolean retransmit;
-    private final Integer spare;
-    private final Integer designatedAreaCode;
-    private final Integer functionalId;
+    private final boolean retransmit;
+    private final int spare;
+    private final int designatedAreaCode;
+    private final int functionalId;
     private final String binaryData;
     private final ApplicationSpecificMessage applicationSpecificMessage;
 }

@@ -43,12 +43,12 @@ public class BinaryMessageMultipleSlot extends AISMessage {
     }
 
     @SuppressWarnings("unused")
-    public Boolean getAddressed() {
+    public boolean getAddressed() {
         return addressed;
     }
 
     @SuppressWarnings("unused")
-    public Boolean getStructured() {
+    public boolean getStructured() {
         return structured;
     }
 
@@ -58,7 +58,7 @@ public class BinaryMessageMultipleSlot extends AISMessage {
     }
 
     @SuppressWarnings("unused")
-    public Integer getApplicationId() {
+    public int getApplicationId() {
         return applicationId;
     }
 
@@ -85,10 +85,10 @@ public class BinaryMessageMultipleSlot extends AISMessage {
                 "} " + super.toString();
     }
 
-    private final Boolean addressed;
-    private final Boolean structured;
+    private final boolean addressed;
+    private final boolean structured;
     private final MMSI destinationMmsi;
-    private final Integer applicationId;
+    private final int applicationId;
     private final String data;
     // private final String radioStatus;
 }

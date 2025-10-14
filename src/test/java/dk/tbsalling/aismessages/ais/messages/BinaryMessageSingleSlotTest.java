@@ -28,7 +28,7 @@ public class BinaryMessageSingleSlotTest {
         assertFalse(message.getBinaryDataFlag());
         assertEquals(MMSI.valueOf(134218384), message.getDestinationMMSI());
         assertEquals("00100000000000000000101001000011100000011011111000010101011011010101100110110010000000001111111110011110100000001100000110000101", message.getBinaryData());
-        assertTrue(!message.getBinaryData().isEmpty());
+        assertFalse(message.getBinaryData().isEmpty());
     }
 
     @Test

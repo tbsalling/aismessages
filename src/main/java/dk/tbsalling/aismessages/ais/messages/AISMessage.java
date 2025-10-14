@@ -98,7 +98,7 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
      */
     private final int numberOfBits;
 
-    private final Integer repeatIndicator;
+    private final int repeatIndicator;
     private final MMSI sourceMmsi;
 
     protected AISMessage() {
@@ -107,7 +107,7 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         this.numberOfBits = -1;
         this.metadata = null;
         this.nmeaTagBlock = null;
-        this.repeatIndicator = null;
+        this.repeatIndicator = -1;
         this.sourceMmsi = null;
     }
 
@@ -310,7 +310,7 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
      * @return The repeat indicator value.
      */
     @SuppressWarnings("unused")
-    public final Integer getRepeatIndicator() {
+    public final int getRepeatIndicator() {
         return repeatIndicator;
     }
 

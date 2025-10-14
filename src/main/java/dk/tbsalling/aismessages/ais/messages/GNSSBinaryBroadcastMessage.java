@@ -86,22 +86,22 @@ public class GNSSBinaryBroadcastMessage extends AISMessage {
     }
 
     @SuppressWarnings("unused")
-	public Integer getSpare1() {
+    public int getSpare1() {
         return spare1;
 	}
 
     @SuppressWarnings("unused")
-	public Float getLatitude() {
+    public float getLatitude() {
         return latitude;
 	}
 
     @SuppressWarnings("unused")
-	public Float getLongitude() {
+    public float getLongitude() {
         return longitude;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getSpare2() {
+    public int getSpare2() {
         return spare2;
 	}
 
@@ -158,10 +158,10 @@ public class GNSSBinaryBroadcastMessage extends AISMessage {
                 "} " + super.toString();
     }
 
-    private final Integer spare1;
-    private final Float latitude;
-    private final Float longitude;
-    private final Integer spare2;
+    private final int spare1;
+    private final float latitude;
+    private final float longitude;
+    private final int spare2;
     private final Integer mType;
     private final Integer stationId;
     private final Integer zCount;

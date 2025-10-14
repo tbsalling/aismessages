@@ -64,7 +64,7 @@ public class AddressedSafetyRelatedMessage extends AISMessage {
     }
 
     @SuppressWarnings("unused")
-	public Integer getSequenceNumber() {
+    public int getSequenceNumber() {
         return sequenceNumber;
 	}
 
@@ -74,12 +74,12 @@ public class AddressedSafetyRelatedMessage extends AISMessage {
 	}
 
     @SuppressWarnings("unused")
-	public Boolean getRetransmit() {
+    public boolean getRetransmit() {
         return retransmit;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getSpare() {
+    public int getSpare() {
         return spare;
 	}
 
@@ -100,9 +100,9 @@ public class AddressedSafetyRelatedMessage extends AISMessage {
                 "} " + super.toString();
     }
 
-    private final Integer sequenceNumber;
+    private final int sequenceNumber;
     private final MMSI destinationMmsi;
-    private final Boolean retransmit;
-    private final Integer spare;
+    private final boolean retransmit;
+    private final int spare;
     private final String text;
 }

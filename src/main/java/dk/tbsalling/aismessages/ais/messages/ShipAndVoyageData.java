@@ -103,22 +103,22 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
 	}
 
     @SuppressWarnings("unused")
-	public Integer getToBow() {
+    public int getToBow() {
         return toBow;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getToStern() {
+    public int getToStern() {
         return toStern;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getToStarboard() {
+    public int getToStarboard() {
         return toStarboard;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getToPort() {
+    public int getToPort() {
         return toPort;
 	}
 
@@ -129,25 +129,25 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
 
 	/** @return The UTC ETA Month (1-12) 0 = not available. */
     @SuppressWarnings("unused")
-    public Integer getEtaMonth() {
+    public int getEtaMonth() {
         return etaMonth;
     }
 
     /** @return The UTC ETA Day (1-31) 0 = not available. */
     @SuppressWarnings("unused")
-    public Integer getEtaDay() {
+    public int getEtaDay() {
         return etaDay;
     }
 
     /** @return The UTC ETA Hour (0-23) 24 = not available. */
     @SuppressWarnings("unused")
-    public Integer getEtaHour() {
+    public int getEtaHour() {
         return etaHour;
     }
 
     /** @return The UTC ETA Minute (0-59) 60 = not available. */
     @SuppressWarnings("unused")
-    public Integer getEtaMinute() {
+    public int getEtaMinute() {
         return etaMinute;
     }
 
@@ -194,12 +194,12 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
     }
 
     @SuppressWarnings("unused")
-	public Float getDraught() {
+    public float getDraught() {
         return draught;
 	}
 
     @SuppressWarnings("unused")
-    public Integer getRawDraught() {
+    public int getRawDraught() {
         return UNSIGNED_INTEGER_DECODER.apply(getBits(294, 302));
     }
 
@@ -209,7 +209,7 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
 	}
 
     @SuppressWarnings("unused")
-	public Boolean getDataTerminalReady() {
+    public boolean getDataTerminalReady() {
         return dataTerminalReady;
 	}
 
@@ -237,16 +237,16 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
     private final String callsign;
     private final String shipName;
     private final ShipType shipType;
-    private final Integer toBow;
-    private final Integer toStern;
-    private final Integer toStarboard;
-    private final Integer toPort;
+    private final int toBow;
+    private final int toStern;
+    private final int toStarboard;
+    private final int toPort;
     private final PositionFixingDevice positionFixingDevice;
-    private final Integer etaMonth;
-    private final Integer etaDay;
-    private final Integer etaHour;
-    private final Integer etaMinute;
-    private final Float draught;
+    private final int etaMonth;
+    private final int etaDay;
+    private final int etaHour;
+    private final int etaMinute;
+    private final float draught;
     private final String destination;
-    private final Boolean dataTerminalReady;
+    private final boolean dataTerminalReady;
 }

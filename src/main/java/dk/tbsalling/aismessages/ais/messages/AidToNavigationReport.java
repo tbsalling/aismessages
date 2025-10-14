@@ -108,37 +108,37 @@ public class AidToNavigationReport extends AISMessage {
     }
 
     @SuppressWarnings("unused")
-    public Boolean getPositionAccurate() {
+    public boolean getPositionAccurate() {
         return positionAccurate;
     }
 
     @SuppressWarnings("unused")
-    public Float getLatitude() {
+    public float getLatitude() {
         return latitude;
     }
 
     @SuppressWarnings("unused")
-    public Float getLongitude() {
+    public float getLongitude() {
         return longitude;
     }
 
     @SuppressWarnings("unused")
-    public Integer getToBow() {
+    public int getToBow() {
         return toBow;
     }
 
     @SuppressWarnings("unused")
-    public Integer getToStern() {
+    public int getToStern() {
         return toStern;
     }
 
     @SuppressWarnings("unused")
-    public Integer getToStarboard() {
+    public int getToStarboard() {
         return toStarboard;
     }
 
     @SuppressWarnings("unused")
-    public Integer getToPort() {
+    public int getToPort() {
         return toPort;
     }
 
@@ -148,12 +148,12 @@ public class AidToNavigationReport extends AISMessage {
     }
 
     @SuppressWarnings("unused")
-    public Integer getSecond() {
+    public int getSecond() {
         return second;
     }
 
     @SuppressWarnings("unused")
-    public Boolean getOffPosition() {
+    public boolean getOffPosition() {
         return offPosition;
     }
 
@@ -163,22 +163,22 @@ public class AidToNavigationReport extends AISMessage {
     }
 
     @SuppressWarnings("unused")
-    public Boolean getRaimFlag() {
+    public boolean getRaimFlag() {
         return raimFlag;
     }
 
     @SuppressWarnings("unused")
-    public Boolean getVirtualAid() {
+    public boolean getVirtualAid() {
         return virtualAid;
     }
 
     @SuppressWarnings("unused")
-    public Boolean getAssignedMode() {
+    public boolean getAssignedMode() {
         return assignedMode;
     }
 
     @SuppressWarnings("unused")
-    public Integer getSpare1() {
+    public int getSpare1() {
         return spare1;
     }
 
@@ -220,21 +220,21 @@ public class AidToNavigationReport extends AISMessage {
 
     private final AidType aidType;
     private final String name;
-    private final Boolean positionAccurate;
-    private final Float latitude;
-    private final Float longitude;
-    private final Integer toBow;
-    private final Integer toStern;
-    private final Integer toPort;
-    private final Integer toStarboard;
+    private final boolean positionAccurate;
+    private final float latitude;
+    private final float longitude;
+    private final int toBow;
+    private final int toStern;
+    private final int toPort;
+    private final int toStarboard;
     private final PositionFixingDevice positionFixingDevice;
-    private final Integer second;
-    private final Boolean offPosition;
+    private final int second;
+    private final boolean offPosition;
     private final String regionalUse;
-    private final Boolean raimFlag;
-    private final Boolean virtualAid;
-    private final Boolean assignedMode;
-    private final Integer spare1;
+    private final boolean raimFlag;
+    private final boolean virtualAid;
+    private final boolean assignedMode;
+    private final int spare1;
     private final String nameExtension;
     private final Integer spare2;
 }

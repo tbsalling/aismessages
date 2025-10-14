@@ -59,7 +59,7 @@ public class SafetyRelatedBroadcastMessage extends AISMessage {
     }
 
     @SuppressWarnings("unused")
-	public Integer getSpare() {
+    public int getSpare() {
         return spare;
 	}
 
@@ -77,6 +77,6 @@ public class SafetyRelatedBroadcastMessage extends AISMessage {
                 "} " + super.toString();
     }
 
-    private final Integer spare;
+    private final int spare;
     private final String text;
 }

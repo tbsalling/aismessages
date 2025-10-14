@@ -109,22 +109,22 @@ public class DataLinkManagement extends AISMessage {
     }
 
     @SuppressWarnings("unused")
-	public Integer getOffsetNumber1() {
+    public int getOffsetNumber1() {
         return offsetNumber1;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getReservedSlots1() {
+    public int getReservedSlots1() {
         return reservedSlots1;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getTimeout1() {
+    public int getTimeout1() {
         return timeout1;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getIncrement1() {
+    public int getIncrement1() {
         return increment1;
 	}
 
@@ -211,10 +211,10 @@ public class DataLinkManagement extends AISMessage {
                 "} " + super.toString();
     }
 
-    private final Integer offsetNumber1;
-    private final Integer reservedSlots1;
-    private final Integer timeout1;
-    private final Integer increment1;
+    private final int offsetNumber1;
+    private final int reservedSlots1;
+    private final int timeout1;
+    private final int increment1;
     private final Integer offsetNumber2;
     private final Integer reservedSlots2;
     private final Integer timeout2;

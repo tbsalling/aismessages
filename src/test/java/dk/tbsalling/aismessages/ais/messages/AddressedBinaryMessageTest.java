@@ -8,7 +8,7 @@ import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.assertInstanceOf;
 
 public class AddressedBinaryMessageTest {
 
@@ -44,16 +44,16 @@ public class AddressedBinaryMessageTest {
         System.out.println(aisMessage.toString());
 
         // Assert
-        assertTrue(aisMessage instanceof AddressedBinaryMessage);
+        assertInstanceOf(AddressedBinaryMessage.class, aisMessage);
         AddressedBinaryMessage addressedBinaryMessage = (AddressedBinaryMessage) aisMessage;
-        assertEquals(1, addressedBinaryMessage.getDesignatedAreaCode().intValue());
-        assertEquals(40, addressedBinaryMessage.getFunctionalId().intValue());
+        assertEquals(1, addressedBinaryMessage.getDesignatedAreaCode());
+        assertEquals(40, addressedBinaryMessage.getFunctionalId());
 
         ApplicationSpecificMessage asm = addressedBinaryMessage.getApplicationSpecificMessage();
         assertEquals(1, asm.getDesignatedAreaCode());
         assertEquals(40, asm.getFunctionalId());
 
-        assertTrue(asm instanceof NumberOfPersonsOnBoard);
+        assertInstanceOf(NumberOfPersonsOnBoard.class, asm);
         NumberOfPersonsOnBoard numberOfPersonsOnBoard = (NumberOfPersonsOnBoard) asm;
         assertEquals("0000000000011000", numberOfPersonsOnBoard.getBinaryData());
         assertEquals(Integer.valueOf(3), numberOfPersonsOnBoard.getNumberOfPersons());

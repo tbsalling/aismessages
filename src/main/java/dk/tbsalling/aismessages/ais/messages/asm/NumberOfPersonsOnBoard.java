@@ -11,11 +11,11 @@ public class NumberOfPersonsOnBoard extends ApplicationSpecificMessage {
         this.numberOfPersons = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(0, 13));
     }
 
-    public Integer getNumberOfPersons() {
+    public int getNumberOfPersons() {
         return numberOfPersons;
     }
 
-    private final Integer numberOfPersons;
+    private final int numberOfPersons;
 
 
 }

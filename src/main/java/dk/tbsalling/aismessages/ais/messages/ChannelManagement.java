@@ -80,12 +80,12 @@ public class ChannelManagement extends AISMessage {
     }
 
     @SuppressWarnings("unused")
-	public Integer getChannelA() {
+    public int getChannelA() {
         return channelA;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getChannelB() {
+    public int getChannelB() {
         return channelB;
 	}
 
@@ -95,7 +95,7 @@ public class ChannelManagement extends AISMessage {
 	}
 
     @SuppressWarnings("unused")
-	public Boolean getPower() {
+    public boolean getPower() {
         return power;
 	}
 
@@ -130,22 +130,22 @@ public class ChannelManagement extends AISMessage {
 	}
 
     @SuppressWarnings("unused")
-	public Boolean getAddressed() {
+    public boolean getAddressed() {
         return addressed;
 	}
 
     @SuppressWarnings("unused")
-	public Boolean getBandA() {
+    public boolean getBandA() {
         return bandA;
 	}
 
     @SuppressWarnings("unused")
-	public Boolean getBandB() {
+    public boolean getBandB() {
         return bandB;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getZoneSize() {
+    public int getZoneSize() {
         return zoneSize;
 	}
 
@@ -170,18 +170,18 @@ public class ChannelManagement extends AISMessage {
                 "} " + super.toString();
     }
 
-    private final Integer channelA;
-    private final Integer channelB;
+    private final int channelA;
+    private final int channelB;
     private final TxRxMode transmitReceiveMode;
-    private final Boolean power;
+    private final boolean power;
     private final Float northEastLongitude;
     private final Float northEastLatitude;
     private final Float southWestLongitude;
     private final Float southWestLatitude;
     private final MMSI destinationMmsi1;
     private final MMSI destinationMmsi2;
-    private final Boolean addressed;
-    private final Boolean bandA;
-    private final Boolean bandB;
-    private final Integer zoneSize;
+    private final boolean addressed;
+    private final boolean bandA;
+    private final boolean bandB;
+    private final int zoneSize;
 }

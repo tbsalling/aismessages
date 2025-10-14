@@ -59,12 +59,12 @@ public class BinaryMessageSingleSlot extends AISMessage {
     }
 
     @SuppressWarnings("unused")
-	public Boolean getDestinationIndicator() {
+    public boolean getDestinationIndicator() {
         return destinationIndicator;
 	}
 
     @SuppressWarnings("unused")
-	public Boolean getBinaryDataFlag() {
+    public boolean getBinaryDataFlag() {
         return binaryDataFlag;
 	}
 
@@ -89,8 +89,8 @@ public class BinaryMessageSingleSlot extends AISMessage {
                 "} " + super.toString();
     }
 
-    private final Boolean destinationIndicator;
-    private final Boolean binaryDataFlag;
+    private final boolean destinationIndicator;
+    private final boolean binaryDataFlag;
     private final MMSI destinationMMSI;
     private final String binaryData;
 }

@@ -90,62 +90,62 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
 	}
 
     @SuppressWarnings("unused")
-	public Float getSpeedOverGround() {
+    public float getSpeedOverGround() {
         return speedOverGround;
 	}
 
     @SuppressWarnings("unused")
-    public Integer getRawSpeedOverGround() {
+    public int getRawSpeedOverGround() {
         return UNSIGNED_INTEGER_DECODER.apply(getBits(46, 55));
     }
 
     @SuppressWarnings("unused")
-	public Boolean getPositionAccuracy() {
+    public boolean getPositionAccuracy() {
         return positionAccuracy;
 	}
 
     @SuppressWarnings("unused")
-    public Boolean getPositionAccurate() {
+    public boolean getPositionAccurate() {
         return getPositionAccuracy();
     }
 
     @SuppressWarnings("unused")
-	public Float getLatitude() {
+    public float getLatitude() {
         return latitude;
 	}
 
     @SuppressWarnings("unused")
-    public Integer getRawLatitude() {
+    public int getRawLatitude() {
         return INTEGER_DECODER.apply(getBits(85, 112));
     }
 
     @SuppressWarnings("unused")
-	public Float getLongitude() {
+    public float getLongitude() {
         return longitude;
 	}
 
     @SuppressWarnings("unused")
-    public Integer getRawLongitude() {
+    public int getRawLongitude() {
         return INTEGER_DECODER.apply(getBits(57, 85));
     }
 
     @SuppressWarnings("unused")
-	public Float getCourseOverGround() {
+    public float getCourseOverGround() {
         return courseOverGround;
 	}
 
     @SuppressWarnings("unused")
-    public Integer getRawCourseOverGround() {
+    public int getRawCourseOverGround() {
         return UNSIGNED_INTEGER_DECODER.apply(getBits(112, 124));
     }
 
     @SuppressWarnings("unused")
-	public Integer getTrueHeading() {
+    public int getTrueHeading() {
         return trueHeading;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getSecond() {
+    public int getSecond() {
         return second;
 	}
 
@@ -165,22 +165,22 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
 	}
 
     @SuppressWarnings("unused")
-	public Integer getToBow() {
+    public int getToBow() {
         return toBow;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getToStern() {
+    public int getToStern() {
         return toStern;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getToStarboard() {
+    public int getToStarboard() {
         return toStarboard;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getToPort() {
+    public int getToPort() {
         return toPort;
 	}
 
@@ -190,17 +190,17 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
 	}
 
     @SuppressWarnings("unused")
-	public Boolean getRaimFlag() {
+    public boolean getRaimFlag() {
         return raimFlag;
 	}
 
     @SuppressWarnings("unused")
-	public Boolean getDataTerminalReady() {
+    public boolean getDataTerminalReady() {
         return dataTerminalReady;
 	}
 
     @SuppressWarnings("unused")
-	public Boolean getAssigned() {
+    public boolean getAssigned() {
         return assigned;
 	}
 
@@ -236,23 +236,23 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
     }
 
     private final String regionalReserved1;
-    private final Float speedOverGround;
-    private final Boolean positionAccuracy;
-    private final Float latitude;
-    private final Float longitude;
-    private final Float courseOverGround;
-    private final Integer trueHeading;
-    private final Integer second;
+    private final float speedOverGround;
+    private final boolean positionAccuracy;
+    private final float latitude;
+    private final float longitude;
+    private final float courseOverGround;
+    private final int trueHeading;
+    private final int second;
     private final String regionalReserved2;
     private final String shipName;
     private final ShipType shipType;
-    private final Integer toBow;
-    private final Integer toStern;
-    private final Integer toStarboard;
-    private final Integer toPort;
+    private final int toBow;
+    private final int toStern;
+    private final int toStarboard;
+    private final int toPort;
     private final PositionFixingDevice positionFixingDevice;
-    private final Boolean raimFlag;
-    private final Boolean dataTerminalReady;
-    private final Boolean assigned;
+    private final boolean raimFlag;
+    private final boolean dataTerminalReady;
+    private final boolean assigned;
     private final String regionalReserved3;
 }

@@ -91,62 +91,62 @@ public abstract class PositionReport extends AISMessage implements ExtendedDynam
 	}
 
     @SuppressWarnings("unused")
-	public Integer getRateOfTurn() {
+    public int getRateOfTurn() {
         return rateOfTurn;
 	}
 
     @SuppressWarnings("unused")
-	public Float getSpeedOverGround() {
+    public float getSpeedOverGround() {
         return speedOverGround;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getRawSpeedOverGround() {
+    public int getRawSpeedOverGround() {
         return UNSIGNED_INTEGER_DECODER.apply(getBits(50, 60));
     }
 
     @SuppressWarnings("unused")
-	public Boolean getPositionAccuracy() {
+    public boolean getPositionAccuracy() {
         return positionAccuracy;
 	}
 
     @SuppressWarnings("unused")
-	public Float getLatitude() {
+    public float getLatitude() {
         return latitude;
 	}
 
     @SuppressWarnings("unused")
-    public Integer getRawLatitude() {
+    public int getRawLatitude() {
         return INTEGER_DECODER.apply(getBits(89, 116));
     }
 
     @SuppressWarnings("unused")
-	public Float getLongitude() {
+    public float getLongitude() {
         return longitude;
 	}
 
     @SuppressWarnings("unused")
-    public Integer getRawLongitude() {
+    public int getRawLongitude() {
         return INTEGER_DECODER.apply(getBits(61, 89));
     }
 
     @SuppressWarnings("unused")
-	public Float getCourseOverGround() {
+    public float getCourseOverGround() {
         return courseOverGround;
 	}
 
     @SuppressWarnings("unused")
-    public Integer getRawCourseOverGround() {
+    public int getRawCourseOverGround() {
         return UNSIGNED_INTEGER_DECODER.apply(getBits(116, 128));
     }
 
     @SuppressWarnings("unused")
-	public Integer getTrueHeading() {
+    public int getTrueHeading() {
         return trueHeading;
 	}
 
     @SuppressWarnings("unused")
-	public Integer getSecond() {
+    public int getSecond() {
         return second;
 	}
 
@@ -156,7 +156,7 @@ public abstract class PositionReport extends AISMessage implements ExtendedDynam
 	}
 
     @SuppressWarnings("unused")
-	public Boolean getRaimFlag() {
+    public boolean getRaimFlag() {
         return raimFlag;
 	}
 
@@ -183,15 +183,15 @@ public abstract class PositionReport extends AISMessage implements ExtendedDynam
     }
 
     private final NavigationStatus navigationStatus;
-    private final Integer rateOfTurn;
-    private final Float speedOverGround;
-    private final Boolean positionAccuracy;
-    private final Float latitude;
-    private final Float longitude;
-    private final Float courseOverGround;
-    private final Integer trueHeading;
-    private final Integer second;
+    private final int rateOfTurn;
+    private final float speedOverGround;
+    private final boolean positionAccuracy;
+    private final float latitude;
+    private final float longitude;
+    private final float courseOverGround;
+    private final int trueHeading;
+    private final int second;
     private final ManeuverIndicator specialManeuverIndicator;
-    private final Boolean raimFlag;
+    private final boolean raimFlag;
     private final CommunicationState communicationState;
 }

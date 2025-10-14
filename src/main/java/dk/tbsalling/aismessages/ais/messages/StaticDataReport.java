@@ -23,9 +23,13 @@ public interface StaticDataReport extends DataReport {
 	String getCallsign();
 	String getShipName();
 	ShipType getShipType();
-	Integer getToBow();
-	Integer getToStern();
-	Integer getToStarboard();
-	Integer getToPort();
+
+    int getToBow();
+
+    int getToStern();
+
+    int getToStarboard();
+
+    int getToPort();
 
 }

@@ -33,7 +33,7 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
 
         // Eagerly decode all mandatory fields
         this.altitude = UNSIGNED_INTEGER_DECODER.apply(getBits(38, 50));
-        this.speed = Float.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(50, 60)));
+        this.speed = UNSIGNED_INTEGER_DECODER.apply(getBits(50, 60));
         this.positionAccuracy = BOOLEAN_DECODER.apply(getBits(60, 61));
         this.longitude = FLOAT_DECODER.apply(getBits(61, 89)) / 600000f;
         this.latitude = FLOAT_DECODER.apply(getBits(89, 116)) / 600000f;
@@ -75,62 +75,62 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
     }
 
     @SuppressWarnings("unused")
-	public Integer getAltitude() {
+    public int getAltitude() {
         return altitude;
 	}
 
     @SuppressWarnings("unused")
-	public Float getSpeedOverGround() {
+    public float getSpeedOverGround() {
         return speed;
 	}
 
     @SuppressWarnings("unused")
-    public Integer getRawSpeedOverGround() {
+    public int getRawSpeedOverGround() {
         return UNSIGNED_INTEGER_DECODER.apply(getBits(50, 60));
     }
 
     @SuppressWarnings("unused")
-	public Boolean getPositionAccuracy() {
+    public boolean getPositionAccuracy() {
         return positionAccuracy;
 	}
 
     @SuppressWarnings("unused")
-    public Boolean getPositionAccurate() {
+    public boolean getPositionAccurate() {
         return getPositionAccuracy();
     }
 
     @SuppressWarnings("unused")
-	public Float getLongitude() {
+    public float getLongitude() {
         return longitude;
 	}
 
     @SuppressWarnings("unused")
-    public Integer getRawLongitude() {
+    public int getRawLongitude() {
         return INTEGER_DECODER.apply(getBits(61, 89));
     }
 
     @SuppressWarnings("unused")
-    public Float getLatitude() {
+    public float getLatitude() {
         return latitude;
     }
 
     @SuppressWarnings("unused")
-    public Integer getRawLatitude() {
+    public int getRawLatitude() {
         return INTEGER_DECODER.apply(getBits(89, 116));
     }
 
     @SuppressWarnings("unused")
-	public Float getCourseOverGround() {
+    public float getCourseOverGround() {
         return courseOverGround;
 	}
 
     @SuppressWarnings("unused")
-    public Integer getRawCourseOverGround() {
+    public int getRawCourseOverGround() {
         return UNSIGNED_INTEGER_DECODER.apply(getBits(116, 128));
     }
 
     @SuppressWarnings("unused")
-	public Integer getSecond() {
+    public int getSecond() {
         return second;
 	}
 
@@ -140,17 +140,17 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
 	}
 
     @SuppressWarnings("unused")
-	public Boolean getDataTerminalReady() {
+    public boolean getDataTerminalReady() {
         return dataTerminalReady;
 	}
 
     @SuppressWarnings("unused")
-	public Boolean getAssigned() {
+    public boolean getAssigned() {
         return assigned;
 	}
 
     @SuppressWarnings("unused")
-	public Boolean getRaimFlag() {
+    public boolean getRaimFlag() {
         return raimFlag;
 	}
 
@@ -178,17 +178,17 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
                 "} " + super.toString();
     }
 
-    private final Integer altitude;
-    private final Float speed;
-    private final Boolean positionAccuracy;
-    private final Float latitude;
-    private final Float longitude;
-    private final Float courseOverGround;
-    private final Integer second;
+    private final int altitude;
+    private final float speed;
+    private final boolean positionAccuracy;
+    private final float latitude;
+    private final float longitude;
+    private final float courseOverGround;
+    private final int second;
     private final String regionalReserved;
-    private final Boolean dataTerminalReady;
-    private final Boolean assigned;
-    private final Boolean raimFlag;
+    private final boolean dataTerminalReady;
+    private final boolean assigned;
+    private final boolean raimFlag;
     private final String radioStatus;
 
 }

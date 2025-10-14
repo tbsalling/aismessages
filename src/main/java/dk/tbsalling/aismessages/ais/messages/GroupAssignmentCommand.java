@@ -80,22 +80,22 @@ public class GroupAssignmentCommand extends AISMessage {
     }
 
     @SuppressWarnings("unused")
-    public Float getNorthEastLongitude() {
+    public float getNorthEastLongitude() {
         return northEastLongitude;
     }
 
     @SuppressWarnings("unused")
-	public Float getNorthEastLatitude() {
+    public float getNorthEastLatitude() {
         return northEastLatitude;
 	}
 
     @SuppressWarnings("unused")
-	public Float getSouthWestLongitude() {
+    public float getSouthWestLongitude() {
         return southWestLongitude;
 	}
 
     @SuppressWarnings("unused")
-    public Float getSouthWestLatitude() {
+    public float getSouthWestLatitude() {
         return southWestLatitude;
     }
 
@@ -125,7 +125,7 @@ public class GroupAssignmentCommand extends AISMessage {
 	}
 
     @SuppressWarnings("unused")
-	public Integer getQuietTime() {
+    public int getQuietTime() {
         return quietTime;
 	}
 
@@ -148,14 +148,14 @@ public class GroupAssignmentCommand extends AISMessage {
     }
 
     private final String spare1;
-    private final Float northEastLatitude;
-    private final Float northEastLongitude;
-    private final Float southWestLatitude;
-    private final Float southWestLongitude;
+    private final float northEastLatitude;
+    private final float northEastLongitude;
+    private final float southWestLatitude;
+    private final float southWestLongitude;
     private final StationType stationType;
     private final ShipType shipType;
     private final TxRxMode transmitReceiveMode;
     private final ReportingInterval reportingInterval;
-    private final Integer quietTime;
+    private final int quietTime;
     private final String spare2;
 }

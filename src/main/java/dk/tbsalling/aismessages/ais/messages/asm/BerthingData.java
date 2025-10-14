@@ -46,15 +46,15 @@ public class BerthingData extends ApplicationSpecificMessage {
         this.berthLatitude = FLOAT_DECODER.apply(getBinaryData().substring(243, 267)) / 60000f;
     }
 
-    public Integer getMessageLinkageId() {
+    public int getMessageLinkageId() {
         return messageLinkageId;
     }
 
-    public Integer getBerthLength() {
+    public int getBerthLength() {
         return berthLength;
     }
 
-    public Float getWaterDepthAtBerth() {
+    public float getWaterDepthAtBerth() {
         return waterDepthAtBerth;
     }
 
@@ -62,19 +62,19 @@ public class BerthingData extends ApplicationSpecificMessage {
         return mooringPosition;
     }
 
-    public Integer getBerthUtcMonth() {
+    public int getBerthUtcMonth() {
         return berthUtcMonth;
     }
 
-    public Integer getBerthUtcDay() {
+    public int getBerthUtcDay() {
         return berthUtcDay;
     }
 
-    public Integer getBerthUtcHour() {
+    public int getBerthUtcHour() {
         return berthUtcHour;
     }
 
-    public Integer getBerthUtcMinute() {
+    public int getBerthUtcMinute() {
         return berthUtcMinute;
     }
 
@@ -178,22 +178,22 @@ public class BerthingData extends ApplicationSpecificMessage {
         return nameOfBerth;
     }
 
-    public Float getBerthLongitude() {
+    public float getBerthLongitude() {
         return berthLongitude;
     }
 
-    public Float getBerthLatitude() {
+    public float getBerthLatitude() {
         return berthLatitude;
     }
 
-    private final Integer messageLinkageId;
-    private final Integer berthLength;
-    private final Float waterDepthAtBerth;
+    private final int messageLinkageId;
+    private final int berthLength;
+    private final float waterDepthAtBerth;
     private final MooringPosition mooringPosition;
-    private final Integer berthUtcMonth;
-    private final Integer berthUtcDay;
-    private final Integer berthUtcHour;
-    private final Integer berthUtcMinute;
+    private final int berthUtcMonth;
+    private final int berthUtcDay;
+    private final int berthUtcHour;
+    private final int berthUtcMinute;
     private final ServiceStatus serviceStatusAgent;
     private final ServiceStatus serviceStatusFuel;
     private final ServiceStatus serviceStatusChandler;
@@ -219,8 +219,8 @@ public class BerthingData extends ApplicationSpecificMessage {
     private final ServiceStatus serviceStatusFutureRegionalUse;
     private final ServiceStatus serviceStatusFutureUse;
     private final String nameOfBerth;
-    private final Float berthLongitude;
-    private final Float berthLatitude;
+    private final float berthLongitude;
+    private final float berthLatitude;
 
     public enum MooringPosition {
         UNDEFINED(0),

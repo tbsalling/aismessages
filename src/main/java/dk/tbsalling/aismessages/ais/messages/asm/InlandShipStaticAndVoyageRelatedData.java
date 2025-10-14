@@ -25,50 +25,50 @@ public class InlandShipStaticAndVoyageRelatedData extends ApplicationSpecificMes
         return uniqueEuropeanVesselIdentificationNumber;
     }
 
-    public Float getLengthOfShip() {
+    public float getLengthOfShip() {
         return lengthOfShip;
     }
 
-    public Float getBeamOfShip() {
+    public float getBeamOfShip() {
         return beamOfShip;
     }
 
-    public Integer getShipOrCombinationType() {
+    public int getShipOrCombinationType() {
         return shipOrCombinationType;
     }
 
-    public Integer getHazardousCargo() {
+    public int getHazardousCargo() {
         return hazardousCargo;
     }
 
-    public Float getDraught() {
+    public float getDraught() {
         return draught;
     }
 
-    public Integer getLoaded() {
+    public int getLoaded() {
         return loaded;
     }
 
-    public Integer getQualityOfSpeedInformation() {
+    public int getQualityOfSpeedInformation() {
         return qualityOfSpeedInformation;
     }
 
-    public Integer getQualityOfCourseInformation() {
+    public int getQualityOfCourseInformation() {
         return qualityOfCourseInformation;
     }
 
-    public Integer getQualityOfHeadingInformation() {
+    public int getQualityOfHeadingInformation() {
         return qualityOfHeadingInformation;
     }
 
     private final String uniqueEuropeanVesselIdentificationNumber;
-    private final Float lengthOfShip;
-    private final Float beamOfShip;
-    private final Integer shipOrCombinationType;
-    private final Integer hazardousCargo;
-    private final Float draught;
-    private final Integer loaded;
-    private final Integer qualityOfSpeedInformation;
-    private final Integer qualityOfCourseInformation;
-    private final Integer qualityOfHeadingInformation;
+    private final float lengthOfShip;
+    private final float beamOfShip;
+    private final int shipOrCombinationType;
+    private final int hazardousCargo;
+    private final float draught;
+    private final int loaded;
+    private final int qualityOfSpeedInformation;
+    private final int qualityOfCourseInformation;
+    private final int qualityOfHeadingInformation;
 }
