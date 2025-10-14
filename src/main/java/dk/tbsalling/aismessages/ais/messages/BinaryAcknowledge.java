@@ -20,6 +20,7 @@ import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import java.util.stream.IntStream;
 
@@ -37,12 +38,45 @@ import static java.lang.String.format;
 @SuppressWarnings("serial")
 public class BinaryAcknowledge extends AISMessage {
 
-    public BinaryAcknowledge(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
+    protected BinaryAcknowledge(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
+        this.spare = UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40));
+        this.mmsi1 = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70)));
+        this.sequence1 = UNSIGNED_INTEGER_DECODER.apply(getBits(70, 72));
+        if (getNumberOfBits() > 72) {
+            this.mmsi2 = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(72, 102)));
+            this.sequence2 = UNSIGNED_INTEGER_DECODER.apply(getBits(102, 104));
+        } else {
+            this.mmsi2 = null;
+            this.sequence2 = null;
+        }
+        if (getNumberOfBits() > 104) {
+            this.mmsi3 = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(104, 134)));
+            this.sequence3 = UNSIGNED_INTEGER_DECODER.apply(getBits(134, 136));
+        } else {
+            this.mmsi3 = null;
+            this.sequence3 = null;
+        }
+        if (getNumberOfBits() > 136) {
+            this.mmsi4 = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(136, 166)));
+            this.sequence4 = UNSIGNED_INTEGER_DECODER.apply(getBits(166, 168));
+        } else {
+            this.mmsi4 = null;
+            this.sequence4 = null;
+        }
 
-    protected BinaryAcknowledge(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
+        final int numberOfBits = getNumberOfBits();
+        int acks = 1;
+        if (numberOfBits > 72) {
+            acks++;
+        }
+        if (numberOfBits > 104) {
+            acks++;
+        }
+        if (numberOfBits > 136) {
+            acks++;
+        }
+        this.numOfAcks = acks;
     }
 
     @Override
@@ -70,64 +104,51 @@ public class BinaryAcknowledge extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Integer getSpare() {
-        return getDecodedValue(() -> spare, value -> spare = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40)));
+        return spare;
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getMmsi1() {
-        return getDecodedValue(() -> mmsi1, value -> mmsi1 = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70))));
+        return mmsi1;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getSequence1() {
-        return getDecodedValue(() -> sequence1, value -> sequence1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(70, 72)));
+        return sequence1;
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getMmsi2() {
-        return getDecodedValue(() -> mmsi2, value -> mmsi2 = value, () -> getNumberOfBits() > 72, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(72, 102))));
+        return mmsi2;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getSequence2() {
-        return getDecodedValue(() -> sequence2, value -> sequence2 = value, () -> getNumberOfBits() > 72, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(102, 104)));
+        return sequence2;
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getMmsi3() {
-        return getDecodedValue(() -> mmsi3, value -> mmsi3 = value, () -> getNumberOfBits() > 104, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(104, 134))));
+        return mmsi3;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getSequence3() {
-        return getDecodedValue(() -> sequence3, value -> sequence3 = value, () -> getNumberOfBits() > 104, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(134, 136)));
+        return sequence3;
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getMmsi4() {
-        return getDecodedValue(() -> mmsi4, value -> mmsi4 = value, () -> getNumberOfBits() > 136, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(136, 166))));
+        return mmsi4;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getSequence4() {
-        return getDecodedValue(() -> sequence4, value -> sequence4 = value, () -> getNumberOfBits() > 136, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(166, 168)));
+        return sequence4;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getNumOfAcks() {
-        if (numOfAcks == null) {
-            final int numberOfBits = getNumberOfBits();
-            numOfAcks = 1;
-            if (numberOfBits > 72) {
-                numOfAcks++;
-            }
-            if (numberOfBits > 104) {
-                numOfAcks++;
-            }
-            if (numberOfBits > 136) {
-                numOfAcks++;
-            }
-        }
         return numOfAcks;
 	}
 
@@ -148,14 +169,14 @@ public class BinaryAcknowledge extends AISMessage {
                 "} " + super.toString();
     }
 
-    private transient Integer spare;
-	private transient MMSI mmsi1;
-	private transient Integer sequence1;
-	private transient MMSI mmsi2;
-	private transient Integer sequence2;
-	private transient MMSI mmsi3;
-	private transient Integer sequence3;
-	private transient MMSI mmsi4;
-	private transient Integer sequence4;
-	private transient Integer numOfAcks;
+    private final Integer spare;
+    private final MMSI mmsi1;
+    private final Integer sequence1;
+    private final MMSI mmsi2;
+    private final Integer sequence2;
+    private final MMSI mmsi3;
+    private final Integer sequence3;
+    private final MMSI mmsi4;
+    private final Integer sequence4;
+    private final Integer numOfAcks;
 }

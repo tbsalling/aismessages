@@ -20,8 +20,7 @@ import dk.tbsalling.aismessages.ais.messages.asm.ApplicationSpecificMessage;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
-
-import java.lang.ref.WeakReference;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import static dk.tbsalling.aismessages.ais.Decoders.BIT_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
@@ -39,12 +38,13 @@ import static java.lang.String.format;
 @SuppressWarnings("serial")
 public class BinaryBroadcastMessage extends AISMessage {
 
-    public BinaryBroadcastMessage(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
-
-    protected BinaryBroadcastMessage(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
+    protected BinaryBroadcastMessage(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
+        this.spare = UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40));
+        this.designatedAreaCode = UNSIGNED_INTEGER_DECODER.apply(getBits(40, 50));
+        this.functionalId = UNSIGNED_INTEGER_DECODER.apply(getBits(50, 56));
+        this.binaryData = BIT_DECODER.apply(getBits(56, getNumberOfBits()));
+        this.applicationSpecificMessage = ApplicationSpecificMessage.create(designatedAreaCode, functionalId, binaryData);
     }
 
     @Override
@@ -77,39 +77,33 @@ public class BinaryBroadcastMessage extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Integer getSpare() {
-        return getDecodedValue(() -> spare, ref -> spare = ref, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40)));
+        return spare;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getDesignatedAreaCode() {
-        return getDecodedValue(() -> designatedAreaCode, value -> designatedAreaCode = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(40, 50)));
+        return designatedAreaCode;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getFunctionalId() {
-        return getDecodedValue(() -> functionalId, value -> functionalId = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(50, 56)));
+        return functionalId;
 	}
 
     @SuppressWarnings("unused")
 	public String getBinaryData() {
-        return getDecodedValueByWeakReference(() -> binaryData, value -> binaryData = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(56, getNumberOfBits())));
+        return binaryData;
 	}
 
     @SuppressWarnings("unused")
     public ApplicationSpecificMessage getApplicationSpecificMessage() {
-        ApplicationSpecificMessage asm = this.applicationSpecificMessage == null ? null : this.applicationSpecificMessage.get();
-        if (asm == null) {
-            asm = ApplicationSpecificMessage.create(getDesignatedAreaCode(), getFunctionalId(), getBinaryData());
-            applicationSpecificMessage = new WeakReference<>(asm);
-        }
+        if (applicationSpecificMessage.getDesignatedAreaCode() != this.getDesignatedAreaCode().intValue())
+            throw new IllegalStateException("Implementation error: DAC of AISMessage does not match ASM: " + applicationSpecificMessage.getDesignatedAreaCode() + " " + this.getDesignatedAreaCode());
 
-        if (asm.getDesignatedAreaCode() != this.getDesignatedAreaCode().intValue())
-            throw new IllegalStateException("Implementation error: DAC of AISMessage does not match ASM: " + asm.getDesignatedAreaCode() + " " + this.getDesignatedAreaCode());
+        if (applicationSpecificMessage.getFunctionalId() != this.getFunctionalId().intValue())
+            throw new IllegalStateException("Implementation error: FI of AISMessage does not match ASM: " + applicationSpecificMessage.getFunctionalId() + " " + this.getFunctionalId());
 
-        if (asm.getFunctionalId() != this.getFunctionalId().intValue())
-            throw new IllegalStateException("Implementation error: FI of AISMessage does not match ASM: " + asm.getFunctionalId() + " " + this.getFunctionalId());
-
-        return asm;
+        return applicationSpecificMessage;
     }
 
     @Override
@@ -123,9 +117,9 @@ public class BinaryBroadcastMessage extends AISMessage {
                 "} " + super.toString();
     }
 
-    private transient Integer spare;
-    private transient Integer designatedAreaCode;
-	private transient Integer functionalId;
-    private transient WeakReference<String> binaryData;
-	private transient WeakReference<ApplicationSpecificMessage> applicationSpecificMessage;
+    private final Integer spare;
+    private final Integer designatedAreaCode;
+    private final Integer functionalId;
+    private final String binaryData;
+    private final ApplicationSpecificMessage applicationSpecificMessage;
 }

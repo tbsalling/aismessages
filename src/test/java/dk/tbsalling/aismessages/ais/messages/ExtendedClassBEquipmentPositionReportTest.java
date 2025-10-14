@@ -46,7 +46,7 @@ public class ExtendedClassBEquipmentPositionReportTest {
         assertEquals(Boolean.FALSE, message.getRaimFlag());
         assertEquals(Boolean.TRUE, message.getDataTerminalReady());
         assertEquals(Boolean.FALSE, message.getAssigned());
-        assertEquals("00000000", message.getRegionalReserved3());
+        assertEquals("0000", message.getRegionalReserved3());
     }
 
 }

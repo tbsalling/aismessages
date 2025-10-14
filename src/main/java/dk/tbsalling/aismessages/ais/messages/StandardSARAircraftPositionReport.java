@@ -20,6 +20,7 @@ import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import static dk.tbsalling.aismessages.ais.Decoders.*;
 import static java.lang.String.format;
@@ -27,12 +28,22 @@ import static java.lang.String.format;
 @SuppressWarnings("serial")
 public class StandardSARAircraftPositionReport extends AISMessage implements DynamicDataReport {
 
-    public StandardSARAircraftPositionReport(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
+    protected StandardSARAircraftPositionReport(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
 
-    protected StandardSARAircraftPositionReport(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
+        // Eagerly decode all mandatory fields
+        this.altitude = UNSIGNED_INTEGER_DECODER.apply(getBits(38, 50));
+        this.speed = Float.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(50, 60)));
+        this.positionAccuracy = BOOLEAN_DECODER.apply(getBits(60, 61));
+        this.longitude = FLOAT_DECODER.apply(getBits(61, 89)) / 600000f;
+        this.latitude = FLOAT_DECODER.apply(getBits(89, 116)) / 600000f;
+        this.courseOverGround = UNSIGNED_FLOAT_DECODER.apply(getBits(116, 128)) / 10f;
+        this.second = UNSIGNED_INTEGER_DECODER.apply(getBits(128, 134));
+        this.regionalReserved = BIT_DECODER.apply(getBits(134, 142));
+        this.dataTerminalReady = BOOLEAN_DECODER.apply(getBits(142, 143));
+        this.assigned = BOOLEAN_DECODER.apply(getBits(146, 147));
+        this.raimFlag = BOOLEAN_DECODER.apply(getBits(147, 148));
+        this.radioStatus = BIT_DECODER.apply(getBits(148, 168));
     }
 
     @Override
@@ -65,12 +76,12 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
 
     @SuppressWarnings("unused")
 	public Integer getAltitude() {
-        return getDecodedValue(() -> altitude, value -> altitude = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 50)));
+        return altitude;
 	}
 
     @SuppressWarnings("unused")
 	public Float getSpeedOverGround() {
-        return getDecodedValue(() -> speed, value -> speed = value, () -> Boolean.TRUE, () -> Float.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(50, 60))));
+        return speed;
 	}
 
     @SuppressWarnings("unused")
@@ -80,7 +91,7 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
 
     @SuppressWarnings("unused")
 	public Boolean getPositionAccuracy() {
-        return getDecodedValue(() -> positionAccuracy, value -> positionAccuracy = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(60, 61)));
+        return positionAccuracy;
 	}
 
     @SuppressWarnings("unused")
@@ -90,7 +101,7 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
 
     @SuppressWarnings("unused")
 	public Float getLongitude() {
-        return getDecodedValue(() -> longitude, value -> longitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(61, 89)) / 600000f);
+        return longitude;
 	}
 
     @SuppressWarnings("unused")
@@ -100,7 +111,7 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
 
     @SuppressWarnings("unused")
     public Float getLatitude() {
-        return getDecodedValue(() -> latitude, value -> latitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(89, 116)) / 600000f);
+        return latitude;
     }
 
     @SuppressWarnings("unused")
@@ -110,7 +121,7 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
 
     @SuppressWarnings("unused")
 	public Float getCourseOverGround() {
-        return getDecodedValue(() -> courseOverGround, value -> courseOverGround = value, () -> Boolean.TRUE, () -> UNSIGNED_FLOAT_DECODER.apply(getBits(116, 128)) / 10f);
+        return courseOverGround;
 	}
 
     @SuppressWarnings("unused")
@@ -120,32 +131,32 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
 
     @SuppressWarnings("unused")
 	public Integer getSecond() {
-        return getDecodedValue(() -> second, value -> second = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(128, 134)));
+        return second;
 	}
 
     @SuppressWarnings("unused")
 	public String getRegionalReserved() {
-        return getDecodedValue(() -> regionalReserved, value -> regionalReserved = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(134, 142)));
+        return regionalReserved;
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getDataTerminalReady() {
-        return getDecodedValue(() -> dataTerminalReady, value -> dataTerminalReady = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(142, 143)));
+        return dataTerminalReady;
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getAssigned() {
-        return getDecodedValue(() -> assigned, value -> assigned = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(146, 147)));
+        return assigned;
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getRaimFlag() {
-        return getDecodedValue(() -> raimFlag, value -> raimFlag = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(147, 148)));
+        return raimFlag;
 	}
 
     @SuppressWarnings("unused")
 	public String getRadioStatus() {
-        return getDecodedValue(() -> radioStatus, value -> radioStatus = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(148, 168)));
+        return radioStatus;
 	}
 
     @Override
@@ -167,17 +178,17 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
                 "} " + super.toString();
     }
 
-    private transient Integer altitude;
-	private transient Float speed;
-	private transient Boolean positionAccuracy;
-	private transient Float latitude;
-	private transient Float longitude;
-	private transient Float courseOverGround;
-	private transient Integer second;
-	private transient String regionalReserved;
-	private transient Boolean dataTerminalReady;
-	private transient Boolean assigned;
-	private transient Boolean raimFlag;
-	private transient String radioStatus;
+    private final Integer altitude;
+    private final Float speed;
+    private final Boolean positionAccuracy;
+    private final Float latitude;
+    private final Float longitude;
+    private final Float courseOverGround;
+    private final Integer second;
+    private final String regionalReserved;
+    private final Boolean dataTerminalReady;
+    private final Boolean assigned;
+    private final Boolean raimFlag;
+    private final String radioStatus;
 
 }

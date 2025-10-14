@@ -22,6 +22,7 @@ import dk.tbsalling.aismessages.ais.messages.types.ShipType;
 import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import java.util.stream.IntStream;
 
@@ -32,12 +33,30 @@ import static java.lang.String.format;
 @SuppressWarnings("serial")
 public class ClassBCSStaticDataReport extends AISMessage implements StaticDataReport {
 
-    public ClassBCSStaticDataReport(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
-
-    protected ClassBCSStaticDataReport(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
+    protected ClassBCSStaticDataReport(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
+        this.partNumber = UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40));
+        if (partNumber == 0) {
+            this.shipName = STRING_DECODER.apply(getBits(40, 160));
+            this.shipType = null;
+            this.vendorId = null;
+            this.callsign = null;
+            this.toBow = null;
+            this.toStern = null;
+            this.toStarboard = null;
+            this.toPort = null;
+            this.mothershipMmsi = null;
+        } else {
+            this.shipName = null;
+            this.shipType = ShipType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 48)));
+            this.vendorId = STRING_DECODER.apply(getBits(48, 90));
+            this.callsign = STRING_DECODER.apply(getBits(90, 132));
+            this.toBow = UNSIGNED_INTEGER_DECODER.apply(getBits(132, 141));
+            this.toStern = UNSIGNED_INTEGER_DECODER.apply(getBits(141, 150));
+            this.toStarboard = UNSIGNED_INTEGER_DECODER.apply(getBits(156, 162));
+            this.toPort = UNSIGNED_INTEGER_DECODER.apply(getBits(150, 156));
+            this.mothershipMmsi = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(132, 162)));
+        }
     }
 
     @Override
@@ -70,52 +89,52 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
 
     @SuppressWarnings("unused")
 	public Integer getPartNumber() {
-        return getDecodedValue(() -> partNumber, value -> partNumber = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40)));
+        return partNumber;
 	}
 
     @SuppressWarnings("unused")
 	public String getShipName() {
-        return getDecodedValue(() -> shipName, value -> shipName = value, () -> getPartNumber() == 0, () -> STRING_DECODER.apply(getBits(40, 160)));
+        return shipName;
 	}
 
     @SuppressWarnings("unused")
 	public ShipType getShipType() {
-        return getDecodedValue(() -> shipType, value -> shipType = value, () -> getPartNumber() == 1, () -> ShipType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 48))));
+        return shipType;
 	}
 
     @SuppressWarnings("unused")
 	public String getVendorId() {
-        return getDecodedValue(() -> vendorId, value -> vendorId = value, () -> getPartNumber() == 1, () -> STRING_DECODER.apply(getBits(48, 90)));
+        return vendorId;
 	}
 
     @SuppressWarnings("unused")
 	public String getCallsign() {
-        return getDecodedValue(() -> callsign, value -> callsign = value, () -> getPartNumber() == 1, () -> STRING_DECODER.apply(getBits(90, 132)));
+        return callsign;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getToBow() {
-        return getDecodedValue(() -> toBow, value -> toBow = value, () -> getPartNumber() == 1, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(132, 141)));
+        return toBow;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getToStern() {
-        return getDecodedValue(() -> toStern, value -> toStern = value, () -> getPartNumber() == 1, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(141, 150)));
+        return toStern;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getToStarboard() {
-        return getDecodedValue(() -> toStarboard, value -> toStarboard = value, () -> getPartNumber() == 1, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(156, 162)));
+        return toStarboard;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getToPort() {
-        return getDecodedValue(() -> toPort, value -> toPort = value, () -> getPartNumber() == 1, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(150, 156)));
+        return toPort;
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getMothershipMmsi() {
-        return getDecodedValue(() -> mothershipMmsi, value -> mothershipMmsi = value, () -> getPartNumber() == 1, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(132, 162))));
+        return mothershipMmsi;
 	}
 
     @Override
@@ -135,15 +154,15 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
                 "} " + super.toString();
     }
 
-    private transient Integer partNumber;
-    private transient String shipName;
-    private transient ShipType shipType;
-    private transient String vendorId;
-    private transient String callsign;
-    private transient Integer toBow;
-    private transient Integer toStern;
-    private transient Integer toStarboard;
-    private transient Integer toPort;
-    private transient MMSI mothershipMmsi;
+    private final Integer partNumber;
+    private final String shipName;
+    private final ShipType shipType;
+    private final String vendorId;
+    private final String callsign;
+    private final Integer toBow;
+    private final Integer toStern;
+    private final Integer toStarboard;
+    private final Integer toPort;
+    private final MMSI mothershipMmsi;
 
 }

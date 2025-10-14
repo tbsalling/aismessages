@@ -20,6 +20,7 @@ import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import static dk.tbsalling.aismessages.ais.Decoders.*;
 import static java.lang.String.format;
@@ -27,12 +28,21 @@ import static java.lang.String.format;
 @SuppressWarnings("serial")
 public class UTCAndDateResponse extends AISMessage {
 
-    public UTCAndDateResponse(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
+    protected UTCAndDateResponse(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
 
-    protected UTCAndDateResponse(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
+        // Eagerly decode all fields
+        this.year = UNSIGNED_INTEGER_DECODER.apply(getBits(38, 52));
+        this.month = UNSIGNED_INTEGER_DECODER.apply(getBits(52, 56));
+        this.day = UNSIGNED_INTEGER_DECODER.apply(getBits(56, 61));
+        this.hour = UNSIGNED_INTEGER_DECODER.apply(getBits(61, 66));
+        this.minute = UNSIGNED_INTEGER_DECODER.apply(getBits(66, 72));
+        this.second = UNSIGNED_INTEGER_DECODER.apply(getBits(72, 78));
+        this.positionAccurate = BOOLEAN_DECODER.apply(getBits(78, 79));
+        this.longitude = FLOAT_DECODER.apply(getBits(79, 107)) / 600000f;
+        this.latitude = FLOAT_DECODER.apply(getBits(107, 134)) / 600000f;
+        this.positionFixingDevice = PositionFixingDevice.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(134, 138)));
+        this.raimFlag = BOOLEAN_DECODER.apply(getBits(148, 149));
     }
 
     @Override
@@ -60,57 +70,57 @@ public class UTCAndDateResponse extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Integer getYear() {
-        return getDecodedValue(() -> year, value -> year = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 52)));
+        return year;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getMonth() {
-        return getDecodedValue(() -> month, value -> month = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(52, 56)));
+        return month;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getDay() {
-        return getDecodedValue(() -> day, value -> day = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(56, 61)));
+        return day;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getHour() {
-        return getDecodedValue(() -> hour, value -> hour = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(61, 66)));
+        return hour;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getMinute() {
-        return getDecodedValue(() -> minute, value -> minute = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(66, 72)));
+        return minute;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getSecond() {
-        return getDecodedValue(() -> second, value -> second = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(72, 78)));
+        return second;
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getPositionAccurate() {
-        return getDecodedValue(() -> positionAccurate, value -> positionAccurate = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(78, 79)));
+        return positionAccurate;
 	}
 
     @SuppressWarnings("unused")
 	public Float getLatitude() {
-        return getDecodedValue(() -> latitude, value -> latitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(107, 134)) / 600000f);
+        return latitude;
 	}
 
     @SuppressWarnings("unused")
 	public Float getLongitude() {
-        return getDecodedValue(() -> longitude, value -> longitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(79, 107)) / 600000f);
+        return longitude;
 	}
 
     @SuppressWarnings("unused")
 	public PositionFixingDevice getPositionFixingDevice() {
-        return getDecodedValue(() -> positionFixingDevice, value -> positionFixingDevice = value, () -> Boolean.TRUE, () -> PositionFixingDevice.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(134, 138))));
+        return positionFixingDevice;
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getRaimFlag() {
-        return getDecodedValue(() -> raimFlag, value -> raimFlag = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(148, 149)));
+        return raimFlag;
 	}
 
     @Override
@@ -131,15 +141,15 @@ public class UTCAndDateResponse extends AISMessage {
                 "} " + super.toString();
     }
 
-    private transient Integer year;
-	private transient Integer month;
-	private transient Integer day;
-	private transient Integer hour;
-	private transient Integer minute;
-	private transient Integer second;
-	private transient Boolean positionAccurate;
-	private transient Float latitude;
-	private transient Float longitude;
-	private transient PositionFixingDevice positionFixingDevice;
-	private transient Boolean raimFlag;
+    private final Integer year;
+    private final Integer month;
+    private final Integer day;
+    private final Integer hour;
+    private final Integer minute;
+    private final Integer second;
+    private final Boolean positionAccurate;
+    private final Float latitude;
+    private final Float longitude;
+    private final PositionFixingDevice positionFixingDevice;
+    private final Boolean raimFlag;
 }

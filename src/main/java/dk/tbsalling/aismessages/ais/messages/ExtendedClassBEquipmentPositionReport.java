@@ -22,6 +22,7 @@ import dk.tbsalling.aismessages.ais.messages.types.ShipType;
 import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import static dk.tbsalling.aismessages.ais.Decoders.*;
 import static java.lang.String.format;
@@ -29,12 +30,30 @@ import static java.lang.String.format;
 @SuppressWarnings("serial")
 public class ExtendedClassBEquipmentPositionReport extends AISMessage implements ExtendedDynamicDataReport {
 
-    public ExtendedClassBEquipmentPositionReport(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
+    protected ExtendedClassBEquipmentPositionReport(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
 
-    protected ExtendedClassBEquipmentPositionReport(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
+        // Eagerly decode all fields
+        this.regionalReserved1 = BIT_DECODER.apply(getBits(38, 46));
+        this.speedOverGround = UNSIGNED_FLOAT_DECODER.apply(getBits(46, 56)) / 10f;
+        this.positionAccuracy = BOOLEAN_DECODER.apply(getBits(56, 57));
+        this.longitude = FLOAT_DECODER.apply(getBits(57, 85)) / 600000f;
+        this.latitude = FLOAT_DECODER.apply(getBits(85, 112)) / 600000f;
+        this.courseOverGround = UNSIGNED_FLOAT_DECODER.apply(getBits(112, 124)) / 10f;
+        this.trueHeading = UNSIGNED_INTEGER_DECODER.apply(getBits(124, 133));
+        this.second = UNSIGNED_INTEGER_DECODER.apply(getBits(133, 139));
+        this.regionalReserved2 = BIT_DECODER.apply(getBits(139, 143));
+        this.shipName = STRING_DECODER.apply(getBits(143, 263));
+        this.shipType = ShipType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(263, 271)));
+        this.toBow = UNSIGNED_INTEGER_DECODER.apply(getBits(271, 280));
+        this.toStern = UNSIGNED_INTEGER_DECODER.apply(getBits(280, 289));
+        this.toPort = UNSIGNED_INTEGER_DECODER.apply(getBits(289, 295));
+        this.toStarboard = UNSIGNED_INTEGER_DECODER.apply(getBits(295, 301));
+        this.positionFixingDevice = PositionFixingDevice.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(301, 305)));
+        this.raimFlag = BOOLEAN_DECODER.apply(getBits(305, 306));
+        this.dataTerminalReady = BOOLEAN_DECODER.apply(getBits(306, 307));
+        this.assigned = BOOLEAN_DECODER.apply(getBits(307, 308));
+        this.regionalReserved3 = BIT_DECODER.apply(getBits(308, 312));
     }
 
     @Override
@@ -67,12 +86,12 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
 
     @SuppressWarnings("unused")
 	public String getRegionalReserved1() {
-        return getDecodedValue(() -> regionalReserved1, value -> regionalReserved1 = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(38, 46)));
+        return regionalReserved1;
 	}
 
     @SuppressWarnings("unused")
 	public Float getSpeedOverGround() {
-        return getDecodedValue(() -> speedOverGround, value -> speedOverGround = value, () -> Boolean.TRUE, () -> UNSIGNED_FLOAT_DECODER.apply(getBits(46, 56)) / 10f);
+        return speedOverGround;
 	}
 
     @SuppressWarnings("unused")
@@ -82,7 +101,7 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
 
     @SuppressWarnings("unused")
 	public Boolean getPositionAccuracy() {
-        return getDecodedValue(() -> positionAccuracy, value -> positionAccuracy = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(56, 57)));
+        return positionAccuracy;
 	}
 
     @SuppressWarnings("unused")
@@ -92,7 +111,7 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
 
     @SuppressWarnings("unused")
 	public Float getLatitude() {
-        return getDecodedValue(() -> latitude, value -> latitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(85, 112)) / 600000f);
+        return latitude;
 	}
 
     @SuppressWarnings("unused")
@@ -102,7 +121,7 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
 
     @SuppressWarnings("unused")
 	public Float getLongitude() {
-        return getDecodedValue(() -> longitude, value -> longitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(57, 85)) / 600000f);
+        return longitude;
 	}
 
     @SuppressWarnings("unused")
@@ -112,7 +131,7 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
 
     @SuppressWarnings("unused")
 	public Float getCourseOverGround() {
-        return getDecodedValue(() -> courseOverGround, value -> courseOverGround = value, () -> Boolean.TRUE, () -> UNSIGNED_FLOAT_DECODER.apply(getBits(112, 124)) / 10f);
+        return courseOverGround;
 	}
 
     @SuppressWarnings("unused")
@@ -122,72 +141,72 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
 
     @SuppressWarnings("unused")
 	public Integer getTrueHeading() {
-        return getDecodedValue(() -> trueHeading, value -> trueHeading = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(124, 133)));
+        return trueHeading;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getSecond() {
-        return getDecodedValue(() -> second, value -> second = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(133, 139)));
+        return second;
 	}
 
     @SuppressWarnings("unused")
 	public String getRegionalReserved2() {
-        return getDecodedValue(() -> regionalReserved2, value -> regionalReserved2 = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(139, 143)));
+        return regionalReserved2;
 	}
 
     @SuppressWarnings("unused")
 	public String getShipName() {
-        return getDecodedValue(() -> shipName, value -> shipName = value, () -> Boolean.TRUE, () -> STRING_DECODER.apply(getBits(143, 263)));
+        return shipName;
 	}
 
     @SuppressWarnings("unused")
 	public ShipType getShipType() {
-        return getDecodedValue(() -> shipType, value -> shipType = value, () -> Boolean.TRUE, () -> ShipType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(263, 271))));
+        return shipType;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getToBow() {
-        return getDecodedValue(() -> toBow, value -> toBow = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(271, 280)));
+        return toBow;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getToStern() {
-        return getDecodedValue(() -> toStern, value -> toStern = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(280, 289)));
+        return toStern;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getToStarboard() {
-        return getDecodedValue(() -> toStarboard, value -> toStarboard = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(295, 301)));
+        return toStarboard;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getToPort() {
-        return getDecodedValue(() -> toPort, value -> toPort = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(289, 295)));
+        return toPort;
 	}
 
     @SuppressWarnings("unused")
 	public PositionFixingDevice getPositionFixingDevice() {
-        return getDecodedValue(() -> positionFixingDevice, value -> positionFixingDevice = value, () -> Boolean.TRUE, () -> PositionFixingDevice.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(301, 305))));
+        return positionFixingDevice;
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getRaimFlag() {
-        return getDecodedValue(() -> raimFlag, value -> raimFlag = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(305, 306)));
+        return raimFlag;
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getDataTerminalReady() {
-        return getDecodedValue(() -> dataTerminalReady, value -> dataTerminalReady = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(306, 307)));
+        return dataTerminalReady;
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getAssigned() {
-        return getDecodedValue(() -> assigned, value -> assigned = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(307, 308)));
+        return assigned;
 	}
 
     @SuppressWarnings("unused")
     public String getRegionalReserved3() {
-        return getDecodedValue(() -> regionalReserved1, value -> regionalReserved1 = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(308, 312)));
+        return regionalReserved3;
     }
 
     @Override
@@ -216,23 +235,24 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
                 "} " + super.toString();
     }
 
-    private transient String regionalReserved1;
-    private transient Float speedOverGround;
-    private transient Boolean positionAccuracy;
-    private transient Float latitude;
-    private transient Float longitude;
-    private transient Float courseOverGround;
-    private transient Integer trueHeading;
-    private transient Integer second;
-    private transient String regionalReserved2;
-    private transient String shipName;
-    private transient ShipType shipType;
-    private transient Integer toBow;
-    private transient Integer toStern;
-    private transient Integer toStarboard;
-    private transient Integer toPort;
-    private transient PositionFixingDevice positionFixingDevice;
-    private transient Boolean raimFlag;
-    private transient Boolean dataTerminalReady;
-    private transient Boolean assigned;
+    private final String regionalReserved1;
+    private final Float speedOverGround;
+    private final Boolean positionAccuracy;
+    private final Float latitude;
+    private final Float longitude;
+    private final Float courseOverGround;
+    private final Integer trueHeading;
+    private final Integer second;
+    private final String regionalReserved2;
+    private final String shipName;
+    private final ShipType shipType;
+    private final Integer toBow;
+    private final Integer toStern;
+    private final Integer toStarboard;
+    private final Integer toPort;
+    private final PositionFixingDevice positionFixingDevice;
+    private final Boolean raimFlag;
+    private final Boolean dataTerminalReady;
+    private final Boolean assigned;
+    private final String regionalReserved3;
 }

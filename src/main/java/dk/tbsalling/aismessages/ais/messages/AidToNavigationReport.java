@@ -21,6 +21,7 @@ import dk.tbsalling.aismessages.ais.messages.types.AidType;
 import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import static dk.tbsalling.aismessages.ais.Decoders.*;
 import static java.lang.String.format;
@@ -33,12 +34,45 @@ import static java.lang.String.format;
 @SuppressWarnings("serial")
 public class AidToNavigationReport extends AISMessage {
 
-    public AidToNavigationReport(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
+    protected AidToNavigationReport(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
 
-    protected AidToNavigationReport(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
+        // Eagerly decode all fields
+        this.aidType = AidType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(38, 43)));
+        this.name = STRING_DECODER.apply(getBits(43, 163));
+        this.positionAccurate = BOOLEAN_DECODER.apply(getBits(163, 164));
+        this.longitude = FLOAT_DECODER.apply(getBits(164, 192)) / 600000f;
+        this.latitude = FLOAT_DECODER.apply(getBits(192, 219)) / 600000f;
+        this.toBow = UNSIGNED_INTEGER_DECODER.apply(getBits(219, 228));
+        this.toStern = UNSIGNED_INTEGER_DECODER.apply(getBits(228, 237));
+        this.toPort = UNSIGNED_INTEGER_DECODER.apply(getBits(237, 243));
+        this.toStarboard = UNSIGNED_INTEGER_DECODER.apply(getBits(243, 249));
+        this.positionFixingDevice = PositionFixingDevice.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(249, 253)));
+        this.second = UNSIGNED_INTEGER_DECODER.apply(getBits(253, 259));
+        this.offPosition = BOOLEAN_DECODER.apply(getBits(259, 260));
+        this.regionalUse = BIT_DECODER.apply(getBits(260, 268));
+        this.raimFlag = BOOLEAN_DECODER.apply(getBits(268, 269));
+        this.virtualAid = BOOLEAN_DECODER.apply(getBits(269, 270));
+        this.assignedMode = BOOLEAN_DECODER.apply(getBits(270, 271));
+        this.spare1 = UNSIGNED_INTEGER_DECODER.apply(getBits(271, 272));
+
+        // Optional fields for messages >= 272 bits
+        if (getNumberOfBits() >= 272) {
+            int extraBits = getNumberOfBits() - 272;
+            int extraChars = extraBits / 6;
+            int extraBitsOfChars = extraChars * 6;
+            if (extraBits > 0) {
+                this.nameExtension = STRING_DECODER.apply(getBits(272, 272 + extraBitsOfChars));
+                this.spare2 = (extraBits == extraBitsOfChars) ? 0 : UNSIGNED_INTEGER_DECODER.apply(getBits(272 + extraBitsOfChars, getNumberOfBits()));
+            } else {
+                // Exactly 272 bits - no extension
+                this.nameExtension = null;
+                this.spare2 = 0;
+            }
+        } else {
+            this.nameExtension = null;
+            this.spare2 = null;
+        }
     }
 
     @Override
@@ -65,108 +99,96 @@ public class AidToNavigationReport extends AISMessage {
 
     @SuppressWarnings("unused")
     public AidType getAidType() {
-        return getDecodedValue(() -> aidType, value -> aidType = value, () -> Boolean.TRUE, () -> AidType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(38, 43))));
+        return aidType;
     }
 
     @SuppressWarnings("unused")
     public String getName() {
-        return getDecodedValue(() -> name, value -> name = value, () -> Boolean.TRUE, () -> STRING_DECODER.apply(getBits(43, 163)));
+        return name;
     }
 
     @SuppressWarnings("unused")
     public Boolean getPositionAccurate() {
-        return getDecodedValue(() -> positionAccurate, value -> positionAccurate = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(163, 164)));
+        return positionAccurate;
     }
 
     @SuppressWarnings("unused")
     public Float getLatitude() {
-        return getDecodedValue(() -> latitude, value -> latitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(192, 219))/600000f);
+        return latitude;
     }
 
     @SuppressWarnings("unused")
     public Float getLongitude() {
-        return getDecodedValue(() -> longitude, value -> longitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(164, 192))/600000f);
+        return longitude;
     }
 
     @SuppressWarnings("unused")
     public Integer getToBow() {
-        return getDecodedValue(() -> toBow, value -> toBow = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(219, 228)));
+        return toBow;
     }
 
     @SuppressWarnings("unused")
     public Integer getToStern() {
-        return getDecodedValue(() -> toStern, value -> toStern = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(228, 237)));
+        return toStern;
     }
 
     @SuppressWarnings("unused")
     public Integer getToStarboard() {
-        return getDecodedValue(() -> toStarboard, value -> toStarboard = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(243, 249)));
+        return toStarboard;
     }
 
     @SuppressWarnings("unused")
     public Integer getToPort() {
-        return getDecodedValue(() -> toPort, value -> toPort = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(237, 243)));
+        return toPort;
     }
 
     @SuppressWarnings("unused")
     public PositionFixingDevice getPositionFixingDevice() {
-        return getDecodedValue(() -> positionFixingDevice, value -> positionFixingDevice = value, () -> Boolean.TRUE, () -> PositionFixingDevice.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(249, 253))));
+        return positionFixingDevice;
     }
 
     @SuppressWarnings("unused")
     public Integer getSecond() {
-        return getDecodedValue(() -> second, value -> second = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(253, 259)));
+        return second;
     }
 
     @SuppressWarnings("unused")
     public Boolean getOffPosition() {
-        return getDecodedValue(() -> offPosition, value -> offPosition = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(259, 260)));
+        return offPosition;
     }
 
     @SuppressWarnings("unused")
     public String getAtoNStatus() {
-        return getDecodedValue(() -> regionalUse, value -> regionalUse = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(260, 268)));
+        return regionalUse;
     }
 
     @SuppressWarnings("unused")
     public Boolean getRaimFlag() {
-        return getDecodedValue(() -> raimFlag, value -> raimFlag = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(268, 269)));
+        return raimFlag;
     }
 
     @SuppressWarnings("unused")
     public Boolean getVirtualAid() {
-        return getDecodedValue(() -> virtualAid, value -> virtualAid = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(269, 270)));
+        return virtualAid;
     }
 
     @SuppressWarnings("unused")
     public Boolean getAssignedMode() {
-        return getDecodedValue(() -> assignedMode, value -> assignedMode = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(270, 271)));
+        return assignedMode;
     }
 
     @SuppressWarnings("unused")
     public Integer getSpare1() {
-        return getDecodedValue(() -> spare1, value -> spare1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(271, 272)));
+        return spare1;
     }
 
     @SuppressWarnings("unused")
     public String getNameExtension() {
-        getDecodedValue(() -> nameExtension, value -> nameExtension = value, () -> getNumberOfBits() > 272, () -> {
-            int extraBits = getNumberOfBits() - 272;
-            int extraChars = extraBits/6;
-            int extraBitsOfChars = extraChars*6;
-            return STRING_DECODER.apply(getBits(272, 272 + extraBitsOfChars));
-        });
         return nameExtension;
     }
 
     @SuppressWarnings("unused")
     public Integer getSpare2() {
-        getDecodedValue(() -> spare2, value -> spare2 = value, () -> getNumberOfBits() >= 272, () -> {
-            int extraBits = getNumberOfBits() - 272;
-            int extraChars = extraBits/6;
-            int extraBitsOfChars = extraChars*6;
-            return (extraBits == extraBitsOfChars) ? 0 : UNSIGNED_INTEGER_DECODER.apply(getBits(272 + extraBitsOfChars, getNumberOfBits()));
-        });
         return spare2;
     }
 
@@ -196,23 +218,23 @@ public class AidToNavigationReport extends AISMessage {
                 "} " + super.toString();
     }
 
-    private transient AidType aidType;
-    private transient String name;
-    private transient Boolean positionAccurate;
-    private transient Float latitude;
-    private transient Float longitude;
-    private transient Integer toBow;
-    private transient Integer toStern;
-    private transient Integer toPort;
-    private transient Integer toStarboard;
-    private transient PositionFixingDevice positionFixingDevice;
-    private transient Integer second;
-    private transient Boolean offPosition;
-    private transient String regionalUse;
-    private transient Boolean raimFlag;
-    private transient Boolean virtualAid;
-    private transient Boolean assignedMode;
-    private transient Integer spare1;
-    private transient String nameExtension;
-    private transient Integer spare2;
+    private final AidType aidType;
+    private final String name;
+    private final Boolean positionAccurate;
+    private final Float latitude;
+    private final Float longitude;
+    private final Integer toBow;
+    private final Integer toStern;
+    private final Integer toPort;
+    private final Integer toStarboard;
+    private final PositionFixingDevice positionFixingDevice;
+    private final Integer second;
+    private final Boolean offPosition;
+    private final String regionalUse;
+    private final Boolean raimFlag;
+    private final Boolean virtualAid;
+    private final Boolean assignedMode;
+    private final Integer spare1;
+    private final String nameExtension;
+    private final Integer spare2;
 }

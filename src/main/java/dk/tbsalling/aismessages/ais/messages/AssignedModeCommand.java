@@ -20,6 +20,7 @@ import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import java.util.stream.IntStream;
 
@@ -36,19 +37,24 @@ import static java.lang.String.format;
  */
 public class AssignedModeCommand extends AISMessage {
 
-    private transient MMSI destinationMmsiA;
-    private transient Integer offsetA;
-    private transient Integer incrementA;
-    private transient MMSI destinationMmsiB;
-    private transient Integer offsetB;
-    private transient Integer incrementB;
+    protected AssignedModeCommand(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
 
-    public AssignedModeCommand(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
+        // Eagerly decode all fields
+        this.destinationMmsiA = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70)));
+        this.offsetA = UNSIGNED_INTEGER_DECODER.apply(getBits(70, 82));
+        this.incrementA = UNSIGNED_INTEGER_DECODER.apply(getBits(82, 92));
 
-    protected AssignedModeCommand(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
+        // Optional fields for 144-bit messages
+        if (getNumberOfBits() >= 144) {
+            this.destinationMmsiB = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(92, 122)));
+            this.offsetB = UNSIGNED_INTEGER_DECODER.apply(getBits(122, 134));
+            this.incrementB = UNSIGNED_INTEGER_DECODER.apply(getBits(134, 144));
+        } else {
+            this.destinationMmsiB = null;
+            this.offsetB = null;
+            this.incrementB = null;
+        }
     }
 
     @Override
@@ -76,32 +82,32 @@ public class AssignedModeCommand extends AISMessage {
 
     @SuppressWarnings("unused")
     public MMSI getDestinationMmsiA() {
-        return getDecodedValue(() -> destinationMmsiA, value -> destinationMmsiA = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70))));
+        return destinationMmsiA;
     }
 
     @SuppressWarnings("unused")
     public Integer getOffsetA() {
-        return getDecodedValue(() -> offsetA, value -> offsetA = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(70, 82)));
+        return offsetA;
     }
 
     @SuppressWarnings("unused")
     public Integer getIncrementA() {
-        return getDecodedValue(() -> incrementA, value -> incrementA = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(82, 92)));
+        return incrementA;
     }
 
     @SuppressWarnings("unused")
     public MMSI getDestinationMmsiB() {
-        return getDecodedValue(() -> destinationMmsiB, value -> destinationMmsiB = value, () -> getNumberOfBits() >= 144, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(92, 122))));
+        return destinationMmsiB;
     }
 
     @SuppressWarnings("unused")
     public Integer getOffsetB() {
-        return getDecodedValue(() -> offsetB, value -> offsetB = value, () -> getNumberOfBits() >= 144, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(122, 134)));
+        return offsetB;
     }
 
     @SuppressWarnings("unused")
     public Integer getIncrementB() {
-        return getDecodedValue(() -> incrementB, value -> incrementB = value, () -> getNumberOfBits() >= 144, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(134, 144)));
+        return incrementB;
     }
 
     @Override
@@ -116,4 +122,11 @@ public class AssignedModeCommand extends AISMessage {
                 ", incrementB=" + getIncrementB() +
                 "} " + super.toString();
     }
+
+    private final MMSI destinationMmsiA;
+    private final Integer offsetA;
+    private final Integer incrementA;
+    private final MMSI destinationMmsiB;
+    private final Integer offsetB;
+    private final Integer incrementB;
 }

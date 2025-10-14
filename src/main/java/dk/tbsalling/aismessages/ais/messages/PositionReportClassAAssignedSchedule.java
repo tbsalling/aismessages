@@ -18,15 +18,12 @@ package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 @SuppressWarnings("serial")
 public class PositionReportClassAAssignedSchedule extends PositionReport {
-    public PositionReportClassAAssignedSchedule(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
-
-    protected PositionReportClassAAssignedSchedule(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
+    protected PositionReportClassAAssignedSchedule(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
     }
 
     @Override

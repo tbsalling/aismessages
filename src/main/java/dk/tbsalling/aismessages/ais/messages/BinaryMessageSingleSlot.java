@@ -20,6 +20,7 @@ import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import static dk.tbsalling.aismessages.ais.Decoders.*;
 import static java.lang.String.format;
@@ -27,12 +28,12 @@ import static java.lang.String.format;
 @SuppressWarnings("serial")
 public class BinaryMessageSingleSlot extends AISMessage {
 
-    public BinaryMessageSingleSlot(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
-
-    protected BinaryMessageSingleSlot(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
+    protected BinaryMessageSingleSlot(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
+        this.destinationIndicator = BOOLEAN_DECODER.apply(getBits(38, 39));
+        this.binaryDataFlag = BOOLEAN_DECODER.apply(getBits(39, 40));
+        this.destinationMMSI = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70)));
+        this.binaryData = BIT_DECODER.apply(getBits(40, 168));
     }
 
     @Override
@@ -59,22 +60,22 @@ public class BinaryMessageSingleSlot extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Boolean getDestinationIndicator() {
-        return getDecodedValue(() -> destinationIndicator, value -> destinationIndicator = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(38, 39)));
+        return destinationIndicator;
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getBinaryDataFlag() {
-        return getDecodedValue(() -> binaryDataFlag, value -> binaryDataFlag = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(39, 40)));
+        return binaryDataFlag;
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getDestinationMMSI() {
-        return getDecodedValue(() -> destinationMMSI, value -> destinationMMSI = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70))));
+        return destinationMMSI;
 	}
 
     @SuppressWarnings("unused")
 	public String getBinaryData() {
-        return getDecodedValue(() -> binaryData, value -> binaryData = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(40, 168)));
+        return binaryData;
 	}
 
     @Override
@@ -88,8 +89,8 @@ public class BinaryMessageSingleSlot extends AISMessage {
                 "} " + super.toString();
     }
 
-    private transient Boolean destinationIndicator;
-    private transient Boolean binaryDataFlag;
-    private transient MMSI destinationMMSI;
-    private transient String binaryData;
+    private final Boolean destinationIndicator;
+    private final Boolean binaryDataFlag;
+    private final MMSI destinationMMSI;
+    private final String binaryData;
 }

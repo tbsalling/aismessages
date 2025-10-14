@@ -19,6 +19,7 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
 import static java.lang.String.format;
@@ -36,12 +37,53 @@ import static java.lang.String.format;
 @SuppressWarnings("serial")
 public class DataLinkManagement extends AISMessage {
 
-    public DataLinkManagement(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
+    protected DataLinkManagement(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
 
-    protected DataLinkManagement(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
+        // Always decode mandatory fields (bits 40-70)
+        this.offsetNumber1 = UNSIGNED_INTEGER_DECODER.apply(getBits(40, 52));
+        this.reservedSlots1 = UNSIGNED_INTEGER_DECODER.apply(getBits(52, 56));
+        this.timeout1 = UNSIGNED_INTEGER_DECODER.apply(getBits(56, 59));
+        this.increment1 = UNSIGNED_INTEGER_DECODER.apply(getBits(59, 70));
+
+        // Conditional fields set 2 (>= 100 bits)
+        if (getNumberOfBits() >= 100) {
+            this.offsetNumber2 = UNSIGNED_INTEGER_DECODER.apply(getBits(70, 82));
+            this.reservedSlots2 = UNSIGNED_INTEGER_DECODER.apply(getBits(82, 86));
+            this.timeout2 = UNSIGNED_INTEGER_DECODER.apply(getBits(86, 89));
+            this.increment2 = UNSIGNED_INTEGER_DECODER.apply(getBits(89, 100));
+        } else {
+            this.offsetNumber2 = null;
+            this.reservedSlots2 = null;
+            this.timeout2 = null;
+            this.increment2 = null;
+        }
+
+        // Conditional fields set 3 (>= 130 bits)
+        if (getNumberOfBits() >= 130) {
+            this.offsetNumber3 = UNSIGNED_INTEGER_DECODER.apply(getBits(100, 112));
+            this.reservedSlots3 = UNSIGNED_INTEGER_DECODER.apply(getBits(112, 116));
+            this.timeout3 = UNSIGNED_INTEGER_DECODER.apply(getBits(116, 119));
+            this.increment3 = UNSIGNED_INTEGER_DECODER.apply(getBits(119, 130));
+        } else {
+            this.offsetNumber3 = null;
+            this.reservedSlots3 = null;
+            this.timeout3 = null;
+            this.increment3 = null;
+        }
+
+        // Conditional fields set 4 (>= 160 bits)
+        if (getNumberOfBits() >= 160) {
+            this.offsetNumber4 = UNSIGNED_INTEGER_DECODER.apply(getBits(130, 142));
+            this.reservedSlots4 = UNSIGNED_INTEGER_DECODER.apply(getBits(142, 146));
+            this.timeout4 = UNSIGNED_INTEGER_DECODER.apply(getBits(146, 149));
+            this.increment4 = UNSIGNED_INTEGER_DECODER.apply(getBits(149, 160));
+        } else {
+            this.offsetNumber4 = null;
+            this.reservedSlots4 = null;
+            this.timeout4 = null;
+            this.increment4 = null;
+        }
     }
 
     @Override
@@ -68,82 +110,82 @@ public class DataLinkManagement extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Integer getOffsetNumber1() {
-        return getDecodedValue(() -> offsetNumber1, value -> offsetNumber1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(40, 52)));
+        return offsetNumber1;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getReservedSlots1() {
-        return getDecodedValue(() -> reservedSlots1, value -> reservedSlots1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(52, 56)));
+        return reservedSlots1;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getTimeout1() {
-        return getDecodedValue(() -> timeout1, value -> timeout1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(56, 59)));
+        return timeout1;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getIncrement1() {
-        return getDecodedValue(() -> increment1, value -> increment1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(59, 70)));
+        return increment1;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getOffsetNumber2() {
-        return getDecodedValue(() -> offsetNumber2, value -> offsetNumber2 = value, () -> getNumberOfBits() >= 100, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(70, 82)));
+        return offsetNumber2;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getReservedSlots2() {
-        return getDecodedValue(() -> reservedSlots2, value -> reservedSlots2 = value, () -> getNumberOfBits() >= 100, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(82, 86)));
+        return reservedSlots2;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getTimeout2() {
-        return getDecodedValue(() -> timeout2, value -> timeout2 = value, () -> getNumberOfBits() >= 100, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(86, 89)));
+        return timeout2;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getIncrement2() {
-        return getDecodedValue(() -> increment2, value -> increment2 = value, () -> getNumberOfBits() >= 100, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(89, 100)));
+        return increment2;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getOffsetNumber3() {
-        return getDecodedValue(() -> offsetNumber3, value -> offsetNumber3 = value, () -> getNumberOfBits() >= 130, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(100, 112)));
+        return offsetNumber3;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getReservedSlots3() {
-        return getDecodedValue(() -> reservedSlots3, value -> reservedSlots3 = value, () -> getNumberOfBits() >= 130, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(112, 116)));
+        return reservedSlots3;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getTimeout3() {
-        return getDecodedValue(() -> timeout3, value -> timeout3 = value, () -> getNumberOfBits() >= 130, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(116, 119)));
+        return timeout3;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getIncrement3() {
-        return getDecodedValue(() -> increment3, value -> increment3 = value, () -> getNumberOfBits() >= 130, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(119, 130)));
+        return increment3;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getOffsetNumber4() {
-        return getDecodedValue(() -> offsetNumber4, value -> offsetNumber4 = value, () -> getNumberOfBits() >= 160, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(130, 142)));
+        return offsetNumber4;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getReservedSlots4() {
-        return getDecodedValue(() -> reservedSlots4, value -> reservedSlots4 = value, () -> getNumberOfBits() >= 160, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(142, 146)));
+        return reservedSlots4;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getTimeout4() {
-        return getDecodedValue(() -> timeout4, value -> timeout4 = value, () -> getNumberOfBits() >= 160, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(146, 149)));
+        return timeout4;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getIncrement4() {
-        return getDecodedValue(() -> increment4, value -> increment4 = value, () -> getNumberOfBits() >= 160, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(149, 160)));
+        return increment4;
 	}
 
     @Override
@@ -169,20 +211,20 @@ public class DataLinkManagement extends AISMessage {
                 "} " + super.toString();
     }
 
-    private transient Integer offsetNumber1;
-    private transient Integer reservedSlots1;
-    private transient Integer timeout1;
-    private transient Integer increment1;
-    private transient Integer offsetNumber2;
-    private transient Integer reservedSlots2;
-    private transient Integer timeout2;
-    private transient Integer increment2;
-    private transient Integer offsetNumber3;
-    private transient Integer reservedSlots3;
-    private transient Integer timeout3;
-    private transient Integer increment3;
-    private transient Integer offsetNumber4;
-    private transient Integer reservedSlots4;
-    private transient Integer timeout4;
-    private transient Integer increment4;
+    private final Integer offsetNumber1;
+    private final Integer reservedSlots1;
+    private final Integer timeout1;
+    private final Integer increment1;
+    private final Integer offsetNumber2;
+    private final Integer reservedSlots2;
+    private final Integer timeout2;
+    private final Integer increment2;
+    private final Integer offsetNumber3;
+    private final Integer reservedSlots3;
+    private final Integer timeout3;
+    private final Integer increment3;
+    private final Integer offsetNumber4;
+    private final Integer reservedSlots4;
+    private final Integer timeout4;
+    private final Integer increment4;
 }

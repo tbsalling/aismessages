@@ -19,8 +19,7 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.messages.types.*;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
-
-import java.lang.ref.WeakReference;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import static dk.tbsalling.aismessages.ais.Decoders.*;
 import static java.lang.String.format;
@@ -35,12 +34,34 @@ import static java.lang.String.format;
 @SuppressWarnings("serial")
 public class StandardClassBCSPositionReport extends AISMessage implements ExtendedDynamicDataReport {
 
-    public StandardClassBCSPositionReport(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
+    protected StandardClassBCSPositionReport(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
 
-    protected StandardClassBCSPositionReport(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
+        // Eagerly decode all mandatory fields
+        this.regionalReserved1 = BIT_DECODER.apply(getBits(38, 46));
+        this.speedOverGround = UNSIGNED_FLOAT_DECODER.apply(getBits(46, 56)) / 10f;
+        this.positionAccuracy = BOOLEAN_DECODER.apply(getBits(56, 57));
+        this.longitude = FLOAT_DECODER.apply(getBits(57, 85)) / 600000f;
+        this.latitude = FLOAT_DECODER.apply(getBits(85, 112)) / 600000f;
+        this.courseOverGround = UNSIGNED_FLOAT_DECODER.apply(getBits(112, 124)) / 10f;
+        this.trueHeading = UNSIGNED_INTEGER_DECODER.apply(getBits(124, 133));
+        this.second = UNSIGNED_INTEGER_DECODER.apply(getBits(133, 139));
+        this.regionalReserved2 = BIT_DECODER.apply(getBits(139, 141));
+        this.csUnit = BOOLEAN_DECODER.apply(getBits(141, 142));
+        this.display = BOOLEAN_DECODER.apply(getBits(142, 143));
+        this.dsc = BOOLEAN_DECODER.apply(getBits(143, 144));
+        this.band = BOOLEAN_DECODER.apply(getBits(144, 145));
+        this.message22 = BOOLEAN_DECODER.apply(getBits(145, 146));
+        this.assigned = BOOLEAN_DECODER.apply(getBits(146, 147));
+        this.raimFlag = BOOLEAN_DECODER.apply(getBits(147, 148));
+        this.commStateSelectorFlag = BOOLEAN_DECODER.apply(getBits(148, 149));
+
+        // Communication state depends on selector flag
+        if (this.commStateSelectorFlag == Boolean.FALSE) {
+            this.communicationState = SOTDMACommunicationState.fromBitString(getBits(149, 168));
+        } else {
+            this.communicationState = ITDMACommunicationState.fromBitString(getBits(149, 168));
+        }
     }
 
     @Override
@@ -73,12 +94,12 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
 
     @SuppressWarnings("unused")
 	public String getRegionalReserved1() {
-        return getDecodedValue(() -> regionalReserved1, value -> regionalReserved1 = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(38, 46)));
+        return regionalReserved1;
 	}
 
     @SuppressWarnings("unused")
 	public Float getSpeedOverGround() {
-        return getDecodedValue(() -> speedOverGround, value -> speedOverGround = value, () -> Boolean.TRUE, () -> UNSIGNED_FLOAT_DECODER.apply(getBits(46, 56)) / 10f);
+        return speedOverGround;
 	}
 
     @SuppressWarnings("unused")
@@ -88,7 +109,7 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
 
     @SuppressWarnings("unused")
 	public Boolean getPositionAccuracy() {
-        return getDecodedValue(() -> positionAccuracy, value -> positionAccuracy = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(56, 57)));
+        return positionAccuracy;
 	}
 
     @SuppressWarnings("unused")
@@ -98,7 +119,7 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
 
     @SuppressWarnings("unused")
 	public Float getLatitude() {
-        return getDecodedValue(() -> latitude, value -> latitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(85, 112)) / 600000f);
+        return latitude;
 	}
 
     @SuppressWarnings("unused")
@@ -108,7 +129,7 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
 
     @SuppressWarnings("unused")
 	public Float getLongitude() {
-        return getDecodedValue(() -> longitude, value -> longitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(57, 85)) / 600000f);
+        return longitude;
 	}
 
     @SuppressWarnings("unused")
@@ -118,7 +139,7 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
 
     @SuppressWarnings("unused")
 	public Float getCourseOverGround() {
-        return getDecodedValue(() -> courseOverGround, value -> courseOverGround = value, () -> Boolean.TRUE, () -> UNSIGNED_FLOAT_DECODER.apply(getBits(112, 124)) / 10f);
+        return courseOverGround;
 	}
 
     @SuppressWarnings("unused")
@@ -128,64 +149,61 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
 
     @SuppressWarnings("unused")
 	public Integer getTrueHeading() {
-        return getDecodedValue(() -> trueHeading, value -> trueHeading = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(124, 133)));
+        return trueHeading;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getSecond() {
-        return getDecodedValue(() -> second, value -> second = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(133, 139)));
+        return second;
 	}
 
     @SuppressWarnings("unused")
 	public String getRegionalReserved2() {
-        return getDecodedValue(() -> regionalReserved2, value -> regionalReserved2 = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(139, 141)));
+        return regionalReserved2;
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getCsUnit() {
-        return getDecodedValue(() -> csUnit, value -> csUnit = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(141, 142)));
+        return csUnit;
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getDisplay() {
-        return getDecodedValue(() -> display, value -> display = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(142, 143)));
+        return display;
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getDsc() {
-        return getDecodedValue(() -> dsc, value -> dsc = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(143, 144)));
+        return dsc;
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getBand() {
-        return getDecodedValue(() -> band, value -> band = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(144, 145)));
+        return band;
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getMessage22() {
-        return getDecodedValue(() -> message22, value -> message22 = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(145, 146)));
+        return message22;
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getAssigned() {
-        return getDecodedValue(() -> assigned, value -> assigned = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(146, 147)));
+        return assigned;
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getRaimFlag() {
-        return getDecodedValue(() -> raimFlag, value -> raimFlag = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(147, 148)));
+        return raimFlag;
 	}
 
     public Boolean getCommunicationStateSelectorFlag() {
-        return getDecodedValue(() -> commStateSelectorFlag, value -> commStateSelectorFlag = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(148, 149)));
+        return commStateSelectorFlag;
     }
 
     @SuppressWarnings("unused")
     public CommunicationState getCommunicationState() {
-        if (getCommunicationStateSelectorFlag() == Boolean.FALSE)
-            return getDecodedValueByWeakReference(() -> communicationState, value -> communicationState = value, () -> Boolean.TRUE, () -> SOTDMACommunicationState.fromBitString(getBits(149, 168)));
-        else
-            return getDecodedValueByWeakReference(() -> communicationState, value -> communicationState = value, () -> Boolean.TRUE, () -> ITDMACommunicationState.fromBitString(getBits(149, 168)));
+        return communicationState;
     }
 
     @Override
@@ -213,23 +231,23 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
                 "} " + super.toString();
     }
 
-    private transient String regionalReserved1;
-	private transient Float speedOverGround;
-	private transient Boolean positionAccuracy;
-	private transient Float latitude;
-	private transient Float longitude;
-	private transient Float courseOverGround;
-	private transient Integer trueHeading;
-	private transient Integer second;
-	private transient String regionalReserved2;
-	private transient Boolean csUnit;
-	private transient Boolean display;
-	private transient Boolean dsc;
-	private transient Boolean band;
-	private transient Boolean message22;
-	private transient Boolean assigned;
-	private transient Boolean raimFlag;
-	private transient Boolean commStateSelectorFlag;
-	private transient WeakReference<CommunicationState> communicationState;
+    private final String regionalReserved1;
+    private final Float speedOverGround;
+    private final Boolean positionAccuracy;
+    private final Float latitude;
+    private final Float longitude;
+    private final Float courseOverGround;
+    private final Integer trueHeading;
+    private final Integer second;
+    private final String regionalReserved2;
+    private final Boolean csUnit;
+    private final Boolean display;
+    private final Boolean dsc;
+    private final Boolean band;
+    private final Boolean message22;
+    private final Boolean assigned;
+    private final Boolean raimFlag;
+    private final Boolean commStateSelectorFlag;
+    private final CommunicationState communicationState;
 
 }

@@ -20,6 +20,7 @@ import dk.tbsalling.aismessages.ais.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.*;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
@@ -38,12 +39,26 @@ import static dk.tbsalling.aismessages.ais.Decoders.*;
 @SuppressWarnings("serial")
 public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
 
-    public ShipAndVoyageData(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
+    protected ShipAndVoyageData(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
 
-    protected ShipAndVoyageData(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
+        // Eagerly decode all fields
+        this.imo = IMO.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70)));
+        this.callsign = STRING_DECODER.apply(getBits(70, 112));
+        this.shipName = STRING_DECODER.apply(getBits(112, 232));
+        this.shipType = ShipType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(232, 240)));
+        this.toBow = UNSIGNED_INTEGER_DECODER.apply(getBits(240, 249));
+        this.toStern = UNSIGNED_INTEGER_DECODER.apply(getBits(249, 258));
+        this.toPort = UNSIGNED_INTEGER_DECODER.apply(getBits(258, 264));
+        this.toStarboard = UNSIGNED_INTEGER_DECODER.apply(getBits(264, 270));
+        this.positionFixingDevice = PositionFixingDevice.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(270, 274)));
+        this.etaMonth = UNSIGNED_INTEGER_DECODER.apply(getBits(274, 278));
+        this.etaDay = UNSIGNED_INTEGER_DECODER.apply(getBits(278, 283));
+        this.etaHour = UNSIGNED_INTEGER_DECODER.apply(getBits(283, 288));
+        this.etaMinute = UNSIGNED_INTEGER_DECODER.apply(getBits(288, 294));
+        this.draught = UNSIGNED_FLOAT_DECODER.apply(getBits(294, 302)) / 10f;
+        this.destination = STRING_DECODER.apply(getBits(302, 422));
+        this.dataTerminalReady = BOOLEAN_DECODER.apply(getBits(422, 423));
     }
 
     @Override
@@ -69,71 +84,71 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
 
     @SuppressWarnings("unused")
 	public IMO getImo() {
-        return getDecodedValue(() -> imo, value -> imo = value, () -> Boolean.TRUE, () -> IMO.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70))));
+        return imo;
 	}
 
     @SuppressWarnings("unused")
 	public String getCallsign() {
-        return getDecodedValue(() -> callsign, value -> callsign = value, () -> Boolean.TRUE, () -> STRING_DECODER.apply(getBits(70, 112)));
+        return callsign;
 	}
 
     @SuppressWarnings("unused")
 	public String getShipName() {
-        return getDecodedValue(() -> shipName, value -> shipName = value, () -> Boolean.TRUE, () -> STRING_DECODER.apply(getBits(112, 232)));
+        return shipName;
 	}
 
     @SuppressWarnings("unused")
 	public ShipType getShipType() {
-        return getDecodedValue(() -> shipType, value -> shipType = value, () -> Boolean.TRUE, () -> ShipType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(232, 240))));
+        return shipType;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getToBow() {
-        return getDecodedValue(() -> toBow, value -> toBow = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(240, 249)));
+        return toBow;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getToStern() {
-        return getDecodedValue(() -> toStern, value -> toStern = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(249, 258)));
+        return toStern;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getToStarboard() {
-        return getDecodedValue(() -> toStarboard, value -> toStarboard = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(264, 270)));
+        return toStarboard;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getToPort() {
-        return getDecodedValue(() -> toPort, value -> toPort = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(258, 264)));
+        return toPort;
 	}
 
     @SuppressWarnings("unused")
 	public PositionFixingDevice getPositionFixingDevice() {
-        return getDecodedValue(() -> positionFixingDevice, value -> positionFixingDevice = value, () -> Boolean.TRUE, () -> PositionFixingDevice.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(270, 274))));
+        return positionFixingDevice;
 	}
 
 	/** @return The UTC ETA Month (1-12) 0 = not available. */
     @SuppressWarnings("unused")
     public Integer getEtaMonth() {
-        return getDecodedValue(() -> etaMonth, value -> etaMonth = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(274, 278)));
+        return etaMonth;
     }
 
     /** @return The UTC ETA Day (1-31) 0 = not available. */
     @SuppressWarnings("unused")
     public Integer getEtaDay() {
-        return getDecodedValue(() -> etaDay, value -> etaDay = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(278, 283)));
+        return etaDay;
     }
 
     /** @return The UTC ETA Hour (0-23) 24 = not available. */
     @SuppressWarnings("unused")
     public Integer getEtaHour() {
-        return getDecodedValue(() -> etaHour, value -> etaHour = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(283, 288)));
+        return etaHour;
     }
 
     /** @return The UTC ETA Minute (0-59) 60 = not available. */
     @SuppressWarnings("unused")
     public Integer getEtaMinute() {
-        return getDecodedValue(() -> etaMinute, value -> etaMinute = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(288, 294)));
+        return etaMinute;
     }
 
     @Deprecated
@@ -180,7 +195,7 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
 
     @SuppressWarnings("unused")
 	public Float getDraught() {
-        return getDecodedValue(() -> draught, value -> draught = value, () -> Boolean.TRUE, () -> UNSIGNED_FLOAT_DECODER.apply(getBits(294, 302)) / 10f);
+        return draught;
 	}
 
     @SuppressWarnings("unused")
@@ -190,12 +205,12 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
 
     @SuppressWarnings("unused")
 	public String getDestination() {
-        return getDecodedValue(() -> destination, value -> destination = value, () -> Boolean.TRUE, () -> STRING_DECODER.apply(getBits(302, 422)));
+        return destination;
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getDataTerminalReady() {
-        return getDecodedValue(() -> dataTerminalReady, value -> dataTerminalReady = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(422, 423)));
+        return dataTerminalReady;
 	}
 
     @Override
@@ -218,20 +233,20 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
                 "} " + super.toString();
     }
 
-    private transient IMO imo;
-    private transient String callsign;
-    private transient String shipName;
-    private transient ShipType shipType;
-    private transient Integer toBow;
-    private transient Integer toStern;
-    private transient Integer toStarboard;
-    private transient Integer toPort;
-    private transient PositionFixingDevice positionFixingDevice;
-    private transient Integer etaMonth;
-    private transient Integer etaDay;
-    private transient Integer etaHour;
-    private transient Integer etaMinute;
-    private transient Float draught;
-    private transient String destination;
-    private transient Boolean dataTerminalReady;
+    private final IMO imo;
+    private final String callsign;
+    private final String shipName;
+    private final ShipType shipType;
+    private final Integer toBow;
+    private final Integer toStern;
+    private final Integer toStarboard;
+    private final Integer toPort;
+    private final PositionFixingDevice positionFixingDevice;
+    private final Integer etaMonth;
+    private final Integer etaDay;
+    private final Integer etaHour;
+    private final Integer etaMinute;
+    private final Float draught;
+    private final String destination;
+    private final Boolean dataTerminalReady;
 }

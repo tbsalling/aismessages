@@ -24,7 +24,6 @@ import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import java.io.Serializable;
-import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
@@ -32,7 +31,6 @@ import java.security.NoSuchAlgorithmException;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.function.BiFunction;
 import java.util.stream.Stream;
 
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
@@ -82,48 +80,51 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
     /**
      * The NMEA messages which represent this AIS message
      */
-    private NMEAMessage[] nmeaMessages;
+    private final NMEAMessage[] nmeaMessages;
 
-    private Metadata metadata;
-    private NMEATagBlock nmeaTagBlock;
+    private final Metadata metadata;
+    private final NMEATagBlock nmeaTagBlock;
 
     /**
-     * Payload expanded to string of 0's and 1's. Use weak reference to allow GC anytime.
+     * Payload expanded to string of 0's and 1's.
      */
-    private transient WeakReference<String> bitString = new WeakReference<>(null);
+    private final String bitString;
 
     /**
      * Length of bitString
      */
-    private transient int numberOfBits = -1;
+    private final int numberOfBits;
 
-    private transient Integer repeatIndicator;
-    private transient MMSI sourceMmsi;
+    private final Integer repeatIndicator;
+    private final MMSI sourceMmsi;
 
     protected AISMessage() {
+        this.nmeaMessages = null;
+        this.bitString = null;
+        this.numberOfBits = -1;
+        this.metadata = null;
+        this.nmeaTagBlock = null;
+        this.repeatIndicator = null;
+        this.sourceMmsi = null;
     }
 
-    protected AISMessage(NMEAMessage[] nmeaMessages) {
+    protected AISMessage(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
         requireNonNull(nmeaMessages);
         check(nmeaMessages);
         this.nmeaMessages = nmeaMessages;
+        this.bitString = bitString;
+        this.numberOfBits = bitString.length();
+        this.metadata = metadata;
+        this.nmeaTagBlock = nmeaTagBlock;
+
+        // Eagerly decode repeatIndicator and sourceMmsi
+        this.repeatIndicator = UNSIGNED_INTEGER_DECODER.apply(getBits(6, 8));
+        this.sourceMmsi = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(8, 38)));
 
         AISMessageType nmeaMessageType = decodeMessageType();
         if (getMessageType() != nmeaMessageType)
             throw new UnsupportedMessageType(nmeaMessageType.getCode());
 
-        checkAISMessage();
-    }
-
-    protected AISMessage(NMEAMessage[] nmeaMessages, String bitString) {
-        requireNonNull(nmeaMessages);
-        check(nmeaMessages);
-        this.nmeaMessages = nmeaMessages;
-        this.bitString = new WeakReference<>(bitString);
-        AISMessageType nmeaMessageType = decodeMessageType();
-        if (getMessageType() != nmeaMessageType) {
-            throw new UnsupportedMessageType(nmeaMessageType.getCode());
-        }
         checkAISMessage();
     }
 
@@ -292,15 +293,6 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
     }
 
     @SuppressWarnings("unused")
-    public final void setMetadata(Metadata metadata) {
-        this.metadata = metadata;
-    }
-
-    public final void setTagBlock(NMEATagBlock nmeaTagBlock) {
-        this.nmeaTagBlock = nmeaTagBlock;
-    }
-
-    @SuppressWarnings("unused")
     public final NMEATagBlock getNmeaTagBlock() {
         return nmeaTagBlock;
     }
@@ -316,7 +308,7 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
      */
     @SuppressWarnings("unused")
     public final Integer getRepeatIndicator() {
-        return getDecodedValue(() -> repeatIndicator, value -> repeatIndicator = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(6, 8)));
+        return repeatIndicator;
     }
 
     /**
@@ -327,7 +319,7 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
      */
     @SuppressWarnings("unused")
     public final MMSI getSourceMmsi() {
-        return getDecodedValue(() -> sourceMmsi, value -> sourceMmsi = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(8, 38))));
+        return sourceMmsi;
     }
 
     @Override
@@ -358,17 +350,11 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
 
     /**
      * Retrieves the bit string representation of the AIS message payload.
-     * If the bit string has not been computed yet, it decodes the payload from the NMEA messages and stores it.
      *
      * @return The bit string representation of the AIS message payload.
      */
     protected String getBitString() {
-        String b = bitString.get();
-        if (b == null) {
-            b = decodePayloadToBitString(nmeaMessages);
-            bitString = new WeakReference<>(b);
-        }
-        return b;
+        return bitString;
     }
 
     /**
@@ -402,14 +388,10 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
 
     /**
      * Retrieves the number of bits in the AIS message payload.
-     * If the number of bits has not been computed yet, it calculates it based on the bit string representation of the payload.
      *
      * @return The number of bits in the AIS message payload.
      */
     protected int getNumberOfBits() {
-        if (numberOfBits < 0) {
-            numberOfBits = getBitString().length();
-        }
         return numberOfBits;
     }
 
@@ -444,9 +426,7 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
      * @throws InvalidMessage if the AIS payload of the NMEAmessage(s) is invalid
      */
     public static AISMessage create(Metadata metadata, NMEAMessage... nmeaMessages) {
-        AISMessage aisMessage = create(nmeaMessages);
-        aisMessage.setMetadata(metadata);
-        return aisMessage;
+        return create(metadata, null, nmeaMessages);
     }
 
     /**
@@ -460,20 +440,6 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
      * @throws InvalidMessage if the AIS payload of the NMEAmessage(s) is invalid
      */
     public static AISMessage create(Metadata metadata, NMEATagBlock nmeaTagBlock, NMEAMessage... nmeaMessages) {
-        AISMessage aisMessage = create(nmeaMessages);
-        aisMessage.setTagBlock(nmeaTagBlock);
-        aisMessage.setMetadata(metadata);
-        return aisMessage;
-    }
-
-    /**
-     * Create proper type of AISMessage from 1..n NMEA messages.
-     *
-     * @param nmeaMessages NMEA messages
-     * @return AISMessage the AIS message
-     * @throws InvalidMessage if the AIS payload of the NMEAmessage(s) is invalid
-     */
-    public static AISMessage create(NMEAMessage... nmeaMessages) {
         String bitString = decodePayloadToBitString(nmeaMessages);
         AISMessageType messageType = AISMessageType.fromInteger(Integer.parseInt(bitString.substring(0, 6), 2));
 
@@ -485,7 +451,12 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
             throw new InvalidMessage("Cannot extract message type from NMEA message: %s".formatted(sb.toString()));
         }
 
-        BiFunction<NMEAMessage[], String, AISMessage> aisMessageConstructor = switch (messageType) {
+        @FunctionalInterface
+        interface AISMessageConstructor {
+            AISMessage create(NMEAMessage[] messages, String bits, Metadata meta, NMEATagBlock tag);
+        }
+
+        AISMessageConstructor aisMessageConstructor = switch (messageType) {
             case ShipAndVoyageRelatedData -> ShipAndVoyageData::new;
             case PositionReportClassAScheduled -> PositionReportClassAScheduled::new;
             case PositionReportClassAAssignedSchedule -> PositionReportClassAAssignedSchedule::new;
@@ -516,7 +487,18 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
             default -> throw new UnsupportedMessageType(messageType.getCode());
         };
 
-        return aisMessageConstructor.apply(nmeaMessages, bitString);
+        return aisMessageConstructor.create(nmeaMessages, bitString, metadata, nmeaTagBlock);
+    }
+
+    /**
+     * Create proper type of AISMessage from 1..n NMEA messages.
+     *
+     * @param nmeaMessages NMEA messages
+     * @return AISMessage the AIS message
+     * @throws InvalidMessage if the AIS payload of the NMEAmessage(s) is invalid
+     */
+    public static AISMessage create(NMEAMessage... nmeaMessages) {
+        return create(null, null, nmeaMessages);
     }
 
     /**

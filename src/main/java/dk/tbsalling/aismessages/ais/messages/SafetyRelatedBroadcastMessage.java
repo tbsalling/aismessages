@@ -19,6 +19,7 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import static dk.tbsalling.aismessages.ais.Decoders.STRING_DECODER;
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
@@ -27,12 +28,11 @@ import static java.lang.String.format;
 @SuppressWarnings("serial")
 public class SafetyRelatedBroadcastMessage extends AISMessage {
 
-    public SafetyRelatedBroadcastMessage(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
-
-    protected SafetyRelatedBroadcastMessage(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
+    protected SafetyRelatedBroadcastMessage(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
+        this.spare = UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40));
+        int extraBitsOfChars = ((getNumberOfBits() - 40) / 6) * 6;
+        this.text = STRING_DECODER.apply(getBits(40, 40 + extraBitsOfChars));
     }
 
     @Override
@@ -60,15 +60,12 @@ public class SafetyRelatedBroadcastMessage extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Integer getSpare() {
-        return getDecodedValue(() -> spare, value -> spare = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40)));
+        return spare;
 	}
 
     @SuppressWarnings("unused")
 	public final String getText() {
-        return getDecodedValue(() -> text, value -> text = value, () -> Boolean.TRUE, () -> {
-            int extraBitsOfChars = ((getNumberOfBits() - 40) / 6) * 6;
-            return STRING_DECODER.apply(getBits(40, 40 + extraBitsOfChars));
-        });
+        return text;
 	}
 
     @Override
@@ -80,6 +77,6 @@ public class SafetyRelatedBroadcastMessage extends AISMessage {
                 "} " + super.toString();
     }
 
-    private transient Integer spare;
-	private transient String text;
+    private final Integer spare;
+    private final String text;
 }

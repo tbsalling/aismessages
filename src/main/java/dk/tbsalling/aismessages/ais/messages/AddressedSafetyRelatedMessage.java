@@ -20,6 +20,7 @@ import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import static dk.tbsalling.aismessages.ais.Decoders.*;
 import static java.lang.String.format;
@@ -27,12 +28,16 @@ import static java.lang.String.format;
 @SuppressWarnings("serial")
 public class AddressedSafetyRelatedMessage extends AISMessage {
 
-    public AddressedSafetyRelatedMessage(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
+    protected AddressedSafetyRelatedMessage(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
 
-    protected AddressedSafetyRelatedMessage(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
+        // Eagerly decode all fields
+        this.sequenceNumber = UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40));
+        this.destinationMmsi = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70)));
+        this.retransmit = BOOLEAN_DECODER.apply(getBits(70, 71));
+        this.spare = UNSIGNED_INTEGER_DECODER.apply(getBits(71, 72));
+        int extraBitsOfChars = ((getNumberOfBits() - 72) / 6) * 6;
+        this.text = STRING_DECODER.apply(getBits(72, 72 + extraBitsOfChars));
     }
 
     @Override
@@ -60,30 +65,27 @@ public class AddressedSafetyRelatedMessage extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Integer getSequenceNumber() {
-        return getDecodedValue(() -> sequenceNumber, value -> sequenceNumber=value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40)));
+        return sequenceNumber;
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getDestinationMmsi() {
-        return getDecodedValue(() -> destinationMmsi, value -> destinationMmsi = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70))));
+        return destinationMmsi;
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getRetransmit() {
-        return getDecodedValue(() -> retransmit, value -> retransmit = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(70, 71)));
+        return retransmit;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getSpare() {
-        return getDecodedValue(() -> spare, value -> spare = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(71, 72)));
+        return spare;
 	}
 
     @SuppressWarnings("unused")
 	public String getText() {
-        return getDecodedValue(() -> text, value -> text = value, () -> Boolean.TRUE, () -> {
-            int extraBitsOfChars = ((getNumberOfBits() - 72)/6)*6;
-            return STRING_DECODER.apply(getBits(72, 72 + extraBitsOfChars));
-        });
+        return text;
 	}
 
     @Override
@@ -98,9 +100,9 @@ public class AddressedSafetyRelatedMessage extends AISMessage {
                 "} " + super.toString();
     }
 
-    private transient Integer sequenceNumber;
-    private transient MMSI destinationMmsi;
-    private transient Boolean retransmit;
-    private transient Integer spare;
-    private transient String text;
+    private final Integer sequenceNumber;
+    private final MMSI destinationMmsi;
+    private final Boolean retransmit;
+    private final Integer spare;
+    private final String text;
 }

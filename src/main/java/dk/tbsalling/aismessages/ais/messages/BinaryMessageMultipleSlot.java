@@ -19,18 +19,20 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import static dk.tbsalling.aismessages.ais.Decoders.*;
 
 @SuppressWarnings("serial")
 public class BinaryMessageMultipleSlot extends AISMessage {
 
-    public BinaryMessageMultipleSlot(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
-
-    protected BinaryMessageMultipleSlot(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
+    protected BinaryMessageMultipleSlot(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
+        this.addressed = BOOLEAN_DECODER.apply(getBits(38, 39));
+        this.structured = BOOLEAN_DECODER.apply(getBits(39, 40));
+        this.destinationMmsi = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70)));
+        this.applicationId = UNSIGNED_INTEGER_DECODER.apply(getBits(70, 86));
+        this.data = BIT_DECODER.apply(getBits(86, 86 + 1004 + 1));
     }
 
     protected void checkAISMessage() {
@@ -42,27 +44,27 @@ public class BinaryMessageMultipleSlot extends AISMessage {
 
     @SuppressWarnings("unused")
     public Boolean getAddressed() {
-        return getDecodedValue(() -> addressed, value -> addressed = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(38, 39)));
+        return addressed;
     }
 
     @SuppressWarnings("unused")
     public Boolean getStructured() {
-        return getDecodedValue(() -> structured, value -> structured = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(39, 40)));
+        return structured;
     }
 
     @SuppressWarnings("unused")
     public MMSI getDestinationMmsi() {
-        return getDecodedValue(() -> destinationMmsi, value -> destinationMmsi = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70))));
+        return destinationMmsi;
     }
 
     @SuppressWarnings("unused")
     public Integer getApplicationId() {
-        return getDecodedValue(() -> applicationId, value -> applicationId = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(70, 86)));
+        return applicationId;
     }
 
     @SuppressWarnings("unused")
     public String getData() {
-        return getDecodedValue(() -> data, value -> data = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(86, 86 + 1004 + 1)));
+        return data;
     }
 
     @SuppressWarnings("unused")
@@ -83,10 +85,10 @@ public class BinaryMessageMultipleSlot extends AISMessage {
                 "} " + super.toString();
     }
 
-    private transient Boolean addressed;
-    private transient Boolean structured;
-    private transient MMSI destinationMmsi;
-    private transient Integer applicationId;
-    private transient String data;
-    // private transient String radioStatus;
+    private final Boolean addressed;
+    private final Boolean structured;
+    private final MMSI destinationMmsi;
+    private final Integer applicationId;
+    private final String data;
+    // private final String radioStatus;
 }

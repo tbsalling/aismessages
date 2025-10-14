@@ -5,6 +5,7 @@ import dk.tbsalling.aismessages.ais.messages.types.NavigationStatus;
 import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import java.util.stream.IntStream;
 
@@ -14,12 +15,19 @@ import static java.lang.String.format;
 @SuppressWarnings("serial")
 public class LongRangeBroadcastMessage extends AISMessage implements DynamicDataReport {
 
-    public LongRangeBroadcastMessage(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
+    protected LongRangeBroadcastMessage(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
 
-    protected LongRangeBroadcastMessage(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
+        // Eagerly decode all mandatory fields
+        this.positionAccuracy = BOOLEAN_DECODER.apply(getBits(38, 39));
+        this.raim = BOOLEAN_DECODER.apply(getBits(39, 40));
+        this.navigationStatus = NavigationStatus.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 44)));
+        this.longitude = FLOAT_DECODER.apply(getBits(44, 62)) / 600f;
+        this.latitude = FLOAT_DECODER.apply(getBits(62, 79)) / 600f;
+        this.speed = UNSIGNED_INTEGER_DECODER.apply(getBits(79, 85));
+        this.course = UNSIGNED_INTEGER_DECODER.apply(getBits(85, 94));
+        this.positionLatency = UNSIGNED_INTEGER_DECODER.apply(getBits(94, 95));
+        this.spare = UNSIGNED_INTEGER_DECODER.apply(getBits(95, 96));
     }
 
     @Override
@@ -55,22 +63,22 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
      */
     @SuppressWarnings("unused")
 	public Boolean getPositionAccuracy() {
-        return getDecodedValue(() -> positionAccuracy, value -> positionAccuracy = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(38, 39)));
+        return positionAccuracy;
 	}
 
     @SuppressWarnings("unused")
     public Boolean getRaim() {
-        return getDecodedValue(() -> raim, value -> raim = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(39, 40)));
+        return raim;
 	}
 
     @SuppressWarnings("unused")
 	public NavigationStatus getNavigationalStatus() {
-        return getDecodedValue(() -> navigationStatus, value -> navigationStatus = value, () -> Boolean.TRUE, () -> NavigationStatus.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 44))));
+        return navigationStatus;
 	}
 
     @SuppressWarnings("unused")
 	public Float getLongitude() {
-        return getDecodedValue(() -> longitude, value -> longitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(44, 62)) / 600f);
+        return longitude;
 	}
 
     @SuppressWarnings("unused")
@@ -80,7 +88,7 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
 
     @SuppressWarnings("unused")
 	public Float getLatitude() {
-        return getDecodedValue(() -> latitude, value -> latitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(62, 79)) / 600f);
+        return latitude;
 	}
 
     @SuppressWarnings("unused")
@@ -93,7 +101,7 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
      */
     @SuppressWarnings("unused")
 	public Float getSpeedOverGround() {
-        return Float.valueOf(getDecodedValue(() -> speed, value -> speed = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(79, 85))));
+        return Float.valueOf(speed);
 	}
 
     @SuppressWarnings("unused")
@@ -106,7 +114,7 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
      */
     @SuppressWarnings("unused")
 	public Float getCourseOverGround() {
-        return Float.valueOf(getDecodedValue(() -> course, value -> course = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(85, 94))));
+        return Float.valueOf(course);
 	}
 
     @SuppressWarnings("unused")
@@ -119,12 +127,12 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
      */
     @SuppressWarnings("unused")
 	public Integer getPositionLatency() {
-        return getDecodedValue(() -> positionLatency, value -> positionLatency = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(94, 95)));
+        return positionLatency;
 	}
 
    @SuppressWarnings("unused")
 	public Integer getSpare() {
-        return getDecodedValue(() -> spare, value -> spare = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(95, 96)));
+       return spare;
 	}
 
     @Override
@@ -143,13 +151,13 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
                 "} " + super.toString();
     }
 
-    private transient Boolean positionAccuracy;
-	private transient Boolean raim;
-	private transient NavigationStatus navigationStatus;
-	private transient Float longitude;
-	private transient Float latitude;
-	private transient Integer speed;
-	private transient Integer course;
-	private transient Integer positionLatency;
-	private transient Integer spare;
+    private final Boolean positionAccuracy;
+    private final Boolean raim;
+    private final NavigationStatus navigationStatus;
+    private final Float longitude;
+    private final Float latitude;
+    private final Integer speed;
+    private final Integer course;
+    private final Integer positionLatency;
+    private final Integer spare;
 }

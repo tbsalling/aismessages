@@ -21,8 +21,7 @@ import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
-
-import java.lang.ref.WeakReference;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import static dk.tbsalling.aismessages.ais.Decoders.*;
 import static java.lang.String.format;
@@ -39,12 +38,18 @@ import static java.lang.String.format;
 @SuppressWarnings("serial")
 public class AddressedBinaryMessage extends AISMessage {
 
-    public AddressedBinaryMessage(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
+    protected AddressedBinaryMessage(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
 
-    protected AddressedBinaryMessage(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
+        // Eagerly decode all fields
+        this.sequenceNumber = UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40));
+        this.destinationMmsi = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70)));
+        this.retransmit = BOOLEAN_DECODER.apply(getBits(70, 71));
+        this.spare = UNSIGNED_INTEGER_DECODER.apply(getBits(71, 72));
+        this.designatedAreaCode = UNSIGNED_INTEGER_DECODER.apply(getBits(72, 82));
+        this.functionalId = UNSIGNED_INTEGER_DECODER.apply(getBits(82, 88));
+        this.binaryData = BIT_DECODER.apply(getBits(88, getNumberOfBits()));
+        this.applicationSpecificMessage = ApplicationSpecificMessage.create(designatedAreaCode, functionalId, binaryData);
     }
 
     @Override
@@ -78,54 +83,42 @@ public class AddressedBinaryMessage extends AISMessage {
 
     @SuppressWarnings("unused")
     public Integer getSequenceNumber() {
-        return getDecodedValue(() -> sequenceNumber, ref -> sequenceNumber = ref, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40)));
+        return sequenceNumber;
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getDestinationMmsi() {
-        return getDecodedValue(() -> destinationMmsi, ref -> destinationMmsi = ref, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70))));
+        return destinationMmsi;
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getRetransmit() {
-        return getDecodedValue(() -> retransmit, ref -> retransmit = ref, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(70, 71)));
+        return retransmit;
 	}
 
     @SuppressWarnings("unused")
-	public int getSpare() {
-        return getDecodedValue(() -> spare, ref -> spare = ref, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(71, 72)));
+    public Integer getSpare() {
+        return spare;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getDesignatedAreaCode() {
-        return getDecodedValue(() -> designatedAreaCode, ref -> designatedAreaCode = ref, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(72, 82)));
+        return designatedAreaCode;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getFunctionalId() {
-        return getDecodedValue(() -> functionalId, ref -> functionalId = ref, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(82, 88)));
+        return functionalId;
 	}
 
     @SuppressWarnings("unused")
 	public String getBinaryData() {
-        return getDecodedValueByWeakReference(() -> binaryData, ref -> binaryData = ref, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(88, getNumberOfBits())));
+        return binaryData;
 	}
 
     @SuppressWarnings("unused")
     public ApplicationSpecificMessage getApplicationSpecificMessage() {
-        ApplicationSpecificMessage asm = this.applicationSpecificMessage == null ? null : this.applicationSpecificMessage.get();
-        if (asm == null) {
-            asm = ApplicationSpecificMessage.create(getDesignatedAreaCode(), getFunctionalId(), getBinaryData());
-            applicationSpecificMessage = new WeakReference<>(asm);
-        }
-
-        if (asm.getDesignatedAreaCode() >= 0 && asm.getDesignatedAreaCode() != this.getDesignatedAreaCode().intValue())
-            throw new IllegalStateException("Implementation error: DAC of AISMessage does not match ASM: " + asm.getDesignatedAreaCode() + " " + this.getDesignatedAreaCode());
-
-        if (asm.getFunctionalId() >= 0 && asm.getFunctionalId() != this.getFunctionalId().intValue())
-            throw new IllegalStateException("Implementation error: FI of AISMessage does not match ASM: " + asm.getFunctionalId() + " " + this.getFunctionalId());
-
-        return asm;
+        return applicationSpecificMessage;
     }
 
     @Override
@@ -142,12 +135,12 @@ public class AddressedBinaryMessage extends AISMessage {
                 "} " + super.toString();
     }
 
-    private transient Integer sequenceNumber;
-    private transient MMSI destinationMmsi;
-    private transient Boolean retransmit;
-    private transient Integer spare;
-    private transient Integer designatedAreaCode;
-    private transient Integer functionalId;
-    private transient WeakReference<String> binaryData;
-    private transient WeakReference<ApplicationSpecificMessage> applicationSpecificMessage;
+    private final Integer sequenceNumber;
+    private final MMSI destinationMmsi;
+    private final Boolean retransmit;
+    private final Integer spare;
+    private final Integer designatedAreaCode;
+    private final Integer functionalId;
+    private final String binaryData;
+    private final ApplicationSpecificMessage applicationSpecificMessage;
 }

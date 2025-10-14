@@ -21,6 +21,7 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.TxRxMode;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import static dk.tbsalling.aismessages.ais.Decoders.*;
 import static java.lang.String.format;
@@ -28,12 +29,31 @@ import static java.lang.String.format;
 @SuppressWarnings("serial")
 public class ChannelManagement extends AISMessage {
 
-    public ChannelManagement(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
-
-    protected ChannelManagement(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
+    protected ChannelManagement(NMEAMessage[] nmeaMessages, String bitString, Metadata metadata, NMEATagBlock nmeaTagBlock) {
+        super(nmeaMessages, bitString, metadata, nmeaTagBlock);
+        this.channelA = UNSIGNED_INTEGER_DECODER.apply(getBits(40, 52));
+        this.channelB = UNSIGNED_INTEGER_DECODER.apply(getBits(52, 64));
+        this.transmitReceiveMode = TxRxMode.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(64, 68)));
+        this.power = BOOLEAN_DECODER.apply(getBits(68, 69));
+        this.addressed = BOOLEAN_DECODER.apply(getBits(139, 140));
+        if (!addressed) {
+            this.northEastLongitude = FLOAT_DECODER.apply(getBits(69, 87)) / 10f;
+            this.northEastLatitude = FLOAT_DECODER.apply(getBits(87, 104)) / 10f;
+            this.southWestLongitude = FLOAT_DECODER.apply(getBits(104, 122)) / 10f;
+            this.southWestLatitude = FLOAT_DECODER.apply(getBits(122, 139)) / 10f;
+            this.destinationMmsi1 = null;
+            this.destinationMmsi2 = null;
+        } else {
+            this.northEastLongitude = null;
+            this.northEastLatitude = null;
+            this.southWestLongitude = null;
+            this.southWestLatitude = null;
+            this.destinationMmsi1 = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(69, 99)));
+            this.destinationMmsi2 = MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(104, 134)));
+        }
+        this.bandA = BOOLEAN_DECODER.apply(getBits(140, 141));
+        this.bandB = BOOLEAN_DECODER.apply(getBits(141, 142));
+        this.zoneSize = UNSIGNED_INTEGER_DECODER.apply(getBits(142, 145));
     }
 
     @Override
@@ -61,72 +81,72 @@ public class ChannelManagement extends AISMessage {
 
     @SuppressWarnings("unused")
 	public Integer getChannelA() {
-        return getDecodedValue(() -> channelA, value -> channelA = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(40, 52)));
+        return channelA;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getChannelB() {
-        return getDecodedValue(() -> channelB, value -> channelB = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(52, 64)));
+        return channelB;
 	}
 
     @SuppressWarnings("unused")
 	public TxRxMode getTransmitReceiveMode() {
-        return getDecodedValue(() -> transmitReceiveMode, value -> transmitReceiveMode = value, () -> Boolean.TRUE, () -> TxRxMode.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(64, 68))));
+        return transmitReceiveMode;
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getPower() {
-        return getDecodedValue(() -> power, value -> power = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(68, 69)));
+        return power;
 	}
 
     @SuppressWarnings("unused")
 	public Float getNorthEastLongitude() {
-        return getDecodedValue(() -> northEastLongitude, value -> northEastLongitude = value, () -> !getAddressed(), () -> FLOAT_DECODER.apply(getBits(69, 87)) / 10f);
+        return northEastLongitude;
 	}
 
     @SuppressWarnings("unused")
 	public Float getNorthEastLatitude() {
-        return getDecodedValue(() -> northEastLatitude, value -> northEastLatitude = value, () -> !getAddressed(), () -> FLOAT_DECODER.apply(getBits(87, 104)) / 10f);
+        return northEastLatitude;
 	}
 
     @SuppressWarnings("unused")
 	public Float getSouthWestLongitude() {
-        return getDecodedValue(() -> southWestLongitude, value -> southWestLongitude = value, () -> !getAddressed(), () -> FLOAT_DECODER.apply(getBits(104, 122)) / 10f);
+        return southWestLongitude;
 	}
 
     @SuppressWarnings("unused")
 	public Float getSouthWestLatitude() {
-        return getDecodedValue(() -> southWestLatitude, value -> southWestLatitude = value, () -> !getAddressed(), () -> FLOAT_DECODER.apply(getBits(122, 139)) / 10f);
+        return southWestLatitude;
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getDestinationMmsi1() {
-        return getDecodedValue(() -> destinationMmsi1, value -> destinationMmsi1 = value, () -> getAddressed(), () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(69, 99))));
+        return destinationMmsi1;
 	}
 
     @SuppressWarnings("unused")
 	public MMSI getDestinationMmsi2() {
-        return getDecodedValue(() -> destinationMmsi2, value -> destinationMmsi2 = value, () -> getAddressed(), () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(104, 134))));
+        return destinationMmsi2;
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getAddressed() {
-        return getDecodedValue(() -> addressed, value -> addressed = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(139, 140)));
+        return addressed;
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getBandA() {
-        return getDecodedValue(() -> bandA, value -> bandA = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(140, 141)));
+        return bandA;
 	}
 
     @SuppressWarnings("unused")
 	public Boolean getBandB() {
-        return getDecodedValue(() -> bandB, value -> bandB = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(141, 142)));
+        return bandB;
 	}
 
     @SuppressWarnings("unused")
 	public Integer getZoneSize() {
-        return getDecodedValue(() -> zoneSize, value -> zoneSize = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(142, 145)));
+        return zoneSize;
 	}
 
     @Override
@@ -150,18 +170,18 @@ public class ChannelManagement extends AISMessage {
                 "} " + super.toString();
     }
 
-    private transient Integer channelA;
-    private transient Integer channelB;
-    private transient TxRxMode transmitReceiveMode;
-    private transient Boolean power;
-    private transient Float northEastLongitude;
-    private transient Float northEastLatitude;
-    private transient Float southWestLongitude;
-    private transient Float southWestLatitude;
-    private transient MMSI destinationMmsi1;
-    private transient MMSI destinationMmsi2;
-    private transient Boolean addressed;
-    private transient Boolean bandA;
-    private transient Boolean bandB;
-    private transient Integer zoneSize;
+    private final Integer channelA;
+    private final Integer channelB;
+    private final TxRxMode transmitReceiveMode;
+    private final Boolean power;
+    private final Float northEastLongitude;
+    private final Float northEastLatitude;
+    private final Float southWestLongitude;
+    private final Float southWestLatitude;
+    private final MMSI destinationMmsi1;
+    private final MMSI destinationMmsi2;
+    private final Boolean addressed;
+    private final Boolean bandA;
+    private final Boolean bandB;
+    private final Integer zoneSize;
 }
