@@ -46,11 +46,11 @@ public class NMEAMessageInputStreamReader {
 		Objects.requireNonNull(nmeaStringPreProcessor, "nmeaStringPreProcessor cannot be null.");
 		Objects.requireNonNull(nmeaMessageHandler, "nmeaMessageHandler cannot be null.");
 
-		if (nmeaStrings instanceof Queue)
-			this.stringSupplier = () -> ((Queue<String>) nmeaStrings).poll();
+        if (nmeaStrings instanceof Queue<?> q)
+            this.stringSupplier = () -> (String) q.poll();
 		else {
 			final Queue<String> nmeaStringsQueue = new LinkedList<>(nmeaStrings);
-			this.stringSupplier = () -> nmeaStringsQueue.poll();
+            this.stringSupplier = nmeaStringsQueue::poll;
 		}
 
 		this.nmeaMessagePreProcessor = nmeaStringPreProcessor;

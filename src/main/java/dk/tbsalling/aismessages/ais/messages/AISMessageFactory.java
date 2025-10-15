@@ -105,12 +105,14 @@ public class AISMessageFactory {
         boolean raimFlag = parser.getBoolean(148, 149);
 
         // Communication state depends on the message type
-        CommunicationState communicationState;
-        if (messageType == AISMessageType.PositionReportClassAScheduled || messageType == AISMessageType.PositionReportClassAAssignedSchedule) {
-            communicationState = SOTDMACommunicationState.fromBitString(parser.getBitPattern(149, 168));
-        } else {  // PositionReportClassAResponseToInterrogation
-            communicationState = ITDMACommunicationState.fromBitString(parser.getBitPattern(149, 168));
-        }
+        CommunicationState communicationState = switch (messageType) {
+            case PositionReportClassAScheduled, PositionReportClassAAssignedSchedule ->
+                    SOTDMACommunicationState.fromBitString(parser.getBitPattern(149, 168));
+            case PositionReportClassAResponseToInterrogation ->
+                    ITDMACommunicationState.fromBitString(parser.getBitPattern(149, 168));
+            default ->
+                    throw new IllegalArgumentException("Unsupported message type for PositionReport: " + messageType);
+        };
 
         return constructor.create(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 navigationStatus, rateOfTurn, speedOverGround, positionAccuracy, latitude, longitude,
