@@ -23,17 +23,17 @@ public class UTCAndDateResponseTest {
         // Assert
         assertEquals(AISMessageType.UTCAndDateResponse, aisMessage.getMessageType());
         UTCAndDateResponse message = (UTCAndDateResponse) aisMessage;
-        assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
+        assertEquals(0, message.getRepeatIndicator());
         assertEquals(MMSI.valueOf(304137000), message.getSourceMmsi());
-        assertEquals(Integer.valueOf(2009), message.getYear());
-        assertEquals(Integer.valueOf(5), message.getMonth());
-        assertEquals(Integer.valueOf(22), message.getDay());
-        assertEquals(Integer.valueOf(2), message.getHour());
-        assertEquals(Integer.valueOf(22), message.getMinute());
-        assertEquals(Integer.valueOf(40), message.getSecond());
+        assertEquals(2009, message.getYear());
+        assertEquals(5, message.getMonth());
+        assertEquals(22, message.getDay());
+        assertEquals(2, message.getHour());
+        assertEquals(22, message.getMinute());
+        assertEquals(40, message.getSecond());
         assertTrue(message.isPositionAccurate());
-        assertEquals(Float.valueOf(28.409117f), message.getLatitude());
-        assertEquals(Float.valueOf(-94.40768f), message.getLongitude());
+        assertEquals(28.409117f, message.getLatitude(), 0.0f);
+        assertEquals(-94.40768f, message.getLongitude(), 0.0f);
         assertEquals(PositionFixingDevice.Gps, message.getPositionFixingDevice());
         assertFalse(message.isRaimFlag());
     }
@@ -51,17 +51,17 @@ public class UTCAndDateResponseTest {
         // Assert
         assertEquals(AISMessageType.UTCAndDateResponse, aisMessage.getMessageType());
         UTCAndDateResponse message = (UTCAndDateResponse) aisMessage;
-        assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
+        assertEquals(0, message.getRepeatIndicator());
         assertEquals(MMSI.valueOf(366941790), message.getSourceMmsi());
-        assertEquals(Integer.valueOf(2010), message.getYear());
-        assertEquals(Integer.valueOf(4), message.getMonth());
-        assertEquals(Integer.valueOf(28), message.getDay());
-        assertEquals(Integer.valueOf(0), message.getHour());
-        assertEquals(Integer.valueOf(10), message.getMinute());
-        assertEquals(Integer.valueOf(13), message.getSecond());
+        assertEquals(2010, message.getYear());
+        assertEquals(4, message.getMonth());
+        assertEquals(28, message.getDay());
+        assertEquals(0, message.getHour());
+        assertEquals(10, message.getMinute());
+        assertEquals(13, message.getSecond());
         assertFalse(message.isPositionAccurate());
-        assertEquals(Float.valueOf(27.814686f), message.getLatitude());
-        assertEquals(Float.valueOf(-97.41047f), message.getLongitude());
+        assertEquals(27.814686f, message.getLatitude(), 0.0f);
+        assertEquals(-97.41047f, message.getLongitude(), 0.0f);
         assertEquals(PositionFixingDevice.Gps, message.getPositionFixingDevice());
         assertFalse(message.isRaimFlag());
     }

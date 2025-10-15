@@ -22,15 +22,15 @@ class StandardSARAircraftPositionReportTest {
         assertEquals(AISMessageType.StandardSARAircraftPositionReport, aisMessage.getMessageType());
         StandardSARAircraftPositionReport message = (StandardSARAircraftPositionReport) aisMessage;
 
-        assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
+        assertEquals(0, message.getRepeatIndicator());
         assertEquals(MMSI.valueOf(1000629720), message.getSourceMmsi());
-        assertEquals(Integer.valueOf(1), message.getAltitude());
-        assertEquals(Float.valueOf(497.0f), message.getSpeedOverGround());
+        assertEquals(1, message.getAltitude());
+        assertEquals(497.0f, message.getSpeedOverGround(), 0.0f);
         assertTrue(message.isPositionAccuracy());
-        assertEquals(Float.valueOf(71.6f), message.getLongitude(), 0.1f);
-        assertEquals(Float.valueOf(34.1f), message.getLatitude(), 0.1f);
-        assertEquals(Float.valueOf(27.0f), message.getCourseOverGround());
-        assertEquals(Integer.valueOf(3), message.getSecond());
+        assertEquals(71.6f, message.getLongitude(), 0.1f);
+        assertEquals(34.1f, message.getLatitude(), 0.1f);
+        assertEquals(27.0f, message.getCourseOverGround(), 0.0f);
+        assertEquals(3, message.getSecond());
         assertEquals("11010010", message.getRegionalReserved());
         assertTrue(message.isDataTerminalReady());
         assertFalse(message.isAssigned());

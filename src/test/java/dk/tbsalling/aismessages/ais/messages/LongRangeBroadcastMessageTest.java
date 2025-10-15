@@ -22,19 +22,19 @@ public class LongRangeBroadcastMessageTest {
 
         // Assert
         assertEquals(AISMessageType.LongRangeBroadcastMessage, aisMessage.getMessageType());
-        assertEquals((Integer) 1, aisMessage.getRepeatIndicator());
+        assertEquals(1, aisMessage.getRepeatIndicator());
         assertEquals(MMSI.valueOf(206914217), aisMessage.getSourceMmsi());
 
         LongRangeBroadcastMessage message = (LongRangeBroadcastMessage) aisMessage;
         assertFalse(message.isPositionAccuracy());
         assertFalse(message.isRaim());
         assertEquals(NavigationStatus.NotUnderCommand, message.getNavigationStatus());
-        assertEquals(Float.valueOf(137.02333f), message.getLongitude());
-        assertEquals(Float.valueOf(4.84f), message.getLatitude());
-        assertEquals(Float.valueOf(57f), message.getSpeedOverGround(), 1e-5);
-        assertEquals((Integer)57, message.getRawSpeedOverGround());
-        assertEquals(Float.valueOf(167f), message.getCourseOverGround(), 1e-5);
-        assertEquals((Integer)167, message.getRawCourseOverGround());
+        assertEquals(137.02333f, message.getLongitude(), 0.0f);
+        assertEquals(4.84f, message.getLatitude(), 0.0f);
+        assertEquals(57f, message.getSpeedOverGround(), 1e-5);
+        assertEquals(57, message.getRawSpeedOverGround());
+        assertEquals(167f, message.getCourseOverGround(), 1e-5);
+        assertEquals(167, message.getRawCourseOverGround());
     }
 
     @Test
@@ -49,19 +49,19 @@ public class LongRangeBroadcastMessageTest {
 
         // Assert
         assertEquals(AISMessageType.LongRangeBroadcastMessage, aisMessage.getMessageType());
-        assertEquals((Integer) 0, aisMessage.getRepeatIndicator());
+        assertEquals(0, aisMessage.getRepeatIndicator());
         assertEquals(MMSI.valueOf(357277000), aisMessage.getSourceMmsi());
 
         LongRangeBroadcastMessage message = (LongRangeBroadcastMessage) aisMessage;
         assertTrue(message.isPositionAccuracy());
         assertFalse(message.isRaim());
         assertEquals(NavigationStatus.Moored, message.getNavigationStatus());
-        assertEquals(Float.valueOf(176.18167f), message.getLongitude());
-        assertEquals(Float.valueOf(-37.65333f), message.getLatitude());
-        assertEquals(Float.valueOf(0f), message.getSpeedOverGround(), 1e-5);
-        assertEquals((Integer)0, message.getRawSpeedOverGround());
-        assertEquals(Float.valueOf(11f), message.getCourseOverGround(), 1e-5);
-        assertEquals((Integer)11, message.getRawCourseOverGround());
+        assertEquals(176.18167f, message.getLongitude(), 0.0f);
+        assertEquals(-37.65333f, message.getLatitude(), 0.0f);
+        assertEquals(0f, message.getSpeedOverGround(), 1e-5);
+        assertEquals(0, message.getRawSpeedOverGround());
+        assertEquals(11f, message.getCourseOverGround(), 1e-5);
+        assertEquals(11, message.getRawCourseOverGround());
     }
 
 }

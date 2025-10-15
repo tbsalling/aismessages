@@ -22,12 +22,12 @@ public class AddressedSafetyRelatedMessageTest {
         // Assert
         assertEquals(AISMessageType.AddressedSafetyRelatedMessage, aisMessage.getMessageType());
         AddressedSafetyRelatedMessage message = (AddressedSafetyRelatedMessage) aisMessage;
-        assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
+        assertEquals(0, message.getRepeatIndicator());
         assertEquals(MMSI.valueOf(271002099), message.getSourceMmsi());
-        assertEquals(Integer.valueOf(0), message.getSequenceNumber());
+        assertEquals(0, message.getSequenceNumber());
         assertEquals(MMSI.valueOf(271002111), message.getDestinationMmsi());
         assertTrue(message.isRetransmit());
-        assertEquals(Integer.valueOf(0), message.getSpare());
+        assertEquals(0, message.getSpare());
         assertEquals("MSG FROM 27100209", message.getText());
     }
 
@@ -44,12 +44,12 @@ public class AddressedSafetyRelatedMessageTest {
         // Assert
         assertEquals(AISMessageType.AddressedSafetyRelatedMessage, aisMessage.getMessageType());
         AddressedSafetyRelatedMessage message = (AddressedSafetyRelatedMessage) aisMessage;
-        assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
+        assertEquals(0, message.getRepeatIndicator());
         assertEquals(MMSI.valueOf(351809000), message.getSourceMmsi());
-        assertEquals(Integer.valueOf(0), message.getSequenceNumber());
+        assertEquals(0, message.getSequenceNumber());
         assertEquals(MMSI.valueOf(302866720), message.getDestinationMmsi());
         assertFalse(message.isRetransmit());
-        assertEquals(Integer.valueOf(1), message.getSpare());
+        assertEquals(1, message.getSpare());
         assertEquals("%JAPUMR 5L", message.getText());
     }
 }

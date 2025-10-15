@@ -21,21 +21,21 @@ public class PositionReportClassAScheduledTest {
 
         // Assert
         assertEquals(AISMessageType.PositionReportClassAScheduled, aisMessage.getMessageType());
-        assertEquals((Integer) 0, aisMessage.getRepeatIndicator());
+        assertEquals(0, aisMessage.getRepeatIndicator());
         PositionReportClassAScheduled message = (PositionReportClassAScheduled) aisMessage;
         assertEquals(MMSI.valueOf(219000195), message.getSourceMmsi());
         assertEquals(NavigationStatus.UnderwayUsingEngine, message.getNavigationStatus());
-        assertEquals((Integer) 0, message.getRateOfTurn());
-        assertEquals((Float) 7.8f, message.getSpeedOverGround());
+        assertEquals(0, message.getRateOfTurn());
+        assertEquals(7.8f, message.getSpeedOverGround(), 0.0f);
         assertTrue(message.isPositionAccuracy());
-        assertEquals(Float.valueOf(56.56692f), message.getLatitude());
-        assertEquals((Integer) 33940151, message.getRawLatitude());
-        assertEquals(Float.valueOf(11.071096f), message.getLongitude());
-        assertEquals((Integer) 6642658, message.getRawLongitude());
-        assertEquals(Float.valueOf(189.7f), message.getCourseOverGround());
-        assertEquals((Integer) 1897, message.getRawCourseOverGround());
-        assertEquals((Integer) 46, message.getSecond());
-        assertEquals((Integer) 186, message.getTrueHeading());
+        assertEquals(56.56692f, message.getLatitude(), 0.0f);
+        assertEquals(33940151, message.getRawLatitude());
+        assertEquals(11.071096f, message.getLongitude(), 0.0f);
+        assertEquals(6642658, message.getRawLongitude());
+        assertEquals(189.7f, message.getCourseOverGround(), 0.0f);
+        assertEquals(1897, message.getRawCourseOverGround());
+        assertEquals(46, message.getSecond());
+        assertEquals(186, message.getTrueHeading());
         assertEquals(ManeuverIndicator.NotAvailable, message.getSpecialManeuverIndicator());
         assertFalse(message.isRaimFlag());
     }
@@ -61,18 +61,18 @@ public class PositionReportClassAScheduledTest {
 
         // Assert
         assertEquals(AISMessageType.PositionReportClassAScheduled, aisMessage.getMessageType());
-        assertEquals((Integer) 0, aisMessage.getRepeatIndicator());
+        assertEquals(0, aisMessage.getRepeatIndicator());
         PositionReportClassAScheduled message = (PositionReportClassAScheduled) aisMessage;
         assertEquals(MMSI.valueOf(503175400), message.getSourceMmsi());
         assertEquals(NavigationStatus.Undefined, message.getNavigationStatus());
-        assertEquals(Integer.valueOf(-731), message.getRateOfTurn());
-        assertEquals(Float.valueOf(0.0f), message.getSpeedOverGround());
+        assertEquals(-731, message.getRateOfTurn());
+        assertEquals(0.0f, message.getSpeedOverGround(), 0.0f);
         assertFalse(message.isPositionAccuracy());
-        assertEquals(Float.valueOf(-34.773254f), message.getLatitude());
-        assertEquals(Float.valueOf(138.48856f), message.getLongitude());
-        assertEquals(Float.valueOf(4.8f), message.getCourseOverGround());
-        assertEquals(Integer.valueOf(47), message.getSecond());
-        assertEquals(Integer.valueOf(511), message.getTrueHeading());
+        assertEquals(-34.773254f, message.getLatitude(), 0.0f);
+        assertEquals(138.48856f, message.getLongitude(), 0.0f);
+        assertEquals(4.8f, message.getCourseOverGround(), 0.0f);
+        assertEquals(47, message.getSecond());
+        assertEquals(511, message.getTrueHeading());
         assertEquals(ManeuverIndicator.NotAvailable, message.getSpecialManeuverIndicator());
         assertFalse(message.isRaimFlag());
 
@@ -84,8 +84,8 @@ public class PositionReportClassAScheduledTest {
         assertNull(sotdmaCommunicationState.getNumberOfReceivedStations());
         assertNull(sotdmaCommunicationState.getSlotNumber());
         assertNull(sotdmaCommunicationState.getSlotOffset());
-        assertEquals(Integer.valueOf(1), sotdmaCommunicationState.getSlotTimeout());
-        assertEquals(Integer.valueOf(0), sotdmaCommunicationState.getUtcHour());
-        assertEquals(Integer.valueOf(24), sotdmaCommunicationState.getUtcMinute());
+        assertEquals(1, sotdmaCommunicationState.getSlotTimeout());
+        assertEquals(0, sotdmaCommunicationState.getUtcHour());
+        assertEquals(24, sotdmaCommunicationState.getUtcMinute());
     }
 }

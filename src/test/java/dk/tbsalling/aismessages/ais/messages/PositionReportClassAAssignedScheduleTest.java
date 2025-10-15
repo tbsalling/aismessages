@@ -48,21 +48,21 @@ public class PositionReportClassAAssignedScheduleTest {
 
         // Assert
         assertEquals(AISMessageType.PositionReportClassAAssignedSchedule, aisMessage.getMessageType());
-        assertEquals((Integer) 0, aisMessage.getRepeatIndicator());
+        assertEquals(0, aisMessage.getRepeatIndicator());
         PositionReportClassAAssignedSchedule message = (PositionReportClassAAssignedSchedule) aisMessage;
         assertEquals(MMSI.valueOf(304911000), message.getSourceMmsi());
         assertEquals(NavigationStatus.UnderwayUsingEngine, message.getNavigationStatus());
-        assertEquals((Integer) 0, message.getRateOfTurn());
-        assertEquals((Float) 13.6f, message.getSpeedOverGround());
+        assertEquals(0, message.getRateOfTurn());
+        assertEquals(13.6f, message.getSpeedOverGround(), 0.0f);
         assertTrue(message.isPositionAccuracy());
-        assertEquals(Float.valueOf(37.21113f), message.getLatitude());
-        assertEquals((Integer) 22326676, message.getRawLatitude());
-        assertEquals(Float.valueOf(-123.45053f), message.getLongitude());
-        assertEquals((Integer) (-74070321), message.getRawLongitude());
-        assertEquals(Float.valueOf(329.7f), message.getCourseOverGround());
-        assertEquals((Integer) 3297, message.getRawCourseOverGround());
-        assertEquals((Integer) 331, message.getTrueHeading());
-        assertEquals((Integer) 7, message.getSecond());
+        assertEquals(37.21113f, message.getLatitude(), 0.0f);
+        assertEquals(22326676, message.getRawLatitude());
+        assertEquals(-123.45053f, message.getLongitude(), 0.0f);
+        assertEquals(-74070321, message.getRawLongitude());
+        assertEquals(329.7f, message.getCourseOverGround(), 0.0f);
+        assertEquals(3297, message.getRawCourseOverGround());
+        assertEquals(331, message.getTrueHeading());
+        assertEquals(7, message.getSecond());
         assertEquals(ManeuverIndicator.NotAvailable, message.getSpecialManeuverIndicator());
         assertFalse(message.isRaimFlag());
     }

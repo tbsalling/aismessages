@@ -21,19 +21,19 @@ public class GroupAssignmentCommandTest {
         // Assert
         assertEquals(AISMessageType.GroupAssignmentCommand, aisMessage.getMessageType());
         GroupAssignmentCommand message = (GroupAssignmentCommand) aisMessage;
-        assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
+        assertEquals(0, message.getRepeatIndicator());
         assertEquals(MMSI.valueOf(2268120), message.getSourceMmsi());
         assertEquals("", message.getSpare1());
-        assertEquals(Float.valueOf(157.8f), message.getNorthEastLongitude());
-        assertEquals(Float.valueOf(3064.2f), message.getNorthEastLatitude());
-        assertEquals(Float.valueOf(109.6f), message.getSouthWestLongitude());
-        assertEquals(Float.valueOf(3040.8f), message.getSouthWestLatitude());
+        assertEquals(157.8f, message.getNorthEastLongitude(), 0.0f);
+        assertEquals(3064.2f, message.getNorthEastLatitude(), 0.0f);
+        assertEquals(109.6f, message.getSouthWestLongitude(), 0.0f);
+        assertEquals(3040.8f, message.getSouthWestLatitude(), 0.0f);
         assertEquals(StationType.InlandWaterways, message.getStationType());
         assertEquals(ShipType.NotAvailable, message.getShipType());
         assertEquals("$", message.getSpare2());
         assertEquals(TxRxMode.TxABRxAB, message.getTransmitReceiveMode());
         assertEquals(ReportingInterval.Autonomous, message.getReportingInterval());
-        assertEquals(Integer.valueOf(0), message.getQuietTime());
+        assertEquals(0, message.getQuietTime());
     }
 
     @Test
@@ -49,16 +49,16 @@ public class GroupAssignmentCommandTest {
         // Assert
         assertEquals(AISMessageType.GroupAssignmentCommand, aisMessage.getMessageType());
         GroupAssignmentCommand message = (GroupAssignmentCommand) aisMessage;
-        assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
+        assertEquals(0, message.getRepeatIndicator());
         assertEquals(MMSI.valueOf(2268120), message.getSourceMmsi());
-        assertEquals(Float.valueOf(157.8f), message.getNorthEastLongitude());
-        assertEquals(Float.valueOf(3064.2f), message.getNorthEastLatitude());
-        assertEquals(Float.valueOf(109.6f), message.getSouthWestLongitude());
-        assertEquals(Float.valueOf(3040.8f), message.getSouthWestLatitude());
+        assertEquals(157.8f, message.getNorthEastLongitude(), 0.0f);
+        assertEquals(3064.2f, message.getNorthEastLatitude(), 0.0f);
+        assertEquals(109.6f, message.getSouthWestLongitude(), 0.0f);
+        assertEquals(3040.8f, message.getSouthWestLatitude(), 0.0f);
         assertEquals(StationType.InlandWaterways, message.getStationType());
         assertEquals(ShipType.NotAvailable, message.getShipType());
         assertEquals(TxRxMode.TxABRxAB, message.getTransmitReceiveMode());
         assertEquals(ReportingInterval.Autonomous, message.getReportingInterval());
-        assertEquals(Integer.valueOf(0), message.getQuietTime());
+        assertEquals(0, message.getQuietTime());
     }
 }

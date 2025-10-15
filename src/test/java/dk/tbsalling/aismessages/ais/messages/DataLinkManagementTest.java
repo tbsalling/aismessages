@@ -23,12 +23,12 @@ public class DataLinkManagementTest {
         // Assert
         assertEquals(AISMessageType.DataLinkManagement, aisMessage.getMessageType());
         DataLinkManagement message = (DataLinkManagement) aisMessage;
-        assertEquals(Integer.valueOf(3), message.getRepeatIndicator());
+        assertEquals(3, message.getRepeatIndicator());
         assertEquals(MMSI.valueOf(3669708), message.getSourceMmsi());
-        assertEquals((Integer) 1620, message.getOffsetNumber1());
-        assertEquals((Integer) 5, message.getReservedSlots1());
-        assertEquals((Integer) 7, message.getTimeout1());
-        assertEquals((Integer) 225, message.getIncrement1());
+        assertEquals(1620, message.getOffsetNumber1());
+        assertEquals(5, message.getReservedSlots1());
+        assertEquals(7, message.getTimeout1());
+        assertEquals(225, message.getIncrement1());
         assertNull(message.getOffsetNumber2());
         assertNull(message.getReservedSlots2());
         assertNull(message.getTimeout2());
@@ -52,12 +52,12 @@ public class DataLinkManagementTest {
         // Assert
         assertEquals(AISMessageType.DataLinkManagement, aisMessage.getMessageType());
         DataLinkManagement message = (DataLinkManagement) aisMessage;
-        assertEquals(Integer.valueOf(3), message.getRepeatIndicator());
+        assertEquals(3, message.getRepeatIndicator());
         assertEquals(MMSI.valueOf(3669708), message.getSourceMmsi());
-        assertEquals((Integer) 1717, message.getOffsetNumber1());
-        assertEquals((Integer) 5, message.getReservedSlots1());
-        assertEquals((Integer) 7, message.getTimeout1());
-        assertEquals((Integer) 225, message.getIncrement1());
+        assertEquals(1717, message.getOffsetNumber1());
+        assertEquals(5, message.getReservedSlots1());
+        assertEquals(7, message.getTimeout1());
+        assertEquals(225, message.getIncrement1());
         assertNull(message.getOffsetNumber2());
         assertNull(message.getReservedSlots2());
         assertNull(message.getTimeout2());

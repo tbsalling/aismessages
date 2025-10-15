@@ -22,9 +22,9 @@ public class SafetyRelatedBroadcastMessageTest {
         // Assert
         assertEquals(AISMessageType.SafetyRelatedBroadcastMessage, aisMessage.getMessageType());
         SafetyRelatedBroadcastMessage message = (SafetyRelatedBroadcastMessage) aisMessage;
-        assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
+        assertEquals(0, message.getRepeatIndicator());
         assertEquals(MMSI.valueOf(351809000), message.getSourceMmsi());
-        assertEquals(Integer.valueOf(0), message.getSpare());
+        assertEquals(0, message.getSpare());
         assertEquals("RCVD YR TEST MSG", message.getText());
     }
 
@@ -41,9 +41,9 @@ public class SafetyRelatedBroadcastMessageTest {
         // Assert
         assertEquals(AISMessageType.SafetyRelatedBroadcastMessage, aisMessage.getMessageType());
         SafetyRelatedBroadcastMessage message = (SafetyRelatedBroadcastMessage) aisMessage;
-        assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
+        assertEquals(0, message.getRepeatIndicator());
         assertEquals(MMSI.valueOf(237008900), message.getSourceMmsi());
-        assertEquals(Integer.valueOf(0), message.getSpare());
+        assertEquals(0, message.getSpare());
         assertEquals("EP228 IX48 FG3 DK7 PL56.", message.getText());
     }
 }

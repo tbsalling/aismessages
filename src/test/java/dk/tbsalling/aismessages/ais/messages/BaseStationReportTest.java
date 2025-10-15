@@ -20,18 +20,18 @@ public class BaseStationReportTest {
 
         // Assert
         assertEquals(AISMessageType.BaseStationReport, aisMessage.getMessageType());
-        assertEquals((Integer) 3, aisMessage.getRepeatIndicator());
+        assertEquals(3, aisMessage.getRepeatIndicator());
         BaseStationReport message = (BaseStationReport) aisMessage;
         assertEquals(MMSI.valueOf(3669708), message.getSourceMmsi());
-        assertEquals((Integer) 2011, message.getYear());
-        assertEquals((Integer) 3, message.getMonth());
-        assertEquals((Integer) 16, message.getDay());
-        assertEquals((Integer) 6, message.getHour());
-        assertEquals((Integer) 25, message.getMinute());
-        assertEquals((Integer) 9, message.getSecond());
+        assertEquals(2011, message.getYear());
+        assertEquals(3, message.getMonth());
+        assertEquals(16, message.getDay());
+        assertEquals(6, message.getHour());
+        assertEquals(25, message.getMinute());
+        assertEquals(9, message.getSecond());
         assertTrue(message.isPositionAccurate());
-        assertEquals(Float.valueOf(37.923283f), message.getLatitude());
-        assertEquals(Float.valueOf(-122.59837f), message.getLongitude());
+        assertEquals(37.923283f, message.getLatitude(), 0.0f);
+        assertEquals(-122.59837f, message.getLongitude(), 0.0f);
         assertEquals(PositionFixingDevice.Surveyed, message.getPositionFixingDevice());
         assertFalse(message.isRaimFlag());
     }
@@ -48,18 +48,18 @@ public class BaseStationReportTest {
 
         // Assert
         assertEquals(AISMessageType.BaseStationReport, aisMessage.getMessageType());
-        assertEquals((Integer) 0, aisMessage.getRepeatIndicator());
+        assertEquals(0, aisMessage.getRepeatIndicator());
         BaseStationReport message = (BaseStationReport) aisMessage;
         assertEquals(MMSI.valueOf(601011), message.getSourceMmsi());
-        assertEquals((Integer) 2012, message.getYear());
-        assertEquals((Integer) 6, message.getMonth());
-        assertEquals((Integer) 8, message.getDay());
-        assertEquals((Integer) 7, message.getHour());
-        assertEquals((Integer) 38, message.getMinute());
-        assertEquals((Integer) 20, message.getSecond());
+        assertEquals(2012, message.getYear());
+        assertEquals(6, message.getMonth());
+        assertEquals(8, message.getDay());
+        assertEquals(7, message.getHour());
+        assertEquals(38, message.getMinute());
+        assertEquals(20, message.getSecond());
         assertTrue(message.isPositionAccurate());
-        assertEquals(Float.valueOf(-29.870832f), message.getLatitude());
-        assertEquals(Float.valueOf(31.033514f), message.getLongitude());
+        assertEquals(-29.870832f, message.getLatitude(), 0.0f);
+        assertEquals(31.033514f, message.getLongitude(), 0.0f);
         assertEquals(PositionFixingDevice.Gps, message.getPositionFixingDevice());
         assertFalse(message.isRaimFlag());
 
@@ -67,8 +67,8 @@ public class BaseStationReportTest {
         assertEquals(SyncState.UTCDirect, sotdmaCommunicationState.getSyncState());
         assertNull(sotdmaCommunicationState.getNumberOfReceivedStations());
         assertNull(sotdmaCommunicationState.getSlotNumber());
-        assertEquals(Integer.valueOf(0), sotdmaCommunicationState.getSlotOffset());
-        assertEquals(Integer.valueOf(0), sotdmaCommunicationState.getSlotTimeout());
+        assertEquals(0, sotdmaCommunicationState.getSlotOffset());
+        assertEquals(0, sotdmaCommunicationState.getSlotTimeout());
         assertNull(sotdmaCommunicationState.getUtcHour());
         assertNull(sotdmaCommunicationState.getUtcMinute());
     }

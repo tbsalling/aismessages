@@ -22,7 +22,7 @@ public class BinaryMessageSingleSlotTest {
         // Assert
         assertEquals(AISMessageType.BinaryMessageSingleSlot, aisMessage.getMessageType());
         BinaryMessageSingleSlot message = (BinaryMessageSingleSlot) aisMessage;
-        assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
+        assertEquals(0, message.getRepeatIndicator());
         assertEquals(MMSI.valueOf(440006460), message.getSourceMmsi());
         assertTrue(message.isDestinationIndicator());
         assertFalse(message.isBinaryDataFlag());
@@ -44,7 +44,7 @@ public class BinaryMessageSingleSlotTest {
         // Assert
         assertEquals(AISMessageType.BinaryMessageSingleSlot, aisMessage.getMessageType());
         BinaryMessageSingleSlot message = (BinaryMessageSingleSlot) aisMessage;
-        assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
+        assertEquals(0, message.getRepeatIndicator());
         assertEquals(MMSI.valueOf(439993936), message.getSourceMmsi());
         assertFalse(message.isDestinationIndicator());
         assertTrue(message.isBinaryDataFlag());
