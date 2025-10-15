@@ -24,7 +24,6 @@ import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 import dk.tbsalling.aismessages.version.Version;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.security.MessageDigest;
@@ -56,8 +55,7 @@ import static java.util.Objects.requireNonNull;
  * Subclasses of AISMessage represent specific types of AIS messages, providing additional methods and fields
  * specific to that message type.
  */
-@SuppressWarnings("serial")
-public abstract class AISMessage implements Serializable {
+public abstract class AISMessage {
 
     private transient static final System.Logger LOG = System.getLogger(AISMessage.class.getName());
 

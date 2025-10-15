@@ -16,9 +16,8 @@
 
 package dk.tbsalling.aismessages.ais.messages.types;
 
-import java.io.Serializable;
 
-public class IMO implements Serializable {
+public class IMO {
 
 	public IMO(int imo) {
 		this.imo = imo;

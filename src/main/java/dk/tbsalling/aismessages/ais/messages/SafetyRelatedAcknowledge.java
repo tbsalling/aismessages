@@ -27,7 +27,6 @@ import java.util.stream.IntStream;
 
 import static java.lang.String.format;
 
-@SuppressWarnings("serial")
 public class SafetyRelatedAcknowledge extends AISMessage {
 
     /**

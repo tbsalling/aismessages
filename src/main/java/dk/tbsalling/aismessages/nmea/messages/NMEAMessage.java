@@ -20,7 +20,6 @@ import dk.tbsalling.aismessages.nmea.exceptions.NMEAParseException;
 import dk.tbsalling.aismessages.nmea.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
-import java.io.Serializable;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,7 +40,7 @@ import java.util.regex.Pattern;
  */
 
 // TODO optimize getters
-public class NMEAMessage implements Serializable {
+public class NMEAMessage {
 
 	public static NMEAMessage fromString(String nmeaString) {
 		return new NMEAMessage(nmeaString);

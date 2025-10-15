@@ -32,7 +32,6 @@ import static java.lang.String.format;
  * @author tbsalling
  *
  */
-@SuppressWarnings("serial")
 public abstract class PositionReport extends AISMessage implements ExtendedDynamicDataReport {
 
     /**

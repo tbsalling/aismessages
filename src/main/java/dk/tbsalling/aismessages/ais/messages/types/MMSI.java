@@ -16,11 +16,9 @@
 
 package dk.tbsalling.aismessages.ais.messages.types;
 
-import java.io.Serializable;
 import java.util.Objects;
 
-@SuppressWarnings("serial")
-public class MMSI implements Serializable {
+public class MMSI {
 
 	public MMSI(int mmsi) {
 		this.mmsi = mmsi;

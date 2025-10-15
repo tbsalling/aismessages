@@ -16,13 +16,12 @@
 
 package dk.tbsalling.aismessages.ais.messages.types;
 
-import java.io.Serializable;
 
 import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
 import static java.lang.System.Logger.Level.WARNING;
 import static java.util.Objects.requireNonNull;
 
-public class SOTDMACommunicationState extends CommunicationState implements Serializable {
+public class SOTDMACommunicationState extends CommunicationState {
 
 	private static final System.Logger LOG = System.getLogger(SOTDMACommunicationState.class.getName());
 

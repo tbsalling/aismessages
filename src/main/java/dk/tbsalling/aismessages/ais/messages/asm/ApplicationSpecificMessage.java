@@ -1,10 +1,8 @@
 package dk.tbsalling.aismessages.ais.messages.asm;
 
-import java.io.Serializable;
-
 import static java.util.Objects.requireNonNull;
 
-public abstract class ApplicationSpecificMessage implements Serializable {
+public abstract class ApplicationSpecificMessage {
 
     /**
      * Create proper type of ApplicationSpecificMessage

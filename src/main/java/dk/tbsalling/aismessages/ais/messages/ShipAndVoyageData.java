@@ -35,7 +35,6 @@ import java.util.Optional;
  * 
  * @author tbsalling
  */
-@SuppressWarnings("serial")
 public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
 
     /**

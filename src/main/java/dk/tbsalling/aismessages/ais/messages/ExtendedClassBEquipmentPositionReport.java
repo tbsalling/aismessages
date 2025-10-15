@@ -25,7 +25,6 @@ import java.time.Instant;
 
 import static java.lang.String.format;
 
-@SuppressWarnings("serial")
 public class ExtendedClassBEquipmentPositionReport extends AISMessage implements ExtendedDynamicDataReport {
 
     /**

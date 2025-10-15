@@ -23,7 +23,6 @@ import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import java.time.Instant;
 
-@SuppressWarnings("serial")
 public class BinaryMessageMultipleSlot extends AISMessage {
 
     /**

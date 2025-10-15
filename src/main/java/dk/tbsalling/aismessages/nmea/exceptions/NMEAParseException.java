@@ -16,7 +16,6 @@
 
 package dk.tbsalling.aismessages.nmea.exceptions;
 
-@SuppressWarnings("serial")
 public class NMEAParseException extends RuntimeException {
 
 	public NMEAParseException(String rawMessage, String errorDescription) {

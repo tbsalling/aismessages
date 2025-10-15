@@ -23,7 +23,6 @@ import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
  * @author tbsalling
  *
  */
-@SuppressWarnings("serial")
 public class Error extends AISMessage {
 
     protected void checkAISMessage() {

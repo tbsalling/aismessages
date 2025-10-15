@@ -36,7 +36,6 @@ import static java.lang.String.format;
  * 
  */
 
-@SuppressWarnings("serial")
 public class DataLinkManagement extends AISMessage {
 
     /**

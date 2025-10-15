@@ -29,7 +29,6 @@ import java.time.Instant;
  * @author tbsalling
  *
  */
-@SuppressWarnings("serial")
 public class PositionReportClassAScheduled extends PositionReport {
     protected PositionReportClassAScheduled(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
                                             NavigationStatus navigationStatus, int rateOfTurn, float speedOverGround,

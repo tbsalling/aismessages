@@ -16,9 +16,8 @@
 
 package dk.tbsalling.aismessages.ais.messages.types;
 
-import java.io.Serializable;
 
-public abstract class CommunicationState implements Serializable {
+public abstract class CommunicationState {
 
 	protected CommunicationState(SyncState syncState) {
 		this.syncState = syncState;

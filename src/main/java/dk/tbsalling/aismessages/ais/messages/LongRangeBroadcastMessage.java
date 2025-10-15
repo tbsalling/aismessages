@@ -13,7 +13,6 @@ import java.util.stream.IntStream;
 
 import static java.lang.String.format;
 
-@SuppressWarnings("serial")
 public class LongRangeBroadcastMessage extends AISMessage implements DynamicDataReport {
 
     /**

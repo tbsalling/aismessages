@@ -7,10 +7,6 @@ import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
 import java.time.Instant;
 import java.util.Map;
 
@@ -113,23 +109,6 @@ public class AISMessageTest {
     }
 
     @Test
-    public void isSerializable() {
-        // Arrange & Act & Assert
-        // Type 1
-        NMEAMessage nmeaMessage1 = NMEAMessage.fromString("!BSVDM,1,1,,A,1:02Ih001U0d=V:Op85<2aT>0<0F,0*3B");
-        assertTrue(isSerializable(AISMessage.create(null, null, null, nmeaMessage1)));
-
-        // Type 4
-        NMEAMessage nmeaMessage4 = NMEAMessage.fromString("!AIVDM,1,1,,B,4h3Ovk1udp6I9o>jPHEdjdW000S:,0*0C");
-        assertTrue(isSerializable(AISMessage.create(null, null, null, nmeaMessage4)));
-
-        // Type 5
-        NMEAMessage nmeaMessage5a = NMEAMessage.fromString("!BSVDM,2,1,5,A,5:02Ih01WrRsEH57J20H5P8u8N222222222222167H66663k085QBS1H,0*55");
-        NMEAMessage nmeaMessage5b = NMEAMessage.fromString("!BSVDM,2,2,5,A,888888888888880,2*38");
-        assertTrue(isSerializable(AISMessage.create(null, null, null, nmeaMessage5a, nmeaMessage5b)));
-    }
-
-    @Test
     public void canReturnRawNmeaMessages() {
         // Arrange
         NMEAMessage nmeaMessage1 = NMEAMessage.fromString("!BSVDM,1,1,,A,1:02Ih001U0d=V:Op85<2aT>0<0F,0*3B");
@@ -186,22 +165,4 @@ public class AISMessageTest {
         assertEquals(2288206, dataFields.get("sourceMmsi.MMSI"));
     }
 
-    private boolean isSerializable(Object object) {
-        assertTrue(object instanceof Serializable);
-
-        // Deep validate that whole tree is serializable
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        ObjectOutputStream oos;
-        try {
-            oos = new ObjectOutputStream(stream);
-            oos.writeObject(object);
-            oos.flush();
-            oos.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-
-        return true;
-    }
 }

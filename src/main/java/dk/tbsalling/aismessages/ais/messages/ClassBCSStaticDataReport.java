@@ -29,7 +29,6 @@ import java.util.stream.IntStream;
 
 import static java.lang.String.format;
 
-@SuppressWarnings("serial")
 public class ClassBCSStaticDataReport extends AISMessage implements StaticDataReport {
 
     /**

@@ -22,7 +22,6 @@ import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import java.time.Instant;
 
-@SuppressWarnings("serial")
 public class PositionReportClassAAssignedSchedule extends PositionReport {
     protected PositionReportClassAAssignedSchedule(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
                                                    NavigationStatus navigationStatus, int rateOfTurn, float speedOverGround,

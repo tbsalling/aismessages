@@ -35,7 +35,6 @@ import static java.lang.String.format;
  * @author tbsalling
  * 
  */
-@SuppressWarnings("serial")
 public class StandardClassBCSPositionReport extends AISMessage implements ExtendedDynamicDataReport {
 
     /**
