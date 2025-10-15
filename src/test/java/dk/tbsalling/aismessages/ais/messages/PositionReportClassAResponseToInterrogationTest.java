@@ -32,7 +32,7 @@ public class PositionReportClassAResponseToInterrogationTest {
         assertEquals(0, message.getRateOfTurn());
         assertEquals(13.6f, message.getSpeedOverGround());
         assertEquals(136, message.getRawSpeedOverGround());
-        assertTrue(message.getPositionAccuracy());
+        assertTrue(message.isPositionAccuracy());
         assertEquals(37.21113f, message.getLatitude());
         assertEquals(22326676, message.getRawLatitude());
         assertEquals(-123.45053f, message.getLongitude());
@@ -42,7 +42,7 @@ public class PositionReportClassAResponseToInterrogationTest {
         assertEquals(331, message.getTrueHeading());
         assertEquals(7, message.getSecond());
         assertEquals(ManeuverIndicator.NotAvailable, message.getSpecialManeuverIndicator());
-        assertFalse(message.getRaimFlag());
+        assertFalse(message.isRaimFlag());
     }
 
     @Test
@@ -64,7 +64,7 @@ public class PositionReportClassAResponseToInterrogationTest {
         assertEquals(-720, message.getRateOfTurn());
         assertEquals(0.7f, message.getSpeedOverGround());
         assertEquals(7, message.getRawSpeedOverGround());
-        assertFalse(message.getPositionAccuracy());
+        assertFalse(message.isPositionAccuracy());
         assertEquals(-22.862577f, message.getLatitude());
         assertEquals(-13717547, message.getRawLatitude());
         assertEquals(-43.175175f, message.getLongitude());
@@ -74,7 +74,7 @@ public class PositionReportClassAResponseToInterrogationTest {
         assertEquals(286, message.getTrueHeading());
         assertEquals(56, message.getSecond());
         assertEquals(ManeuverIndicator.NotAvailable, message.getSpecialManeuverIndicator());
-        assertFalse(message.getRaimFlag());
+        assertFalse(message.isRaimFlag());
     }
 
     @Test

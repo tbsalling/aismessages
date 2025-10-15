@@ -22,13 +22,15 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 import java.time.Instant;
 
 import static java.lang.String.format;
 
 /**
- * broadcast message with unspecified binary payload. The St. Lawrence Seaway
+ * Broadcast message with unspecified binary payload. The St. Lawrence Seaway
  * AIS system and the USG PAWSS system use this payload for local extension
  * messages. It is variable in length up to a maximum of 1008 bits (up to 5
  * AIVDM sentence payloads).
@@ -36,6 +38,8 @@ import static java.lang.String.format;
  * @author tbsalling
  * 
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class BinaryBroadcastMessage extends AISMessage {
 
     /**
@@ -76,55 +80,25 @@ public class BinaryBroadcastMessage extends AISMessage {
         }
     }
 
-    public final AISMessageType getMessageType() {
+    public AISMessageType getMessageType() {
         return AISMessageType.BinaryBroadcastMessage;
     }
 
     @SuppressWarnings("unused")
-	public Integer getSpare() {
-        return spare;
-	}
-
-    @SuppressWarnings("unused")
-	public Integer getDesignatedAreaCode() {
-        return designatedAreaCode;
-	}
-
-    @SuppressWarnings("unused")
-	public Integer getFunctionalId() {
-        return functionalId;
-	}
-
-    @SuppressWarnings("unused")
-	public String getBinaryData() {
-        return binaryData;
-	}
-
-    @SuppressWarnings("unused")
     public ApplicationSpecificMessage getApplicationSpecificMessage() {
-        if (applicationSpecificMessage.getDesignatedAreaCode() != this.getDesignatedAreaCode().intValue())
+        if (applicationSpecificMessage.getDesignatedAreaCode() != designatedAreaCode)
             throw new IllegalStateException("Implementation error: DAC of AISMessage does not match ASM: " + applicationSpecificMessage.getDesignatedAreaCode() + " " + this.getDesignatedAreaCode());
 
-        if (applicationSpecificMessage.getFunctionalId() != this.getFunctionalId().intValue())
+        if (applicationSpecificMessage.getFunctionalId() != functionalId)
             throw new IllegalStateException("Implementation error: FI of AISMessage does not match ASM: " + applicationSpecificMessage.getFunctionalId() + " " + this.getFunctionalId());
 
         return applicationSpecificMessage;
     }
 
-    @Override
-    public String toString() {
-        return "BinaryBroadcastMessage{" +
-                "messageType=" + getMessageType() +
-                ", spare=" + getSpare() +
-                ", designatedAreaCode=" + getDesignatedAreaCode() +
-                ", functionalId=" + getFunctionalId() +
-                ", binaryData='" + getBinaryData() + '\'' +
-                "} " + super.toString();
-    }
+    int spare;
+    int designatedAreaCode;
+    int functionalId;
+    String binaryData;
+    ApplicationSpecificMessage applicationSpecificMessage;
 
-    private final Integer spare;
-    private final Integer designatedAreaCode;
-    private final Integer functionalId;
-    private final String binaryData;
-    private final ApplicationSpecificMessage applicationSpecificMessage;
 }

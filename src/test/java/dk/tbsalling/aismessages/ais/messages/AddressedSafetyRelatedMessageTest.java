@@ -26,7 +26,7 @@ public class AddressedSafetyRelatedMessageTest {
         assertEquals(MMSI.valueOf(271002099), message.getSourceMmsi());
         assertEquals(Integer.valueOf(0), message.getSequenceNumber());
         assertEquals(MMSI.valueOf(271002111), message.getDestinationMmsi());
-        assertTrue(message.getRetransmit());
+        assertTrue(message.isRetransmit());
         assertEquals(Integer.valueOf(0), message.getSpare());
         assertEquals("MSG FROM 27100209", message.getText());
     }
@@ -48,7 +48,7 @@ public class AddressedSafetyRelatedMessageTest {
         assertEquals(MMSI.valueOf(351809000), message.getSourceMmsi());
         assertEquals(Integer.valueOf(0), message.getSequenceNumber());
         assertEquals(MMSI.valueOf(302866720), message.getDestinationMmsi());
-        assertFalse(message.getRetransmit());
+        assertFalse(message.isRetransmit());
         assertEquals(Integer.valueOf(1), message.getSpare());
         assertEquals("%JAPUMR 5L", message.getText());
     }

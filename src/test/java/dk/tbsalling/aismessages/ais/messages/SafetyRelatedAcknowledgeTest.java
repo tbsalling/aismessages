@@ -29,11 +29,11 @@ public class SafetyRelatedAcknowledgeTest {
         assertEquals(MMSI.valueOf(211217560), message.getMmsi1());
         assertEquals(Integer.valueOf(2), message.getSequence1());
         assertNull(message.getMmsi2());
-        assertNull(message.getSequence2());
+        assertEquals(-1, message.getSequence2());
         assertNull(message.getMmsi3());
-        assertNull(message.getSequence3());
+        assertEquals(-1, message.getSequence3());
         assertNull(message.getMmsi4());
-        assertNull(message.getSequence4());
+        assertEquals(-1, message.getSequence4());
         assertEquals(Integer.valueOf(1), message.getNumOfAcks());
     }
 

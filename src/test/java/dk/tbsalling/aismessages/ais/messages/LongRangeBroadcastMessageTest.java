@@ -26,9 +26,9 @@ public class LongRangeBroadcastMessageTest {
         assertEquals(MMSI.valueOf(206914217), aisMessage.getSourceMmsi());
 
         LongRangeBroadcastMessage message = (LongRangeBroadcastMessage) aisMessage;
-        assertFalse(message.getPositionAccuracy());
-        assertFalse(message.getRaim());
-        assertEquals(NavigationStatus.NotUnderCommand, message.getNavigationalStatus());
+        assertFalse(message.isPositionAccuracy());
+        assertFalse(message.isRaim());
+        assertEquals(NavigationStatus.NotUnderCommand, message.getNavigationStatus());
         assertEquals(Float.valueOf(137.02333f), message.getLongitude());
         assertEquals(Float.valueOf(4.84f), message.getLatitude());
         assertEquals(Float.valueOf(57f), message.getSpeedOverGround(), 1e-5);
@@ -53,9 +53,9 @@ public class LongRangeBroadcastMessageTest {
         assertEquals(MMSI.valueOf(357277000), aisMessage.getSourceMmsi());
 
         LongRangeBroadcastMessage message = (LongRangeBroadcastMessage) aisMessage;
-        assertTrue(message.getPositionAccuracy());
-        assertFalse(message.getRaim());
-        assertEquals(NavigationStatus.Moored, message.getNavigationalStatus());
+        assertTrue(message.isPositionAccuracy());
+        assertFalse(message.isRaim());
+        assertEquals(NavigationStatus.Moored, message.getNavigationStatus());
         assertEquals(Float.valueOf(176.18167f), message.getLongitude());
         assertEquals(Float.valueOf(-37.65333f), message.getLatitude());
         assertEquals(Float.valueOf(0f), message.getSpeedOverGround(), 1e-5);

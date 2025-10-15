@@ -268,11 +268,11 @@ public class AISMessageFactory {
         int sequence1 = parser.getUnsignedInt(70, 72);
 
         MMSI mmsi2 = null;
-        Integer sequence2 = null;
+        int sequence2 = -1;
         MMSI mmsi3 = null;
-        Integer sequence3 = null;
+        int sequence3 = -1;
         MMSI mmsi4 = null;
-        Integer sequence4 = null;
+        int sequence4 = -1;
 
         if (parser.getLength() >= 104) {
             mmsi2 = MMSI.valueOf(parser.getUnsignedInt(72, 102));
@@ -310,14 +310,14 @@ public class AISMessageFactory {
     static Interrogation createInterrogation(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int spare1 = parser.getUnsignedInt(38, 40);
         MMSI interrogatedMmsi1 = MMSI.valueOf(parser.getUnsignedInt(40, 70));
-        Integer type1_1 = parser.getUnsignedInt(70, 76);
-        Integer offset1_1 = parser.getUnsignedInt(76, 88);
+        int type1_1 = parser.getUnsignedInt(70, 76);
+        int offset1_1 = parser.getUnsignedInt(76, 88);
 
-        Integer type1_2 = null;
-        Integer offset1_2 = null;
+        int type1_2 = -1;
+        int offset1_2 = -1;
         MMSI interrogatedMmsi2 = null;
-        Integer type2_1 = null;
-        Integer offset2_1 = null;
+        int type2_1 = -1;
+        int offset2_1 = -1;
 
         if (parser.getLength() >= 110) {
             type1_2 = parser.getUnsignedInt(90, 96);
@@ -602,10 +602,10 @@ public class AISMessageFactory {
         ShipType shipType = null;
         String vendorId = null;
         String callsign = null;
-        Integer toBow = null;
-        Integer toStern = null;
-        Integer toStarboard = null;
-        Integer toPort = null;
+        int toBow = -1;
+        int toStern = -1;
+        int toStarboard = -1;
+        int toPort = -1;
         MMSI mothershipMmsi = null;
 
         if (partNumber == 0) {

@@ -117,7 +117,7 @@ public class AISMessageTest {
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage1);
 
         // Assert
-        NMEAMessage[] nmeaMessages = aisMessage.getNmeaMessages();
+        NMEAMessage[] nmeaMessages = aisMessage.getMetadata().nmeaMessages();
         assertNotNull(nmeaMessages);
         assertEquals(1, nmeaMessages.length);
         assertEquals("!BSVDM,1,1,,A,1:02Ih001U0d=V:Op85<2aT>0<0F,0*3B", nmeaMessages[0].getRawMessage());
@@ -131,7 +131,7 @@ public class AISMessageTest {
         aisMessage = AISMessage.create(null, null, null, nmeaMessage2a, nmeaMessage2b);
 
         // Assert
-        nmeaMessages = aisMessage.getNmeaMessages();
+        nmeaMessages = aisMessage.getMetadata().nmeaMessages();
         assertNotNull(nmeaMessages);
         assertEquals(2, nmeaMessages.length);
         assertEquals("!BSVDM,2,1,5,A,5:02Ih01WrRsEH57J20H5P8u8N222222222222167H66663k085QBS1H,0*55", nmeaMessages[0].getRawMessage());

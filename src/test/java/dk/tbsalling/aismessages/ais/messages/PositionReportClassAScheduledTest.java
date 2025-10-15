@@ -27,7 +27,7 @@ public class PositionReportClassAScheduledTest {
         assertEquals(NavigationStatus.UnderwayUsingEngine, message.getNavigationStatus());
         assertEquals((Integer) 0, message.getRateOfTurn());
         assertEquals((Float) 7.8f, message.getSpeedOverGround());
-        assertTrue(message.getPositionAccuracy());
+        assertTrue(message.isPositionAccuracy());
         assertEquals(Float.valueOf(56.56692f), message.getLatitude());
         assertEquals((Integer) 33940151, message.getRawLatitude());
         assertEquals(Float.valueOf(11.071096f), message.getLongitude());
@@ -37,7 +37,7 @@ public class PositionReportClassAScheduledTest {
         assertEquals((Integer) 46, message.getSecond());
         assertEquals((Integer) 186, message.getTrueHeading());
         assertEquals(ManeuverIndicator.NotAvailable, message.getSpecialManeuverIndicator());
-        assertFalse(message.getRaimFlag());
+        assertFalse(message.isRaimFlag());
     }
 
     @Test
@@ -67,14 +67,14 @@ public class PositionReportClassAScheduledTest {
         assertEquals(NavigationStatus.Undefined, message.getNavigationStatus());
         assertEquals(Integer.valueOf(-731), message.getRateOfTurn());
         assertEquals(Float.valueOf(0.0f), message.getSpeedOverGround());
-        assertFalse(message.getPositionAccuracy());
+        assertFalse(message.isPositionAccuracy());
         assertEquals(Float.valueOf(-34.773254f), message.getLatitude());
         assertEquals(Float.valueOf(138.48856f), message.getLongitude());
         assertEquals(Float.valueOf(4.8f), message.getCourseOverGround());
         assertEquals(Integer.valueOf(47), message.getSecond());
         assertEquals(Integer.valueOf(511), message.getTrueHeading());
         assertEquals(ManeuverIndicator.NotAvailable, message.getSpecialManeuverIndicator());
-        assertFalse(message.getRaimFlag());
+        assertFalse(message.isRaimFlag());
 
         CommunicationState communicationState = message.getCommunicationState();
         assertEquals(SyncState.UTCDirect, communicationState.getSyncState());

@@ -20,6 +20,8 @@ import dk.tbsalling.aismessages.ais.messages.types.*;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 import java.time.Instant;
 
@@ -32,6 +34,8 @@ import static java.lang.String.format;
  * 
  * @author tbsalling
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class GroupAssignmentCommand extends AISMessage {
 
     /**
@@ -75,92 +79,19 @@ public class GroupAssignmentCommand extends AISMessage {
         }
     }
 
-    public final AISMessageType getMessageType() {
+    public AISMessageType getMessageType() {
         return AISMessageType.GroupAssignmentCommand;
     }
 
-    @SuppressWarnings("unused")
-    public String getSpare1() {
-        return spare1;
-    }
-
-    @SuppressWarnings("unused")
-    public float getNorthEastLongitude() {
-        return northEastLongitude;
-    }
-
-    @SuppressWarnings("unused")
-    public float getNorthEastLatitude() {
-        return northEastLatitude;
-	}
-
-    @SuppressWarnings("unused")
-    public float getSouthWestLongitude() {
-        return southWestLongitude;
-	}
-
-    @SuppressWarnings("unused")
-    public float getSouthWestLatitude() {
-        return southWestLatitude;
-    }
-
-    @SuppressWarnings("unused")
-	public StationType getStationType() {
-        return stationType;
-	}
-
-    @SuppressWarnings("unused")
-	public ShipType getShipType() {
-        return shipType;
-	}
-
-    @SuppressWarnings("unused")
-    public String getSpare2() {
-        return spare2;
-    }
-
-    @SuppressWarnings("unused")
-	public TxRxMode getTransmitReceiveMode() {
-        return transmitReceiveMode;
-	}
-
-    @SuppressWarnings("unused")
-	public ReportingInterval getReportingInterval() {
-        return reportingInterval;
-	}
-
-    @SuppressWarnings("unused")
-    public int getQuietTime() {
-        return quietTime;
-	}
-
-    @Override
-    public String toString() {
-        return "GroupAssignmentCommand{" +
-                "messageType=" + getMessageType() +
-                ", spare1='" + getSpare1() + '\'' +
-                ", northEastLatitude=" + getNorthEastLatitude() +
-                ", northEastLongitude=" + getNorthEastLongitude() +
-                ", southWestLatitude=" + getSouthWestLatitude() +
-                ", southWestLongitude=" + getSouthWestLongitude() +
-                ", stationType=" + getStationType() +
-                ", shipType=" + getShipType() +
-                ", transmitReceiveMode=" + getTransmitReceiveMode() +
-                ", reportingInterval=" + getReportingInterval() +
-                ", quietTime=" + getQuietTime() +
-                ", spare2='" + getSpare2() + '\'' +
-                "} " + super.toString();
-    }
-
-    private final String spare1;
-    private final float northEastLatitude;
-    private final float northEastLongitude;
-    private final float southWestLatitude;
-    private final float southWestLongitude;
-    private final StationType stationType;
-    private final ShipType shipType;
-    private final TxRxMode transmitReceiveMode;
-    private final ReportingInterval reportingInterval;
-    private final int quietTime;
-    private final String spare2;
+    String spare1;
+    float northEastLatitude;
+    float northEastLongitude;
+    float southWestLatitude;
+    float southWestLongitude;
+    StationType stationType;
+    ShipType shipType;
+    TxRxMode transmitReceiveMode;
+    ReportingInterval reportingInterval;
+    int quietTime;
+    String spare2;
 }

@@ -21,6 +21,8 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 import java.time.Instant;
 import java.util.stream.IntStream;
@@ -32,15 +34,16 @@ import static java.lang.String.format;
  * @author tbsalling
  *
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class Interrogation extends AISMessage {
 
     /**
      * Constructor accepting pre-parsed values for true immutability.
      */
     protected Interrogation(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
-                            MMSI interrogatedMmsi1, Integer type1_1, Integer offset1_1,
-                            Integer type1_2, Integer offset1_2,
-                            MMSI interrogatedMmsi2, Integer type2_1, Integer offset2_1) {
+                            MMSI interrogatedMmsi1, int type1_1, int offset1_1, int type1_2, int offset1_2,
+                            MMSI interrogatedMmsi2, int type2_1, int offset2_1) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.interrogatedMmsi1 = interrogatedMmsi1;
         this.type1_1 = type1_1;
@@ -71,71 +74,16 @@ public class Interrogation extends AISMessage {
         }
     }
 
-    public final AISMessageType getMessageType() {
+    public AISMessageType getMessageType() {
         return AISMessageType.Interrogation;
     }
 
-    @SuppressWarnings("unused")
-	public final MMSI getInterrogatedMmsi1() {
-        return interrogatedMmsi1;
-	}
-
-    @SuppressWarnings("unused")
-	public final Integer getType1_1() {
-        return type1_1;
-	}
-
-    @SuppressWarnings("unused")
-	public final Integer getOffset1_1() {
-        return offset1_1;
-	}
-
-    @SuppressWarnings("unused")
-	public final Integer getType1_2() {
-        return type1_2;
-	}
-
-    @SuppressWarnings("unused")
-	public final Integer getOffset1_2() {
-        return offset1_2;
-	}
-
-    @SuppressWarnings("unused")
-	public final MMSI getInterrogatedMmsi2() {
-        return interrogatedMmsi2;
-	}
-
-    @SuppressWarnings("unused")
-	public final Integer getType2_1() {
-        return type2_1;
-	}
-
-    @SuppressWarnings("unused")
-	public final Integer getOffset2_1() {
-        return offset2_1;
-	}
-
-    @Override
-    public String toString() {
-        return "Interrogation{" +
-                "messageType=" + getMessageType() +
-                ", interrogatedMmsi1=" + getInterrogatedMmsi1() +
-                ", type1_1=" + getType1_1() +
-                ", offset1_1=" + getOffset1_1() +
-                ", type1_2=" + getType1_2() +
-                ", offset1_2=" + getOffset1_2() +
-                ", interrogatedMmsi2=" + getInterrogatedMmsi2() +
-                ", type2_1=" + getType2_1() +
-                ", offset2_1=" + getOffset2_1() +
-                "} " + super.toString();
-    }
-
-    private final MMSI interrogatedMmsi1;
-    private final Integer type1_1;
-    private final Integer offset1_1;
-    private final Integer type1_2;
-    private final Integer offset1_2;
-    private final MMSI interrogatedMmsi2;
-    private final Integer type2_1;
-    private final Integer offset2_1;
+    MMSI interrogatedMmsi1;
+    int type1_1;
+    int offset1_1;
+    int type1_2;
+    int offset1_2;
+    MMSI interrogatedMmsi2;
+    int type2_1;
+    int offset2_1;
 }

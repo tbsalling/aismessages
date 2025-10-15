@@ -21,11 +21,15 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 import java.time.Instant;
 
 import static java.lang.String.format;
 
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class AddressedSafetyRelatedMessage extends AISMessage {
 
     /**
@@ -65,46 +69,9 @@ public class AddressedSafetyRelatedMessage extends AISMessage {
         return AISMessageType.AddressedSafetyRelatedMessage;
     }
 
-    @SuppressWarnings("unused")
-    public int getSequenceNumber() {
-        return sequenceNumber;
-	}
-
-    @SuppressWarnings("unused")
-	public MMSI getDestinationMmsi() {
-        return destinationMmsi;
-	}
-
-    @SuppressWarnings("unused")
-    public boolean getRetransmit() {
-        return retransmit;
-	}
-
-    @SuppressWarnings("unused")
-    public int getSpare() {
-        return spare;
-	}
-
-    @SuppressWarnings("unused")
-	public String getText() {
-        return text;
-	}
-
-    @Override
-    public String toString() {
-        return "AddressedSafetyRelatedMessage{" +
-                "messageType=" + getMessageType() +
-                ", sequenceNumber=" + getSequenceNumber() +
-                ", destinationMmsi=" + getDestinationMmsi() +
-                ", retransmit=" + getRetransmit() +
-                ", spare=" + getSpare() +
-                ", text='" + getText() + '\'' +
-                "} " + super.toString();
-    }
-
-    private final int sequenceNumber;
-    private final MMSI destinationMmsi;
-    private final boolean retransmit;
-    private final int spare;
-    private final String text;
+    int sequenceNumber;
+    MMSI destinationMmsi;
+    boolean retransmit;
+    int spare;
+    String text;
 }

@@ -26,7 +26,7 @@ public class StandardClassBCSPositionReportTest {
         assertEquals("00000000", message.getRegionalReserved1());
         assertEquals((Float) 0.0f, message.getSpeedOverGround());
         assertEquals((Integer) 0, message.getRawSpeedOverGround());
-        assertFalse(message.getPositionAccurate());
+        assertFalse(message.isPositionAccuracy());
         assertEquals(Float.valueOf(37.785034f), message.getLatitude());
         assertEquals((Integer)22671021, message.getRawLatitude());
         assertEquals(Float.valueOf(-122.26732f), message.getLongitude());
@@ -36,13 +36,13 @@ public class StandardClassBCSPositionReportTest {
         assertEquals((Integer) 511, message.getTrueHeading());
         assertEquals((Integer) 55, message.getSecond());
         assertEquals("00", message.getRegionalReserved2());
-        assertTrue(message.getCsUnit());
-        assertFalse(message.getDisplay());
-        assertTrue(message.getDsc());
-        assertTrue(message.getBand());
-        assertTrue(message.getMessage22());
-        assertFalse(message.getAssigned());
-        assertFalse(message.getRaimFlag());
+        assertTrue(message.isCsUnit());
+        assertFalse(message.isDisplay());
+        assertTrue(message.isDsc());
+        assertTrue(message.isBand());
+        assertTrue(message.isMessage22());
+        assertFalse(message.isAssigned());
+        assertFalse(message.isRaimFlag());
         //assertEquals("11100000000000000110", message.getRadioStatus());
     }
 
@@ -63,20 +63,20 @@ public class StandardClassBCSPositionReportTest {
         assertEquals(MMSI.valueOf(941204826), message.getSourceMmsi());
         assertEquals("00000000", message.getRegionalReserved1());
         assertEquals((Float) 0.3f, message.getSpeedOverGround());
-        assertTrue(message.getPositionAccurate());
+        assertTrue(message.isPositionAccuracy());
         assertEquals(Float.valueOf(42.020855f), message.getLatitude());
         assertEquals(Float.valueOf(-87.70006f), message.getLongitude());
         assertEquals(Float.valueOf(186.2f), message.getCourseOverGround());
         assertEquals((Integer) 511, message.getTrueHeading());
         assertEquals((Integer) 60, message.getSecond());
         assertEquals("00", message.getRegionalReserved2());
-        assertFalse(message.getCsUnit());
-        assertFalse(message.getDisplay());
-        assertFalse(message.getDsc());
-        assertTrue(message.getBand());
-        assertFalse(message.getMessage22());
-        assertFalse(message.getAssigned());
-        assertFalse(message.getRaimFlag());
+        assertFalse(message.isCsUnit());
+        assertFalse(message.isDisplay());
+        assertFalse(message.isDsc());
+        assertTrue(message.isBand());
+        assertFalse(message.isMessage22());
+        assertFalse(message.isAssigned());
+        assertFalse(message.isRaimFlag());
     }
 
     @Test
@@ -96,21 +96,21 @@ public class StandardClassBCSPositionReportTest {
         assertEquals(MMSI.valueOf(423302100), message.getSourceMmsi());
         assertEquals("00001111", message.getRegionalReserved1());
         assertEquals((Float) 1.4f, message.getSpeedOverGround());
-        assertTrue(message.getPositionAccurate());
+        assertTrue(message.isPositionAccuracy());
         assertEquals(Float.valueOf(40.005283f), message.getLatitude());
         assertEquals(Float.valueOf(53.010998f), message.getLongitude());
         assertEquals(Float.valueOf(177f), message.getCourseOverGround());
         assertEquals((Integer) 177, message.getTrueHeading());
         assertEquals((Integer) 34, message.getSecond());
         assertEquals("00", message.getRegionalReserved2());
-        assertTrue(message.getCsUnit());
-        assertTrue(message.getDisplay());
-        assertTrue(message.getDsc());
-        assertTrue(message.getBand());
-        assertTrue(message.getMessage22());
-        assertFalse(message.getAssigned());
-        assertFalse(message.getRaimFlag());
-        assertTrue(message.getCommunicationStateSelectorFlag());
+        assertTrue(message.isCsUnit());
+        assertTrue(message.isDisplay());
+        assertTrue(message.isDsc());
+        assertTrue(message.isBand());
+        assertTrue(message.isMessage22());
+        assertFalse(message.isAssigned());
+        assertFalse(message.isRaimFlag());
+        assertTrue(message.isCommStateSelectorFlag());
 
         CommunicationState communicationState = message.getCommunicationState();   // 1100000000000000110b = 3, slot incr = 6
         assertEquals(SyncState.BaseIndirect, communicationState.getSyncState());

@@ -20,9 +20,13 @@ import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 import java.time.Instant;
 
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class BinaryMessageMultipleSlot extends AISMessage {
 
     /**
@@ -42,57 +46,14 @@ public class BinaryMessageMultipleSlot extends AISMessage {
     protected void checkAISMessage() {
     }
 
-    public final AISMessageType getMessageType() {
+    public AISMessageType getMessageType() {
         return AISMessageType.BinaryMessageMultipleSlot;
     }
 
-    @SuppressWarnings("unused")
-    public boolean getAddressed() {
-        return addressed;
-    }
-
-    @SuppressWarnings("unused")
-    public boolean getStructured() {
-        return structured;
-    }
-
-    @SuppressWarnings("unused")
-    public MMSI getDestinationMmsi() {
-        return destinationMmsi;
-    }
-
-    @SuppressWarnings("unused")
-    public int getApplicationId() {
-        return applicationId;
-    }
-
-    @SuppressWarnings("unused")
-    public String getData() {
-        return data;
-    }
-
-    @SuppressWarnings("unused")
-    public String getRadioStatus() {
-        return null; // BIT_DECODER.apply(getBits(6, 8));
-    }
-
-    @Override
-    public String toString() {
-        return "BinaryMessageMultipleSlot{" +
-                "messageType=" + getMessageType() +
-                ", addressed=" + getAddressed() +
-                ", structured=" + getStructured() +
-                ", destinationMmsi=" + getDestinationMmsi() +
-                ", applicationId=" + getApplicationId() +
-                ", data='" + getData() + '\'' +
-                ", radioStatus='" + getRadioStatus() + '\'' +
-                "} " + super.toString();
-    }
-
-    private final boolean addressed;
-    private final boolean structured;
-    private final MMSI destinationMmsi;
-    private final int applicationId;
-    private final String data;
-    // private final String radioStatus;
+    boolean addressed;
+    boolean structured;
+    MMSI destinationMmsi;
+    int applicationId;
+    String data;
+    // String radioStatus;
 }

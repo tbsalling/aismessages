@@ -31,11 +31,11 @@ public class UTCAndDateResponseTest {
         assertEquals(Integer.valueOf(2), message.getHour());
         assertEquals(Integer.valueOf(22), message.getMinute());
         assertEquals(Integer.valueOf(40), message.getSecond());
-        assertTrue(message.getPositionAccurate());
+        assertTrue(message.isPositionAccurate());
         assertEquals(Float.valueOf(28.409117f), message.getLatitude());
         assertEquals(Float.valueOf(-94.40768f), message.getLongitude());
         assertEquals(PositionFixingDevice.Gps, message.getPositionFixingDevice());
-        assertFalse(message.getRaimFlag());
+        assertFalse(message.isRaimFlag());
     }
 
     @Test
@@ -59,10 +59,10 @@ public class UTCAndDateResponseTest {
         assertEquals(Integer.valueOf(0), message.getHour());
         assertEquals(Integer.valueOf(10), message.getMinute());
         assertEquals(Integer.valueOf(13), message.getSecond());
-        assertFalse(message.getPositionAccurate());
+        assertFalse(message.isPositionAccurate());
         assertEquals(Float.valueOf(27.814686f), message.getLatitude());
         assertEquals(Float.valueOf(-97.41047f), message.getLongitude());
         assertEquals(PositionFixingDevice.Gps, message.getPositionFixingDevice());
-        assertFalse(message.getRaimFlag());
+        assertFalse(message.isRaimFlag());
     }
 }

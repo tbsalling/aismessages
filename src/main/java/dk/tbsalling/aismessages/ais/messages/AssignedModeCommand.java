@@ -21,6 +21,8 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 import java.time.Instant;
 import java.util.stream.IntStream;
@@ -35,6 +37,8 @@ import static java.lang.String.format;
  *
  * @author tbsalling
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class AssignedModeCommand extends AISMessage {
 
     /**
@@ -71,57 +75,15 @@ public class AssignedModeCommand extends AISMessage {
         }
     }
 
-    public final AISMessageType getMessageType() {
+    public AISMessageType getMessageType() {
         return AISMessageType.AssignedModeCommand;
     }
 
-    @SuppressWarnings("unused")
-    public MMSI getDestinationMmsiA() {
-        return destinationMmsiA;
-    }
+    MMSI destinationMmsiA;
+    Integer offsetA;
+    Integer incrementA;
+    MMSI destinationMmsiB;
+    Integer offsetB;
+    Integer incrementB;
 
-    @SuppressWarnings("unused")
-    public Integer getOffsetA() {
-        return offsetA;
-    }
-
-    @SuppressWarnings("unused")
-    public Integer getIncrementA() {
-        return incrementA;
-    }
-
-    @SuppressWarnings("unused")
-    public MMSI getDestinationMmsiB() {
-        return destinationMmsiB;
-    }
-
-    @SuppressWarnings("unused")
-    public Integer getOffsetB() {
-        return offsetB;
-    }
-
-    @SuppressWarnings("unused")
-    public Integer getIncrementB() {
-        return incrementB;
-    }
-
-    @Override
-    public String toString() {
-        return "AssignedModeCommand{" +
-                "messageType=" + getMessageType() +
-                ", destinationMmsiA=" + getDestinationMmsiA() +
-                ", offsetA=" + getOffsetA() +
-                ", incrementA=" + getIncrementA() +
-                ", destinationMmsiB=" + getDestinationMmsiB() +
-                ", offsetB=" + getOffsetB() +
-                ", incrementB=" + getIncrementB() +
-                "} " + super.toString();
-    }
-
-    private final MMSI destinationMmsiA;
-    private final Integer offsetA;
-    private final Integer incrementA;
-    private final MMSI destinationMmsiB;
-    private final Integer offsetB;
-    private final Integer incrementB;
 }

@@ -22,11 +22,15 @@ import dk.tbsalling.aismessages.ais.messages.types.TxRxMode;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 import java.time.Instant;
 
 import static java.lang.String.format;
 
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class ChannelManagement extends AISMessage {
 
     /**
@@ -74,113 +78,23 @@ public class ChannelManagement extends AISMessage {
         }
     }
 
-    public final AISMessageType getMessageType() {
+    public AISMessageType getMessageType() {
         return AISMessageType.ChannelManagement;
     }
 
-    @SuppressWarnings("unused")
-    public int getChannelA() {
-        return channelA;
-	}
+    int channelA;
+    int channelB;
+    TxRxMode transmitReceiveMode;
+    boolean power;
+    float northEastLongitude;
+    float northEastLatitude;
+    float southWestLongitude;
+    float southWestLatitude;
+    MMSI destinationMmsi1;
+    MMSI destinationMmsi2;
+    boolean addressed;
+    boolean bandA;
+    boolean bandB;
+    int zoneSize;
 
-    @SuppressWarnings("unused")
-    public int getChannelB() {
-        return channelB;
-	}
-
-    @SuppressWarnings("unused")
-	public TxRxMode getTransmitReceiveMode() {
-        return transmitReceiveMode;
-	}
-
-    @SuppressWarnings("unused")
-    public boolean getPower() {
-        return power;
-	}
-
-    @SuppressWarnings("unused")
-	public Float getNorthEastLongitude() {
-        return northEastLongitude;
-	}
-
-    @SuppressWarnings("unused")
-	public Float getNorthEastLatitude() {
-        return northEastLatitude;
-	}
-
-    @SuppressWarnings("unused")
-	public Float getSouthWestLongitude() {
-        return southWestLongitude;
-	}
-
-    @SuppressWarnings("unused")
-	public Float getSouthWestLatitude() {
-        return southWestLatitude;
-	}
-
-    @SuppressWarnings("unused")
-	public MMSI getDestinationMmsi1() {
-        return destinationMmsi1;
-	}
-
-    @SuppressWarnings("unused")
-	public MMSI getDestinationMmsi2() {
-        return destinationMmsi2;
-	}
-
-    @SuppressWarnings("unused")
-    public boolean getAddressed() {
-        return addressed;
-	}
-
-    @SuppressWarnings("unused")
-    public boolean getBandA() {
-        return bandA;
-	}
-
-    @SuppressWarnings("unused")
-    public boolean getBandB() {
-        return bandB;
-	}
-
-    @SuppressWarnings("unused")
-    public int getZoneSize() {
-        return zoneSize;
-	}
-
-    @Override
-    public String toString() {
-        return "ChannelManagement{" +
-                "messageType=" + getMessageType() +
-                ", channelA=" + getChannelA() +
-                ", channelB=" + getChannelB() +
-                ", transmitReceiveMode=" + getTransmitReceiveMode() +
-                ", power=" + getPower() +
-                ", northEastLongitude=" + getNorthEastLongitude() +
-                ", northEastLatitude=" + getNorthEastLatitude() +
-                ", southWestLongitude=" + getSouthWestLongitude() +
-                ", southWestLatitude=" + getSouthWestLatitude() +
-                ", destinationMmsi1=" + getDestinationMmsi1() +
-                ", destinationMmsi2=" + getDestinationMmsi2() +
-                ", addressed=" + getAddressed() +
-                ", bandA=" + getBandA() +
-                ", bandB=" + getBandB() +
-                ", zoneSize=" + getZoneSize() +
-                "} " + super.toString();
-    }
-
-    private final int channelA;
-    private final int channelB;
-    private final TxRxMode transmitReceiveMode;
-    private final boolean power;
-    private final Float northEastLongitude;
-    private final Float northEastLatitude;
-    private final Float southWestLongitude;
-    private final Float southWestLatitude;
-    private final MMSI destinationMmsi1;
-    private final MMSI destinationMmsi2;
-    private final boolean addressed;
-    private final boolean bandA;
-    private final boolean bandB;
-    private final int zoneSize;
 }

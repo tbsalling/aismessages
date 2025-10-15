@@ -23,6 +23,8 @@ import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 import java.time.Instant;
 
@@ -35,6 +37,8 @@ import static java.lang.String.format;
  * @author tbsalling
  * 
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class StandardClassBCSPositionReport extends AISMessage implements ExtendedDynamicDataReport {
 
     /**
@@ -92,7 +96,7 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
         }
     }
 
-    public final AISMessageType getMessageType() {
+    public AISMessageType getMessageType() {
         return AISMessageType.StandardClassBCSPositionReport;
     }
 
@@ -101,166 +105,27 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
         return TransponderClass.B;
     }
 
-    @SuppressWarnings("unused")
-	public String getRegionalReserved1() {
-        return regionalReserved1;
-	}
-
-    @SuppressWarnings("unused")
-    public float getSpeedOverGround() {
-        return speedOverGround;
-	}
-
-    @SuppressWarnings("unused")
-    public int getRawSpeedOverGround() {
-        return rawSpeedOverGround;
-    }
-
-    @SuppressWarnings("unused")
-    public boolean getPositionAccuracy() {
-        return positionAccuracy;
-	}
-
-    @SuppressWarnings("unused")
-    public boolean getPositionAccurate() {
-        return getPositionAccuracy();
-    }
-
-    @SuppressWarnings("unused")
-    public float getLatitude() {
-        return latitude;
-	}
-
-    @SuppressWarnings("unused")
-    public int getRawLatitude() {
-        return rawLatitude;
-    }
-
-    @SuppressWarnings("unused")
-    public float getLongitude() {
-        return longitude;
-	}
-
-    @SuppressWarnings("unused")
-    public int getRawLongitude() {
-        return rawLongitude;
-    }
-
-    @SuppressWarnings("unused")
-    public float getCourseOverGround() {
-        return courseOverGround;
-	}
-
-    @SuppressWarnings("unused")
-    public int getRawCourseOverGround() {
-        return rawCourseOverGround;
-    }
-
-    @SuppressWarnings("unused")
-    public int getTrueHeading() {
-        return trueHeading;
-	}
-
-    @SuppressWarnings("unused")
-    public int getSecond() {
-        return second;
-	}
-
-    @SuppressWarnings("unused")
-	public String getRegionalReserved2() {
-        return regionalReserved2;
-	}
-
-    @SuppressWarnings("unused")
-    public boolean getCsUnit() {
-        return csUnit;
-	}
-
-    @SuppressWarnings("unused")
-    public boolean getDisplay() {
-        return display;
-	}
-
-    @SuppressWarnings("unused")
-    public boolean getDsc() {
-        return dsc;
-	}
-
-    @SuppressWarnings("unused")
-    public boolean getBand() {
-        return band;
-	}
-
-    @SuppressWarnings("unused")
-    public boolean getMessage22() {
-        return message22;
-	}
-
-    @SuppressWarnings("unused")
-    public boolean getAssigned() {
-        return assigned;
-	}
-
-    @SuppressWarnings("unused")
-    public boolean getRaimFlag() {
-        return raimFlag;
-	}
-
-    public boolean getCommunicationStateSelectorFlag() {
-        return commStateSelectorFlag;
-    }
-
-    @SuppressWarnings("unused")
-    public CommunicationState getCommunicationState() {
-        return communicationState;
-    }
-
-    @Override
-    public String toString() {
-        return "StandardClassBCSPositionReport{" +
-                "messageType=" + getMessageType() +
-                ", regionalReserved1='" + getRegionalReserved1() + '\'' +
-                ", speedOverGround=" + getSpeedOverGround() +
-                ", positionAccuracy=" + getPositionAccuracy() +
-                ", latitude=" + getLatitude() +
-                ", longitude=" + getLongitude() +
-                ", courseOverGround=" + getCourseOverGround() +
-                ", trueHeading=" + getTrueHeading() +
-                ", second=" + getSecond() +
-                ", regionalReserved2='" + getRegionalReserved2() + '\'' +
-                ", csUnit=" + getCsUnit() +
-                ", display=" + getDisplay() +
-                ", dsc=" + getDsc() +
-                ", band=" + getBand() +
-                ", message22=" + getMessage22() +
-                ", assigned=" + getAssigned() +
-                ", raimFlag=" + getRaimFlag() +
-                ", commStateSelectorFlag=" + getCommunicationStateSelectorFlag() +
-                ", commState=" + getCommunicationState() +
-                "} " + super.toString();
-    }
-
-    private final String regionalReserved1;
-    private final float speedOverGround;
-    private final boolean positionAccuracy;
-    private final float latitude;
-    private final float longitude;
-    private final float courseOverGround;
-    private final int trueHeading;
-    private final int second;
-    private final String regionalReserved2;
-    private final boolean csUnit;
-    private final boolean display;
-    private final boolean dsc;
-    private final boolean band;
-    private final boolean message22;
-    private final boolean assigned;
-    private final boolean raimFlag;
-    private final boolean commStateSelectorFlag;
-    private final CommunicationState communicationState;
-    private final int rawSpeedOverGround;
-    private final int rawLatitude;
-    private final int rawLongitude;
-    private final int rawCourseOverGround;
+    String regionalReserved1;
+    float speedOverGround;
+    boolean positionAccuracy;
+    float latitude;
+    float longitude;
+    float courseOverGround;
+    int trueHeading;
+    int second;
+    String regionalReserved2;
+    boolean csUnit;
+    boolean display;
+    boolean dsc;
+    boolean band;
+    boolean message22;
+    boolean assigned;
+    boolean raimFlag;
+    boolean commStateSelectorFlag;
+    CommunicationState communicationState;
+    int rawSpeedOverGround;
+    int rawLatitude;
+    int rawLongitude;
+    int rawCourseOverGround;
 
 }

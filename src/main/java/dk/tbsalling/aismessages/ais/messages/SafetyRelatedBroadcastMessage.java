@@ -21,11 +21,15 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 import java.time.Instant;
 
 import static java.lang.String.format;
 
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class SafetyRelatedBroadcastMessage extends AISMessage {
 
     /**
@@ -57,29 +61,11 @@ public class SafetyRelatedBroadcastMessage extends AISMessage {
         }
     }
 
-    public final AISMessageType getMessageType() {
+    public AISMessageType getMessageType() {
         return AISMessageType.SafetyRelatedBroadcastMessage;
     }
 
-    @SuppressWarnings("unused")
-    public int getSpare() {
-        return spare;
-	}
+    int spare;
+    String text;
 
-    @SuppressWarnings("unused")
-	public final String getText() {
-        return text;
-	}
-
-    @Override
-    public String toString() {
-        return "SafetyRelatedBroadcastMessage{" +
-                "messageType=" + getMessageType() +
-                ", spare=" + getSpare() +
-                ", text='" + getText() + '\'' +
-                "} " + super.toString();
-    }
-
-    private final int spare;
-    private final String text;
 }

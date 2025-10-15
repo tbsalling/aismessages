@@ -24,11 +24,13 @@ import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 import dk.tbsalling.aismessages.version.Version;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
-import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -53,6 +55,9 @@ import static java.util.Objects.requireNonNull;
  * Subclasses of AISMessage represent specific types of AIS messages, providing additional methods and fields
  * specific to that message type.
  */
+@Getter
+@ToString
+@EqualsAndHashCode
 public abstract class AISMessage {
 
     private static final System.Logger LOG = System.getLogger(AISMessage.class.getName());
@@ -75,14 +80,11 @@ public abstract class AISMessage {
     }
 
     private final Metadata metadata;
-
-    /**
-     * Length of bitString
-     */
-    private final int numberOfBits;
-
     private final int repeatIndicator;
     private final MMSI sourceMmsi;
+
+    @ToString.Exclude
+    private final int numberOfBits;
 
     protected AISMessage() {
         this.numberOfBits = -1;
@@ -90,7 +92,6 @@ public abstract class AISMessage {
         this.repeatIndicator = -1;
         this.sourceMmsi = null;
     }
-
 
     /**
      * Constructor that accepts pre-parsed values, enabling true immutability.
@@ -107,7 +108,6 @@ public abstract class AISMessage {
     protected AISMessage(Instant received, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, MMSI sourceMmsi, int repeatIndicator) {
         requireNonNull(nmeaMessages);
         requireNonNull(bitString);
-        check(nmeaMessages);
 
         this.numberOfBits = bitString.length();
         this.metadata = new Metadata(received, nmeaTagBlock, nmeaMessages, Version.VERSION, bitString, source);
@@ -115,10 +115,6 @@ public abstract class AISMessage {
         this.sourceMmsi = sourceMmsi;
 
         checkAISMessage();
-    }
-
-    private static void check(NMEAMessage[] nmeaMessages) {
-        // TODO sanity check NMEA messages
     }
 
     /**
@@ -160,53 +156,9 @@ public abstract class AISMessage {
             throw new InvalidMessage(message.toString());
     }
 
-    public NMEAMessage[] getNmeaMessages() {
-        return metadata != null ? metadata.nmeaMessages() : null;
-    }
-
     public abstract AISMessageType getMessageType();
 
     @SuppressWarnings("unused")
-    public final Metadata getMetadata() {
-        return metadata;
-    }
-
-    @SuppressWarnings("unused")
-    public final NMEATagBlock getNmeaTagBlock() {
-        return metadata != null ? metadata.nmeaTagBlock() : null;
-    }
-
-
-    /**
-     * Retrieves the repeat indicator value of the AIS message.
-     *
-     * @return The repeat indicator value.
-     */
-    @SuppressWarnings("unused")
-    public final int getRepeatIndicator() {
-        return repeatIndicator;
-    }
-
-    /**
-     * Retrieves the source MMSI (Maritime Mobile Service Identity) of the AIS message.
-     * The source MMSI uniquely identifies the transmitting vessel or maritime entity.
-     *
-     * @return The source MMSI.
-     */
-    @SuppressWarnings("unused")
-    public final MMSI getSourceMmsi() {
-        return sourceMmsi;
-    }
-
-    @Override
-    public String toString() {
-        return "AISMessage{" +
-                "nmeaMessages=" + Arrays.toString(getNmeaMessages()) +
-                ", metadata=" + metadata +
-                ", repeatIndicator=" + getRepeatIndicator() +
-                ", sourceMmsi=" + getSourceMmsi() +
-                '}' + tagBlockToString();
-    }
 
     /**
      * Converts the NMEA tag block to a string representation.
@@ -214,11 +166,10 @@ public abstract class AISMessage {
      * @return The string representation of the NMEA tag block, or an empty string if it is null.
      */
     public String tagBlockToString() {
-        NMEATagBlock tagBlock = getNmeaTagBlock();
+        NMEATagBlock tagBlock = metadata != null ? metadata.nmeaTagBlock() : null;
         String tagBlockMessage;
         if (tagBlock != null) {
             tagBlockMessage = String.valueOf(tagBlock);
-
         } else {
             tagBlockMessage = "";
         }
@@ -232,16 +183,6 @@ public abstract class AISMessage {
      */
     protected String getBitString() {
         return metadata != null ? metadata.bitString() : null;
-    }
-
-
-    /**
-     * Retrieves the number of bits in the AIS message payload.
-     *
-     * @return The number of bits in the AIS message payload.
-     */
-    protected int getNumberOfBits() {
-        return numberOfBits;
     }
 
     /**
@@ -616,23 +557,4 @@ public abstract class AISMessage {
         charToSixBit.put("w", "111111"); // 63
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof AISMessage)) return false;
-
-        AISMessage that = (AISMessage) o;
-
-        if (!getBitString().equals(that.getBitString())) return false;
-        if (metadata != null ? !metadata.equals(that.metadata) : that.metadata != null) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        int result = metadata != null ? metadata.hashCode() : 0;
-        result = 31 * result + getBitString().hashCode();
-        return result;
-    }
 }

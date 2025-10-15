@@ -23,12 +23,16 @@ import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 import java.time.Instant;
 import java.util.stream.IntStream;
 
 import static java.lang.String.format;
 
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class ClassBCSStaticDataReport extends AISMessage implements StaticDataReport {
 
     /**
@@ -37,7 +41,7 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
     protected ClassBCSStaticDataReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
                                        int partNumber, String shipName, ShipType shipType,
                                        String vendorId, String callsign,
-                                       Integer toBow, Integer toStern, Integer toStarboard, Integer toPort,
+                                       int toBow, int toStern, int toStarboard, int toPort,
                                        MMSI mothershipMmsi) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.partNumber = partNumber;
@@ -71,7 +75,7 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
         }
     }
 
-    public final AISMessageType getMessageType() {
+    public AISMessageType getMessageType() {
         return AISMessageType.ClassBCSStaticDataReport;
     }
 
@@ -80,82 +84,15 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
         return TransponderClass.B;
     }
 
-    @SuppressWarnings("unused")
-    public int getPartNumber() {
-        return partNumber;
-	}
-
-    @SuppressWarnings("unused")
-	public String getShipName() {
-        return shipName;
-	}
-
-    @SuppressWarnings("unused")
-	public ShipType getShipType() {
-        return shipType;
-	}
-
-    @SuppressWarnings("unused")
-	public String getVendorId() {
-        return vendorId;
-	}
-
-    @SuppressWarnings("unused")
-	public String getCallsign() {
-        return callsign;
-	}
-
-    @SuppressWarnings("unused")
-    public int getToBow() {
-        return toBow != null ? toBow : 0;
-	}
-
-    @SuppressWarnings("unused")
-    public int getToStern() {
-        return toStern != null ? toStern : 0;
-	}
-
-    @SuppressWarnings("unused")
-    public int getToStarboard() {
-        return toStarboard != null ? toStarboard : 0;
-	}
-
-    @SuppressWarnings("unused")
-    public int getToPort() {
-        return toPort != null ? toPort : 0;
-	}
-
-    @SuppressWarnings("unused")
-	public MMSI getMothershipMmsi() {
-        return mothershipMmsi;
-	}
-
-    @Override
-    public String toString() {
-        return "ClassBCSStaticDataReport{" +
-                "messageType=" + getMessageType() +
-                ", partNumber=" + getPartNumber() +
-                ", shipName='" + getShipName() + '\'' +
-                ", shipType=" + getShipType() +
-                ", vendorId='" + getVendorId() + '\'' +
-                ", callsign='" + getCallsign() + '\'' +
-                ", toBow=" + getToBow() +
-                ", toStern=" + getToStern() +
-                ", toStarboard=" + getToStarboard() +
-                ", toPort=" + getToPort() +
-                ", mothershipMmsi=" + getMothershipMmsi() +
-                "} " + super.toString();
-    }
-
-    private final int partNumber;
-    private final String shipName;
-    private final ShipType shipType;
-    private final String vendorId;
-    private final String callsign;
-    private final Integer toBow;
-    private final Integer toStern;
-    private final Integer toStarboard;
-    private final Integer toPort;
-    private final MMSI mothershipMmsi;
+    int partNumber;
+    String shipName;
+    ShipType shipType;
+    String vendorId;
+    String callsign;
+    int toBow;
+    int toStern;
+    int toStarboard;
+    int toPort;
+    MMSI mothershipMmsi;
 
 }

@@ -23,6 +23,9 @@ import dk.tbsalling.aismessages.ais.messages.types.*;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
 import java.time.Instant;
 
@@ -32,6 +35,9 @@ import static java.lang.String.format;
  * @author tbsalling
  *
  */
+@Getter
+@ToString
+@EqualsAndHashCode(callSuper = true)
 public abstract class PositionReport extends AISMessage implements ExtendedDynamicDataReport {
 
     /**
@@ -110,123 +116,21 @@ public abstract class PositionReport extends AISMessage implements ExtendedDynam
         return TransponderClass.A;
     }
 
-    @SuppressWarnings("unused")
-	public NavigationStatus getNavigationStatus() {
-        return navigationStatus;
-	}
-
-    @SuppressWarnings("unused")
-    public int getRateOfTurn() {
-        return rateOfTurn;
-	}
-
-    @SuppressWarnings("unused")
-    public int getRawRateOfTurn() {
-        return rawRateOfTurn;
-    }
-
-    @SuppressWarnings("unused")
-    public float getSpeedOverGround() {
-        return speedOverGround;
-	}
-
-    @SuppressWarnings("unused")
-    public int getRawSpeedOverGround() {
-        return rawSpeedOverGround;
-    }
-
-    @SuppressWarnings("unused")
-    public boolean getPositionAccuracy() {
-        return positionAccuracy;
-	}
-
-    @SuppressWarnings("unused")
-    public float getLatitude() {
-        return latitude;
-	}
-
-    @SuppressWarnings("unused")
-    public int getRawLatitude() {
-        return rawLatitude;
-    }
-
-    @SuppressWarnings("unused")
-    public float getLongitude() {
-        return longitude;
-	}
-
-    @SuppressWarnings("unused")
-    public int getRawLongitude() {
-        return rawLongitude;
-    }
-
-    @SuppressWarnings("unused")
-    public float getCourseOverGround() {
-        return courseOverGround;
-	}
-
-    @SuppressWarnings("unused")
-    public int getRawCourseOverGround() {
-        return rawCourseOverGround;
-    }
-
-    @SuppressWarnings("unused")
-    public int getTrueHeading() {
-        return trueHeading;
-	}
-
-    @SuppressWarnings("unused")
-    public int getSecond() {
-        return second;
-	}
-
-    @SuppressWarnings("unused")
-	public ManeuverIndicator getSpecialManeuverIndicator() {
-        return specialManeuverIndicator;
-	}
-
-    @SuppressWarnings("unused")
-    public boolean getRaimFlag() {
-        return raimFlag;
-	}
-
-    @SuppressWarnings("unused")
-    public CommunicationState getCommunicationState() {
-        return communicationState;
-    }
-
-    @Override
-    public String toString() {
-        return "PositionReport{" +
-                "navigationStatus=" + getNavigationStatus() +
-                ", rateOfTurn=" + getRateOfTurn() +
-                ", speedOverGround=" + getSpeedOverGround() +
-                ", positionAccuracy=" + getPositionAccuracy() +
-                ", latitude=" + getLatitude() +
-                ", longitude=" + getLongitude() +
-                ", courseOverGround=" + getCourseOverGround() +
-                ", trueHeading=" + getTrueHeading() +
-                ", second=" + getSecond() +
-                ", specialManeuverIndicator=" + getSpecialManeuverIndicator() +
-                ", raimFlag=" + getRaimFlag() +
-                "} " + super.toString();
-    }
-
-    private final NavigationStatus navigationStatus;
-    private final int rateOfTurn;
-    private final float speedOverGround;
-    private final boolean positionAccuracy;
-    private final float latitude;
-    private final float longitude;
-    private final float courseOverGround;
-    private final int trueHeading;
-    private final int second;
-    private final ManeuverIndicator specialManeuverIndicator;
-    private final boolean raimFlag;
-    private final CommunicationState communicationState;
-    private final int rawRateOfTurn;
-    private final int rawSpeedOverGround;
-    private final int rawLatitude;
-    private final int rawLongitude;
-    private final int rawCourseOverGround;
+    NavigationStatus navigationStatus;
+    int rateOfTurn;
+    float speedOverGround;
+    boolean positionAccuracy;
+    float latitude;
+    float longitude;
+    float courseOverGround;
+    int trueHeading;
+    int second;
+    ManeuverIndicator specialManeuverIndicator;
+    boolean raimFlag;
+    CommunicationState communicationState;
+    int rawRateOfTurn;
+    int rawSpeedOverGround;
+    int rawLatitude;
+    int rawLongitude;
+    int rawCourseOverGround;
 }

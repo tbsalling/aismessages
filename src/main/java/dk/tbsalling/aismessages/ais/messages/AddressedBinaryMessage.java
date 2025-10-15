@@ -22,6 +22,8 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 import java.time.Instant;
 
@@ -36,6 +38,8 @@ import static java.lang.String.format;
  * @author tbsalling
  * 
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class AddressedBinaryMessage extends AISMessage {
 
     /**
@@ -81,70 +85,16 @@ public class AddressedBinaryMessage extends AISMessage {
         }
     }
 
-    public final AISMessageType getMessageType() {
+    public AISMessageType getMessageType() {
         return AISMessageType.AddressedBinaryMessage;
     }
 
-    @SuppressWarnings("unused")
-    public int getSequenceNumber() {
-        return sequenceNumber;
-	}
-
-    @SuppressWarnings("unused")
-	public MMSI getDestinationMmsi() {
-        return destinationMmsi;
-	}
-
-    @SuppressWarnings("unused")
-    public boolean getRetransmit() {
-        return retransmit;
-	}
-
-    @SuppressWarnings("unused")
-    public int getSpare() {
-        return spare;
-	}
-
-    @SuppressWarnings("unused")
-    public int getDesignatedAreaCode() {
-        return designatedAreaCode;
-	}
-
-    @SuppressWarnings("unused")
-    public int getFunctionalId() {
-        return functionalId;
-	}
-
-    @SuppressWarnings("unused")
-	public String getBinaryData() {
-        return binaryData;
-	}
-
-    @SuppressWarnings("unused")
-    public ApplicationSpecificMessage getApplicationSpecificMessage() {
-        return applicationSpecificMessage;
-    }
-
-    @Override
-    public String toString() {
-        return "AddressedBinaryMessage{" +
-                "messageType=" + getMessageType() +
-                ", sequenceNumber=" + getSequenceNumber() +
-                ", destinationMmsi=" + getDestinationMmsi() +
-                ", retransmit=" + getRetransmit() +
-                ", spare=" + getSpare() +
-                ", designatedAreaCode=" + getDesignatedAreaCode() +
-                ", functionalId=" + getFunctionalId() +
-                ", binaryData='" + getBinaryData() + '\'' +
-                "} " + super.toString();
-    }
-
-    private final int sequenceNumber;
-    private final MMSI destinationMmsi;
-    private final boolean retransmit;
-    private final int spare;
-    private final int designatedAreaCode;
-    private final int functionalId;
-    private final String binaryData;
-    private final ApplicationSpecificMessage applicationSpecificMessage;
+    int sequenceNumber;
+    MMSI destinationMmsi;
+    boolean retransmit;
+    int spare;
+    int designatedAreaCode;
+    int functionalId;
+    String binaryData;
+    ApplicationSpecificMessage applicationSpecificMessage;
 }

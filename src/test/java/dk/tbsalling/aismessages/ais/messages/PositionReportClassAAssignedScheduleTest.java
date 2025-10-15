@@ -54,7 +54,7 @@ public class PositionReportClassAAssignedScheduleTest {
         assertEquals(NavigationStatus.UnderwayUsingEngine, message.getNavigationStatus());
         assertEquals((Integer) 0, message.getRateOfTurn());
         assertEquals((Float) 13.6f, message.getSpeedOverGround());
-        assertTrue(message.getPositionAccuracy());
+        assertTrue(message.isPositionAccuracy());
         assertEquals(Float.valueOf(37.21113f), message.getLatitude());
         assertEquals((Integer) 22326676, message.getRawLatitude());
         assertEquals(Float.valueOf(-123.45053f), message.getLongitude());
@@ -64,6 +64,6 @@ public class PositionReportClassAAssignedScheduleTest {
         assertEquals((Integer) 331, message.getTrueHeading());
         assertEquals((Integer) 7, message.getSecond());
         assertEquals(ManeuverIndicator.NotAvailable, message.getSpecialManeuverIndicator());
-        assertFalse(message.getRaimFlag());
+        assertFalse(message.isRaimFlag());
     }
 }

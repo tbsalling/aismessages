@@ -36,5 +36,5 @@ public interface DynamicDataReport extends DataReport {
 
     int getRawCourseOverGround();
 
-    boolean getPositionAccuracy();
+    boolean isPositionAccuracy();
 }

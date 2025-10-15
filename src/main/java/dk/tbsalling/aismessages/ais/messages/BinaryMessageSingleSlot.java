@@ -21,11 +21,15 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 import java.time.Instant;
 
 import static java.lang.String.format;
 
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class BinaryMessageSingleSlot extends AISMessage {
 
     /**
@@ -59,43 +63,12 @@ public class BinaryMessageSingleSlot extends AISMessage {
         }
     }
 
-    public final AISMessageType getMessageType() {
+    public AISMessageType getMessageType() {
         return AISMessageType.BinaryMessageSingleSlot;
     }
 
-    @SuppressWarnings("unused")
-    public boolean getDestinationIndicator() {
-        return destinationIndicator;
-	}
-
-    @SuppressWarnings("unused")
-    public boolean getBinaryDataFlag() {
-        return binaryDataFlag;
-	}
-
-    @SuppressWarnings("unused")
-	public MMSI getDestinationMMSI() {
-        return destinationMMSI;
-	}
-
-    @SuppressWarnings("unused")
-	public String getBinaryData() {
-        return binaryData;
-	}
-
-    @Override
-    public String toString() {
-        return "BinaryMessageSingleSlot{" +
-                "messageType=" + getMessageType() +
-                ", destinationIndicator=" + getDestinationIndicator() +
-                ", destinationMMSI=" + getDestinationMMSI() +
-                ", binaryDataFlag=" + getBinaryDataFlag() +
-                ", binaryData='" + getBinaryData() + '\'' +
-                "} " + super.toString();
-    }
-
-    private final boolean destinationIndicator;
-    private final boolean binaryDataFlag;
-    private final MMSI destinationMMSI;
-    private final String binaryData;
+    boolean destinationIndicator;
+    boolean binaryDataFlag;
+    MMSI destinationMMSI;
+    String binaryData;
 }

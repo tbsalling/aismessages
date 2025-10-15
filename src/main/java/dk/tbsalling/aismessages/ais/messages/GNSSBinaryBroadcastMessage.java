@@ -21,6 +21,8 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 import java.time.Instant;
 
@@ -33,6 +35,8 @@ import static java.lang.String.format;
  * 
  * @author tbsalling
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class GNSSBinaryBroadcastMessage extends AISMessage {
 
     /**
@@ -75,92 +79,19 @@ public class GNSSBinaryBroadcastMessage extends AISMessage {
         }
     }
 
-    public final AISMessageType getMessageType() {
+    public AISMessageType getMessageType() {
         return AISMessageType.GNSSBinaryBroadcastMessage;
     }
 
-    @SuppressWarnings("unused")
-    public int getSpare1() {
-        return spare1;
-	}
-
-    @SuppressWarnings("unused")
-    public float getLatitude() {
-        return latitude;
-	}
-
-    @SuppressWarnings("unused")
-    public float getLongitude() {
-        return longitude;
-	}
-
-    @SuppressWarnings("unused")
-    public int getSpare2() {
-        return spare2;
-	}
-
-    @SuppressWarnings("unused")
-	public Integer getMType() {
-        return mType;
-	}
-
-    @SuppressWarnings("unused")
-	public Integer getStationId() {
-        return stationId;
-	}
-
-    @SuppressWarnings("unused")
-	public Integer getZCount() {
-        return zCount;
-	}
-
-    @SuppressWarnings("unused")
-	public Integer getSequenceNumber() {
-        return sequenceNumber;
-	}
-
-    @SuppressWarnings("unused")
-	public Integer getNumOfWords() {
-        return numOfWords;
-	}
-
-    @SuppressWarnings("unused")
-	public Integer getHealth() {
-        return health;
-	}
-
-    @SuppressWarnings("unused")
-	public String getBinaryData() {
-        return binaryData;
-	}
-
-    @Override
-    public String toString() {
-        return "GNSSBinaryBroadcastMessage{" +
-                "messageType=" + getMessageType() +
-                ", spare1=" + getSpare1() +
-                ", latitude=" + getLatitude() +
-                ", longitude=" + getLongitude() +
-                ", spare2=" + getSpare2() +
-                ", mType=" + getMType() +
-                ", stationId=" + getStationId() +
-                ", zCount=" + getZCount() +
-                ", sequenceNumber=" + getSequenceNumber() +
-                ", numOfWords=" + getNumOfWords() +
-                ", health=" + getHealth() +
-                ", binaryData='" + getBinaryData() + '\'' +
-                "} " + super.toString();
-    }
-
-    private final int spare1;
-    private final float latitude;
-    private final float longitude;
-    private final int spare2;
-    private final Integer mType;
-    private final Integer stationId;
-    private final Integer zCount;
-    private final Integer sequenceNumber;
-    private final Integer numOfWords;
-    private final Integer health;
-    private final String binaryData;
+    int spare1;
+    float latitude;
+    float longitude;
+    int spare2;
+    Integer mType;
+    Integer stationId;
+    Integer zCount;
+    Integer sequenceNumber;
+    Integer numOfWords;
+    Integer health;
+    String binaryData;
 }

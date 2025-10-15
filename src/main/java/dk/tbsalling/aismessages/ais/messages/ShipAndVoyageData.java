@@ -21,6 +21,8 @@ import dk.tbsalling.aismessages.ais.messages.types.*;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 import java.time.Instant;
 import java.time.ZoneOffset;
@@ -35,6 +37,8 @@ import java.util.Optional;
  * 
  * @author tbsalling
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
 
     /**
@@ -101,82 +105,13 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
         }
     }
 
-    public final AISMessageType getMessageType() {
+    public AISMessageType getMessageType() {
         return AISMessageType.ShipAndVoyageRelatedData;
     }
 
     @Override
     public TransponderClass getTransponderClass() {
         return TransponderClass.A;
-    }
-
-    @SuppressWarnings("unused")
-	public IMO getImo() {
-        return imo;
-	}
-
-    @SuppressWarnings("unused")
-	public String getCallsign() {
-        return callsign;
-	}
-
-    @SuppressWarnings("unused")
-	public String getShipName() {
-        return shipName;
-	}
-
-    @SuppressWarnings("unused")
-	public ShipType getShipType() {
-        return shipType;
-	}
-
-    @SuppressWarnings("unused")
-    public int getToBow() {
-        return toBow;
-	}
-
-    @SuppressWarnings("unused")
-    public int getToStern() {
-        return toStern;
-	}
-
-    @SuppressWarnings("unused")
-    public int getToStarboard() {
-        return toStarboard;
-	}
-
-    @SuppressWarnings("unused")
-    public int getToPort() {
-        return toPort;
-	}
-
-    @SuppressWarnings("unused")
-	public PositionFixingDevice getPositionFixingDevice() {
-        return positionFixingDevice;
-	}
-
-	/** @return The UTC ETA Month (1-12) 0 = not available. */
-    @SuppressWarnings("unused")
-    public int getEtaMonth() {
-        return etaMonth;
-    }
-
-    /** @return The UTC ETA Day (1-31) 0 = not available. */
-    @SuppressWarnings("unused")
-    public int getEtaDay() {
-        return etaDay;
-    }
-
-    /** @return The UTC ETA Hour (0-23) 24 = not available. */
-    @SuppressWarnings("unused")
-    public int getEtaHour() {
-        return etaHour;
-    }
-
-    /** @return The UTC ETA Minute (0-59) 60 = not available. */
-    @SuppressWarnings("unused")
-    public int getEtaMinute() {
-        return etaMinute;
     }
 
     /**
@@ -215,61 +150,21 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
         }
     }
 
-    @SuppressWarnings("unused")
-    public float getDraught() {
-        return draught;
-	}
-
-    @SuppressWarnings("unused")
-    public int getRawDraught() {
-        return rawDraught;
-    }
-
-    @SuppressWarnings("unused")
-	public String getDestination() {
-        return destination;
-	}
-
-    @SuppressWarnings("unused")
-    public boolean getDataTerminalReady() {
-        return dataTerminalReady;
-	}
-
-    @Override
-    public String toString() {
-        return "ShipAndVoyageData{" +
-                "messageType=" + getMessageType() +
-                ", imo=" + getImo() +
-                ", callsign='" + getCallsign() + '\'' +
-                ", shipName='" + getShipName() + '\'' +
-                ", shipType=" + getShipType() +
-                ", toBow=" + getToBow() +
-                ", toStern=" + getToStern() +
-                ", toStarboard=" + getToStarboard() +
-                ", toPort=" + getToPort() +
-                ", positionFixingDevice=" + getPositionFixingDevice() +
-                ", eta='" + String.format("%02d-%02d %02d:%02d", this.getEtaDay(), this.getEtaMonth(), this.getEtaHour(), this.getEtaMinute()) + '\'' +
-                ", draught=" + getDraught() +
-                ", destination='" + getDestination() + '\'' +
-                ", dataTerminalReady=" + getDataTerminalReady() +
-                "} " + super.toString();
-    }
-
-    private final IMO imo;
-    private final String callsign;
-    private final String shipName;
-    private final ShipType shipType;
-    private final int toBow;
-    private final int toStern;
-    private final int toStarboard;
-    private final int toPort;
-    private final PositionFixingDevice positionFixingDevice;
-    private final int etaMonth;
-    private final int etaDay;
-    private final int etaHour;
-    private final int etaMinute;
-    private final float draught;
-    private final String destination;
-    private final boolean dataTerminalReady;
-    private final int rawDraught;
+    IMO imo;
+    String callsign;
+    String shipName;
+    ShipType shipType;
+    int toBow;
+    int toStern;
+    int toStarboard;
+    int toPort;
+    PositionFixingDevice positionFixingDevice;
+    int etaMonth;
+    int etaDay;
+    int etaHour;
+    int etaMinute;
+    float draught;
+    String destination;
+    boolean dataTerminalReady;
+    int rawDraught;
 }

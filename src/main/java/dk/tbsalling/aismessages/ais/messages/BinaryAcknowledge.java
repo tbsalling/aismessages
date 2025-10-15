@@ -21,6 +21,8 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 import java.time.Instant;
 import java.util.stream.IntStream;
@@ -35,6 +37,8 @@ import static java.lang.String.format;
  * @author tbsalling
  * 
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class BinaryAcknowledge extends AISMessage {
 
     /**
@@ -78,85 +82,18 @@ public class BinaryAcknowledge extends AISMessage {
         }
     }
 
-    public final AISMessageType getMessageType() {
+    public AISMessageType getMessageType() {
         return AISMessageType.BinaryAcknowledge;
     }
 
-    @SuppressWarnings("unused")
-    public int getSpare() {
-        return spare;
-	}
-
-    @SuppressWarnings("unused")
-	public MMSI getMmsi1() {
-        return mmsi1;
-	}
-
-    @SuppressWarnings("unused")
-    public int getSequence1() {
-        return sequence1;
-	}
-
-    @SuppressWarnings("unused")
-	public MMSI getMmsi2() {
-        return mmsi2;
-	}
-
-    @SuppressWarnings("unused")
-	public Integer getSequence2() {
-        return sequence2;
-	}
-
-    @SuppressWarnings("unused")
-	public MMSI getMmsi3() {
-        return mmsi3;
-	}
-
-    @SuppressWarnings("unused")
-	public Integer getSequence3() {
-        return sequence3;
-	}
-
-    @SuppressWarnings("unused")
-	public MMSI getMmsi4() {
-        return mmsi4;
-	}
-
-    @SuppressWarnings("unused")
-	public Integer getSequence4() {
-        return sequence4;
-	}
-
-    @SuppressWarnings("unused")
-    public int getNumOfAcks() {
-        return numOfAcks;
-	}
-
-    @Override
-    public String toString() {
-        return "BinaryAcknowledge{" +
-                "messageType=" + getMessageType() +
-                ", spare=" + getSpare() +
-                ", mmsi1=" + getMmsi1() +
-                ", sequence1=" + getSequence1() +
-                ", mmsi2=" + getMmsi2() +
-                ", sequence2=" + getSequence2() +
-                ", mmsi3=" + getMmsi3() +
-                ", sequence3=" + getSequence3() +
-                ", mmsi4=" + getMmsi4() +
-                ", sequence4=" + getSequence4() +
-                ", numOfAcks=" + getNumOfAcks() +
-                "} " + super.toString();
-    }
-
-    private final int spare;
-    private final MMSI mmsi1;
-    private final int sequence1;
-    private final MMSI mmsi2;
-    private final Integer sequence2;
-    private final MMSI mmsi3;
-    private final Integer sequence3;
-    private final MMSI mmsi4;
-    private final Integer sequence4;
-    private final int numOfAcks;
+    int spare;
+    MMSI mmsi1;
+    int sequence1;
+    MMSI mmsi2;
+    Integer sequence2;
+    MMSI mmsi3;
+    Integer sequence3;
+    MMSI mmsi4;
+    Integer sequence4;
+    int numOfAcks;
 }

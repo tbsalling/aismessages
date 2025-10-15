@@ -28,21 +28,21 @@ public class AidToNavigationReportTest {
         AidToNavigationReport message = (AidToNavigationReport) aisMessage;
         assertEquals(MMSI.valueOf(995036019), message.getSourceMmsi());
         assertEquals(AidType.BeaconSpecialMark, message.getAidType());
-        assertEquals(false, message.getAssignedMode());
+        assertEquals(false, message.isAssignedMode());
         assertEquals("S16A GLT VIRT ATON", message.getName());
         assertEquals(null, message.getNameExtension());
-        assertEquals(false, message.getOffPosition());
+        assertEquals(false, message.isOffPosition());
         assertEquals(Integer.valueOf(60), message.getSecond());
         assertEquals(Integer.valueOf(0), message.getToBow());
         assertEquals(Integer.valueOf(0), message.getToPort());
         assertEquals(Integer.valueOf(0), message.getToStern());
         assertEquals(Integer.valueOf(0), message.getToStarboard());
-        assertEquals(true, message.getVirtualAid());
-        assertEquals(false, message.getPositionAccurate());
+        assertEquals(true, message.isVirtualAid());
+        assertEquals(false, message.isPositionAccurate());
         assertEquals(Float.valueOf(-23.936693f), message.getLatitude()); // lat = 111001001001101101001100000b = -23,9366933333
         assertEquals(Float.valueOf(151.44344f), message.getLongitude());
         assertEquals(PositionFixingDevice.Surveyed, message.getPositionFixingDevice());
-        assertFalse(message.getRaimFlag());
+        assertFalse(message.isRaimFlag());
     }
 
     @Test
@@ -61,21 +61,21 @@ public class AidToNavigationReportTest {
         AidToNavigationReport message = (AidToNavigationReport) aisMessage;
         assertEquals(MMSI.valueOf(995036021), message.getSourceMmsi());
         assertEquals(AidType.BeaconSpecialMark, message.getAidType());
-        assertEquals(false, message.getAssignedMode());
+        assertEquals(false, message.isAssignedMode());
         assertEquals("S6A GLT VIRTU ATON", message.getName());
         assertEquals(null, message.getNameExtension());
-        assertEquals(false, message.getOffPosition());
+        assertEquals(false, message.isOffPosition());
         assertEquals(Integer.valueOf(60), message.getSecond());
         assertEquals(Integer.valueOf(0), message.getToBow());
         assertEquals(Integer.valueOf(0), message.getToPort());
         assertEquals(Integer.valueOf(0), message.getToStern());
         assertEquals(Integer.valueOf(0), message.getToStarboard());
-        assertEquals(true, message.getVirtualAid());
-        assertEquals(false, message.getPositionAccurate());
+        assertEquals(true, message.isVirtualAid());
+        assertEquals(false, message.isPositionAccurate());
         assertEquals(Float.valueOf(-23.917385f), message.getLatitude());
         assertEquals(Float.valueOf(151.49791f), message.getLongitude());
         assertEquals(PositionFixingDevice.Surveyed, message.getPositionFixingDevice());
-        assertFalse(message.getRaimFlag());
+        assertFalse(message.isRaimFlag());
     }
 
 }

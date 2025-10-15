@@ -23,6 +23,8 @@ import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 import java.time.Instant;
 
@@ -33,6 +35,8 @@ import static java.lang.String.format;
  *
  * @author tbsalling
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class AidToNavigationReport extends AISMessage {
 
     /**
@@ -90,144 +94,23 @@ public class AidToNavigationReport extends AISMessage {
         return AISMessageType.AidToNavigationReport;
     }
 
-    @SuppressWarnings("unused")
-    public AidType getAidType() {
-        return aidType;
-    }
-
-    @SuppressWarnings("unused")
-    public String getName() {
-        return name;
-    }
-
-    @SuppressWarnings("unused")
-    public boolean getPositionAccurate() {
-        return positionAccurate;
-    }
-
-    @SuppressWarnings("unused")
-    public float getLatitude() {
-        return latitude;
-    }
-
-    @SuppressWarnings("unused")
-    public float getLongitude() {
-        return longitude;
-    }
-
-    @SuppressWarnings("unused")
-    public int getToBow() {
-        return toBow;
-    }
-
-    @SuppressWarnings("unused")
-    public int getToStern() {
-        return toStern;
-    }
-
-    @SuppressWarnings("unused")
-    public int getToStarboard() {
-        return toStarboard;
-    }
-
-    @SuppressWarnings("unused")
-    public int getToPort() {
-        return toPort;
-    }
-
-    @SuppressWarnings("unused")
-    public PositionFixingDevice getPositionFixingDevice() {
-        return positionFixingDevice;
-    }
-
-    @SuppressWarnings("unused")
-    public int getSecond() {
-        return second;
-    }
-
-    @SuppressWarnings("unused")
-    public boolean getOffPosition() {
-        return offPosition;
-    }
-
-    @SuppressWarnings("unused")
-    public String getAtoNStatus() {
-        return regionalUse;
-    }
-
-    @SuppressWarnings("unused")
-    public boolean getRaimFlag() {
-        return raimFlag;
-    }
-
-    @SuppressWarnings("unused")
-    public boolean getVirtualAid() {
-        return virtualAid;
-    }
-
-    @SuppressWarnings("unused")
-    public boolean getAssignedMode() {
-        return assignedMode;
-    }
-
-    @SuppressWarnings("unused")
-    public int getSpare1() {
-        return spare1;
-    }
-
-    @SuppressWarnings("unused")
-    public String getNameExtension() {
-        return nameExtension;
-    }
-
-    @SuppressWarnings("unused")
-    public Integer getSpare2() {
-        return spare2;
-    }
-
-    @Override
-    public String toString() {
-        return "AidToNavigationReport{" +
-                "messageType=" + getMessageType() +
-                ", aidType=" + getAidType() +
-                ", name='" + getName() + '\'' +
-                ", positionAccurate=" + getPositionAccurate() +
-                ", latitude=" + getLatitude() +
-                ", longitude=" + getLongitude() +
-                ", toBow=" + getToBow() +
-                ", toStern=" + getToStern() +
-                ", toPort=" + getToPort() +
-                ", toStarboard=" + getToStarboard() +
-                ", positionFixingDevice=" + getPositionFixingDevice() +
-                ", second=" + getSecond() +
-                ", offPosition=" + getOffPosition() +
-                ", regionalUse='" + getAtoNStatus() + '\'' +
-                ", raimFlag=" + getRaimFlag() +
-                ", virtualAid=" + getVirtualAid() +
-                ", assignedMode=" + getAssignedMode() +
-                ", spare1=" + getSpare1() +
-                ", nameExtension='" + getNameExtension() + '\'' +
-                ", spare2=" + getSpare2() +
-                "} " + super.toString();
-    }
-
-    private final AidType aidType;
-    private final String name;
-    private final boolean positionAccurate;
-    private final float latitude;
-    private final float longitude;
-    private final int toBow;
-    private final int toStern;
-    private final int toPort;
-    private final int toStarboard;
-    private final PositionFixingDevice positionFixingDevice;
-    private final int second;
-    private final boolean offPosition;
-    private final String regionalUse;
-    private final boolean raimFlag;
-    private final boolean virtualAid;
-    private final boolean assignedMode;
-    private final int spare1;
-    private final String nameExtension;
-    private final Integer spare2;
+    AidType aidType;
+    String name;
+    boolean positionAccurate;
+    float latitude;
+    float longitude;
+    int toBow;
+    int toStern;
+    int toPort;
+    int toStarboard;
+    PositionFixingDevice positionFixingDevice;
+    int second;
+    boolean offPosition;
+    String regionalUse;
+    boolean raimFlag;
+    boolean virtualAid;
+    boolean assignedMode;
+    int spare1;
+    String nameExtension;
+    int spare2;
 }

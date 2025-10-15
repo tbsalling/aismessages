@@ -21,11 +21,15 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 import java.time.Instant;
 
 import static java.lang.String.format;
 
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class UTCAndDateInquiry extends AISMessage {
 
     /**
@@ -56,22 +60,10 @@ public class UTCAndDateInquiry extends AISMessage {
         }
     }
 
-    public final AISMessageType getMessageType() {
+    public AISMessageType getMessageType() {
         return AISMessageType.UTCAndDateInquiry;
     }
 
     @SuppressWarnings("unused")
-	public MMSI getDestinationMmsi() {
-        return destinationMmsi;
-	}
-
-    @Override
-    public String toString() {
-        return "UTCAndDateInquiry{" +
-                "messageType=" + getMessageType() +
-                ", destinationMmsi=" + getDestinationMmsi() +
-                "} " + super.toString();
-    }
-
-    private final MMSI destinationMmsi;
+    MMSI destinationMmsi;
 }

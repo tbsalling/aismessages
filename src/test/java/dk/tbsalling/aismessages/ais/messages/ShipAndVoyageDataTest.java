@@ -48,7 +48,7 @@ public class ShipAndVoyageDataTest {
         assertEquals((Integer) 0, message.getEtaMinute());
         assertEquals(Optional.empty(), message.getEtaAfterReceived());
         assertEquals("SFO 70", message.getDestination());
-        assertFalse(message.getDataTerminalReady());
+        assertFalse(message.isDataTerminalReady());
     }
 
     @Test
@@ -86,7 +86,7 @@ public class ShipAndVoyageDataTest {
         assertEquals((Integer) 10, message.getEtaMinute());
         assertEquals(Optional.of(ZonedDateTime.of(2011, 5, 14, 20, 10, 0, 0, ZoneOffset.UTC)), message.getEtaAfterReceived());
         assertEquals("", message.getDestination());
-        assertFalse(message.getDataTerminalReady());
+        assertFalse(message.isDataTerminalReady());
     }
 
     @Test

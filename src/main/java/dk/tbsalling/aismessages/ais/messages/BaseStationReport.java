@@ -23,6 +23,8 @@ import dk.tbsalling.aismessages.ais.messages.types.SOTDMACommunicationState;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 import java.time.Instant;
 
@@ -33,6 +35,8 @@ import static java.lang.String.format;
  * @author tbsalling
  *
  */
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class BaseStationReport extends AISMessage {
 
     /**
@@ -77,99 +81,21 @@ public class BaseStationReport extends AISMessage {
         }
     }
 
-    public final AISMessageType getMessageType() {
+    public AISMessageType getMessageType() {
         return AISMessageType.BaseStationReport;
     }
 
-    @SuppressWarnings("unused")
-    public int getYear() {
-        return year;
-	}
+    int year;
+    int month;
+    int day;
+    int hour;
+    int minute;
+    int second;
+    boolean positionAccurate;
+    float latitude;
+    float longitude;
+    PositionFixingDevice positionFixingDevice;
+    boolean raimFlag;
+    SOTDMACommunicationState communicationState;
 
-    @SuppressWarnings("unused")
-    public int getMonth() {
-        return month;
-	}
-
-    @SuppressWarnings("unused")
-    public int getDay() {
-        return day;
-	}
-
-    @SuppressWarnings("unused")
-    public int getHour() {
-        return hour;
-	}
-
-    @SuppressWarnings("unused")
-    public int getMinute() {
-        return minute;
-	}
-
-    @SuppressWarnings("unused")
-    public int getSecond() {
-        return second;
-	}
-
-    @SuppressWarnings("unused")
-    public boolean getPositionAccurate() {
-        return positionAccurate;
-	}
-
-    @SuppressWarnings("unused")
-    public float getLatitude() {
-        return latitude;
-	}
-
-    @SuppressWarnings("unused")
-    public float getLongitude() {
-        return longitude;
-	}
-
-    @SuppressWarnings("unused")
-	public PositionFixingDevice getPositionFixingDevice() {
-        return positionFixingDevice;
-	}
-
-    @SuppressWarnings("unused")
-    public boolean getRaimFlag() {
-        return raimFlag;
-	}
-
-    @SuppressWarnings("unused")
-    public SOTDMACommunicationState getCommunicationState() {
-        return communicationState;
-    }
-
-    @Override
-    public String toString() {
-        return "BaseStationReport{" +
-                "messageType=" + getMessageType() +
-                ", year=" + getYear() +
-                ", month=" + getMonth() +
-                ", day=" + getDay() +
-                ", hour=" + getHour() +
-                ", minute=" + getMinute() +
-                ", second=" + getSecond() +
-                ", positionAccurate=" + getPositionAccurate() +
-                ", latitude=" + getLatitude() +
-                ", longitude=" + getLongitude() +
-                ", positionFixingDevice=" + getPositionFixingDevice() +
-                ", raimFlag=" + getRaimFlag() +
-                ", communicationState=" + getCommunicationState() +
-                "} " + super.toString();
-    }
-
-    private final int year;
-    private final int month;
-    private final int day;
-    private final int hour;
-    private final int minute;
-    private final int second;
-    private final boolean positionAccurate;
-    private final float latitude;
-    private final float longitude;
-    private final PositionFixingDevice positionFixingDevice;
-    private final boolean raimFlag;
-    private final SOTDMACommunicationState communicationState;
 }

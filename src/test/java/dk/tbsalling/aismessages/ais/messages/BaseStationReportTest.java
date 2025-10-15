@@ -29,11 +29,11 @@ public class BaseStationReportTest {
         assertEquals((Integer) 6, message.getHour());
         assertEquals((Integer) 25, message.getMinute());
         assertEquals((Integer) 9, message.getSecond());
-        assertTrue(message.getPositionAccurate());
+        assertTrue(message.isPositionAccurate());
         assertEquals(Float.valueOf(37.923283f), message.getLatitude());
         assertEquals(Float.valueOf(-122.59837f), message.getLongitude());
         assertEquals(PositionFixingDevice.Surveyed, message.getPositionFixingDevice());
-        assertFalse(message.getRaimFlag());
+        assertFalse(message.isRaimFlag());
     }
 
     @Test
@@ -57,11 +57,11 @@ public class BaseStationReportTest {
         assertEquals((Integer) 7, message.getHour());
         assertEquals((Integer) 38, message.getMinute());
         assertEquals((Integer) 20, message.getSecond());
-        assertTrue(message.getPositionAccurate());
+        assertTrue(message.isPositionAccurate());
         assertEquals(Float.valueOf(-29.870832f), message.getLatitude());
         assertEquals(Float.valueOf(31.033514f), message.getLongitude());
         assertEquals(PositionFixingDevice.Gps, message.getPositionFixingDevice());
-        assertFalse(message.getRaimFlag());
+        assertFalse(message.isRaimFlag());
 
         SOTDMACommunicationState sotdmaCommunicationState = message.getCommunicationState();
         assertEquals(SyncState.UTCDirect, sotdmaCommunicationState.getSyncState());

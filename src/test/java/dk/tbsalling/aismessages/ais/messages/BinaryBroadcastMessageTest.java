@@ -45,8 +45,8 @@ public class BinaryBroadcastMessageTest {
         System.out.println(aisMessage.toString());
 
         // Assert
-        assertEquals(316, ((BinaryBroadcastMessage) aisMessage).getDesignatedAreaCode().intValue());
-        assertEquals(7, ((BinaryBroadcastMessage) aisMessage).getFunctionalId().intValue());
+        assertEquals(316, ((BinaryBroadcastMessage) aisMessage).getDesignatedAreaCode());
+        assertEquals(7, ((BinaryBroadcastMessage) aisMessage).getFunctionalId());
         assertEquals(UnknownApplicationSpecificMessage.class, ((BinaryBroadcastMessage) aisMessage).getApplicationSpecificMessage().getClass());
     }
 
@@ -62,8 +62,8 @@ public class BinaryBroadcastMessageTest {
         System.out.println(aisMessage.toString());
 
         // Assert
-        assertEquals(88, ((BinaryBroadcastMessage) aisMessage).getDesignatedAreaCode().intValue());
-        assertEquals(4, ((BinaryBroadcastMessage) aisMessage).getFunctionalId().intValue());
+        assertEquals(88, ((BinaryBroadcastMessage) aisMessage).getDesignatedAreaCode());
+        assertEquals(4, ((BinaryBroadcastMessage) aisMessage).getFunctionalId());
         assertEquals(UnknownApplicationSpecificMessage.class, ((BinaryBroadcastMessage) aisMessage).getApplicationSpecificMessage().getClass());
     }
 
@@ -81,8 +81,8 @@ public class BinaryBroadcastMessageTest {
         // Assert
         assertTrue(aisMessage instanceof BinaryBroadcastMessage);
         BinaryBroadcastMessage binaryBroadcastMessage = (BinaryBroadcastMessage) aisMessage;
-        assertEquals(200, binaryBroadcastMessage.getDesignatedAreaCode().intValue());
-        assertEquals(10, binaryBroadcastMessage.getFunctionalId().intValue());
+        assertEquals(200, binaryBroadcastMessage.getDesignatedAreaCode());
+        assertEquals(10, binaryBroadcastMessage.getFunctionalId());
 
         ApplicationSpecificMessage asm = binaryBroadcastMessage.getApplicationSpecificMessage();
         assertEquals(200, asm.getDesignatedAreaCode());
@@ -116,8 +116,8 @@ public class BinaryBroadcastMessageTest {
         // Assert
         assertTrue(aisMessage instanceof BinaryBroadcastMessage);
         BinaryBroadcastMessage binaryBroadcastMessage = (BinaryBroadcastMessage) aisMessage;
-        assertEquals(200, binaryBroadcastMessage.getDesignatedAreaCode().intValue());
-        assertEquals(10, binaryBroadcastMessage.getFunctionalId().intValue());
+        assertEquals(200, binaryBroadcastMessage.getDesignatedAreaCode());
+        assertEquals(10, binaryBroadcastMessage.getFunctionalId());
 
         ApplicationSpecificMessage asm = binaryBroadcastMessage.getApplicationSpecificMessage();
         assertEquals(200, asm.getDesignatedAreaCode());

@@ -29,7 +29,7 @@ public class ExtendedClassBEquipmentPositionReportTest {
         ExtendedClassBEquipmentPositionReport message = (ExtendedClassBEquipmentPositionReport) aisMessage;
         assertEquals("00000000", message.getRegionalReserved1());
         assertEquals(7.1, message.getSpeedOverGround(), 1e-6);
-        assertEquals(Boolean.TRUE, message.getPositionAccurate());
+        assertEquals(Boolean.TRUE, message.isPositionAccuracy());
         assertEquals(118.994422, message.getLongitude(), 1e-6);
         assertEquals(24.695787, message.getLatitude(), 1e-6);
         assertEquals(49.7, message.getCourseOverGround(), 1e-1);
@@ -43,9 +43,9 @@ public class ExtendedClassBEquipmentPositionReportTest {
         assertEquals(4, message.getToPort());
         assertEquals(4, message.getToStarboard());
         assertEquals(Gps, message.getPositionFixingDevice());
-        assertEquals(Boolean.FALSE, message.getRaimFlag());
-        assertEquals(Boolean.TRUE, message.getDataTerminalReady());
-        assertEquals(Boolean.FALSE, message.getAssigned());
+        assertEquals(Boolean.FALSE, message.isRaimFlag());
+        assertEquals(Boolean.TRUE, message.isDataTerminalReady());
+        assertEquals(Boolean.FALSE, message.isAssigned());
         assertEquals("0000", message.getRegionalReserved3());
     }
 

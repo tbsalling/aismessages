@@ -28,10 +28,10 @@ public class InterrogationTest {
         assertEquals(MMSI.valueOf(366969740), message.getInterrogatedMmsi1());
         assertEquals((Integer) 0, message.getType1_1());
         assertEquals((Integer) 0, message.getOffset1_1());
-        assertNull(message.getType1_2());
-        assertNull(message.getOffset1_2());
+        assertEquals(-1, message.getType1_2());
+        assertEquals(-1, message.getOffset1_2());
         assertNull(message.getInterrogatedMmsi2());
-        assertNull(message.getType2_1());
-        assertNull(message.getOffset2_1());
+        assertEquals(-1, message.getType2_1());
+        assertEquals(-1, message.getOffset2_1());
     }
 }
