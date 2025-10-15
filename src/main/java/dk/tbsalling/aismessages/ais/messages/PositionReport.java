@@ -38,7 +38,7 @@ import static java.lang.String.format;
 @Getter
 @ToString
 @EqualsAndHashCode(callSuper = true)
-public abstract class PositionReport extends AISMessage implements ExtendedDynamicDataReport {
+public abstract sealed class PositionReport extends AISMessage implements ExtendedDynamicDataReport permits PositionReportClassAScheduled, PositionReportClassAAssignedSchedule, PositionReportClassAResponseToInterrogation {
 
     /**
      * Constructor accepting pre-parsed values for true immutability.

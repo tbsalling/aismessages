@@ -58,7 +58,7 @@ import static java.util.Objects.requireNonNull;
 @Getter
 @ToString
 @EqualsAndHashCode
-public abstract class AISMessage {
+public abstract sealed class AISMessage permits AddressedBinaryMessage, AddressedSafetyRelatedMessage, AidToNavigationReport, AssignedModeCommand, BaseStationReport, BinaryAcknowledge, BinaryBroadcastMessage, BinaryMessageMultipleSlot, BinaryMessageSingleSlot, ChannelManagement, ClassBCSStaticDataReport, DataLinkManagement, Error, ExtendedClassBEquipmentPositionReport, GNSSBinaryBroadcastMessage, GroupAssignmentCommand, Interrogation, LongRangeBroadcastMessage, PositionReport, SafetyRelatedAcknowledge, SafetyRelatedBroadcastMessage, ShipAndVoyageData, StandardClassBCSPositionReport, StandardSARAircraftPositionReport, UTCAndDateInquiry, UTCAndDateResponse {
 
     private static final System.Logger LOG = System.getLogger(AISMessage.class.getName());
     
