@@ -13,7 +13,7 @@ public class LongRangeBroadcastMessageTest {
     @Test
     public void canDecode1() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,KC5E2b@U19PFdLbMuc5=ROv62<7m,0*16");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,B,KC5E2b@U19PFdLbMuc5=ROv62<7m,0*16");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
@@ -40,7 +40,7 @@ public class LongRangeBroadcastMessageTest {
     @Test
     public void canDecode2() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,K5DfMB9FLsM?P00d,0*70");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,B,K5DfMB9FLsM?P00d,0*70");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);

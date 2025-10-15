@@ -15,7 +15,7 @@ class StandardSARAircraftPositionReportTest {
         String nmea = "!AIVDM,1,1,,A,9>rAUn00GiU7gi<COH913Pu:0@6:,0*4B";
 
         // Act
-        AISMessage aisMessage = AISMessage.create(null, null, null, NMEAMessage.fromString(nmea));
+        AISMessage aisMessage = AISMessage.create(null, null, null, new NMEAMessage(nmea));
         System.out.println(aisMessage.toString());
 
         // Assert

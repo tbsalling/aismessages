@@ -12,8 +12,8 @@ public class BinaryMessageMultipleSlotTest {
     @Test
     public void canDecode() {
         // Arrange
-        NMEAMessage nmeaMessage1 = NMEAMessage.fromString("!AIVDM,2,1,4,A,J6SUcDh0000000000000000000000000000000000000000000000000000,0*0E");
-        NMEAMessage nmeaMessage2 = NMEAMessage.fromString("!AIVDM,2,2,4,A,00000000000,2*23");
+        NMEAMessage nmeaMessage1 = new NMEAMessage("!AIVDM,2,1,4,A,J6SUcDh0000000000000000000000000000000000000000000000000000,0*0E");
+        NMEAMessage nmeaMessage2 = new NMEAMessage("!AIVDM,2,2,4,A,00000000000,2*23");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage1, nmeaMessage2);
@@ -36,8 +36,8 @@ public class BinaryMessageMultipleSlotTest {
     @Test
     public void canDecodeAlternative() {
         // Arrange
-        NMEAMessage nmeaMessage1 = NMEAMessage.fromString("!AIVDM,2,1,1,A,J5NJP<82<mN1<tn4GfOl1lTp8h6000000000000000000000000000000000,0*38");
-        NMEAMessage nmeaMessage2 = NMEAMessage.fromString("!AIVDM,2,2,1,A,00000000000,2*26");
+        NMEAMessage nmeaMessage1 = new NMEAMessage("!AIVDM,2,1,1,A,J5NJP<82<mN1<tn4GfOl1lTp8h6000000000000000000000000000000000,0*38");
+        NMEAMessage nmeaMessage2 = new NMEAMessage("!AIVDM,2,2,1,A,00000000000,2*26");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage1, nmeaMessage2);

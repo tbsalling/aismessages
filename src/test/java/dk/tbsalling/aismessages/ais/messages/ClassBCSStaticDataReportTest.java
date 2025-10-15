@@ -14,7 +14,7 @@ public class ClassBCSStaticDataReportTest {
     @Test
     public void canDecode() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,H5NLOjTUG5CD=1BG46mqhj0P7130,0*78");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,H5NLOjTUG5CD=1BG46mqhj0P7130,0*78");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
@@ -44,7 +44,7 @@ public class ClassBCSStaticDataReportTest {
     public void canDecode_githubIssue38() {
         // Arrange
         String msg = "!AIVDM,1,1,,B,H3m9T21HTe<H`u8B22222222220,0*0F";
-        NMEAMessage nmeaMessage = NMEAMessage.fromString(msg);
+        NMEAMessage nmeaMessage = new NMEAMessage(msg);
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
@@ -56,7 +56,7 @@ public class ClassBCSStaticDataReportTest {
     public void canDecode_githubIssue47() {
         // Arrange
         String msg = "!AIVDM,1,1,,,H7tKep@H>0u8<PTB222222222200,2*01";
-        NMEAMessage nmeaMessage = NMEAMessage.fromString(msg);
+        NMEAMessage nmeaMessage = new NMEAMessage(msg);
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
@@ -77,8 +77,8 @@ public class ClassBCSStaticDataReportTest {
         String partA = "!AIVDM,1,1,,A,H42O55i18tMET00000000000000,2*6D";
         String partB = "!AIVDM,1,1,,A,H42O55lti4hhhilD3nink000?050,0*40";
 
-        NMEAMessage nmeaMessageA = NMEAMessage.fromString(partA);
-        NMEAMessage nmeaMessageB = NMEAMessage.fromString(partB);
+        NMEAMessage nmeaMessageA = new NMEAMessage(partA);
+        NMEAMessage nmeaMessageB = new NMEAMessage(partB);
 
         // Act
         AISMessage aisMessagePartA = AISMessage.create(null, null, null, nmeaMessageA);

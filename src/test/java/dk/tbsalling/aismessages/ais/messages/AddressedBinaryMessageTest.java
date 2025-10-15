@@ -15,7 +15,7 @@ public class AddressedBinaryMessageTest {
     @Test
     public void canDecode() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!ABVDM,1,1,,B,63M@g840SJL`01lSk09w1IMK?00100803Pp03g8p001pTaIK00,4*56");
+        NMEAMessage nmeaMessage = new NMEAMessage("!ABVDM,1,1,,B,63M@g840SJL`01lSk09w1IMK?00100803Pp03g8p001pTaIK00,4*56");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
@@ -36,7 +36,7 @@ public class AddressedBinaryMessageTest {
     @Test
     public void canDecodeAsmNumberOfPersonsOnboard() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,63bump80OEGr06P060,4*79");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,B,63bump80OEGr06P060,4*79");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);

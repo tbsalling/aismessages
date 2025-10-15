@@ -13,7 +13,7 @@ public class GNSSBinaryBroadcastMessageTest {
     @Test
     public void canDecodeMinimal() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,A02VqLPA4I6C07h5Ed1h,0*43");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,A02VqLPA4I6C07h5Ed1h,0*43");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
@@ -41,7 +41,7 @@ public class GNSSBinaryBroadcastMessageTest {
     @Test
     public void canDecodeWithBinaryData() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,A02VqLPA4I6C07h5Ed1h<OrsubtH0000000000S@gN10kGJp,0*0E");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,A02VqLPA4I6C07h5Ed1h<OrsubtH0000000000S@gN10kGJp,0*0E");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);

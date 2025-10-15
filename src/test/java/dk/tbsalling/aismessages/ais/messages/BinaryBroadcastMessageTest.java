@@ -16,7 +16,7 @@ public class BinaryBroadcastMessageTest {
     @Test
     public void canDecode() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,85MwpKiKf:MPiQa:ofV@v2mQTfB26oEtbEVqh4j1QDQPHjhpkNJ3,0*11");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,B,85MwpKiKf:MPiQa:ofV@v2mQTfB26oEtbEVqh4j1QDQPHjhpkNJ3,0*11");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
@@ -37,7 +37,7 @@ public class BinaryBroadcastMessageTest {
     @Test
     public void canDecodeUnknownApplicationSpecificMessage() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,8@30oni?1j020@00,0*23");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,8@30oni?1j020@00,0*23");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
@@ -53,8 +53,8 @@ public class BinaryBroadcastMessageTest {
     @Test
     public void canDecodeMultiSentenceUnknownApplicationSpecificMessage() {
         // Arrange
-        NMEAMessage nmeaMessage1 = NMEAMessage.fromString("!AIVDM,2,1,8,A,803Iw60F14m1CPH4mDT4RDi@000003RP9iHb@001irBQ0@4gAaI00000261Q,0*04");
-        NMEAMessage nmeaMessage2 = NMEAMessage.fromString("!AIVDM,2,2,8,A,pGp07IiTPi@BkU5pSwrrbs8219RW=R19RV=R19RVER19RVKtDb>jq20000>4,0*47");
+        NMEAMessage nmeaMessage1 = new NMEAMessage("!AIVDM,2,1,8,A,803Iw60F14m1CPH4mDT4RDi@000003RP9iHb@001irBQ0@4gAaI00000261Q,0*04");
+        NMEAMessage nmeaMessage2 = new NMEAMessage("!AIVDM,2,2,8,A,pGp07IiTPi@BkU5pSwrrbs8219RW=R19RV=R19RVER19RVKtDb>jq20000>4,0*47");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage1, nmeaMessage2);
@@ -71,7 +71,7 @@ public class BinaryBroadcastMessageTest {
     @Test
     public void canDecodeDac200Fi10InlandShipStaticAndVoyageRelatedData1() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,839udkPj2d<dteLMt1T0a?bP01L0,0*79");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,B,839udkPj2d<dteLMt1T0a?bP01L0,0*79");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
@@ -106,7 +106,7 @@ public class BinaryBroadcastMessageTest {
     @Test
     public void canDecodeDac200Fi10InlandShipStaticAndVoyageRelatedData2() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,83aDCr@j2P000000029Pt?cm0000,0*5F");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,83aDCr@j2P000000029Pt?cm0000,0*5F");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
@@ -141,7 +141,7 @@ public class BinaryBroadcastMessageTest {
     @Test
     public void canDecodeDac265Fi1EmptyPayload() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,83n30vi2@@,4*69");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,83n30vi2@@,4*69");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
@@ -159,7 +159,7 @@ public class BinaryBroadcastMessageTest {
     @Test
     public void failsWithInvalidMessageWhenDecodingShortMessage() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,83aDCr@,0*5F");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,83aDCr@,0*5F");
 
         // Act & Assert
         assertThrows(InvalidMessage.class, () -> AISMessage.create(null, null, null, nmeaMessage));

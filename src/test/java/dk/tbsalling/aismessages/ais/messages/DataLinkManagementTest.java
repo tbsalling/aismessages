@@ -13,7 +13,7 @@ public class DataLinkManagementTest {
     @Test
     public void canDecodeShortVariant1() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,Dh3Ovk1UAN>4,0*0A");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,Dh3Ovk1UAN>4,0*0A");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
@@ -42,7 +42,7 @@ public class DataLinkManagementTest {
     @Test
     public void canDecodeShortVariant2() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,Dh3Ovk1cEN>4,0*3B");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,B,Dh3Ovk1cEN>4,0*3B");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);

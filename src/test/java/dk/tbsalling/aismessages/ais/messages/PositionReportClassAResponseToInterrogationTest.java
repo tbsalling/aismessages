@@ -16,7 +16,7 @@ public class PositionReportClassAResponseToInterrogationTest {
     @Test
     public void canDecode() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,34RjBV0028o:pnNEBeU<pJF>0PT@,0*3F");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,34RjBV0028o:pnNEBeU<pJF>0PT@,0*3F");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
@@ -48,7 +48,7 @@ public class PositionReportClassAResponseToInterrogationTest {
     @Test
     public void canDecode2() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,3:U70chP@7LrG1SjrgmKF8uh00vP,0*56");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,3:U70chP@7LrG1SjrgmKF8uh00vP,0*56");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
@@ -80,7 +80,7 @@ public class PositionReportClassAResponseToInterrogationTest {
     @Test
     public void digest() throws NoSuchAlgorithmException {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,34RjBV0028o:pnNEBeU<pJF>0PT@,0*3F");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,34RjBV0028o:pnNEBeU<pJF>0PT@,0*3F");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);

@@ -11,7 +11,7 @@ public class BaseStationReportTest {
     @Test
     public void canDecode() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,4h3Ovk1udp6I9o>jPHEdjdW000S:,0*0C");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,B,4h3Ovk1udp6I9o>jPHEdjdW000S:,0*0C");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
@@ -39,7 +39,7 @@ public class BaseStationReportTest {
     @Test
     public void canDecodeCommunicationState() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,400TcdiuiT7VDR>3nIfr6>i00000,0*78");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,400TcdiuiT7VDR>3nIfr6>i00000,0*78");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);

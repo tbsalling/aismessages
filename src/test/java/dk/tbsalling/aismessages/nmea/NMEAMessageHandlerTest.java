@@ -33,7 +33,7 @@ public class NMEAMessageHandlerTest {
 
     @Test
     public void a_canHandleUnfragmentedMessageReceived() {
-        NMEAMessage unfragmentedNMEAMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A");
+        NMEAMessage unfragmentedNMEAMessage = new NMEAMessage("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A");
 
         final ArgumentCaptor<AISMessage> aisMessage = new ArgumentCaptor<>();
 
@@ -48,8 +48,8 @@ public class NMEAMessageHandlerTest {
 
     @Test
     public void b_canHandleFragmentedMessageReceived() {
-        NMEAMessage fragmentedNMEAMessage1 = NMEAMessage.fromString("!AIVDM,2,1,3,B,55DA><02=6wpPuID000qTf059@DlU<00000000171lMDD4q20LmDp3hB,0*27");
-        NMEAMessage fragmentedNMEAMessage2 = NMEAMessage.fromString("!AIVDM,2,2,3,B,p=Mh00000000000,2*4C");
+        NMEAMessage fragmentedNMEAMessage1 = new NMEAMessage("!AIVDM,2,1,3,B,55DA><02=6wpPuID000qTf059@DlU<00000000171lMDD4q20LmDp3hB,0*27");
+        NMEAMessage fragmentedNMEAMessage2 = new NMEAMessage("!AIVDM,2,2,3,B,p=Mh00000000000,2*4C");
 
         final ArgumentCaptor<AISMessage> aisMessage = new ArgumentCaptor<>();
 
@@ -65,9 +65,9 @@ public class NMEAMessageHandlerTest {
 
     @Test
     public void c_canFlushEmpty() {
-        NMEAMessage unfragmentedNMEAMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A");
-        NMEAMessage fragmentedNMEAMessage1 = NMEAMessage.fromString("!AIVDM,2,1,3,B,55DA><02=6wpPuID000qTf059@DlU<00000000171lMDD4q20LmDp3hB,0*27");
-        NMEAMessage fragmentedNMEAMessage2 = NMEAMessage.fromString("!AIVDM,2,2,3,B,p=Mh00000000000,2*4C");
+        NMEAMessage unfragmentedNMEAMessage = new NMEAMessage("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A");
+        NMEAMessage fragmentedNMEAMessage1 = new NMEAMessage("!AIVDM,2,1,3,B,55DA><02=6wpPuID000qTf059@DlU<00000000171lMDD4q20LmDp3hB,0*27");
+        NMEAMessage fragmentedNMEAMessage2 = new NMEAMessage("!AIVDM,2,2,3,B,p=Mh00000000000,2*4C");
 
         final ArgumentCaptor<AISMessage> aisMessage = new ArgumentCaptor<>();
 
@@ -87,8 +87,8 @@ public class NMEAMessageHandlerTest {
 
     @Test
     public void d_canFlushUnhandled() {
-        NMEAMessage unfragmentedNMEAMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A");
-        NMEAMessage fragmentedNMEAMessage1 = NMEAMessage.fromString("!AIVDM,2,1,3,B,55DA><02=6wpPuID000qTf059@DlU<00000000171lMDD4q20LmDp3hB,0*27");
+        NMEAMessage unfragmentedNMEAMessage = new NMEAMessage("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A");
+        NMEAMessage fragmentedNMEAMessage1 = new NMEAMessage("!AIVDM,2,1,3,B,55DA><02=6wpPuID000qTf059@DlU<00000000171lMDD4q20LmDp3hB,0*27");
 
         final ArgumentCaptor<AISMessage> aisMessage = new ArgumentCaptor<>();
 
@@ -108,7 +108,7 @@ public class NMEAMessageHandlerTest {
 
     @Test
     public void canHandleInvalidFragmentMessageReceived() {
-        NMEAMessage invalidFragmentNMEAMessage = NMEAMessage.fromString("!AIVDM,,1,,B,13cpFJ0P0100`lE4IIvW8@Ow`052p,0*53");
+        NMEAMessage invalidFragmentNMEAMessage = new NMEAMessage("!AIVDM,,1,,B,13cpFJ0P0100`lE4IIvW8@Ow`052p,0*53");
 
         final ArgumentCaptor<AISMessage> aisMessage = new ArgumentCaptor<>();
 

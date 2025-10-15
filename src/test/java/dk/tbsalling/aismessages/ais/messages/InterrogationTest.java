@@ -13,7 +13,7 @@ public class InterrogationTest {
     @Test
     public void canDecodeShortVariant() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,?h3Ovk1GOPph000,2*53");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,?h3Ovk1GOPph000,2*53");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);

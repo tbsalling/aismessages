@@ -11,7 +11,7 @@ public class GroupAssignmentCommandTest {
     @Test
     public void canDecode() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,G02:Kn01R`sn@291nj600000900,2*12");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,B,G02:Kn01R`sn@291nj600000900,2*12");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
@@ -39,7 +39,7 @@ public class GroupAssignmentCommandTest {
     @Test
     public void canDecodeAlternative() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,G02:Kn01R`sn@291nj600000900,2*12");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,B,G02:Kn01R`sn@291nj600000900,2*12");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);

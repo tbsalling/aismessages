@@ -13,7 +13,7 @@ public class UTCAndDateResponseTest {
     @Test
     public void canDecode() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,;4R33:1uUK2F`q?mOt@@GoQ00000,0*5D");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,B,;4R33:1uUK2F`q?mOt@@GoQ00000,0*5D");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
@@ -41,7 +41,7 @@ public class UTCAndDateResponseTest {
     @Test
     public void canDecodeAlternative() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,;5MtFGQua>0:=I25ih?rVc100000,0*69");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,B,;5MtFGQua>0:=I25ih?rVc100000,0*69");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);

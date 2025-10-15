@@ -95,7 +95,7 @@ public class NMEAMessageInputStreamReader {
 			string = nmeaMessagePreProcessor.apply(string);
 
 			try {
-				NMEAMessage nmea = NMEAMessage.fromString(string);
+                NMEAMessage nmea = new NMEAMessage(string);
 				nmeaMessageHandler.accept(nmea);
                 LOG.log(DEBUG, "Received: %s".formatted(nmea.toString()));
 			} catch (InvalidMessage invalidMessageException) {

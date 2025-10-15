@@ -13,7 +13,7 @@ public class SafetyRelatedAcknowledgeTest {
     @Test
     public void canDecodeWithOneAck() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,=39UOj0jFs9R,0*17");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,=39UOj0jFs9R,0*17");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
@@ -40,7 +40,7 @@ public class SafetyRelatedAcknowledgeTest {
     @Test
     public void canDecodeWithMultipleAcks() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,=8157oQGOv9f,0*0F");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,=8157oQGOv9f,0*0F");
 
         // Act
         AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
