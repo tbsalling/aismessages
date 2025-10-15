@@ -57,7 +57,7 @@ import static java.util.Objects.requireNonNull;
  * specific to that message type.
  */
 @SuppressWarnings("serial")
-public abstract class AISMessage implements Serializable, CachedDecodedValues {
+public abstract class AISMessage implements Serializable {
 
     private transient static final System.Logger LOG = System.getLogger(AISMessage.class.getName());
 

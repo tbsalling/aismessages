@@ -1,12 +1,10 @@
 package dk.tbsalling.aismessages.ais.messages.asm;
 
-import dk.tbsalling.aismessages.ais.messages.CachedDecodedValues;
-
 import java.io.Serializable;
 
 import static java.util.Objects.requireNonNull;
 
-public abstract class ApplicationSpecificMessage implements Serializable, CachedDecodedValues {
+public abstract class ApplicationSpecificMessage implements Serializable {
 
     /**
      * Create proper type of ApplicationSpecificMessage
