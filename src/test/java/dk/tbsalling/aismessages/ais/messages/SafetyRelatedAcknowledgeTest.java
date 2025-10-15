@@ -23,18 +23,18 @@ public class SafetyRelatedAcknowledgeTest {
         // Assert
         assertEquals(AISMessageType.SafetyRelatedAcknowledge, aisMessage.getMessageType());
         SafetyRelatedAcknowledge message = (SafetyRelatedAcknowledge) aisMessage;
-        assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
+        assertEquals(0, message.getRepeatIndicator());
         assertEquals(MMSI.valueOf(211378120), message.getSourceMmsi());
-        assertEquals(Integer.valueOf(0), message.getSpare());
+        assertEquals(0, message.getSpare());
         assertEquals(MMSI.valueOf(211217560), message.getMmsi1());
-        assertEquals(Integer.valueOf(2), message.getSequence1());
+        assertEquals(2, message.getSequence1());
         assertNull(message.getMmsi2());
         assertEquals(-1, message.getSequence2());
         assertNull(message.getMmsi3());
         assertEquals(-1, message.getSequence3());
         assertNull(message.getMmsi4());
         assertEquals(-1, message.getSequence4());
-        assertEquals(Integer.valueOf(1), message.getNumOfAcks());
+        assertEquals(1, message.getNumOfAcks());
     }
 
     @Test
@@ -50,11 +50,11 @@ public class SafetyRelatedAcknowledgeTest {
         // Assert
         assertEquals(AISMessageType.SafetyRelatedAcknowledge, aisMessage.getMessageType());
         SafetyRelatedAcknowledge message = (SafetyRelatedAcknowledge) aisMessage;
-        assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
+        assertEquals(0, message.getRepeatIndicator());
         assertEquals(MMSI.valueOf(538003422), message.getSourceMmsi());
-        assertEquals(Integer.valueOf(0), message.getSpare());
+        assertEquals(0, message.getSpare());
         assertEquals(MMSI.valueOf(366999707), message.getMmsi1());
-        assertEquals(Integer.valueOf(2), message.getSequence1());
-        assertEquals(Integer.valueOf(1), message.getNumOfAcks());
+        assertEquals(2, message.getSequence1());
+        assertEquals(1, message.getNumOfAcks());
     }
 }

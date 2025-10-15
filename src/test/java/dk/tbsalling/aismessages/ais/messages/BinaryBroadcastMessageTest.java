@@ -26,10 +26,10 @@ public class BinaryBroadcastMessageTest {
         // Assert
         assertEquals(AISMessageType.BinaryBroadcastMessage, aisMessage.getMessageType());
         BinaryBroadcastMessage message = (BinaryBroadcastMessage) aisMessage;
-        assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
+        assertEquals(0, message.getRepeatIndicator());
         assertEquals(MMSI.valueOf(366999663), message.getSourceMmsi());
-        assertEquals((Integer) 366, message.getDesignatedAreaCode());
-        assertEquals((Integer) 56, message.getFunctionalId());
+        assertEquals(366, message.getDesignatedAreaCode());
+        assertEquals(56, message.getFunctionalId());
         // TODO : check the binary value
         assertEquals("1010011101100000110001100001101001001010110111101110100110010000111110000010110101100001100100101110010010000010000110110111010101111100101010010101100110111001110000000100110010000001100001010100100001100000011000110010110000111000110011011110011010000011", message.getBinaryData());
     }
@@ -92,15 +92,15 @@ public class BinaryBroadcastMessageTest {
         InlandShipStaticAndVoyageRelatedData inlandMessage = (InlandShipStaticAndVoyageRelatedData) asm;
 
         assertEquals("02325170", inlandMessage.getUniqueEuropeanVesselIdentificationNumber());
-        assertEquals(Float.valueOf(80.0f), inlandMessage.getLengthOfShip());
-        assertEquals(Float.valueOf(8.2f), inlandMessage.getBeamOfShip());
-        assertEquals(Integer.valueOf(8020), inlandMessage.getShipOrCombinationType());
-        assertEquals(Integer.valueOf(0), inlandMessage.getHazardousCargo());
-        assertEquals(Float.valueOf(0.0f), inlandMessage.getDraught());
-        assertEquals(Integer.valueOf(2), inlandMessage.getLoaded());
-        assertEquals(Integer.valueOf(1), inlandMessage.getQualityOfSpeedInformation());
-        assertEquals(Integer.valueOf(1), inlandMessage.getQualityOfCourseInformation());
-        assertEquals(Integer.valueOf(1), inlandMessage.getQualityOfHeadingInformation());
+        assertEquals(80.0f, inlandMessage.getLengthOfShip(), 0.0f);
+        assertEquals(8.2f, inlandMessage.getBeamOfShip(), 0.0f);
+        assertEquals(8020, inlandMessage.getShipOrCombinationType());
+        assertEquals(0, inlandMessage.getHazardousCargo());
+        assertEquals(0.0f, inlandMessage.getDraught(), 0.0f);
+        assertEquals(2, inlandMessage.getLoaded());
+        assertEquals(1, inlandMessage.getQualityOfSpeedInformation());
+        assertEquals(1, inlandMessage.getQualityOfCourseInformation());
+        assertEquals(1, inlandMessage.getQualityOfHeadingInformation());
     }
 
     @Test
@@ -127,15 +127,15 @@ public class BinaryBroadcastMessageTest {
         InlandShipStaticAndVoyageRelatedData inlandMessage = (InlandShipStaticAndVoyageRelatedData) asm;
 
         assertEquals("", inlandMessage.getUniqueEuropeanVesselIdentificationNumber());
-        assertEquals(Float.valueOf(110.0f), inlandMessage.getLengthOfShip());
-        assertEquals(Float.valueOf(12.0f), inlandMessage.getBeamOfShip());
-        assertEquals(Integer.valueOf(8030), inlandMessage.getShipOrCombinationType());
-        assertEquals(Integer.valueOf(5), inlandMessage.getHazardousCargo());
-        assertEquals(Float.valueOf(0.0f), inlandMessage.getDraught());
-        assertEquals(Integer.valueOf(0), inlandMessage.getLoaded());
-        assertEquals(Integer.valueOf(0), inlandMessage.getQualityOfSpeedInformation());
-        assertEquals(Integer.valueOf(0), inlandMessage.getQualityOfCourseInformation());
-        assertEquals(Integer.valueOf(0), inlandMessage.getQualityOfHeadingInformation());
+        assertEquals(110.0f, inlandMessage.getLengthOfShip(), 0.0f);
+        assertEquals(12.0f, inlandMessage.getBeamOfShip(), 0.0f);
+        assertEquals(8030, inlandMessage.getShipOrCombinationType());
+        assertEquals(5, inlandMessage.getHazardousCargo());
+        assertEquals(0.0f, inlandMessage.getDraught(), 0.0f);
+        assertEquals(0, inlandMessage.getLoaded());
+        assertEquals(0, inlandMessage.getQualityOfSpeedInformation());
+        assertEquals(0, inlandMessage.getQualityOfCourseInformation());
+        assertEquals(0, inlandMessage.getQualityOfHeadingInformation());
     }
 
     @Test
