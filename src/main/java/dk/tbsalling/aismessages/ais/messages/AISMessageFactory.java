@@ -33,7 +33,7 @@ import java.time.Instant;
 public class AISMessageFactory {
 
     static ShipAndVoyageData createShipAndVoyageData(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
-        IMO imo = IMO.valueOf(parser.getUnsignedInt(40, 70));
+        IMO imo = new IMO(parser.getUnsignedInt(40, 70));
         String callsign = parser.getString(70, 112);
         String shipName = parser.getString(112, 232);
         ShipType shipType = ShipType.fromInteger(parser.getUnsignedInt(232, 240));
