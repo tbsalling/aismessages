@@ -54,10 +54,8 @@ import static java.util.Objects.requireNonNull;
  */
 public abstract class AISMessage {
 
-    private transient static final System.Logger LOG = System.getLogger(AISMessage.class.getName());
-
-    public transient static final String VERSION = Version.VERSION;
-
+    private static final System.Logger LOG = System.getLogger(AISMessage.class.getName());
+    
     static {
         LOG.log(INFO, """
 
