@@ -21,7 +21,10 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.ShipType;
 import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
+import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
+import java.time.Instant;
 import java.util.stream.IntStream;
 
 import static java.lang.String.format;
@@ -32,12 +35,12 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
     /**
      * Constructor accepting pre-parsed values for true immutability.
      */
-    protected ClassBCSStaticDataReport(Metadata metadata, int repeatIndicator, MMSI sourceMmsi,
+    protected ClassBCSStaticDataReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
                                        int partNumber, String shipName, ShipType shipType,
                                        String vendorId, String callsign,
                                        Integer toBow, Integer toStern, Integer toStarboard, Integer toPort,
                                        MMSI mothershipMmsi) {
-        super(metadata, repeatIndicator, sourceMmsi);
+        super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.partNumber = partNumber;
         this.shipName = shipName;
         this.shipType = shipType;

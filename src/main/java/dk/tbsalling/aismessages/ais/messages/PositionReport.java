@@ -21,6 +21,10 @@ package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.*;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
+import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+
+import java.time.Instant;
 
 import static java.lang.String.format;
 
@@ -34,9 +38,11 @@ public abstract class PositionReport extends AISMessage implements ExtendedDynam
     /**
      * Constructor accepting pre-parsed values for true immutability.
      *
-     * @param metadata                 the metadata
-     * @param repeatIndicator          the pre-parsed repeat indicator
      * @param sourceMmsi               the pre-parsed source MMSI
+     * @param repeatIndicator          the pre-parsed repeat indicator
+     * @param nmeaTagBlock             the NMEA tag block
+     * @param nmeaMessages             the NMEA messages
+     * @param bitString                the bit string
      * @param navigationStatus         the navigation status
      * @param rateOfTurn               the rate of turn (calculated from raw value)
      * @param speedOverGround          the speed over ground
@@ -55,13 +61,13 @@ public abstract class PositionReport extends AISMessage implements ExtendedDynam
      * @param rawLongitude             the raw longitude value
      * @param rawCourseOverGround      the raw course over ground value
      */
-    protected PositionReport(Metadata metadata, int repeatIndicator, MMSI sourceMmsi,
+    protected PositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
                              NavigationStatus navigationStatus, int rateOfTurn, float speedOverGround,
                              boolean positionAccuracy, float latitude, float longitude,
                              float courseOverGround, int trueHeading, int second,
                              ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState,
                              int rawRateOfTurn, int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround) {
-        super(metadata, repeatIndicator, sourceMmsi);
+        super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.navigationStatus = navigationStatus;
         this.rateOfTurn = rateOfTurn;
         this.speedOverGround = speedOverGround;

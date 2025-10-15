@@ -17,16 +17,20 @@
 package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.*;
+import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+
+import java.time.Instant;
 
 @SuppressWarnings("serial")
 public class PositionReportClassAResponseToInterrogation extends PositionReport {
-    protected PositionReportClassAResponseToInterrogation(Metadata metadata, int repeatIndicator, MMSI sourceMmsi,
+    protected PositionReportClassAResponseToInterrogation(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
                                                           NavigationStatus navigationStatus, int rateOfTurn, float speedOverGround,
                                                           boolean positionAccuracy, float latitude, float longitude,
                                                           float courseOverGround, int trueHeading, int second,
                                                           ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState,
                                                           int rawRateOfTurn, int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround) {
-        super(metadata, repeatIndicator, sourceMmsi,
+        super(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 navigationStatus, rateOfTurn, speedOverGround, positionAccuracy, latitude, longitude,
                 courseOverGround, trueHeading, second, specialManeuverIndicator, raimFlag, communicationState,
                 rawRateOfTurn, rawSpeedOverGround, rawLatitude, rawLongitude, rawCourseOverGround);

@@ -18,6 +18,10 @@ package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.asm.ApplicationSpecificMessage;
 import dk.tbsalling.aismessages.ais.messages.types.*;
+import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+
+import java.time.Instant;
 
 /**
  * Factory class that contains parsing logic for all AIS message types using BitStringParser.
@@ -27,7 +31,7 @@ import dk.tbsalling.aismessages.ais.messages.types.*;
  */
 class AISMessageFactory {
 
-    static ShipAndVoyageData createShipAndVoyageData(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi) {
+    static ShipAndVoyageData createShipAndVoyageData(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         IMO imo = IMO.valueOf(parser.getUnsignedInt(40, 70));
         String callsign = parser.getString(70, 112);
         String shipName = parser.getString(112, 232);
@@ -46,32 +50,32 @@ class AISMessageFactory {
         boolean dataTerminalReady = parser.getBoolean(422, 423);
         int rawDraught = parser.getUnsignedInt(294, 302);
 
-        return new ShipAndVoyageData(metadata, repeatIndicator, sourceMmsi,
+        return new ShipAndVoyageData(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 imo, callsign, shipName, shipType, toBow, toStern, toPort, toStarboard,
                 positionFixingDevice, etaMonth, etaDay, etaHour, etaMinute, draught, destination, dataTerminalReady, rawDraught);
     }
 
-    static PositionReport createPositionReportClassAScheduled(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi,
+    static PositionReport createPositionReportClassAScheduled(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser,
                                                               AISMessageType messageType) {
-        return createPositionReport(metadata, parser, repeatIndicator, sourceMmsi,
+        return createPositionReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser,
                 messageType, PositionReportClassAScheduled::new);
     }
 
-    static PositionReport createPositionReportClassAAssignedSchedule(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi,
+    static PositionReport createPositionReportClassAAssignedSchedule(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser,
                                                                      AISMessageType messageType) {
-        return createPositionReport(metadata, parser, repeatIndicator, sourceMmsi,
+        return createPositionReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser,
                 messageType, PositionReportClassAAssignedSchedule::new);
     }
 
-    static PositionReport createPositionReportClassAResponseToInterrogation(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi,
+    static PositionReport createPositionReportClassAResponseToInterrogation(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser,
                                                                             AISMessageType messageType) {
-        return createPositionReport(metadata, parser, repeatIndicator, sourceMmsi,
+        return createPositionReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser,
                 messageType, PositionReportClassAResponseToInterrogation::new);
     }
 
     @FunctionalInterface
     private interface PositionReportConstructor {
-        PositionReport create(Metadata metadata, int repeatIndicator, MMSI sourceMmsi,
+        PositionReport create(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
                               NavigationStatus navigationStatus, int rateOfTurn, float speedOverGround,
                               boolean positionAccuracy, float latitude, float longitude,
                               float courseOverGround, int trueHeading, int second,
@@ -79,7 +83,7 @@ class AISMessageFactory {
                               int rawRateOfTurn, int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround);
     }
 
-    private static PositionReport createPositionReport(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi,
+    private static PositionReport createPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser,
                                                        AISMessageType messageType,
                                                        PositionReportConstructor constructor) {
         NavigationStatus navigationStatus = NavigationStatus.fromInteger(parser.getUnsignedInt(38, 42));
@@ -107,13 +111,13 @@ class AISMessageFactory {
             communicationState = ITDMACommunicationState.fromBitString(parser.getBitPattern(149, 168));
         }
 
-        return constructor.create(metadata, repeatIndicator, sourceMmsi,
+        return constructor.create(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 navigationStatus, rateOfTurn, speedOverGround, positionAccuracy, latitude, longitude,
                 courseOverGround, trueHeading, second, specialManeuverIndicator, raimFlag, communicationState,
                 rawRateOfTurn, rawSpeedOverGround, rawLatitude, rawLongitude, rawCourseOverGround);
     }
 
-    static BaseStationReport createBaseStationReport(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi) {
+    static BaseStationReport createBaseStationReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int year = parser.getUnsignedInt(38, 52);
         int month = parser.getUnsignedInt(52, 56);
         int day = parser.getUnsignedInt(56, 61);
@@ -127,12 +131,12 @@ class AISMessageFactory {
         boolean raimFlag = parser.getBoolean(148, 149);
         SOTDMACommunicationState communicationState = SOTDMACommunicationState.fromBitString(parser.getBits(149, 168));
 
-        return new BaseStationReport(metadata, repeatIndicator, sourceMmsi,
+        return new BaseStationReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 year, month, day, hour, minute, second, positionAccurate, latitude, longitude,
                 positionFixingDevice, raimFlag, communicationState);
     }
 
-    static AddressedBinaryMessage createAddressedBinaryMessage(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi) {
+    static AddressedBinaryMessage createAddressedBinaryMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int sequenceNumber = parser.getUnsignedInt(38, 40);
         MMSI destinationMmsi = MMSI.valueOf(parser.getUnsignedInt(40, 70));
         boolean retransmitFlag = parser.getBoolean(70, 71);
@@ -142,12 +146,12 @@ class AISMessageFactory {
         String binaryData = parser.getBitPattern(88, parser.getLength());
         ApplicationSpecificMessage applicationSpecificMessage = ApplicationSpecificMessage.create(designatedAreaCode, functionalId, binaryData);
 
-        return new AddressedBinaryMessage(metadata, repeatIndicator, sourceMmsi,
+        return new AddressedBinaryMessage(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 sequenceNumber, destinationMmsi, retransmitFlag, spare, designatedAreaCode, functionalId, binaryData,
                 applicationSpecificMessage);
     }
 
-    static BinaryAcknowledge createBinaryAcknowledge(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi) {
+    static BinaryAcknowledge createBinaryAcknowledge(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int spare = parser.getUnsignedInt(38, 40);
 
         MMSI mmsi1 = MMSI.valueOf(parser.getUnsignedInt(40, 70));
@@ -181,22 +185,22 @@ class AISMessageFactory {
         if (parser.getLength() > 104) numOfAcks++;
         if (parser.getLength() > 136) numOfAcks++;
 
-        return new BinaryAcknowledge(metadata, repeatIndicator, sourceMmsi,
+        return new BinaryAcknowledge(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 spare, mmsi1, sequence1, mmsi2, sequence2, mmsi3, sequence3, mmsi4, sequence4, numOfAcks);
     }
 
-    static BinaryBroadcastMessage createBinaryBroadcastMessage(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi) {
+    static BinaryBroadcastMessage createBinaryBroadcastMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         Integer spare = parser.getUnsignedInt(38, 40);
         Integer designatedAreaCode = parser.getUnsignedInt(40, 50);
         Integer functionalId = parser.getUnsignedInt(50, 56);
         String binaryData = parser.getLength() > 56 ? parser.getBitPattern(56, parser.getLength()) : "";
         ApplicationSpecificMessage applicationSpecificMessage = ApplicationSpecificMessage.create(designatedAreaCode, functionalId, binaryData);
 
-        return new BinaryBroadcastMessage(metadata, repeatIndicator, sourceMmsi,
+        return new BinaryBroadcastMessage(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 spare, designatedAreaCode, functionalId, binaryData, applicationSpecificMessage);
     }
 
-    static StandardSARAircraftPositionReport createStandardSARAircraftPositionReport(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi) {
+    static StandardSARAircraftPositionReport createStandardSARAircraftPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int altitude = parser.getUnsignedInt(38, 50);
         int rawSpeedOverGround = parser.getUnsignedInt(50, 60);
         int speed = rawSpeedOverGround;
@@ -214,20 +218,20 @@ class AISMessageFactory {
         boolean raimFlag = parser.getBoolean(147, 148);
         String radioStatus = parser.getBitPattern(148, 168);
 
-        return new StandardSARAircraftPositionReport(metadata, repeatIndicator, sourceMmsi,
+        return new StandardSARAircraftPositionReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 altitude, speed, positionAccuracy, latitude, longitude, courseOverGround, second,
                 regionalReserved, dataTerminalReady, assigned, raimFlag, radioStatus,
                 rawSpeedOverGround, rawLongitude, rawLatitude, rawCourseOverGround);
     }
 
-    static UTCAndDateInquiry createUTCAndDateInquiry(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi) {
+    static UTCAndDateInquiry createUTCAndDateInquiry(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         MMSI destinationMmsi = MMSI.valueOf(parser.getUnsignedInt(40, 70));
 
-        return new UTCAndDateInquiry(metadata, repeatIndicator, sourceMmsi,
+        return new UTCAndDateInquiry(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 destinationMmsi);
     }
 
-    static UTCAndDateResponse createUTCAndDateResponse(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi) {
+    static UTCAndDateResponse createUTCAndDateResponse(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int year = parser.getUnsignedInt(38, 52);
         int month = parser.getUnsignedInt(52, 56);
         int day = parser.getUnsignedInt(56, 61);
@@ -240,23 +244,23 @@ class AISMessageFactory {
         PositionFixingDevice positionFixingDevice = PositionFixingDevice.fromInteger(parser.getUnsignedInt(134, 138));
         boolean raimFlag = parser.getBoolean(148, 149);
 
-        return new UTCAndDateResponse(metadata, repeatIndicator, sourceMmsi,
+        return new UTCAndDateResponse(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 year, month, day, hour, minute, second, positionAccurate, latitude, longitude,
                 positionFixingDevice, raimFlag);
     }
 
-    static AddressedSafetyRelatedMessage createAddressedSafetyRelatedMessage(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi) {
+    static AddressedSafetyRelatedMessage createAddressedSafetyRelatedMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int sequenceNumber = parser.getUnsignedInt(38, 40);
         MMSI destinationMmsi = MMSI.valueOf(parser.getUnsignedInt(40, 70));
         boolean retransmit = parser.getBoolean(70, 71);
         int spare = parser.getUnsignedInt(71, 72);
         String text = parser.getString(72, parser.getLength());
 
-        return new AddressedSafetyRelatedMessage(metadata, repeatIndicator, sourceMmsi,
+        return new AddressedSafetyRelatedMessage(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 sequenceNumber, destinationMmsi, retransmit, spare, text);
     }
 
-    static SafetyRelatedAcknowledge createSafetyRelatedAcknowledge(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi) {
+    static SafetyRelatedAcknowledge createSafetyRelatedAcknowledge(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int spare = parser.getUnsignedInt(38, 40);
 
         MMSI mmsi1 = MMSI.valueOf(parser.getUnsignedInt(40, 70));
@@ -290,19 +294,19 @@ class AISMessageFactory {
         if (parser.getLength() > 104) numOfAcks++;
         if (parser.getLength() > 136) numOfAcks++;
 
-        return new SafetyRelatedAcknowledge(metadata, repeatIndicator, sourceMmsi,
+        return new SafetyRelatedAcknowledge(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 spare, mmsi1, sequence1, mmsi2, sequence2, mmsi3, sequence3, mmsi4, sequence4, numOfAcks);
     }
 
-    static SafetyRelatedBroadcastMessage createSafetyRelatedBroadcastMessage(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi) {
+    static SafetyRelatedBroadcastMessage createSafetyRelatedBroadcastMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int spare = parser.getUnsignedInt(38, 40);
         String text = parser.getString(40, parser.getLength());
 
-        return new SafetyRelatedBroadcastMessage(metadata, repeatIndicator, sourceMmsi,
+        return new SafetyRelatedBroadcastMessage(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 spare, text);
     }
 
-    static Interrogation createInterrogation(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi) {
+    static Interrogation createInterrogation(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int spare1 = parser.getUnsignedInt(38, 40);
         MMSI interrogatedMmsi1 = MMSI.valueOf(parser.getUnsignedInt(40, 70));
         Integer type1_1 = parser.getUnsignedInt(70, 76);
@@ -325,12 +329,12 @@ class AISMessageFactory {
             offset2_1 = parser.getUnsignedInt(156, 162);
         }
 
-        return new Interrogation(metadata, repeatIndicator, sourceMmsi,
+        return new Interrogation(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 interrogatedMmsi1, type1_1, offset1_1, type1_2, offset1_2,
                 interrogatedMmsi2, type2_1, offset2_1);
     }
 
-    static AssignedModeCommand createAssignedModeCommand(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi) {
+    static AssignedModeCommand createAssignedModeCommand(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int spare = parser.getUnsignedInt(38, 40);
         MMSI destinationMmsiA = MMSI.valueOf(parser.getUnsignedInt(40, 70));
         Integer offsetA = parser.getUnsignedInt(70, 82);
@@ -346,11 +350,11 @@ class AISMessageFactory {
             incrementB = parser.getUnsignedInt(134, 144);
         }
 
-        return new AssignedModeCommand(metadata, repeatIndicator, sourceMmsi,
+        return new AssignedModeCommand(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 destinationMmsiA, offsetA, incrementA, destinationMmsiB, offsetB, incrementB);
     }
 
-    static GNSSBinaryBroadcastMessage createGNSSBinaryBroadcastMessage(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi) {
+    static GNSSBinaryBroadcastMessage createGNSSBinaryBroadcastMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int spare1 = parser.getUnsignedInt(38, 40);
         float longitude = parser.getSignedFloat(40, 58) / 10f;
         float latitude = parser.getSignedFloat(58, 75) / 10f;
@@ -374,11 +378,11 @@ class AISMessageFactory {
             binaryData = parser.getBitPattern(80, parser.getLength());
         }
 
-        return new GNSSBinaryBroadcastMessage(metadata, repeatIndicator, sourceMmsi,
+        return new GNSSBinaryBroadcastMessage(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 spare1, latitude, longitude, spare2, mType, stationId, zCount, sequenceNumber, numOfWords, health, binaryData);
     }
 
-    static StandardClassBCSPositionReport createStandardClassBCSPositionReport(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi) {
+    static StandardClassBCSPositionReport createStandardClassBCSPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         String regionalReserved1 = parser.getBitPattern(38, 46);
         int rawSpeedOverGround = parser.getUnsignedInt(46, 56);
         float speedOverGround = rawSpeedOverGround / 10f;
@@ -405,14 +409,14 @@ class AISMessageFactory {
                 ? ITDMACommunicationState.fromBitString(parser.getBits(149, 168))
                 : SOTDMACommunicationState.fromBitString(parser.getBits(149, 168));
 
-        return new StandardClassBCSPositionReport(metadata, repeatIndicator, sourceMmsi,
+        return new StandardClassBCSPositionReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 regionalReserved1, speedOverGround, positionAccuracy, latitude, longitude, courseOverGround,
                 trueHeading, second, regionalReserved2, csUnit, display, dsc, band, message22, assigned,
                 raimFlag, commStateSelectorFlag, commState,
                 rawSpeedOverGround, rawLatitude, rawLongitude, rawCourseOverGround);
     }
 
-    static ExtendedClassBEquipmentPositionReport createExtendedClassBEquipmentPositionReport(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi) {
+    static ExtendedClassBEquipmentPositionReport createExtendedClassBEquipmentPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         String regionalReserved1 = parser.getBitPattern(38, 46);
         int rawSpeedOverGround = parser.getUnsignedInt(46, 56);
         float speedOverGround = rawSpeedOverGround / 10f;
@@ -438,14 +442,14 @@ class AISMessageFactory {
         boolean assigned = parser.getBoolean(307, 308);
         String regionalReserved3 = parser.getBitPattern(308, 312);
 
-        return new ExtendedClassBEquipmentPositionReport(metadata, repeatIndicator, sourceMmsi,
+        return new ExtendedClassBEquipmentPositionReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 regionalReserved1, speedOverGround, positionAccuracy, latitude, longitude, courseOverGround, trueHeading,
                 second, regionalReserved2, shipName, shipType, toBow, toStern, toPort, toStarboard,
                 positionFixingDevice, raimFlag, dataTerminalReady, assigned, regionalReserved3,
                 rawSpeedOverGround, rawLatitude, rawLongitude, rawCourseOverGround);
     }
 
-    static DataLinkManagement createDataLinkManagement(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi) {
+    static DataLinkManagement createDataLinkManagement(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int spare = parser.getUnsignedInt(38, 40);
         int offsetNumber1 = parser.getUnsignedInt(40, 52);
         int reservedSlots1 = parser.getUnsignedInt(52, 56);
@@ -486,14 +490,14 @@ class AISMessageFactory {
             increment4 = parser.getUnsignedInt(147, 154);
         }
 
-        return new DataLinkManagement(metadata, repeatIndicator, sourceMmsi,
+        return new DataLinkManagement(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 offsetNumber1, reservedSlots1, timeout1, increment1,
                 offsetNumber2, reservedSlots2, timeout2, increment2,
                 offsetNumber3, reservedSlots3, timeout3, increment3,
                 offsetNumber4, reservedSlots4, timeout4, increment4);
     }
 
-    static AidToNavigationReport createAidToNavigationReport(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi) {
+    static AidToNavigationReport createAidToNavigationReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         AidType aidType = AidType.fromInteger(parser.getUnsignedInt(38, 43));
         String name = parser.getString(43, 163);
         boolean positionAccurate = parser.getBoolean(163, 164);
@@ -525,13 +529,13 @@ class AISMessageFactory {
             }
         }
 
-        return new AidToNavigationReport(metadata, repeatIndicator, sourceMmsi,
+        return new AidToNavigationReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 aidType, name, positionAccurate, latitude, longitude, toBow, toStern, toPort, toStarboard,
                 positionFixingDevice, second, offPosition, regionalUse, raimFlag, virtualAid, assignedMode,
                 spare1, nameExtension, spare2);
     }
 
-    static ChannelManagement createChannelManagement(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi) {
+    static ChannelManagement createChannelManagement(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int spare1 = parser.getUnsignedInt(38, 40);
         int channelA = parser.getUnsignedInt(40, 52);
         int channelB = parser.getUnsignedInt(52, 64);
@@ -564,13 +568,13 @@ class AISMessageFactory {
         boolean bandB = parser.getBoolean(141, 142);
         int zoneSize = parser.getUnsignedInt(142, 145);
 
-        return new ChannelManagement(metadata, repeatIndicator, sourceMmsi,
+        return new ChannelManagement(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 channelA, channelB, transmitReceiveMode, power, northEastLongitude, northEastLatitude,
                 southWestLongitude, southWestLatitude, destinationMmsi1, destinationMmsi2, addressed,
                 bandA, bandB, zoneSize);
     }
 
-    static GroupAssignmentCommand createGroupAssignmentCommand(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi) {
+    static GroupAssignmentCommand createGroupAssignmentCommand(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         String spare1 = parser.getString(38, 40);
         float northEastLongitude = parser.getSignedFloat(40, 58) / 10f;
         float northEastLatitude = parser.getSignedFloat(58, 75) / 10f;
@@ -583,12 +587,12 @@ class AISMessageFactory {
         ReportingInterval reportingInterval = ReportingInterval.fromInteger(parser.getUnsignedInt(168, 172));
         int quietTime = parser.getUnsignedInt(172, 176);
 
-        return new GroupAssignmentCommand(metadata, repeatIndicator, sourceMmsi,
+        return new GroupAssignmentCommand(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 spare1, northEastLongitude, northEastLatitude, southWestLongitude, southWestLatitude,
                 stationType, shipType, spare2, transmitReceiveMode, reportingInterval, quietTime);
     }
 
-    static ClassBCSStaticDataReport createClassBCSStaticDataReport(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi) {
+    static ClassBCSStaticDataReport createClassBCSStaticDataReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int spare = parser.getUnsignedInt(38, 40);
         int partNumber = parser.getUnsignedInt(38, 40);
 
@@ -620,21 +624,21 @@ class AISMessageFactory {
             }
         }
 
-        return new ClassBCSStaticDataReport(metadata, repeatIndicator, sourceMmsi,
+        return new ClassBCSStaticDataReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 partNumber, shipName, shipType, vendorId, callsign, toBow, toStern, toStarboard, toPort, mothershipMmsi);
     }
 
-    static BinaryMessageSingleSlot createBinaryMessageSingleSlot(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi) {
+    static BinaryMessageSingleSlot createBinaryMessageSingleSlot(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         boolean destinationIndicator = parser.getBoolean(38, 39);
         boolean binaryDataFlag = parser.getBoolean(39, 40);
         MMSI destinationMMSI = MMSI.valueOf(parser.getUnsignedInt(40, 70));
         String binaryData = parser.getBitPattern(40, 168);
 
-        return new BinaryMessageSingleSlot(metadata, repeatIndicator, sourceMmsi,
+        return new BinaryMessageSingleSlot(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 destinationIndicator, binaryDataFlag, destinationMMSI, binaryData);
     }
 
-    static BinaryMessageMultipleSlot createBinaryMessageMultipleSlot(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi) {
+    static BinaryMessageMultipleSlot createBinaryMessageMultipleSlot(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         boolean addressed = parser.getBoolean(38, 39);
         boolean structured = parser.getBoolean(39, 40);
 
@@ -651,11 +655,11 @@ class AISMessageFactory {
             data = data + "0".repeat(maxDataBits - data.length());
         }
 
-        return new BinaryMessageMultipleSlot(metadata, repeatIndicator, sourceMmsi,
+        return new BinaryMessageMultipleSlot(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 addressed, structured, destinationMmsi, applicationId, data);
     }
 
-    static LongRangeBroadcastMessage createLongRangeBroadcastMessage(Metadata metadata, BitStringParser parser, int repeatIndicator, MMSI sourceMmsi) {
+    static LongRangeBroadcastMessage createLongRangeBroadcastMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         boolean positionAccuracy = parser.getBoolean(38, 39);
         boolean raim = parser.getBoolean(39, 40);
         NavigationStatus status = NavigationStatus.fromInteger(parser.getUnsignedInt(40, 44));
@@ -670,7 +674,7 @@ class AISMessageFactory {
         int positionLatency = parser.getUnsignedInt(94, 95);
         int spare = parser.getUnsignedInt(95, 96);
 
-        return new LongRangeBroadcastMessage(metadata, repeatIndicator, sourceMmsi,
+        return new LongRangeBroadcastMessage(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 positionAccuracy, raim, status, latitude, longitude, speed, course, positionLatency, spare,
                 rawLongitude, rawLatitude, rawSpeedOverGround, rawCourseOverGround);
     }

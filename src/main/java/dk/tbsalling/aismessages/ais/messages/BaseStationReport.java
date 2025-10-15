@@ -21,6 +21,10 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
 import dk.tbsalling.aismessages.ais.messages.types.SOTDMACommunicationState;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
+import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+
+import java.time.Instant;
 
 import static java.lang.String.format;
 
@@ -35,12 +39,12 @@ public class BaseStationReport extends AISMessage {
     /**
      * Constructor accepting pre-parsed values for true immutability.
      */
-    protected BaseStationReport(Metadata metadata, int repeatIndicator, MMSI sourceMmsi,
+    protected BaseStationReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
                                 int year, int month, int day, int hour, int minute, int second,
                                 boolean positionAccurate, float latitude, float longitude,
                                 PositionFixingDevice positionFixingDevice, boolean raimFlag,
                                 SOTDMACommunicationState communicationState) {
-        super(metadata, repeatIndicator, sourceMmsi);
+        super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.year = year;
         this.month = month;
         this.day = day;

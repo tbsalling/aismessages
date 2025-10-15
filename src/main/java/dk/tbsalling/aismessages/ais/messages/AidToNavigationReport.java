@@ -21,6 +21,10 @@ import dk.tbsalling.aismessages.ais.messages.types.AidType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
+import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+
+import java.time.Instant;
 
 import static java.lang.String.format;
 
@@ -35,7 +39,7 @@ public class AidToNavigationReport extends AISMessage {
     /**
      * Constructor accepting pre-parsed values for true immutability.
      */
-    protected AidToNavigationReport(Metadata metadata, int repeatIndicator, MMSI sourceMmsi,
+    protected AidToNavigationReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
                                     AidType aidType, String name, boolean positionAccurate,
                                     float latitude, float longitude,
                                     int toBow, int toStern, int toPort, int toStarboard,
@@ -43,7 +47,7 @@ public class AidToNavigationReport extends AISMessage {
                                     boolean offPosition, String regionalUse, boolean raimFlag,
                                     boolean virtualAid, boolean assignedMode, int spare1,
                                     String nameExtension, Integer spare2) {
-        super(metadata, repeatIndicator, sourceMmsi);
+        super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.aidType = aidType;
         this.name = name;
         this.positionAccurate = positionAccurate;

@@ -21,6 +21,10 @@ import dk.tbsalling.aismessages.ais.messages.types.CommunicationState;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
+import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+
+import java.time.Instant;
 
 import static java.lang.String.format;
 
@@ -37,7 +41,7 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
     /**
      * Constructor accepting pre-parsed values for true immutability.
      */
-    protected StandardClassBCSPositionReport(Metadata metadata, int repeatIndicator, MMSI sourceMmsi,
+    protected StandardClassBCSPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
                                              String regionalReserved1, float speedOverGround,
                                              boolean positionAccuracy, float latitude, float longitude,
                                              float courseOverGround, int trueHeading, int second,
@@ -45,7 +49,7 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
                                              boolean message22, boolean assigned, boolean raimFlag, boolean commStateSelectorFlag,
                                              CommunicationState communicationState,
                                              int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround) {
-        super(metadata, repeatIndicator, sourceMmsi);
+        super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.regionalReserved1 = regionalReserved1;
         this.speedOverGround = speedOverGround;
         this.positionAccuracy = positionAccuracy;

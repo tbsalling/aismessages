@@ -18,6 +18,10 @@ package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.*;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
+import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+
+import java.time.Instant;
 
 import static java.lang.String.format;
 
@@ -27,7 +31,7 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
     /**
      * Constructor accepting pre-parsed values for true immutability.
      */
-    protected ExtendedClassBEquipmentPositionReport(Metadata metadata, int repeatIndicator, MMSI sourceMmsi,
+    protected ExtendedClassBEquipmentPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
                                                     String regionalReserved1, float speedOverGround, boolean positionAccuracy,
                                                     float latitude, float longitude, float courseOverGround, int trueHeading,
                                                     int second, String regionalReserved2, String shipName, ShipType shipType,
@@ -35,7 +39,7 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
                                                     PositionFixingDevice positionFixingDevice, boolean raimFlag,
                                                     boolean dataTerminalReady, boolean assigned, String regionalReserved3,
                                                     int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround) {
-        super(metadata, repeatIndicator, sourceMmsi);
+        super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.regionalReserved1 = regionalReserved1;
         this.speedOverGround = speedOverGround;
         this.positionAccuracy = positionAccuracy;

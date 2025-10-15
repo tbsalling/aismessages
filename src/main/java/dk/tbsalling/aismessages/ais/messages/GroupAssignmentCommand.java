@@ -18,6 +18,10 @@ package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.*;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
+import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+
+import java.time.Instant;
 
 import static java.lang.String.format;
 
@@ -34,12 +38,12 @@ public class GroupAssignmentCommand extends AISMessage {
     /**
      * Constructor accepting pre-parsed values for true immutability.
      */
-    protected GroupAssignmentCommand(Metadata metadata, int repeatIndicator, MMSI sourceMmsi,
+    protected GroupAssignmentCommand(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
                                      String spare1, float northEastLongitude, float northEastLatitude,
                                      float southWestLongitude, float southWestLatitude,
                                      StationType stationType, ShipType shipType, String spare2,
                                      TxRxMode transmitReceiveMode, ReportingInterval reportingInterval, int quietTime) {
-        super(metadata, repeatIndicator, sourceMmsi);
+        super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.spare1 = spare1;
         this.northEastLongitude = northEastLongitude;
         this.northEastLatitude = northEastLatitude;

@@ -20,6 +20,10 @@ import dk.tbsalling.aismessages.ais.messages.asm.ApplicationSpecificMessage;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
+import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+
+import java.time.Instant;
 
 import static java.lang.String.format;
 
@@ -38,10 +42,10 @@ public class BinaryBroadcastMessage extends AISMessage {
     /**
      * Constructor accepting pre-parsed values for true immutability.
      */
-    protected BinaryBroadcastMessage(Metadata metadata, int repeatIndicator, MMSI sourceMmsi,
+    protected BinaryBroadcastMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
                                      Integer spare, Integer designatedAreaCode, Integer functionalId,
                                      String binaryData, ApplicationSpecificMessage applicationSpecificMessage) {
-        super(metadata, repeatIndicator, sourceMmsi);
+        super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.spare = spare;
         this.designatedAreaCode = designatedAreaCode;
         this.functionalId = functionalId;
