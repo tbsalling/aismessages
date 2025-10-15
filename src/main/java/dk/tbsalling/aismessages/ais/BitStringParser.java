@@ -108,28 +108,22 @@ public class BitStringParser {
         SIX_BIT_ASCII.put(63, "?"); // 63
     }
 
-    private static final Boolean STRIP_ALPHA_SIGNS = true;
+    private static final boolean STRIP_ALPHA_SIGNS = true;
 
     public static final Function<String, Integer> UNSIGNED_INTEGER_DECODER = bitString -> Integer.parseUnsignedInt(bitString, 2);
 
     public static final Function<String, Integer> INTEGER_DECODER = bitString -> {
-        Integer value;
-        String signBit = bitString.substring(0, 1);
-        String valueBits = bitString.substring(1);
-        if ("0".equals(signBit))
-            value = UNSIGNED_INTEGER_DECODER.apply(valueBits);
-        else {
-            valueBits = valueBits.replaceAll("0", "x");
-            valueBits = valueBits.replaceAll("1", "0");
-            valueBits = valueBits.replaceAll("x", "1");
-            value = -1 - UNSIGNED_INTEGER_DECODER.apply(valueBits);
+        int n = bitString.length();
+        int x = Integer.parseUnsignedInt(bitString, 2);
+        if ((x & (1 << (n - 1))) != 0) {
+            x -= (1 << n); // two's complement sign extension within n bits
         }
-        return value;
+        return x;
     };
 
     public static final Function<String, Float> FLOAT_DECODER = bitString -> Float.valueOf(INTEGER_DECODER.apply(bitString));
 
-    public static final Function<String, Boolean> BOOLEAN_DECODER = bitString -> "1".equals(bitString.substring(0, 1));
+    public static final Function<String, Boolean> BOOLEAN_DECODER = bitString -> bitString.charAt(0) == '1';
 
     public static final Function<String, Long> UNSIGNED_LONG_DECODER = bitString -> Long.parseUnsignedLong(bitString, 2);
 
@@ -146,23 +140,22 @@ public class BitStringParser {
     };
 
     public static final Function<String, String> STRING_DECODER = bitString -> {
-        StringBuilder stringBuffer = new StringBuilder();
-        String remainingBits = bitString;
-        while (remainingBits.length() >= 6) {
-            String b = remainingBits.substring(0, 6);
-            remainingBits = remainingBits.substring(6);
-            Integer i = UNSIGNED_INTEGER_DECODER.apply(b);
-            String c = SIX_BIT_ASCII.get(i);
+        int len = bitString.length();
+        StringBuilder stringBuffer = new StringBuilder(len / 6 + 1);
+        for (int i = 0; i + 6 <= len; i += 6) {
+            String b = bitString.substring(i, i + 6);
+            Integer v = UNSIGNED_INTEGER_DECODER.apply(b);
+            String c = SIX_BIT_ASCII.get(v);
             stringBuffer.append(c);
         }
         String string = stringBuffer.toString();
         if (STRIP_ALPHA_SIGNS) {
-            string = string.replaceAll("@", " ").trim();
+            string = string.replace("@", " ").trim();
         }
         return string;
     };
 
-    public static final Function<String, String> BIT_DECODER = bitString -> bitString;
+    public static final Function<String, String> BIT_DECODER = Function.identity();
 
     /**
      * Creates a new BitStringParser for the given binary string.
@@ -199,15 +192,11 @@ public class BitStringParser {
      * @return the zero bit-stuffed string
      */
     private String getZeroBitStuffedString(int endIndex) {
-        String b = bitString;
-        if (b.length() - endIndex < 0) {
-            StringBuilder c = new StringBuilder(b);
-            for (int i = b.length() - endIndex; i < 0; i++) {
-                c.append("0");
-            }
-            b = c.toString();
+        int deficit = endIndex - bitString.length();
+        if (deficit > 0) {
+            return bitString + "0".repeat(deficit);
         }
-        return b;
+        return bitString;
     }
 
     /**
