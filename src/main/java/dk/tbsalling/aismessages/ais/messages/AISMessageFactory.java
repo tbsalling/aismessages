@@ -16,6 +16,7 @@
 
 package dk.tbsalling.aismessages.ais.messages;
 
+import dk.tbsalling.aismessages.ais.BitStringParser;
 import dk.tbsalling.aismessages.ais.messages.asm.ApplicationSpecificMessage;
 import dk.tbsalling.aismessages.ais.messages.types.*;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
@@ -29,7 +30,7 @@ import java.time.Instant;
  *
  * @author tbsalling
  */
-class AISMessageFactory {
+public class AISMessageFactory {
 
     static ShipAndVoyageData createShipAndVoyageData(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         IMO imo = IMO.valueOf(parser.getUnsignedInt(40, 70));

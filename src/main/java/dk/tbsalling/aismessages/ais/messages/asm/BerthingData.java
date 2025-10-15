@@ -1,6 +1,6 @@
 package dk.tbsalling.aismessages.ais.messages.asm;
 
-import static dk.tbsalling.aismessages.ais.Decoders.*;
+import static dk.tbsalling.aismessages.ais.BitStringParser.*;
 import static java.util.Arrays.stream;
 
 public class BerthingData extends ApplicationSpecificMessage {
