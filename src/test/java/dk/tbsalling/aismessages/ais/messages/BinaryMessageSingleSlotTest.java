@@ -15,7 +15,7 @@ public class BinaryMessageSingleSlotTest {
         NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,I6SWo?8P00a3PKpEKEVj0?vNP<65,0*73");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
@@ -37,7 +37,7 @@ public class BinaryMessageSingleSlotTest {
         NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,I6SW6D5P00a3PO8>KUV00?vNP<65,0*0E");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 

@@ -15,7 +15,7 @@ public class SafetyRelatedBroadcastMessageTest {
         NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,>5?Per18=HB1U:1@E=B0m<L,2*51");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
@@ -34,7 +34,7 @@ public class SafetyRelatedBroadcastMessageTest {
         NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,>3R1p10E3;;R0USCR0HO>0@gN10kGJp,0*37");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 

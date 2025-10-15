@@ -16,7 +16,7 @@ public class BinaryMessageMultipleSlotTest {
         NMEAMessage nmeaMessage2 = NMEAMessage.fromString("!AIVDM,2,2,4,A,00000000000,2*23");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage1, nmeaMessage2);
+        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage1, nmeaMessage2);
 
         System.out.println(aisMessage.toString());
 
@@ -40,7 +40,7 @@ public class BinaryMessageMultipleSlotTest {
         NMEAMessage nmeaMessage2 = NMEAMessage.fromString("!AIVDM,2,2,1,A,00000000000,2*26");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage1, nmeaMessage2);
+        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage1, nmeaMessage2);
 
         System.out.println(aisMessage.toString());
 

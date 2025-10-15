@@ -14,7 +14,7 @@ public class BaseStationReportTest {
         NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,4h3Ovk1udp6I9o>jPHEdjdW000S:,0*0C");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
@@ -42,7 +42,7 @@ public class BaseStationReportTest {
         NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,400TcdiuiT7VDR>3nIfr6>i00000,0*78");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 

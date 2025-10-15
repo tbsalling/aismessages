@@ -16,7 +16,7 @@ public class AssignedModeCommandTest {
         NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,@6TMCD1GOSmUBKh4,0*29");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 

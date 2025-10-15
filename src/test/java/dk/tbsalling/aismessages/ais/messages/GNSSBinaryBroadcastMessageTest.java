@@ -16,7 +16,7 @@ public class GNSSBinaryBroadcastMessageTest {
         NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,A02VqLPA4I6C07h5Ed1h,0*43");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
@@ -44,7 +44,7 @@ public class GNSSBinaryBroadcastMessageTest {
         NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,A02VqLPA4I6C07h5Ed1h<OrsubtH0000000000S@gN10kGJp,0*0E");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 

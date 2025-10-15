@@ -16,7 +16,7 @@ public class LongRangeBroadcastMessageTest {
         NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,KC5E2b@U19PFdLbMuc5=ROv62<7m,0*16");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
@@ -43,7 +43,7 @@ public class LongRangeBroadcastMessageTest {
         NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,K5DfMB9FLsM?P00d,0*70");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 

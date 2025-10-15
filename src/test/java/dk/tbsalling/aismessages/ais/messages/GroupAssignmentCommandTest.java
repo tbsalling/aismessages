@@ -14,7 +14,7 @@ public class GroupAssignmentCommandTest {
         NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,G02:Kn01R`sn@291nj600000900,2*12");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
@@ -42,7 +42,7 @@ public class GroupAssignmentCommandTest {
         NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,G02:Kn01R`sn@291nj600000900,2*12");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 

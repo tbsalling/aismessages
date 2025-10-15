@@ -17,9 +17,9 @@
 package dk.tbsalling.aismessages.nmea;
 
 import dk.tbsalling.aismessages.ais.messages.AISMessage;
-import dk.tbsalling.aismessages.ais.messages.Metadata;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class NMEAMessageHandler implements Consumer<NMEAMessage> {
 	private static final System.Logger LOG = System.getLogger(NMEAMessageHandler.class.getName());
 
 	private final String source;
-    private final ArrayList<NMEAMessage> messageFragments = new ArrayList<>();
+    private final List<NMEAMessage> messageFragments = new ArrayList<>();
     private final List<Consumer<? super AISMessage>> aisMessageReceivers = new LinkedList<>();
 
     public NMEAMessageHandler(String source, Consumer<? super AISMessage>... aisMessageReceivers) {
@@ -71,7 +71,7 @@ public class NMEAMessageHandler implements Consumer<NMEAMessage> {
 			messageFragments.clear();
 		} else if (numberOfFragments == 1) {
 			LOG.log(DEBUG, "Handling unfragmented NMEA message");
-            AISMessage aisMessage = AISMessage.create(new Metadata(source), nmeaMessage.getTagBlock(), nmeaMessage);
+            AISMessage aisMessage = AISMessage.create(Instant.now(), source, nmeaMessage.getTagBlock(), nmeaMessage);
             sendToAisMessageReceivers(aisMessage);
 			messageFragments.clear();
 		} else {
@@ -95,7 +95,7 @@ public class NMEAMessageHandler implements Consumer<NMEAMessage> {
                     LOG.log(DEBUG, "nmeaMessage.getNumberOfFragments(): %d".formatted(nmeaMessage.getNumberOfFragments()));
                     LOG.log(DEBUG, "messageFragments.size(): %d".formatted(messageFragments.size()));
 					if (nmeaMessage.getNumberOfFragments() == messageFragments.size()) {
-                        AISMessage aisMessage = AISMessage.create(new Metadata(source), nmeaMessage.getTagBlock(), messageFragments.toArray(new NMEAMessage[messageFragments.size()]));
+                        AISMessage aisMessage = AISMessage.create(Instant.now(), source, nmeaMessage.getTagBlock(), messageFragments.toArray(new NMEAMessage[0]));
                         sendToAisMessageReceivers(aisMessage);
 						messageFragments.clear();
 					} else
@@ -124,8 +124,8 @@ public class NMEAMessageHandler implements Consumer<NMEAMessage> {
      * @return List of unhandled NMEAMessages.
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<NMEAMessage> flush() {
-		ArrayList<NMEAMessage> unhandled = (ArrayList<NMEAMessage>) messageFragments.clone();
+    public List<NMEAMessage> flush() {
+        List<NMEAMessage> unhandled = List.copyOf(messageFragments);
 		messageFragments.clear();
 		return unhandled;
 	}

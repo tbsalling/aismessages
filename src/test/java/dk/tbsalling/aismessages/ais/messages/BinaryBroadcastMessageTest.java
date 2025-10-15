@@ -19,7 +19,7 @@ public class BinaryBroadcastMessageTest {
         NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,85MwpKiKf:MPiQa:ofV@v2mQTfB26oEtbEVqh4j1QDQPHjhpkNJ3,0*11");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
@@ -40,7 +40,7 @@ public class BinaryBroadcastMessageTest {
         NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,8@30oni?1j020@00,0*23");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
@@ -57,7 +57,7 @@ public class BinaryBroadcastMessageTest {
         NMEAMessage nmeaMessage2 = NMEAMessage.fromString("!AIVDM,2,2,8,A,pGp07IiTPi@BkU5pSwrrbs8219RW=R19RV=R19RVER19RVKtDb>jq20000>4,0*47");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage1, nmeaMessage2);
+        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage1, nmeaMessage2);
 
         System.out.println(aisMessage.toString());
 
@@ -74,7 +74,7 @@ public class BinaryBroadcastMessageTest {
         NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,839udkPj2d<dteLMt1T0a?bP01L0,0*79");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
@@ -109,7 +109,7 @@ public class BinaryBroadcastMessageTest {
         NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,83aDCr@j2P000000029Pt?cm0000,0*5F");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
@@ -144,7 +144,7 @@ public class BinaryBroadcastMessageTest {
         NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,83n30vi2@@,4*69");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
@@ -162,7 +162,7 @@ public class BinaryBroadcastMessageTest {
         NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,83aDCr@,0*5F");
 
         // Act & Assert
-        assertThrows(InvalidMessage.class, () -> AISMessage.create(nmeaMessage));
+        assertThrows(InvalidMessage.class, () -> AISMessage.create(null, null, null, nmeaMessage));
     }
 
 }

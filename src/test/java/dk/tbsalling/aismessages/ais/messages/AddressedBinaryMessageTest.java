@@ -18,7 +18,7 @@ public class AddressedBinaryMessageTest {
         NMEAMessage nmeaMessage = NMEAMessage.fromString("!ABVDM,1,1,,B,63M@g840SJL`01lSk09w1IMK?00100803Pp03g8p001pTaIK00,4*56");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
@@ -39,7 +39,7 @@ public class AddressedBinaryMessageTest {
         NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,63bump80OEGr06P060,4*79");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 

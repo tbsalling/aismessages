@@ -12,12 +12,10 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class NMEAMessageHandlerTest {
@@ -81,7 +79,7 @@ public class NMEAMessageHandlerTest {
         aisMessageReceiver.accept(fragmentedNMEAMessage1);
         aisMessageReceiver.accept(fragmentedNMEAMessage2);
 
-        ArrayList<NMEAMessage> flush = aisMessageReceiver.flush();
+        List<NMEAMessage> flush = aisMessageReceiver.flush();
 
         assertNotNull(flush);
         assertEquals(0, flush.size());
@@ -101,7 +99,7 @@ public class NMEAMessageHandlerTest {
         aisMessageReceiver.accept(unfragmentedNMEAMessage);
         aisMessageReceiver.accept(fragmentedNMEAMessage1);
 
-        ArrayList<NMEAMessage> flush = aisMessageReceiver.flush();
+        List<NMEAMessage> flush = aisMessageReceiver.flush();
 
         assertNotNull(flush);
         assertEquals(1, flush.size());
@@ -120,7 +118,7 @@ public class NMEAMessageHandlerTest {
 
         aisMessageReceiver.accept(invalidFragmentNMEAMessage);
 
-        ArrayList<NMEAMessage> flush = aisMessageReceiver.flush();
+        List<NMEAMessage> flush = aisMessageReceiver.flush();
 
         assertNotNull(flush);
         assertEquals(0, flush.size());

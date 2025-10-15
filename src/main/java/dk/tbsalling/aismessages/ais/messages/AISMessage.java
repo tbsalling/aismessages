@@ -116,7 +116,7 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         check(nmeaMessages);
 
         this.numberOfBits = bitString.length();
-        this.metadata = new Metadata(nmeaMessages, bitString, nmeaTagBlock, source, received);
+        this.metadata = new Metadata(received, nmeaTagBlock, nmeaMessages, Version.VERSION, bitString, source);
         this.repeatIndicator = repeatIndicator;
         this.sourceMmsi = sourceMmsi;
 
@@ -385,26 +385,12 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
      * Create proper type of AISMessage from 1..n NMEA messages, and
      * attach metadata.
      *
-     * @param metadata     Meta data
-     * @param nmeaMessages NMEA messages
-     * @return AISMessage the AIS message
-     * @throws InvalidMessage if the AIS payload of the NMEAmessage(s) is invalid
-     */
-    public static AISMessage create(Metadata metadata, NMEAMessage... nmeaMessages) {
-        return create(metadata, null, nmeaMessages);
-    }
-
-    /**
-     * Create proper type of AISMessage from 1..n NMEA messages, and
-     * attach metadata.
-     *
-     * @param userMetadata Meta data
      * @param nmeaTagBlock NMEA Tag Block
      * @param nmeaMessages NMEA messages
      * @return AISMessage the AIS message
      * @throws InvalidMessage if the AIS payload of the NMEAmessage(s) is invalid
      */
-    public static AISMessage create(Metadata userMetadata, NMEATagBlock nmeaTagBlock, NMEAMessage... nmeaMessages) {
+    public static AISMessage create(Instant received, String source, NMEATagBlock nmeaTagBlock, NMEAMessage... nmeaMessages) {
         String bitString = decodePayloadToBitString(nmeaMessages);
         AISMessageType messageType = AISMessageType.fromInteger(Integer.parseInt(bitString.substring(0, 6), 2));
 
@@ -422,10 +408,6 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
         // Parse common fields from all messages
         int repeatIndicator = parser.getUnsignedInt(6, 8);
         MMSI sourceMmsi = MMSI.valueOf(parser.getUnsignedInt(8, 38));
-
-        // Extract source and received from userMetadata if provided
-        String source = userMetadata != null ? userMetadata.source() : null;
-        Instant received = userMetadata != null ? userMetadata.received() : null;
 
         return switch (messageType) {
             case ShipAndVoyageRelatedData ->
@@ -484,17 +466,6 @@ public abstract class AISMessage implements Serializable, CachedDecodedValues {
                     AISMessageFactory.createLongRangeBroadcastMessage(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser);
             default -> throw new UnsupportedMessageType(messageType.getCode());
         };
-    }
-
-    /**
-     * Create proper type of AISMessage from 1..n NMEA messages.
-     *
-     * @param nmeaMessages NMEA messages
-     * @return AISMessage the AIS message
-     * @throws InvalidMessage if the AIS payload of the NMEAmessage(s) is invalid
-     */
-    public static AISMessage create(NMEAMessage... nmeaMessages) {
-        return create(null, null, nmeaMessages);
     }
 
     /**
