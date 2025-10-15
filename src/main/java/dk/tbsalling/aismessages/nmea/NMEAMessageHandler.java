@@ -60,7 +60,7 @@ public class NMEAMessageHandler implements Consumer<NMEAMessage> {
     public void accept(NMEAMessage nmeaMessage) {
         LOG.log(DEBUG, "Received for processing: %s".formatted(nmeaMessage.getRawMessage()));
 
-		int numberOfFragments = nmeaMessage.getNumberOfFragments() == null ? -1 : nmeaMessage.getNumberOfFragments();
+        int numberOfFragments = nmeaMessage.getNumberOfFragments();
 		if (numberOfFragments <= 0) {
             LOG.log(WARNING, "NMEA message is invalid: %s".formatted(nmeaMessage.toString()));
 			messageFragments.clear();

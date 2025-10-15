@@ -57,15 +57,15 @@ public class NMEAMessage {
         if (lastFieldParts.length != 2)
             throw new NMEAParseException(rawMessage, "Expected checksum fields to start with *");
 
-        // Eagerly parse and assign all fields (allowing blanks as null where applicable)
+        // Eagerly parse and assign all fields (using sentinel -1 for missing numeric fields)
         this.messageType = (isBlank(fields[0]) ? null : fields[0].replace("!", ""));
-        this.numberOfFragments = (isBlank(fields[1]) ? null : Integer.valueOf(fields[1]));
-        this.fragmentNumber = (isBlank(fields[2]) ? null : Integer.valueOf(fields[2]));
-        this.sequenceNumber = (isBlank(fields[3]) ? null : Integer.valueOf(fields[3]));
+        this.numberOfFragments = (isBlank(fields[1]) ? -1 : Integer.parseInt(fields[1]));
+        this.fragmentNumber = (isBlank(fields[2]) ? -1 : Integer.parseInt(fields[2]));
+        this.sequenceNumber = (isBlank(fields[3]) ? -1 : Integer.parseInt(fields[3]));
         this.radioChannelCode = (isBlank(fields[4]) ? null : fields[4]);
         this.encodedPayload = (isBlank(fields[5]) ? null : fields[5]);
-        this.fillBits = (isBlank(lastFieldParts[0]) ? null : Integer.valueOf(lastFieldParts[0]));
-        this.checksum = (isBlank(lastFieldParts[1]) ? null : Integer.valueOf(lastFieldParts[1], 16));
+        this.fillBits = (isBlank(lastFieldParts[0]) ? -1 : Integer.parseInt(lastFieldParts[0]));
+        this.checksum = (isBlank(lastFieldParts[1]) ? -1 : Integer.parseInt(lastFieldParts[1], 16));
 
         // Validate supported message type
         if (!isValid())
@@ -85,11 +85,11 @@ public class NMEAMessage {
     String rawMessage;
     NMEATagBlock tagBlock;
     String messageType;
-    Integer numberOfFragments;
-    Integer fragmentNumber;
-    Integer sequenceNumber;
+    int numberOfFragments;
+    int fragmentNumber;
+    int sequenceNumber;
     String radioChannelCode;
     String encodedPayload;
-    Integer fillBits;
-    Integer checksum;
+    int fillBits;
+    int checksum;
 }
