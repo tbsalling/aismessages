@@ -17,10 +17,15 @@
 package dk.tbsalling.aismessages.ais.messages.types;
 
 
+import lombok.EqualsAndHashCode;
+import lombok.Value;
+
 import static dk.tbsalling.aismessages.ais.BitStringParser.BOOLEAN_DECODER;
 import static dk.tbsalling.aismessages.ais.BitStringParser.UNSIGNED_INTEGER_DECODER;
 import static java.util.Objects.requireNonNull;
 
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class ITDMACommunicationState extends CommunicationState {
 
 	private ITDMACommunicationState(SyncState syncState, Integer slotIncrement, Integer numberOfSlots, Boolean keepFlag) {
@@ -45,22 +50,7 @@ public class ITDMACommunicationState extends CommunicationState {
 		);
 	}
 
-	@SuppressWarnings("unused")
-	public Integer getSlotIncrement() {
-		return slotIncrement;
-	}
-
-	@SuppressWarnings("unused")
-	public Integer getNumberOfSlots() {
-		return numberOfSlots;
-	}
-
-	@SuppressWarnings("unused")
-	public Boolean getKeepFlag() {
-		return keepFlag;
-	}
-
-	private final Integer slotIncrement;
-	private final Integer numberOfSlots;
-	private final Boolean keepFlag;
+    Integer slotIncrement;
+    Integer numberOfSlots;
+    Boolean keepFlag;
 }

@@ -16,11 +16,15 @@
 
 package dk.tbsalling.aismessages.ais.messages.types;
 
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
 import static dk.tbsalling.aismessages.ais.BitStringParser.UNSIGNED_INTEGER_DECODER;
 import static java.lang.System.Logger.Level.WARNING;
 import static java.util.Objects.requireNonNull;
 
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class SOTDMACommunicationState extends CommunicationState {
 
 	private static final System.Logger LOG = System.getLogger(SOTDMACommunicationState.class.getName());
@@ -68,40 +72,11 @@ public class SOTDMACommunicationState extends CommunicationState {
 		return new SOTDMACommunicationState(syncState, slotTimeout, numberOfReceivedStations, slotNumber, utcHour, utcMinute, slotOffset);
 	}
 
-	@SuppressWarnings("unused")
-	public Integer getSlotTimeout() {
-		return slotTimeout;
-	}
+    Integer slotTimeout;
+    Integer numberOfReceivedStations;
+    Integer slotNumber;
+    Integer utcHour;
+    Integer utcMinute;
+    Integer slotOffset;
 
-	@SuppressWarnings("unused")
-	public Integer getNumberOfReceivedStations() {
-		return numberOfReceivedStations;
-	}
-
-	@SuppressWarnings("unused")
-	public Integer getSlotNumber() {
-		return slotNumber;
-	}
-
-	@SuppressWarnings("unused")
-	public Integer getUtcHour() {
-		return utcHour;
-	}
-
-	@SuppressWarnings("unused")
-	public Integer getUtcMinute() {
-		return utcMinute;
-	}
-
-	@SuppressWarnings("unused")
-	public Integer getSlotOffset() {
-		return slotOffset;
-	}
-
-	private Integer slotTimeout;
-	private Integer numberOfReceivedStations;
-	private Integer slotNumber;
-	private Integer utcHour;
-	private Integer utcMinute;
-	private Integer slotOffset;
 }
