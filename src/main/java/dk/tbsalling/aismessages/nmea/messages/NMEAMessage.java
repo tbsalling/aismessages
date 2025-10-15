@@ -25,8 +25,52 @@ import java.util.regex.Pattern;
 
 public class NMEAMessage {
 
+    public NMEAMessage(String input) {
+        // Parse tag block first and strip it from the working string
+        final String nmeaTagBlockRegEx = "^\\\\.*\\*[0-9A-Fa-f]{2}\\\\";
+        String working = input;
+        NMEATagBlock parsedTagBlock = null;
+        Pattern tbPattern = Pattern.compile(nmeaTagBlockRegEx);
+        Matcher tbMatcher = tbPattern.matcher(working);
+        if (tbMatcher.lookingAt()) {
+            String nmeaTagBlockString = working.substring(tbMatcher.start(), tbMatcher.end());
+            parsedTagBlock = NMEATagBlock.fromString(nmeaTagBlockString);
+            working = working.substring(tbMatcher.end());
+        }
+        this.tagBlock = parsedTagBlock; // can be null
 
-    public final boolean isValid() {
+        // Store the raw NMEA sentence (without tag block if it existed)
+        this.rawMessage = working;
+
+        // Basic structural validations before parsing fields
+        final String nmeaMessageRegExp = "^!.*\\*[0-9A-Fa-f]{2}$";
+        if (!rawMessage.matches(nmeaMessageRegExp))
+            throw new NMEAParseException(rawMessage, "Message does not comply with regexp \"" + nmeaMessageRegExp + "\"");
+
+        String[] fields = rawMessage.split(",", -1); // keep empty strings
+        if (fields.length != 7)
+            throw new NMEAParseException(rawMessage, "Expected 7 fields separated by commas; got " + fields.length);
+
+        String[] lastFieldParts = fields[6].split("\\*", -1);
+        if (lastFieldParts.length != 2)
+            throw new NMEAParseException(rawMessage, "Expected checksum fields to start with *");
+
+        // Eagerly parse and assign all fields (allowing blanks as null where applicable)
+        this.messageType = (isBlank(fields[0]) ? null : fields[0].replace("!", ""));
+        this.numberOfFragments = (isBlank(fields[1]) ? null : Integer.valueOf(fields[1]));
+        this.fragmentNumber = (isBlank(fields[2]) ? null : Integer.valueOf(fields[2]));
+        this.sequenceNumber = (isBlank(fields[3]) ? null : Integer.valueOf(fields[3]));
+        this.radioChannelCode = (isBlank(fields[4]) ? null : fields[4]);
+        this.encodedPayload = (isBlank(fields[5]) ? null : fields[5]);
+        this.fillBits = (isBlank(lastFieldParts[0]) ? null : Integer.valueOf(lastFieldParts[0]));
+        this.checksum = (isBlank(lastFieldParts[1]) ? null : Integer.valueOf(lastFieldParts[1], 16));
+
+        // Validate supported message type
+        if (!isValid())
+            throw new UnsupportedMessageType(this.messageType);
+    }
+
+    private boolean isValid() {
         // messageType is parsed eagerly in constructor
         if (messageType == null || messageType.length() != 5) return false;
         String type = messageType.substring(2);
@@ -82,51 +126,6 @@ public class NMEAMessage {
         return tagBlock;
     }
 
-    public NMEAMessage(String input) {
-        // Parse tag block first and strip it from the working string
-        final String nmeaTagBlockRegEx = "^\\\\.*\\*[0-9A-Fa-f]{2}\\\\";
-        String working = input;
-        NMEATagBlock parsedTagBlock = null;
-        Pattern tbPattern = Pattern.compile(nmeaTagBlockRegEx);
-        Matcher tbMatcher = tbPattern.matcher(working);
-        if (tbMatcher.lookingAt()) {
-            String nmeaTagBlockString = working.substring(tbMatcher.start(), tbMatcher.end());
-            parsedTagBlock = NMEATagBlock.fromString(nmeaTagBlockString);
-            working = working.substring(tbMatcher.end());
-        }
-        this.tagBlock = parsedTagBlock; // can be null
-
-        // Store the raw NMEA sentence (without tag block if it existed)
-        this.rawMessage = working;
-
-        // Basic structural validations before parsing fields
-        final String nmeaMessageRegExp = "^!.*\\*[0-9A-Fa-f]{2}$";
-        if (!rawMessage.matches(nmeaMessageRegExp))
-            throw new NMEAParseException(rawMessage, "Message does not comply with regexp \"" + nmeaMessageRegExp + "\"");
-
-        String[] fields = rawMessage.split(",", -1); // keep empty strings
-        if (fields.length != 7)
-            throw new NMEAParseException(rawMessage, "Expected 7 fields separated by commas; got " + fields.length);
-
-        String[] lastFieldParts = fields[6].split("\\*", -1);
-        if (lastFieldParts.length != 2)
-            throw new NMEAParseException(rawMessage, "Expected checksum fields to start with *");
-
-        // Eagerly parse and assign all fields (allowing blanks as null where applicable)
-        this.messageType = (isBlank(fields[0]) ? null : fields[0].replace("!", ""));
-        this.numberOfFragments = (isBlank(fields[1]) ? null : Integer.valueOf(fields[1]));
-        this.fragmentNumber = (isBlank(fields[2]) ? null : Integer.valueOf(fields[2]));
-        this.sequenceNumber = (isBlank(fields[3]) ? null : Integer.valueOf(fields[3]));
-        this.radioChannelCode = (isBlank(fields[4]) ? null : fields[4]);
-        this.encodedPayload = (isBlank(fields[5]) ? null : fields[5]);
-        this.fillBits = (isBlank(lastFieldParts[0]) ? null : Integer.valueOf(lastFieldParts[0]));
-        this.checksum = (isBlank(lastFieldParts[1]) ? null : Integer.valueOf(lastFieldParts[1], 16));
-
-        // Validate supported message type
-        if (!isValid()) {
-            throw new UnsupportedMessageType(this.messageType);
-        }
-    }
 
     private static boolean isBlank(String s) {
         return s == null || s.isBlank();
