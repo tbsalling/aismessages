@@ -31,6 +31,7 @@ import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
 
+import static java.lang.System.Logger.Level.INFO;
 import static java.lang.System.Logger.Level.WARNING;
 import static java.util.Objects.requireNonNull;
 
@@ -58,7 +59,7 @@ public abstract class AISMessage {
     public transient static final String VERSION = Version.VERSION;
 
     static {
-        System.err.print("""
+        LOG.log(INFO, """
 
                 AISMessages v%s // Copyright (c) 2011- by S-Consult ApS, Denmark, CVR DK31327490. http://tbsalling.dk.
                 
