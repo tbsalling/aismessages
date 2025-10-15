@@ -33,14 +33,6 @@ public class MMSI {
         return "MMSI [mmsi=%d]".formatted(mmsi);
     }
 
-    /**
-     * @deprecated Use {@link #intValue()} instead.
-     */
-    @Deprecated(forRemoval = true)
-    public Integer getMMSI() {
-        return Integer.valueOf(mmsi);
-    }
-
     public int intValue() {
         return mmsi;
     }

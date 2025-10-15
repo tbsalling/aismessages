@@ -69,7 +69,7 @@ public class GroupAssignmentCommand extends AISMessage {
 
         if (errorMessage.length() > 0) {
             if (numberOfBits >= 38)
-                errorMessage.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().getMMSI()));
+                errorMessage.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().intValue()));
 
             throw new InvalidMessage(errorMessage.toString());
         }

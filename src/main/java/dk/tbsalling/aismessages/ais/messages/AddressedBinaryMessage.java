@@ -75,7 +75,7 @@ public class AddressedBinaryMessage extends AISMessage {
 
         if (message.length() > 0) {
             if (numberOfBits >= 38)
-                message.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().getMMSI()));
+                message.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().intValue()));
 
             throw new InvalidMessage(message.toString());
         }

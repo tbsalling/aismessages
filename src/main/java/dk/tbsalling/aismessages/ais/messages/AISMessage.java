@@ -24,18 +24,14 @@ import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 import dk.tbsalling.aismessages.version.Version;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.stream.Stream;
 
 import static java.lang.System.Logger.Level.WARNING;
-import static java.lang.reflect.Modifier.isPublic;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -139,116 +135,6 @@ public abstract class AISMessage {
         return messageDigester.digest();
     }
 
-    /**
-     * @return a map of data field name and values.
-     */
-    public Map<String, Object> dataFields() {
-        Map<String, Object> map = new TreeMap<>();
-        callGetters(map, null, this);
-        return map;
-    }
-
-    /**
-     * Retrieves the values of all getter methods for the given object and stores them in a map.
-     *
-     * @param getterValues the map to store the getter values in
-     * @param prefix       the prefix to be added to the property name in the map
-     * @param o            the object to retrieve the getter values from
-     */
-    private void callGetters(Map getterValues, String prefix, Object o) {
-        Method[] methods = o.getClass().getMethods();
-
-        Stream.of(methods)
-                .filter(m -> m.getName().startsWith("get"))
-                .filter(m -> !m.getName().equals("getClass"))
-                .filter(m -> m.getParameterCount() == 0)
-                .filter(m -> isPublic(m.getModifiers()))
-                .forEach(m -> {
-                    try {
-                        String propertyName = addPrefix(prefix, decapitalize(m.getName().substring(3)));
-                        Class<?> returnType = m.getReturnType();
-
-                        if (isComplexType(returnType)) {
-                            var nestedObject = m.invoke(o);
-                            if (nestedObject == null)
-                                getterValues.put(propertyName, null);
-                            else
-                                callGetters(getterValues, propertyName, nestedObject);
-                        } else if (Class.class.equals(returnType)) {
-                            Object value = m.invoke(o);
-                            getterValues.put(propertyName, ((Class) value).getSimpleName());
-                        } else {
-                            Object value = m.invoke(o);
-                            if (value != null) {
-                                if (returnType.isEnum())
-                                    getterValues.put(propertyName, value.toString());
-                                else
-                                    getterValues.put(propertyName, value);
-                            } else {
-                                getterValues.put(propertyName, null);
-                            }
-                        }
-                    } catch (IllegalAccessException e) {
-                        e.printStackTrace();
-                    } catch (InvocationTargetException e) {
-                        e.printStackTrace();
-                    }
-                });
-    }
-
-    /**
-     * Checks if the given class is a complex type.
-     *
-     * @param clazz the class to be checked
-     * @return true if the class is a complex type, false otherwise
-     */
-    private boolean isComplexType(Class<?> clazz) {
-        if (clazz.isArray() || clazz.isEnum())
-            return false;
-        String classname = clazz.getName();
-        if (!classname.contains(".") || !classname.startsWith("dk.tbsalling.aismessages.ais.messages.types.")) {
-            return false;
-        }
-
-        return Stream.of(clazz.getMethods())
-                .filter(m -> m.getName().startsWith("get"))
-                .filter(m -> m.getParameterCount() == 0)
-                .filter(m -> isPublic(m.getModifiers()))
-                .findAny()
-                .isPresent();
-    }
-
-    /**
-     * Converts the first character of the input string to lowercase.
-     *
-     * @param string the string to be decapitalized
-     * @return the decapitalized string
-     */
-    private static String decapitalize(String string) {
-        if (string != null) {
-            if (!string.equals(string.toUpperCase())) {
-                char c[] = string.toCharArray();
-                c[0] = Character.toLowerCase(c[0]);
-                string = new String(c);
-            }
-        }
-
-        return string;
-    }
-
-    /**
-     * Adds a prefix to a given string.
-     *
-     * @param prefix the prefix to be added
-     * @param string the string to add the prefix to
-     * @return the string with the prefix added, or the original string if the prefix is empty or null
-     */
-    private static String addPrefix(String prefix, String string) {
-        if (prefix == null || prefix.isEmpty() || prefix.trim().isEmpty())
-            return string;
-        else
-            return String.format("%s.%s", prefix, string);
-    }
 
     /**
      * This method performs a rudimentary sanity check of the AIS data payload contained in the NMEA sentence(s).

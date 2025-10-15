@@ -49,14 +49,6 @@ public class IMO {
         return "IMO [imo=%d]".formatted(imo);
 	}
 
-    /**
-     * @deprecated Use {@link #intValue()} instead.
-     */
-    @Deprecated(forRemoval = true)
-    public Integer getIMO() {
-	    return imo;
-	}
-
     public int intValue() {
         return imo;
     }

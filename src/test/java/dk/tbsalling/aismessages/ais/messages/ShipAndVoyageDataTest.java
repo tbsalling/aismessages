@@ -41,7 +41,7 @@ public class ShipAndVoyageDataTest {
         assertEquals(PositionFixingDevice.Gps, message.getPositionFixingDevice());
         assertEquals(Float.valueOf("8.3"), message.getDraught());
         assertEquals((Integer) 83 , message.getRawDraught());
-        assertEquals("06-03 19:00", message.getEta());
+        assertEquals(String.format("%02d-%02d %02d:%02d", message.getEtaDay(), message.getEtaMonth(), message.getEtaHour(), message.getEtaMinute()), "06-03 19:00");
         assertEquals((Integer) 3, message.getEtaMonth());
         assertEquals((Integer) 6, message.getEtaDay());
         assertEquals((Integer) 19, message.getEtaHour());
@@ -79,7 +79,7 @@ public class ShipAndVoyageDataTest {
         assertEquals(Integer.valueOf(23), message.getToPort());
         assertNull(message.getPositionFixingDevice());
         assertEquals(Float.valueOf("0"), message.getDraught());
-        assertEquals("14-05 20:10", message.getEta());
+        assertEquals(String.format("%02d-%02d %02d:%02d", message.getEtaDay(), message.getEtaMonth(), message.getEtaHour(), message.getEtaMinute()), "14-05 20:10");
         assertEquals((Integer) 5, message.getEtaMonth());
         assertEquals((Integer) 14, message.getEtaDay());
         assertEquals((Integer) 20, message.getEtaHour());

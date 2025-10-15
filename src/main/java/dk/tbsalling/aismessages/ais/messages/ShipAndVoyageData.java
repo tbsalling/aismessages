@@ -179,12 +179,6 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
         return etaMinute;
     }
 
-    @Deprecated
-    @SuppressWarnings("unused")
-	public String getEta() {
-        return String.format("%02d-%02d %02d:%02d", this.getEtaDay(), this.getEtaMonth(), this.getEtaHour(), this.getEtaMinute());
-	}
-
     /**
      * @return The vessel AIS ETA, with the year filled in based on the metadata received time.
      * If the AIS Month and day are the received date or later, the first calendar date after the received is used for the year.
