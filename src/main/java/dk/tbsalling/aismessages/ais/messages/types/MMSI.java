@@ -21,10 +21,6 @@ import lombok.Value;
 @Value
 public class MMSI {
 
-	public MMSI(int mmsi) {
-		this.mmsi = mmsi;
-	}
-
     /**
      * Returns the MMSI as a 9-digit string.
      * If the MMSI is not exactly 9 digits long, an exception is thrown.
