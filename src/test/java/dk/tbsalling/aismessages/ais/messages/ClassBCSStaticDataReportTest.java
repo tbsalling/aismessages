@@ -25,7 +25,7 @@ public class ClassBCSStaticDataReportTest {
         assertEquals(AISMessageType.ClassBCSStaticDataReport, aisMessage.getMessageType());
         ClassBCSStaticDataReport message = (ClassBCSStaticDataReport) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(367468490), message.getSourceMmsi());
+        assertEquals(new MMSI(367468490), message.getSourceMmsi());
         assertEquals(1, message.getPartNumber());
         assertNull(message.getShipName());
         assertEquals(ShipType.PleasureCraft, message.getShipType());
@@ -35,7 +35,7 @@ public class ClassBCSStaticDataReportTest {
         assertEquals(7, message.getToStern());
         assertEquals(3, message.getToStarboard());
         assertEquals(1, message.getToPort());
-        assertEquals(MMSI.valueOf(8417347), message.getMothershipMmsi());
+        assertEquals(new MMSI(8417347), message.getMothershipMmsi());
 
     }
 
@@ -67,7 +67,7 @@ public class ClassBCSStaticDataReportTest {
         assertInstanceOf(ClassBCSStaticDataReport.class, aisMessage);
         assertEquals(24, aisMessage.getMessageType().getCode());
         assertEquals(0, ((ClassBCSStaticDataReport) aisMessage).getPartNumber());
-        assertEquals(533130721, aisMessage.getSourceMmsi().intValue());
+        assertEquals(533130721, aisMessage.getSourceMmsi().getMmsi());
         assertEquals("FC ORCHID", ((ClassBCSStaticDataReport) aisMessage).getShipName());
     }
 
@@ -89,14 +89,14 @@ public class ClassBCSStaticDataReportTest {
         assertTrue(aisMessagePartA instanceof ClassBCSStaticDataReport);
         assertEquals(24, aisMessagePartA.getMessageType().getCode());
         assertEquals(0, ((ClassBCSStaticDataReport) aisMessagePartA).getPartNumber());
-        assertEquals(271041815, aisMessagePartA.getSourceMmsi().intValue());
+        assertEquals(271041815, aisMessagePartA.getSourceMmsi().getMmsi());
         assertEquals("PROGUY", ((ClassBCSStaticDataReport) aisMessagePartA).getShipName());
 
         System.out.println(aisMessagePartB.toString());
         assertTrue(aisMessagePartB instanceof ClassBCSStaticDataReport);
         assertEquals(24, aisMessagePartB.getMessageType().getCode());
         assertEquals(1, ((ClassBCSStaticDataReport) aisMessagePartB).getPartNumber());
-        assertEquals(271041815, aisMessagePartB.getSourceMmsi().intValue());
+        assertEquals(271041815, aisMessagePartB.getSourceMmsi().getMmsi());
         assertEquals(60, ((ClassBCSStaticDataReport) aisMessagePartB).getShipType().getCode());
         assertEquals("1D00014", ((ClassBCSStaticDataReport) aisMessagePartB).getVendorId());
         assertEquals("TC6163", ((ClassBCSStaticDataReport) aisMessagePartB).getCallsign());

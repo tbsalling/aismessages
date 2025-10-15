@@ -23,7 +23,7 @@ public class PositionReportClassAScheduledTest {
         assertEquals(AISMessageType.PositionReportClassAScheduled, aisMessage.getMessageType());
         assertEquals(0, aisMessage.getRepeatIndicator());
         PositionReportClassAScheduled message = (PositionReportClassAScheduled) aisMessage;
-        assertEquals(MMSI.valueOf(219000195), message.getSourceMmsi());
+        assertEquals(new MMSI(219000195), message.getSourceMmsi());
         assertEquals(NavigationStatus.UnderwayUsingEngine, message.getNavigationStatus());
         assertEquals(0, message.getRateOfTurn());
         assertEquals(7.8f, message.getSpeedOverGround(), 0.0f);
@@ -63,7 +63,7 @@ public class PositionReportClassAScheduledTest {
         assertEquals(AISMessageType.PositionReportClassAScheduled, aisMessage.getMessageType());
         assertEquals(0, aisMessage.getRepeatIndicator());
         PositionReportClassAScheduled message = (PositionReportClassAScheduled) aisMessage;
-        assertEquals(MMSI.valueOf(503175400), message.getSourceMmsi());
+        assertEquals(new MMSI(503175400), message.getSourceMmsi());
         assertEquals(NavigationStatus.Undefined, message.getNavigationStatus());
         assertEquals(-731, message.getRateOfTurn());
         assertEquals(0.0f, message.getSpeedOverGround(), 0.0f);

@@ -22,7 +22,7 @@ public class BaseStationReportTest {
         assertEquals(AISMessageType.BaseStationReport, aisMessage.getMessageType());
         assertEquals(3, aisMessage.getRepeatIndicator());
         BaseStationReport message = (BaseStationReport) aisMessage;
-        assertEquals(MMSI.valueOf(3669708), message.getSourceMmsi());
+        assertEquals(new MMSI(3669708), message.getSourceMmsi());
         assertEquals(2011, message.getYear());
         assertEquals(3, message.getMonth());
         assertEquals(16, message.getDay());
@@ -50,7 +50,7 @@ public class BaseStationReportTest {
         assertEquals(AISMessageType.BaseStationReport, aisMessage.getMessageType());
         assertEquals(0, aisMessage.getRepeatIndicator());
         BaseStationReport message = (BaseStationReport) aisMessage;
-        assertEquals(MMSI.valueOf(601011), message.getSourceMmsi());
+        assertEquals(new MMSI(601011), message.getSourceMmsi());
         assertEquals(2012, message.getYear());
         assertEquals(6, message.getMonth());
         assertEquals(8, message.getDay());

@@ -24,7 +24,7 @@ public class GNSSBinaryBroadcastMessageTest {
         assertEquals(AISMessageType.GNSSBinaryBroadcastMessage, aisMessage.getMessageType());
         GNSSBinaryBroadcastMessage message = (GNSSBinaryBroadcastMessage) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(2734450), message.getSourceMmsi());
+        assertEquals(new MMSI(2734450), message.getSourceMmsi());
         assertEquals(0, message.getSpare1());
         assertEquals(1747.8f, message.getLongitude(), 0.0f);
         assertEquals(3599.2f, message.getLatitude(), 0.0f);
@@ -52,7 +52,7 @@ public class GNSSBinaryBroadcastMessageTest {
         assertEquals(AISMessageType.GNSSBinaryBroadcastMessage, aisMessage.getMessageType());
         GNSSBinaryBroadcastMessage message = (GNSSBinaryBroadcastMessage) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(2734450), message.getSourceMmsi());
+        assertEquals(new MMSI(2734450), message.getSourceMmsi());
         assertEquals(0, message.getSpare1());
         assertEquals(1747.8f, message.getLongitude(), 0.0f);
         assertEquals(3599.2f, message.getLatitude(), 0.0f);

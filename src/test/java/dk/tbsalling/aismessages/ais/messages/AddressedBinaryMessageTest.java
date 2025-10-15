@@ -26,7 +26,7 @@ public class AddressedBinaryMessageTest {
         assertEquals(AISMessageType.AddressedBinaryMessage, aisMessage.getMessageType());
         AddressedBinaryMessage message = (AddressedBinaryMessage) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(232009504), message.getSourceMmsi());
+        assertEquals(new MMSI(232009504), message.getSourceMmsi());
         assertEquals(0, message.getDesignatedAreaCode());
         assertEquals(29, message.getFunctionalId());
         // TODO : check the binary value

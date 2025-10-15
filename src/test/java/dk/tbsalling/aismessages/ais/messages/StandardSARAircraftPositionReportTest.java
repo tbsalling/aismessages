@@ -23,7 +23,7 @@ class StandardSARAircraftPositionReportTest {
         StandardSARAircraftPositionReport message = (StandardSARAircraftPositionReport) aisMessage;
 
         assertEquals(0, message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(1000629720), message.getSourceMmsi());
+        assertEquals(new MMSI(1000629720), message.getSourceMmsi());
         assertEquals(1, message.getAltitude());
         assertEquals(497.0f, message.getSpeedOverGround(), 0.0f);
         assertTrue(message.isPositionAccuracy());

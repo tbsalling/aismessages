@@ -23,10 +23,10 @@ public class BinaryMessageSingleSlotTest {
         assertEquals(AISMessageType.BinaryMessageSingleSlot, aisMessage.getMessageType());
         BinaryMessageSingleSlot message = (BinaryMessageSingleSlot) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(440006460), message.getSourceMmsi());
+        assertEquals(new MMSI(440006460), message.getSourceMmsi());
         assertTrue(message.isDestinationIndicator());
         assertFalse(message.isBinaryDataFlag());
-        assertEquals(MMSI.valueOf(134218384), message.getDestinationMMSI());
+        assertEquals(new MMSI(134218384), message.getDestinationMMSI());
         assertEquals("00100000000000000000101001000011100000011011111000010101011011010101100110110010000000001111111110011110100000001100000110000101", message.getBinaryData());
         assertFalse(message.getBinaryData().isEmpty());
     }
@@ -45,10 +45,10 @@ public class BinaryMessageSingleSlotTest {
         assertEquals(AISMessageType.BinaryMessageSingleSlot, aisMessage.getMessageType());
         BinaryMessageSingleSlot message = (BinaryMessageSingleSlot) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(439993936), message.getSourceMmsi());
+        assertEquals(new MMSI(439993936), message.getSourceMmsi());
         assertFalse(message.isDestinationIndicator());
         assertTrue(message.isBinaryDataFlag());
-        assertEquals(MMSI.valueOf(402653840), message.getDestinationMMSI());
+        assertEquals(new MMSI(402653840), message.getDestinationMMSI());
         assertEquals("01100000000000000000101001000011100000011111001000001110011011100101100110000000000000001111111110011110100000001100000110000101", message.getBinaryData());
     }
 }

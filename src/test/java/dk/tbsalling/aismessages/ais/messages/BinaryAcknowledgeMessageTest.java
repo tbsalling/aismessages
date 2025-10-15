@@ -24,10 +24,10 @@ public class BinaryAcknowledgeMessageTest {
         assertEquals(AISMessageType.BinaryAcknowledge, aisMessage.getMessageType());
         BinaryAcknowledge message = (BinaryAcknowledge) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(2288206), message.getSourceMmsi());
+        assertEquals(new MMSI(2288206), message.getSourceMmsi());
         assertEquals(1, message.getNumOfAcks());
         assertEquals(0, message.getSequence1());
-        assertEquals(MMSI.valueOf(992271914), message.getMmsi1());
+        assertEquals(new MMSI(992271914), message.getMmsi1());
         assertNull(message.getSequence2());
         assertNull(message.getMmsi2());
         assertNull(message.getSequence3());

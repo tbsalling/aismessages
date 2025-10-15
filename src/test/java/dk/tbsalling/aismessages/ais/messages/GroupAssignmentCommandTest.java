@@ -22,7 +22,7 @@ public class GroupAssignmentCommandTest {
         assertEquals(AISMessageType.GroupAssignmentCommand, aisMessage.getMessageType());
         GroupAssignmentCommand message = (GroupAssignmentCommand) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(2268120), message.getSourceMmsi());
+        assertEquals(new MMSI(2268120), message.getSourceMmsi());
         assertEquals("", message.getSpare1());
         assertEquals(157.8f, message.getNorthEastLongitude(), 0.0f);
         assertEquals(3064.2f, message.getNorthEastLatitude(), 0.0f);
@@ -50,7 +50,7 @@ public class GroupAssignmentCommandTest {
         assertEquals(AISMessageType.GroupAssignmentCommand, aisMessage.getMessageType());
         GroupAssignmentCommand message = (GroupAssignmentCommand) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(2268120), message.getSourceMmsi());
+        assertEquals(new MMSI(2268120), message.getSourceMmsi());
         assertEquals(157.8f, message.getNorthEastLongitude(), 0.0f);
         assertEquals(3064.2f, message.getNorthEastLatitude(), 0.0f);
         assertEquals(109.6f, message.getSouthWestLongitude(), 0.0f);

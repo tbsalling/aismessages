@@ -23,7 +23,7 @@ public class ChannelManagementTest {
         assertEquals(AISMessageType.ChannelManagement, aisMessage.getMessageType());
         ChannelManagement message = (ChannelManagement) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(3160107), message.getSourceMmsi());
+        assertEquals(new MMSI(3160107), message.getSourceMmsi());
         assertFalse(message.isPower());
         assertEquals(2087, message.getChannelA());
         assertEquals(2088, message.getChannelB());

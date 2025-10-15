@@ -139,7 +139,7 @@ public class AISMessageFactory {
 
     static AddressedBinaryMessage createAddressedBinaryMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int sequenceNumber = parser.getUnsignedInt(38, 40);
-        MMSI destinationMmsi = MMSI.valueOf(parser.getUnsignedInt(40, 70));
+        MMSI destinationMmsi = new MMSI(parser.getUnsignedInt(40, 70));
         boolean retransmitFlag = parser.getBoolean(70, 71);
         int spare = parser.getUnsignedInt(71, 72);
         int designatedAreaCode = parser.getUnsignedInt(72, 82);
@@ -155,7 +155,7 @@ public class AISMessageFactory {
     static BinaryAcknowledge createBinaryAcknowledge(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int spare = parser.getUnsignedInt(38, 40);
 
-        MMSI mmsi1 = MMSI.valueOf(parser.getUnsignedInt(40, 70));
+        MMSI mmsi1 = new MMSI(parser.getUnsignedInt(40, 70));
         int sequence1 = parser.getUnsignedInt(70, 72);
 
         MMSI mmsi2 = null;
@@ -166,17 +166,17 @@ public class AISMessageFactory {
         Integer sequence4 = null;
 
         if (parser.getLength() >= 104) {
-            mmsi2 = MMSI.valueOf(parser.getUnsignedInt(72, 102));
+            mmsi2 = new MMSI(parser.getUnsignedInt(72, 102));
             sequence2 = parser.getUnsignedInt(102, 104);
         }
 
         if (parser.getLength() >= 136) {
-            mmsi3 = MMSI.valueOf(parser.getUnsignedInt(104, 134));
+            mmsi3 = new MMSI(parser.getUnsignedInt(104, 134));
             sequence3 = parser.getUnsignedInt(134, 136);
         }
 
         if (parser.getLength() >= 168) {
-            mmsi4 = MMSI.valueOf(parser.getUnsignedInt(136, 166));
+            mmsi4 = new MMSI(parser.getUnsignedInt(136, 166));
             sequence4 = parser.getUnsignedInt(166, 168);
         }
 
@@ -226,7 +226,7 @@ public class AISMessageFactory {
     }
 
     static UTCAndDateInquiry createUTCAndDateInquiry(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
-        MMSI destinationMmsi = MMSI.valueOf(parser.getUnsignedInt(40, 70));
+        MMSI destinationMmsi = new MMSI(parser.getUnsignedInt(40, 70));
 
         return new UTCAndDateInquiry(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 destinationMmsi);
@@ -252,7 +252,7 @@ public class AISMessageFactory {
 
     static AddressedSafetyRelatedMessage createAddressedSafetyRelatedMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int sequenceNumber = parser.getUnsignedInt(38, 40);
-        MMSI destinationMmsi = MMSI.valueOf(parser.getUnsignedInt(40, 70));
+        MMSI destinationMmsi = new MMSI(parser.getUnsignedInt(40, 70));
         boolean retransmit = parser.getBoolean(70, 71);
         int spare = parser.getUnsignedInt(71, 72);
         String text = parser.getString(72, parser.getLength());
@@ -264,7 +264,7 @@ public class AISMessageFactory {
     static SafetyRelatedAcknowledge createSafetyRelatedAcknowledge(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int spare = parser.getUnsignedInt(38, 40);
 
-        MMSI mmsi1 = MMSI.valueOf(parser.getUnsignedInt(40, 70));
+        MMSI mmsi1 = new MMSI(parser.getUnsignedInt(40, 70));
         int sequence1 = parser.getUnsignedInt(70, 72);
 
         MMSI mmsi2 = null;
@@ -275,17 +275,17 @@ public class AISMessageFactory {
         int sequence4 = -1;
 
         if (parser.getLength() >= 104) {
-            mmsi2 = MMSI.valueOf(parser.getUnsignedInt(72, 102));
+            mmsi2 = new MMSI(parser.getUnsignedInt(72, 102));
             sequence2 = parser.getUnsignedInt(102, 104);
         }
 
         if (parser.getLength() >= 136) {
-            mmsi3 = MMSI.valueOf(parser.getUnsignedInt(104, 134));
+            mmsi3 = new MMSI(parser.getUnsignedInt(104, 134));
             sequence3 = parser.getUnsignedInt(134, 136);
         }
 
         if (parser.getLength() >= 168) {
-            mmsi4 = MMSI.valueOf(parser.getUnsignedInt(136, 166));
+            mmsi4 = new MMSI(parser.getUnsignedInt(136, 166));
             sequence4 = parser.getUnsignedInt(166, 168);
         }
 
@@ -309,7 +309,7 @@ public class AISMessageFactory {
 
     static Interrogation createInterrogation(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int spare1 = parser.getUnsignedInt(38, 40);
-        MMSI interrogatedMmsi1 = MMSI.valueOf(parser.getUnsignedInt(40, 70));
+        MMSI interrogatedMmsi1 = new MMSI(parser.getUnsignedInt(40, 70));
         int type1_1 = parser.getUnsignedInt(70, 76);
         int offset1_1 = parser.getUnsignedInt(76, 88);
 
@@ -325,7 +325,7 @@ public class AISMessageFactory {
         }
 
         if (parser.getLength() >= 160) {
-            interrogatedMmsi2 = MMSI.valueOf(parser.getUnsignedInt(120, 150));
+            interrogatedMmsi2 = new MMSI(parser.getUnsignedInt(120, 150));
             type2_1 = parser.getUnsignedInt(150, 156);
             offset2_1 = parser.getUnsignedInt(156, 162);
         }
@@ -337,7 +337,7 @@ public class AISMessageFactory {
 
     static AssignedModeCommand createAssignedModeCommand(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int spare = parser.getUnsignedInt(38, 40);
-        MMSI destinationMmsiA = MMSI.valueOf(parser.getUnsignedInt(40, 70));
+        MMSI destinationMmsiA = new MMSI(parser.getUnsignedInt(40, 70));
         Integer offsetA = parser.getUnsignedInt(70, 82);
         Integer incrementA = parser.getUnsignedInt(82, 92);
 
@@ -346,7 +346,7 @@ public class AISMessageFactory {
         Integer incrementB = null;
 
         if (parser.getLength() >= 144) {
-            destinationMmsiB = MMSI.valueOf(parser.getUnsignedInt(92, 122));
+            destinationMmsiB = new MMSI(parser.getUnsignedInt(92, 122));
             offsetB = parser.getUnsignedInt(122, 134);
             incrementB = parser.getUnsignedInt(134, 144);
         }
@@ -561,8 +561,8 @@ public class AISMessageFactory {
             southWestLatitude = parser.getSignedFloat(122, 139) / 10f;
         } else {
             // Addressed mode - MMSIs
-            destinationMmsi1 = MMSI.valueOf(parser.getUnsignedInt(69, 99));
-            destinationMmsi2 = MMSI.valueOf(parser.getUnsignedInt(104, 134));
+            destinationMmsi1 = new MMSI(parser.getUnsignedInt(69, 99));
+            destinationMmsi2 = new MMSI(parser.getUnsignedInt(104, 134));
         }
 
         boolean bandA = parser.getBoolean(140, 141);
@@ -621,7 +621,7 @@ public class AISMessageFactory {
 
             int mmsiValue = parser.getUnsignedInt(132, 162);
             if (mmsiValue != 0) {
-                mothershipMmsi = MMSI.valueOf(mmsiValue);
+                mothershipMmsi = new MMSI(mmsiValue);
             }
         }
 
@@ -632,7 +632,7 @@ public class AISMessageFactory {
     static BinaryMessageSingleSlot createBinaryMessageSingleSlot(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         boolean destinationIndicator = parser.getBoolean(38, 39);
         boolean binaryDataFlag = parser.getBoolean(39, 40);
-        MMSI destinationMMSI = MMSI.valueOf(parser.getUnsignedInt(40, 70));
+        MMSI destinationMMSI = new MMSI(parser.getUnsignedInt(40, 70));
         String binaryData = parser.getBitPattern(40, 168);
 
         return new BinaryMessageSingleSlot(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
@@ -643,7 +643,7 @@ public class AISMessageFactory {
         boolean addressed = parser.getBoolean(38, 39);
         boolean structured = parser.getBoolean(39, 40);
 
-        MMSI destinationMmsi = MMSI.valueOf(parser.getUnsignedInt(40, 70));
+        MMSI destinationMmsi = new MMSI(parser.getUnsignedInt(40, 70));
 
         int applicationId = parser.getUnsignedInt(70, 86);
 

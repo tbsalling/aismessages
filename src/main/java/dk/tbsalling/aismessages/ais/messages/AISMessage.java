@@ -232,7 +232,7 @@ public abstract class AISMessage {
 
         // Parse common fields from all messages
         int repeatIndicator = parser.getUnsignedInt(6, 8);
-        MMSI sourceMmsi = MMSI.valueOf(parser.getUnsignedInt(8, 38));
+        MMSI sourceMmsi = new MMSI(parser.getUnsignedInt(8, 38));
 
         return switch (messageType) {
             case ShipAndVoyageRelatedData ->

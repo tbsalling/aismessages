@@ -24,7 +24,7 @@ public class UTCAndDateResponseTest {
         assertEquals(AISMessageType.UTCAndDateResponse, aisMessage.getMessageType());
         UTCAndDateResponse message = (UTCAndDateResponse) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(304137000), message.getSourceMmsi());
+        assertEquals(new MMSI(304137000), message.getSourceMmsi());
         assertEquals(2009, message.getYear());
         assertEquals(5, message.getMonth());
         assertEquals(22, message.getDay());
@@ -52,7 +52,7 @@ public class UTCAndDateResponseTest {
         assertEquals(AISMessageType.UTCAndDateResponse, aisMessage.getMessageType());
         UTCAndDateResponse message = (UTCAndDateResponse) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(366941790), message.getSourceMmsi());
+        assertEquals(new MMSI(366941790), message.getSourceMmsi());
         assertEquals(2010, message.getYear());
         assertEquals(4, message.getMonth());
         assertEquals(28, message.getDay());

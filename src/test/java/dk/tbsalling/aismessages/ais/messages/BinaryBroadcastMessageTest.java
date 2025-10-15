@@ -27,7 +27,7 @@ public class BinaryBroadcastMessageTest {
         assertEquals(AISMessageType.BinaryBroadcastMessage, aisMessage.getMessageType());
         BinaryBroadcastMessage message = (BinaryBroadcastMessage) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(366999663), message.getSourceMmsi());
+        assertEquals(new MMSI(366999663), message.getSourceMmsi());
         assertEquals(366, message.getDesignatedAreaCode());
         assertEquals(56, message.getFunctionalId());
         // TODO : check the binary value

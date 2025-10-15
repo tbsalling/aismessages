@@ -24,8 +24,8 @@ public class AssignedModeCommandTest {
         assertEquals(AISMessageType.AssignedModeCommand, aisMessage.getMessageType());
         AssignedModeCommand message = (AssignedModeCommand) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(440882000), message.getSourceMmsi());
-        assertEquals(MMSI.valueOf(366972761), message.getDestinationMmsiA());
+        assertEquals(new MMSI(440882000), message.getSourceMmsi());
+        assertEquals(new MMSI(366972761), message.getDestinationMmsiA());
         assertEquals(1318, message.getOffsetA());
         assertEquals(960, message.getIncrementA());
         assertNull(message.getDestinationMmsiB());

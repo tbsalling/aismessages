@@ -27,7 +27,7 @@ public class PositionReportClassAResponseToInterrogationTest {
         assertEquals(AISMessageType.PositionReportClassAResponseToInterrogation, aisMessage.getMessageType());
         assertEquals(0, aisMessage.getRepeatIndicator());
         PositionReportClassAResponseToInterrogation message = (PositionReportClassAResponseToInterrogation) aisMessage;
-        assertEquals(MMSI.valueOf(304911000), message.getSourceMmsi());
+        assertEquals(new MMSI(304911000), message.getSourceMmsi());
         assertEquals(NavigationStatus.UnderwayUsingEngine, message.getNavigationStatus());
         assertEquals(0, message.getRateOfTurn());
         assertEquals(13.6f, message.getSpeedOverGround());
@@ -59,7 +59,7 @@ public class PositionReportClassAResponseToInterrogationTest {
         assertEquals(AISMessageType.PositionReportClassAResponseToInterrogation, aisMessage.getMessageType());
         assertEquals(0, aisMessage.getRepeatIndicator());
         PositionReportClassAResponseToInterrogation message = (PositionReportClassAResponseToInterrogation) aisMessage;
-        assertEquals(MMSI.valueOf(710000815), message.getSourceMmsi());
+        assertEquals(new MMSI(710000815), message.getSourceMmsi());
         assertEquals(NavigationStatus.UnderwayUsingEngine, message.getNavigationStatus());
         assertEquals(-720, message.getRateOfTurn());
         assertEquals(0.7f, message.getSpeedOverGround());

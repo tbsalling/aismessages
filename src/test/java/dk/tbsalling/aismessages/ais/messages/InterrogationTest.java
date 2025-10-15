@@ -24,8 +24,8 @@ public class InterrogationTest {
         assertEquals(AISMessageType.Interrogation, aisMessage.getMessageType());
         Interrogation message = (Interrogation) aisMessage;
         assertEquals(3, message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(3669708), message.getSourceMmsi());
-        assertEquals(MMSI.valueOf(366969740), message.getInterrogatedMmsi1());
+        assertEquals(new MMSI(3669708), message.getSourceMmsi());
+        assertEquals(new MMSI(366969740), message.getInterrogatedMmsi1());
         assertEquals(0, message.getType1_1());
         assertEquals(0, message.getOffset1_1());
         assertEquals(-1, message.getType1_2());

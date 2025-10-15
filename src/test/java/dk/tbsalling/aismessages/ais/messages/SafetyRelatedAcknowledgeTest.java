@@ -24,9 +24,9 @@ public class SafetyRelatedAcknowledgeTest {
         assertEquals(AISMessageType.SafetyRelatedAcknowledge, aisMessage.getMessageType());
         SafetyRelatedAcknowledge message = (SafetyRelatedAcknowledge) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(211378120), message.getSourceMmsi());
+        assertEquals(new MMSI(211378120), message.getSourceMmsi());
         assertEquals(0, message.getSpare());
-        assertEquals(MMSI.valueOf(211217560), message.getMmsi1());
+        assertEquals(new MMSI(211217560), message.getMmsi1());
         assertEquals(2, message.getSequence1());
         assertNull(message.getMmsi2());
         assertEquals(-1, message.getSequence2());
@@ -51,9 +51,9 @@ public class SafetyRelatedAcknowledgeTest {
         assertEquals(AISMessageType.SafetyRelatedAcknowledge, aisMessage.getMessageType());
         SafetyRelatedAcknowledge message = (SafetyRelatedAcknowledge) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(538003422), message.getSourceMmsi());
+        assertEquals(new MMSI(538003422), message.getSourceMmsi());
         assertEquals(0, message.getSpare());
-        assertEquals(MMSI.valueOf(366999707), message.getMmsi1());
+        assertEquals(new MMSI(366999707), message.getMmsi1());
         assertEquals(2, message.getSequence1());
         assertEquals(1, message.getNumOfAcks());
     }

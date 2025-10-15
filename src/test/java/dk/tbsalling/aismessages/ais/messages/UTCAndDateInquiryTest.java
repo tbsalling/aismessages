@@ -23,8 +23,8 @@ public class UTCAndDateInquiryTest {
         assertEquals(AISMessageType.UTCAndDateInquiry, aisMessage.getMessageType());
         UTCAndDateInquiry message = (UTCAndDateInquiry) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(353825000), message.getSourceMmsi());
-        assertEquals(MMSI.valueOf(366971350), message.getDestinationMmsi());
+        assertEquals(new MMSI(353825000), message.getSourceMmsi());
+        assertEquals(new MMSI(366971350), message.getDestinationMmsi());
     }
 
     @Test
@@ -41,7 +41,7 @@ public class UTCAndDateInquiryTest {
         assertEquals(AISMessageType.UTCAndDateInquiry, aisMessage.getMessageType());
         UTCAndDateInquiry message = (UTCAndDateInquiry) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(440882000), message.getSourceMmsi());
-        assertEquals(MMSI.valueOf(366972000), message.getDestinationMmsi());
+        assertEquals(new MMSI(440882000), message.getSourceMmsi());
+        assertEquals(new MMSI(366972000), message.getDestinationMmsi());
     }
 }
