@@ -19,10 +19,12 @@ package dk.tbsalling.aismessages.nmea.messages;
 import dk.tbsalling.aismessages.nmea.exceptions.NMEAParseException;
 import dk.tbsalling.aismessages.nmea.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.Value;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+@Value
 public class NMEAMessage {
 
     public NMEAMessage(String input) {
@@ -71,94 +73,23 @@ public class NMEAMessage {
     }
 
     private boolean isValid() {
-        // messageType is parsed eagerly in constructor
         if (messageType == null || messageType.length() != 5) return false;
         String type = messageType.substring(2);
         return ("VDM".equals(type) || "VDO".equals(type));
     }
 
-    @SuppressWarnings("unused")
-    public String getMessageType() {
-        return messageType;
-    }
-
-    @SuppressWarnings("unused")
-    public Integer getNumberOfFragments() {
-        return numberOfFragments;
-    }
-
-    @SuppressWarnings("unused")
-    public Integer getFragmentNumber() {
-        return fragmentNumber;
-    }
-
-    @SuppressWarnings("unused")
-    public Integer getSequenceNumber() {
-        return sequenceNumber;
-    }
-
-    @SuppressWarnings("unused")
-    public String getRadioChannelCode() {
-        return radioChannelCode;
-    }
-
-    @SuppressWarnings("unused")
-    public String getEncodedPayload() {
-        return encodedPayload;
-    }
-
-    @SuppressWarnings("unused")
-    public Integer getFillBits() {
-        return fillBits;
-    }
-
-    @SuppressWarnings("unused")
-    public Integer getChecksum() {
-        return checksum;
-    }
-
-    @SuppressWarnings("unused")
-    public String getRawMessage() {
-        return rawMessage;
-    }
-
-    public NMEATagBlock getTagBlock() {
-        return tagBlock;
-    }
-
-
     private static boolean isBlank(String s) {
         return s == null || s.isBlank();
     }
 
-    @Override
-    public String toString() {
-        return "NMEAMessage{" +
-                "rawMessage='" + rawMessage + '\'' +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        NMEAMessage that = (NMEAMessage) o;
-        return rawMessage.equals(that.rawMessage);
-    }
-
-    @Override
-    public int hashCode() {
-        return rawMessage.hashCode();
-    }
-
-    private final String rawMessage;
-    private final NMEATagBlock tagBlock;
-    private final String messageType;
-    private final Integer numberOfFragments;
-    private final Integer fragmentNumber;
-    private final Integer sequenceNumber;
-    private final String radioChannelCode;
-    private final String encodedPayload;
-    private final Integer fillBits;
-    private final Integer checksum;
+    String rawMessage;
+    NMEATagBlock tagBlock;
+    String messageType;
+    Integer numberOfFragments;
+    Integer fragmentNumber;
+    Integer sequenceNumber;
+    String radioChannelCode;
+    String encodedPayload;
+    Integer fillBits;
+    Integer checksum;
 }
