@@ -1,5 +1,5 @@
 ![Build status](https://travis-ci.org/tbsalling/aismessages.svg?branch=master)
-[![License](http://img.shields.io/badge/license-CCANS3-green.svg)](https://github.com/tbsalling/aismessages/blob/master/LICENSE)
+[![License](http://img.shields.io/badge/license-CCANS4-green.svg)](https://github.com/tbsalling/aismessages/blob/master/LICENSE)
 
 Introduction
 ---
@@ -124,7 +124,7 @@ License
 AISmessages is released under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA
 4.0)
 license - which means that it is free for non-commercial use. For full license details see the
-[LICENSE-full](LICENSE.txt) file or read [the summary](LICENSE-summary.md).
+[LICENSE](LICENSE) file or read [the summary](docs/LICENSE-summary.md).
 
 To obtain a commercial license and/or commercial support contact
 [Thomas Borg Salling](mailto:tbsalling@tbsalling.dk?subject=[GitHub]%20AISmessages%20license) - tbsalling@tbsalling.dk.
