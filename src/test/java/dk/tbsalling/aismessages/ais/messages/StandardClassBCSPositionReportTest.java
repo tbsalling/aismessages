@@ -14,7 +14,7 @@ public class StandardClassBCSPositionReportTest {
         NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,B5NJ;PP005l4ot5Isbl03wsUkP06,0*76");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
@@ -52,7 +52,7 @@ public class StandardClassBCSPositionReportTest {
         NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,B>1VUFP00vK`auV0eUulKwv0RJGT,0*09");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
@@ -85,7 +85,7 @@ public class StandardClassBCSPositionReportTest {
         NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,B6CdCm0t3`tba35f@V9faHi7kP06,0*58");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 

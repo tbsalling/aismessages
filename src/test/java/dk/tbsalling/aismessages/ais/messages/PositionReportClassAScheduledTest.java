@@ -15,7 +15,7 @@ public class PositionReportClassAScheduledTest {
         NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,13@nePh01>PjcO4PGReoJEmL0HJg,0*67");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
@@ -46,7 +46,7 @@ public class PositionReportClassAScheduledTest {
         NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,13chv900160wps@GF<FlHCjR0<0ht2cv3i,0*1A");
 
         // Act & Assert
-        assertThrows(InvalidMessage.class, () -> AISMessage.create(null, null, null, nmeaMessage));
+        assertThrows(InvalidMessage.class, () -> dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage));
     }
 
     @Test
@@ -55,7 +55,7 @@ public class PositionReportClassAScheduledTest {
         NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,17OoHr?P009qtlQd6T<0<?wN041P,0*01");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 

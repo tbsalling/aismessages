@@ -17,7 +17,7 @@ public class ExtendedClassBEquipmentPositionReportTest {
         NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,B,C69DqeP0Ar8;JH3R6<4O7wWPl@:62L>jcaQgh0000000?104222P,0*32");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 

@@ -21,9 +21,9 @@ public class AISMessageTest {
         NMEAMessage nmeaMessage2 = new NMEAMessage("!AIVDM,1,1,,A,13AkSB0000PhAmHPoTNcp1Fp0D17,0*00");
 
         // Act
-        AISMessage aisMessage1 = AISMessage.create(Instant.now(), "TEST", null, nmeaMessage1);
-        AISMessage aisMessage2 = AISMessage.create(Instant.now(), "TEST", null, nmeaMessage1);
-        AISMessage aisMessage3 = AISMessage.create(Instant.now(), "TEST", null, nmeaMessage2);
+        AISMessage aisMessage1 = AISMessageFactory.create(Instant.now(), "TEST", null, nmeaMessage1);
+        AISMessage aisMessage2 = AISMessageFactory.create(Instant.now(), "TEST", null, nmeaMessage1);
+        AISMessage aisMessage3 = AISMessageFactory.create(Instant.now(), "TEST", null, nmeaMessage2);
 
         // Assert
         // Note: Equality now depends on Metadata record which includes NMEAMessage[] array references
@@ -48,9 +48,9 @@ public class AISMessageTest {
         NMEATagBlock tag = NMEATagBlock.fromString("\\c:1705510832,s:43574,i:<S>S</S><O>XEE</O><T>A:1705510832 G:1 I:1705510887 D:1705510892 F:1641</T><Q>32</Q>*38\\");
 
         // Act
-        AISMessage ais1 = AISMessage.create(time1, source, tag, nmea);
-        AISMessage ais2 = AISMessage.create(time2, source, tag, nmea);
-        AISMessage ais3 = AISMessage.create(time3, source, tag, nmea);
+        AISMessage ais1 = AISMessageFactory.create(time1, source, tag, nmea);
+        AISMessage ais2 = AISMessageFactory.create(time2, source, tag, nmea);
+        AISMessage ais3 = AISMessageFactory.create(time3, source, tag, nmea);
 
         // Assert
         // Note: Equality now depends on Metadata record which includes NMEAMessage[] array references
@@ -74,9 +74,9 @@ public class AISMessageTest {
         NMEAMessage nmea = new NMEAMessage("!AIVDM,1,1,,A,13aEOK?P00PD2wVMdLDRhgvL289?,0*26");
 
         // Act
-        AISMessage ais1 = AISMessage.create(time1, source, null, nmea);
-        AISMessage ais2 = AISMessage.create(time2, source, null, nmea);
-        AISMessage ais3 = AISMessage.create(time3, source, null, nmea);
+        AISMessage ais1 = AISMessageFactory.create(time1, source, null, nmea);
+        AISMessage ais2 = AISMessageFactory.create(time2, source, null, nmea);
+        AISMessage ais3 = AISMessageFactory.create(time3, source, null, nmea);
 
         // Assert
         // Note: Equality now depends on Metadata record which includes NMEAMessage[] array references
@@ -95,7 +95,7 @@ public class AISMessageTest {
         NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,B,00,4*21");
 
         // Act & Assert
-        assertThrows(InvalidMessage.class, () -> AISMessage.create(null, null, null, nmeaMessage));
+        assertThrows(InvalidMessage.class, () -> AISMessageFactory.create(null, null, null, nmeaMessage));
     }
 
     @Test
@@ -103,7 +103,7 @@ public class AISMessageTest {
         // Arrange & Act & Assert
         assertThrows(NMEAParseException.class, () -> {
             NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,B,13K6th002u9@8P0DEVv2M1up02Pl,0*740008,2*09");
-            AISMessage.create(null, null, null, nmeaMessage);
+            AISMessageFactory.create(null, null, null, nmeaMessage);
         });
     }
 
@@ -114,7 +114,7 @@ public class AISMessageTest {
 
         // Act
         // Test one-liner
-        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage1);
+        AISMessage aisMessage = AISMessageFactory.create(null, null, null, nmeaMessage1);
 
         // Assert
         NMEAMessage[] nmeaMessages = aisMessage.getMetadata().nmeaMessages();
@@ -128,7 +128,7 @@ public class AISMessageTest {
 
         // Act
         // Test two-liner
-        aisMessage = AISMessage.create(null, null, null, nmeaMessage2a, nmeaMessage2b);
+        aisMessage = AISMessageFactory.create(null, null, null, nmeaMessage2a, nmeaMessage2b);
 
         // Assert
         nmeaMessages = aisMessage.getMetadata().nmeaMessages();

@@ -17,6 +17,7 @@
 package dk.tbsalling.aismessages.nmea;
 
 import dk.tbsalling.aismessages.ais.messages.AISMessage;
+import dk.tbsalling.aismessages.ais.messages.AISMessageFactory;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 
 import java.time.Instant;
@@ -66,7 +67,7 @@ public class NMEAMessageHandler implements Consumer<NMEAMessage> {
 			messageFragments.clear();
 		} else if (numberOfFragments == 1) {
 			LOG.log(DEBUG, "Handling unfragmented NMEA message");
-            AISMessage aisMessage = AISMessage.create(Instant.now(), source, nmeaMessage.getTagBlock(), nmeaMessage);
+            AISMessage aisMessage = AISMessageFactory.create(Instant.now(), source, nmeaMessage.getTagBlock(), nmeaMessage);
             sendToAisMessageReceivers(aisMessage);
 			messageFragments.clear();
 		} else {
@@ -90,7 +91,7 @@ public class NMEAMessageHandler implements Consumer<NMEAMessage> {
                     LOG.log(DEBUG, "nmeaMessage.getNumberOfFragments(): %d".formatted(nmeaMessage.getNumberOfFragments()));
                     LOG.log(DEBUG, "messageFragments.size(): %d".formatted(messageFragments.size()));
 					if (nmeaMessage.getNumberOfFragments() == messageFragments.size()) {
-                        AISMessage aisMessage = AISMessage.create(Instant.now(), source, nmeaMessage.getTagBlock(), messageFragments.toArray(new NMEAMessage[0]));
+                        AISMessage aisMessage = AISMessageFactory.create(Instant.now(), source, nmeaMessage.getTagBlock(), messageFragments.toArray(new NMEAMessage[0]));
                         sendToAisMessageReceivers(aisMessage);
 						messageFragments.clear();
 					} else

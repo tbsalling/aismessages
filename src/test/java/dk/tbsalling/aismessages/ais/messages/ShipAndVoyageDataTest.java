@@ -21,7 +21,7 @@ public class ShipAndVoyageDataTest {
         NMEAMessage nmeaMessage2 = new NMEAMessage("!AIVDM,2,2,3,A,888888888888880,2*27");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage1, nmeaMessage2);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage1, nmeaMessage2);
 
         System.out.println(aisMessage.toString());
 
@@ -60,7 +60,7 @@ public class ShipAndVoyageDataTest {
         NMEAMessage nmeaMessage2 = new NMEAMessage("!AIVDM,2,2,0,B,00000000000,2*27");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(now.toInstant(), "Test", tag, nmeaMessage1, nmeaMessage2);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(now.toInstant(), "Test", tag, nmeaMessage1, nmeaMessage2);
 
         System.out.println(aisMessage.toString());
 
@@ -97,7 +97,7 @@ public class ShipAndVoyageDataTest {
         NMEAMessage nmeaMessage2 = new NMEAMessage("!AIVDM,2,2,0,B,00000000000,2*27");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage1, nmeaMessage2);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage1, nmeaMessage2);
         byte[] digest = aisMessage.digest();
         String digestAsString = String.format("%040x", new java.math.BigInteger(1, digest));
 
@@ -106,14 +106,14 @@ public class ShipAndVoyageDataTest {
 
         // Change line 1
         NMEAMessage nmeaMessage1b = new NMEAMessage("!AIVDM,2,1,0,B,539S:k40000000c3G04PPh63<00000000080000o1PVG2uGD:00000000001,0*34");
-        aisMessage = AISMessage.create(null, null, null, nmeaMessage1b, nmeaMessage2);
+        aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage1b, nmeaMessage2);
         digest = aisMessage.digest();
         digestAsString = String.format("%040x", new java.math.BigInteger(1, digest));
         assertNotEquals(expectedDigest, digestAsString);
 
         // Change line 2
         NMEAMessage nmeaMessage2b = new NMEAMessage("!AIVDM,2,2,0,B,00000000001,2*27");
-        aisMessage = AISMessage.create(null, null, null, nmeaMessage1, nmeaMessage2b);
+        aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage1, nmeaMessage2b);
         digest = aisMessage.digest();
         digestAsString = String.format("%040x", new java.math.BigInteger(1, digest));
         assertNotEquals(expectedDigest, digestAsString);

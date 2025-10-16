@@ -16,7 +16,7 @@ public class SafetyRelatedAcknowledgeTest {
         NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,=39UOj0jFs9R,0*17");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
@@ -43,7 +43,7 @@ public class SafetyRelatedAcknowledgeTest {
         NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,=8157oQGOv9f,0*0F");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 

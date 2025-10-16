@@ -16,7 +16,7 @@ public class InterrogationTest {
         NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,?h3Ovk1GOPph000,2*53");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 

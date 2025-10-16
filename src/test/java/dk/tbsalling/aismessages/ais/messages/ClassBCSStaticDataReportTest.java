@@ -17,7 +17,7 @@ public class ClassBCSStaticDataReportTest {
         NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,H5NLOjTUG5CD=1BG46mqhj0P7130,0*78");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
@@ -47,7 +47,7 @@ public class ClassBCSStaticDataReportTest {
         NMEAMessage nmeaMessage = new NMEAMessage(msg);
 
         // Act
-        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
     }
@@ -59,7 +59,7 @@ public class ClassBCSStaticDataReportTest {
         NMEAMessage nmeaMessage = new NMEAMessage(msg);
 
         // Act
-        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
@@ -81,8 +81,8 @@ public class ClassBCSStaticDataReportTest {
         NMEAMessage nmeaMessageB = new NMEAMessage(partB);
 
         // Act
-        AISMessage aisMessagePartA = AISMessage.create(null, null, null, nmeaMessageA);
-        AISMessage aisMessagePartB = AISMessage.create(null, null, null, nmeaMessageB);
+        AISMessage aisMessagePartA = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessageA);
+        AISMessage aisMessagePartB = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessageB);
 
         // Assert
         System.out.println(aisMessagePartA.toString());

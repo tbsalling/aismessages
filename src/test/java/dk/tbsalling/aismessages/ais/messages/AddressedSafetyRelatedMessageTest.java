@@ -15,7 +15,7 @@ public class AddressedSafetyRelatedMessageTest {
         NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,<42Lati0W:Ov=C7P6B?=Pjoihhjhqq,2*2B");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
@@ -37,7 +37,7 @@ public class AddressedSafetyRelatedMessageTest {
         NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,<5?Per18=HB1U:1@E=B0m<L,2*51");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 

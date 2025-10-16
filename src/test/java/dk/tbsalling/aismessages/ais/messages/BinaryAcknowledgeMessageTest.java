@@ -16,7 +16,7 @@ public class BinaryAcknowledgeMessageTest {
         NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,B,702;bCSdToR`,0*34");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(null, null, null, nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 

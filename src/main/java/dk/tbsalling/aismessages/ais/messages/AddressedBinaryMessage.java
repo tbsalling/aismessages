@@ -70,8 +70,10 @@ public class AddressedBinaryMessage extends AISMessage {
         if (numberOfBits <= 72) {
             message.append(format("Message of type %s should be at least 72 bits long; not %d.", getMessageType(), numberOfBits));
 
-            if (numberOfBits >= 40)
-                message.append(format(" Unparseable binary payload: \"%s\".", getBitString().substring(40, Math.min(numberOfBits, getBitString().length()))));
+            if (numberOfBits >= 40) {
+                final String bs = getMetadata().bitString();
+                message.append(format(" Unparseable binary payload: \"%s\".", bs.substring(40, Math.min(numberOfBits, bs.length()))));
+            }
         }
 
         if (numberOfBits > 1008)

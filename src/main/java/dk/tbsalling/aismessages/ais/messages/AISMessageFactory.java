@@ -23,6 +23,8 @@ import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import java.time.Instant;
+import java.util.Map;
+import java.util.TreeMap;
 
 /**
  * Factory class that contains parsing logic for all AIS message types using BitStringParser.
@@ -32,7 +34,143 @@ import java.time.Instant;
  */
 public class AISMessageFactory {
 
-    static ShipAndVoyageData createShipAndVoyageData(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
+    private static final Map<String, String> charToSixBit = new TreeMap<>();
+
+    static {
+        charToSixBit.put("0", "000000"); // 0
+        charToSixBit.put("1", "000001"); // 1
+        charToSixBit.put("2", "000010"); // 2
+        charToSixBit.put("3", "000011"); // 3
+        charToSixBit.put("4", "000100"); // 4
+        charToSixBit.put("5", "000101"); // 5
+        charToSixBit.put("6", "000110"); // 6
+        charToSixBit.put("7", "000111"); // 7
+        charToSixBit.put("8", "001000"); // 8
+        charToSixBit.put("9", "001001"); // 9
+        charToSixBit.put(":", "001010"); // 10
+        charToSixBit.put(";", "001011"); // 11
+        charToSixBit.put("<", "001100"); // 12
+        charToSixBit.put("=", "001101"); // 13
+        charToSixBit.put(">", "001110"); // 14
+        charToSixBit.put("?", "001111"); // 15
+        charToSixBit.put("@", "010000"); // 16
+        charToSixBit.put("A", "010001"); // 17
+        charToSixBit.put("B", "010010"); // 18
+        charToSixBit.put("C", "010011"); // 19
+        charToSixBit.put("D", "010100"); // 20
+        charToSixBit.put("E", "010101"); // 21
+        charToSixBit.put("F", "010110"); // 22
+        charToSixBit.put("G", "010111"); // 23
+        charToSixBit.put("H", "011000"); // 24
+        charToSixBit.put("I", "011001"); // 25
+        charToSixBit.put("J", "011010"); // 26
+        charToSixBit.put("K", "011011"); // 27
+        charToSixBit.put("L", "011100"); // 28
+        charToSixBit.put("M", "011101"); // 29
+        charToSixBit.put("N", "011110"); // 30
+        charToSixBit.put("O", "011111"); // 31
+        charToSixBit.put("P", "100000"); // 32
+        charToSixBit.put("Q", "100001"); // 33
+        charToSixBit.put("R", "100010"); // 34
+        charToSixBit.put("S", "100011"); // 35
+        charToSixBit.put("T", "100100"); // 36
+        charToSixBit.put("U", "100101"); // 37
+        charToSixBit.put("V", "100110"); // 38
+        charToSixBit.put("W", "100111"); // 39
+        charToSixBit.put("`", "101000"); // 40
+        charToSixBit.put("a", "101001"); // 41
+        charToSixBit.put("b", "101010"); // 42
+        charToSixBit.put("c", "101011"); // 43
+        charToSixBit.put("d", "101100"); // 44
+        charToSixBit.put("e", "101101"); // 45
+        charToSixBit.put("f", "101110"); // 46
+        charToSixBit.put("g", "101111"); // 47
+        charToSixBit.put("h", "110000"); // 48
+        charToSixBit.put("i", "110001"); // 49
+        charToSixBit.put("j", "110010"); // 50
+        charToSixBit.put("k", "110011"); // 51
+        charToSixBit.put("l", "110100"); // 52
+        charToSixBit.put("m", "110101"); // 53
+        charToSixBit.put("n", "110110"); // 54
+        charToSixBit.put("o", "110111"); // 55
+        charToSixBit.put("p", "111000"); // 56
+        charToSixBit.put("q", "111001"); // 57
+        charToSixBit.put("r", "111010"); // 58
+        charToSixBit.put("s", "111011"); // 59
+        charToSixBit.put("t", "111100"); // 60
+        charToSixBit.put("u", "111101"); // 61
+        charToSixBit.put("v", "111110"); // 62
+        charToSixBit.put("w", "111111"); // 63
+    }
+
+    // Public methods
+
+    /**
+     * Converts a six-bit encoded ASCII payload to a binary string representation (sequence of '0' and '1').
+     *
+     * @param encodedString the six-bit encoded payload
+     * @param paddingBits   number of pad bits to discard from the end (0..5)
+     * @return the binary string
+     * @throws IllegalArgumentException if inputs are invalid
+     */
+    public static String toBitString(String encodedString, Integer paddingBits) {
+        if (encodedString == null) {
+            throw new IllegalArgumentException("encodedString cannot be null");
+        }
+        if (paddingBits == null || paddingBits < 0 || paddingBits > 5) {
+            throw new IllegalArgumentException("paddingBits must be in range 0..5");
+        }
+        StringBuilder bitString = new StringBuilder(encodedString.length() * 6);
+        for (int i = 0; i < encodedString.length(); i++) {
+            String c = encodedString.substring(i, i + 1);
+            String sixBits = charToSixBit.get(c);
+            if (sixBits == null) {
+                throw new IllegalArgumentException("Invalid six-bit character: '" + c + "'");
+            }
+            bitString.append(sixBits);
+        }
+        return bitString.substring(0, bitString.length() - paddingBits);
+    }
+
+    /**
+     * Create proper type of AISMessage from 1..n NMEA messages, and attach metadata.
+     */
+    public static AISMessage create(Instant received, String source, NMEATagBlock nmeaTagBlock, NMEAMessage... nmeaMessages) {
+        // Decode payload into bit string
+        String bitString = decodePayloadToBitString(nmeaMessages);
+
+        // Determine message type
+        AISMessageType messageType = AISMessageType.fromInteger(Integer.parseInt(bitString.substring(0, 6), 2));
+        if (messageType == null) {
+            StringBuilder sb = new StringBuilder();
+            for (NMEAMessage nmeaMessage : nmeaMessages) {
+                sb.append(nmeaMessage);
+            }
+            throw new dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage("Cannot extract message type from NMEA message: %s".formatted(sb.toString()));
+        }
+
+        // Use BitStringParser to parse the message
+        BitStringParser parser = new BitStringParser(bitString);
+
+        // Parse common fields from all messages
+        int repeatIndicator = parser.getUnsignedInt(6, 8);
+        MMSI sourceMmsi = new MMSI(parser.getUnsignedInt(8, 38));
+
+        // Delegate directly to the AISMessageFactory to construct the correct subtype
+        return AISMessageFactory.createByType(
+                messageType,
+                sourceMmsi,
+                repeatIndicator,
+                nmeaTagBlock,
+                nmeaMessages,
+                bitString,
+                source,
+                received,
+                parser
+        );
+    }
+
+    private static ShipAndVoyageData createShipAndVoyageData(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         IMO imo = new IMO(parser.getUnsignedInt(40, 70));
         String callsign = parser.getString(70, 112);
         String shipName = parser.getString(112, 232);
@@ -56,32 +194,22 @@ public class AISMessageFactory {
                 positionFixingDevice, etaMonth, etaDay, etaHour, etaMinute, draught, destination, dataTerminalReady, rawDraught);
     }
 
-    static PositionReport createPositionReportClassAScheduled(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser,
+    private static PositionReport createPositionReportClassAScheduled(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser,
                                                               AISMessageType messageType) {
         return createPositionReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser,
                 messageType, PositionReportClassAScheduled::new);
     }
 
-    static PositionReport createPositionReportClassAAssignedSchedule(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser,
+    private static PositionReport createPositionReportClassAAssignedSchedule(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser,
                                                                      AISMessageType messageType) {
         return createPositionReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser,
                 messageType, PositionReportClassAAssignedSchedule::new);
     }
 
-    static PositionReport createPositionReportClassAResponseToInterrogation(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser,
+    private static PositionReport createPositionReportClassAResponseToInterrogation(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser,
                                                                             AISMessageType messageType) {
         return createPositionReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser,
                 messageType, PositionReportClassAResponseToInterrogation::new);
-    }
-
-    @FunctionalInterface
-    private interface PositionReportConstructor {
-        PositionReport create(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
-                              NavigationStatus navigationStatus, int rateOfTurn, float speedOverGround,
-                              boolean positionAccuracy, float latitude, float longitude,
-                              float courseOverGround, int trueHeading, int second,
-                              ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState,
-                              int rawRateOfTurn, int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround);
     }
 
     private static PositionReport createPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser,
@@ -120,7 +248,7 @@ public class AISMessageFactory {
                 rawRateOfTurn, rawSpeedOverGround, rawLatitude, rawLongitude, rawCourseOverGround);
     }
 
-    static BaseStationReport createBaseStationReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
+    private static BaseStationReport createBaseStationReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int year = parser.getUnsignedInt(38, 52);
         int month = parser.getUnsignedInt(52, 56);
         int day = parser.getUnsignedInt(56, 61);
@@ -139,7 +267,7 @@ public class AISMessageFactory {
                 positionFixingDevice, raimFlag, communicationState);
     }
 
-    static AddressedBinaryMessage createAddressedBinaryMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
+    private static AddressedBinaryMessage createAddressedBinaryMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int sequenceNumber = parser.getUnsignedInt(38, 40);
         MMSI destinationMmsi = new MMSI(parser.getUnsignedInt(40, 70));
         boolean retransmitFlag = parser.getBoolean(70, 71);
@@ -154,7 +282,7 @@ public class AISMessageFactory {
                 applicationSpecificMessage);
     }
 
-    static BinaryAcknowledge createBinaryAcknowledge(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
+    private static BinaryAcknowledge createBinaryAcknowledge(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int spare = parser.getUnsignedInt(38, 40);
 
         MMSI mmsi1 = new MMSI(parser.getUnsignedInt(40, 70));
@@ -192,7 +320,7 @@ public class AISMessageFactory {
                 spare, mmsi1, sequence1, mmsi2, sequence2, mmsi3, sequence3, mmsi4, sequence4, numOfAcks);
     }
 
-    static BinaryBroadcastMessage createBinaryBroadcastMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
+    private static BinaryBroadcastMessage createBinaryBroadcastMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         Integer spare = parser.getUnsignedInt(38, 40);
         Integer designatedAreaCode = parser.getUnsignedInt(40, 50);
         Integer functionalId = parser.getUnsignedInt(50, 56);
@@ -203,7 +331,7 @@ public class AISMessageFactory {
                 spare, designatedAreaCode, functionalId, binaryData, applicationSpecificMessage);
     }
 
-    static StandardSARAircraftPositionReport createStandardSARAircraftPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
+    private static StandardSARAircraftPositionReport createStandardSARAircraftPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int altitude = parser.getUnsignedInt(38, 50);
         int rawSpeedOverGround = parser.getUnsignedInt(50, 60);
         int speed = rawSpeedOverGround;
@@ -227,14 +355,14 @@ public class AISMessageFactory {
                 rawSpeedOverGround, rawLongitude, rawLatitude, rawCourseOverGround);
     }
 
-    static UTCAndDateInquiry createUTCAndDateInquiry(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
+    private static UTCAndDateInquiry createUTCAndDateInquiry(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         MMSI destinationMmsi = new MMSI(parser.getUnsignedInt(40, 70));
 
         return new UTCAndDateInquiry(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 destinationMmsi);
     }
 
-    static UTCAndDateResponse createUTCAndDateResponse(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
+    private static UTCAndDateResponse createUTCAndDateResponse(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int year = parser.getUnsignedInt(38, 52);
         int month = parser.getUnsignedInt(52, 56);
         int day = parser.getUnsignedInt(56, 61);
@@ -252,7 +380,7 @@ public class AISMessageFactory {
                 positionFixingDevice, raimFlag);
     }
 
-    static AddressedSafetyRelatedMessage createAddressedSafetyRelatedMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
+    private static AddressedSafetyRelatedMessage createAddressedSafetyRelatedMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int sequenceNumber = parser.getUnsignedInt(38, 40);
         MMSI destinationMmsi = new MMSI(parser.getUnsignedInt(40, 70));
         boolean retransmit = parser.getBoolean(70, 71);
@@ -263,7 +391,7 @@ public class AISMessageFactory {
                 sequenceNumber, destinationMmsi, retransmit, spare, text);
     }
 
-    static SafetyRelatedAcknowledge createSafetyRelatedAcknowledge(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
+    private static SafetyRelatedAcknowledge createSafetyRelatedAcknowledge(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int spare = parser.getUnsignedInt(38, 40);
 
         MMSI mmsi1 = new MMSI(parser.getUnsignedInt(40, 70));
@@ -301,7 +429,7 @@ public class AISMessageFactory {
                 spare, mmsi1, sequence1, mmsi2, sequence2, mmsi3, sequence3, mmsi4, sequence4, numOfAcks);
     }
 
-    static SafetyRelatedBroadcastMessage createSafetyRelatedBroadcastMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
+    private static SafetyRelatedBroadcastMessage createSafetyRelatedBroadcastMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int spare = parser.getUnsignedInt(38, 40);
         String text = parser.getString(40, parser.getLength());
 
@@ -309,7 +437,7 @@ public class AISMessageFactory {
                 spare, text);
     }
 
-    static Interrogation createInterrogation(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
+    private static Interrogation createInterrogation(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int spare1 = parser.getUnsignedInt(38, 40);
         MMSI interrogatedMmsi1 = new MMSI(parser.getUnsignedInt(40, 70));
         int type1_1 = parser.getUnsignedInt(70, 76);
@@ -337,7 +465,7 @@ public class AISMessageFactory {
                 interrogatedMmsi2, type2_1, offset2_1);
     }
 
-    static AssignedModeCommand createAssignedModeCommand(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
+    private static AssignedModeCommand createAssignedModeCommand(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int spare = parser.getUnsignedInt(38, 40);
         MMSI destinationMmsiA = new MMSI(parser.getUnsignedInt(40, 70));
         Integer offsetA = parser.getUnsignedInt(70, 82);
@@ -357,7 +485,7 @@ public class AISMessageFactory {
                 destinationMmsiA, offsetA, incrementA, destinationMmsiB, offsetB, incrementB);
     }
 
-    static GNSSBinaryBroadcastMessage createGNSSBinaryBroadcastMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
+    private static GNSSBinaryBroadcastMessage createGNSSBinaryBroadcastMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int spare1 = parser.getUnsignedInt(38, 40);
         float longitude = parser.getSignedFloat(40, 58) / 10f;
         float latitude = parser.getSignedFloat(58, 75) / 10f;
@@ -385,7 +513,7 @@ public class AISMessageFactory {
                 spare1, latitude, longitude, spare2, mType, stationId, zCount, sequenceNumber, numOfWords, health, binaryData);
     }
 
-    static StandardClassBCSPositionReport createStandardClassBCSPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
+    private static StandardClassBCSPositionReport createStandardClassBCSPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         String regionalReserved1 = parser.getBitPattern(38, 46);
         int rawSpeedOverGround = parser.getUnsignedInt(46, 56);
         float speedOverGround = rawSpeedOverGround / 10f;
@@ -419,7 +547,7 @@ public class AISMessageFactory {
                 rawSpeedOverGround, rawLatitude, rawLongitude, rawCourseOverGround);
     }
 
-    static ExtendedClassBEquipmentPositionReport createExtendedClassBEquipmentPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
+    private static ExtendedClassBEquipmentPositionReport createExtendedClassBEquipmentPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         String regionalReserved1 = parser.getBitPattern(38, 46);
         int rawSpeedOverGround = parser.getUnsignedInt(46, 56);
         float speedOverGround = rawSpeedOverGround / 10f;
@@ -452,7 +580,7 @@ public class AISMessageFactory {
                 rawSpeedOverGround, rawLatitude, rawLongitude, rawCourseOverGround);
     }
 
-    static DataLinkManagement createDataLinkManagement(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
+    private static DataLinkManagement createDataLinkManagement(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int spare = parser.getUnsignedInt(38, 40);
         int offsetNumber1 = parser.getUnsignedInt(40, 52);
         int reservedSlots1 = parser.getUnsignedInt(52, 56);
@@ -500,7 +628,7 @@ public class AISMessageFactory {
                 offsetNumber4, reservedSlots4, timeout4, increment4);
     }
 
-    static AidToNavigationReport createAidToNavigationReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
+    private static AidToNavigationReport createAidToNavigationReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         AidType aidType = AidType.fromInteger(parser.getUnsignedInt(38, 43));
         String name = parser.getString(43, 163);
         boolean positionAccurate = parser.getBoolean(163, 164);
@@ -538,7 +666,7 @@ public class AISMessageFactory {
                 spare1, nameExtension, spare2);
     }
 
-    static ChannelManagement createChannelManagement(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
+    private static ChannelManagement createChannelManagement(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int spare1 = parser.getUnsignedInt(38, 40);
         int channelA = parser.getUnsignedInt(40, 52);
         int channelB = parser.getUnsignedInt(52, 64);
@@ -577,7 +705,7 @@ public class AISMessageFactory {
                 bandA, bandB, zoneSize);
     }
 
-    static GroupAssignmentCommand createGroupAssignmentCommand(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
+    private static GroupAssignmentCommand createGroupAssignmentCommand(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         String spare1 = parser.getString(38, 40);
         float northEastLongitude = parser.getSignedFloat(40, 58) / 10f;
         float northEastLatitude = parser.getSignedFloat(58, 75) / 10f;
@@ -595,7 +723,7 @@ public class AISMessageFactory {
                 stationType, shipType, spare2, transmitReceiveMode, reportingInterval, quietTime);
     }
 
-    static ClassBCSStaticDataReport createClassBCSStaticDataReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
+    private static ClassBCSStaticDataReport createClassBCSStaticDataReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         int spare = parser.getUnsignedInt(38, 40);
         int partNumber = parser.getUnsignedInt(38, 40);
 
@@ -631,7 +759,7 @@ public class AISMessageFactory {
                 partNumber, shipName, shipType, vendorId, callsign, toBow, toStern, toStarboard, toPort, mothershipMmsi);
     }
 
-    static BinaryMessageSingleSlot createBinaryMessageSingleSlot(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
+    private static BinaryMessageSingleSlot createBinaryMessageSingleSlot(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         boolean destinationIndicator = parser.getBoolean(38, 39);
         boolean binaryDataFlag = parser.getBoolean(39, 40);
         MMSI destinationMMSI = new MMSI(parser.getUnsignedInt(40, 70));
@@ -641,7 +769,7 @@ public class AISMessageFactory {
                 destinationIndicator, binaryDataFlag, destinationMMSI, binaryData);
     }
 
-    static BinaryMessageMultipleSlot createBinaryMessageMultipleSlot(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
+    private static BinaryMessageMultipleSlot createBinaryMessageMultipleSlot(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         boolean addressed = parser.getBoolean(38, 39);
         boolean structured = parser.getBoolean(39, 40);
 
@@ -662,7 +790,7 @@ public class AISMessageFactory {
                 addressed, structured, destinationMmsi, applicationId, data);
     }
 
-    static LongRangeBroadcastMessage createLongRangeBroadcastMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
+    private static LongRangeBroadcastMessage createLongRangeBroadcastMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received, BitStringParser parser) {
         boolean positionAccuracy = parser.getBoolean(38, 39);
         boolean raim = parser.getBoolean(39, 40);
         NavigationStatus status = NavigationStatus.fromInteger(parser.getUnsignedInt(40, 44));
@@ -681,4 +809,283 @@ public class AISMessageFactory {
                 positionAccuracy, raim, status, latitude, longitude, speed, course, positionLatency, spare,
                 rawLongitude, rawLatitude, rawSpeedOverGround, rawCourseOverGround);
     }
+
+
+    @FunctionalInterface
+    private interface PositionReportConstructor {
+        PositionReport create(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
+                              NavigationStatus navigationStatus, int rateOfTurn, float speedOverGround,
+                              boolean positionAccuracy, float latitude, float longitude,
+                              float courseOverGround, int trueHeading, int second,
+                              ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState,
+                              int rawRateOfTurn, int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround);
+    }
+
+    // Private helper methods (placed last)
+    private static AISMessage createByType(
+            AISMessageType messageType,
+            MMSI sourceMmsi,
+            int repeatIndicator,
+            NMEATagBlock nmeaTagBlock,
+            NMEAMessage[] nmeaMessages,
+            String bitString,
+            String source,
+            Instant received,
+            BitStringParser parser
+    ) {
+        return switch (messageType) {
+            case ShipAndVoyageRelatedData ->
+                    AISMessageFactory.createShipAndVoyageData(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser);
+            case PositionReportClassAScheduled ->
+                    AISMessageFactory.createPositionReportClassAScheduled(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser, messageType);
+            case PositionReportClassAAssignedSchedule ->
+                    AISMessageFactory.createPositionReportClassAAssignedSchedule(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser, messageType);
+            case PositionReportClassAResponseToInterrogation ->
+                    AISMessageFactory.createPositionReportClassAResponseToInterrogation(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser, messageType);
+            case BaseStationReport ->
+                    AISMessageFactory.createBaseStationReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser);
+            case AddressedBinaryMessage ->
+                    AISMessageFactory.createAddressedBinaryMessage(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser);
+            case BinaryAcknowledge ->
+                    AISMessageFactory.createBinaryAcknowledge(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser);
+            case BinaryBroadcastMessage ->
+                    AISMessageFactory.createBinaryBroadcastMessage(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser);
+            case StandardSARAircraftPositionReport ->
+                    AISMessageFactory.createStandardSARAircraftPositionReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser);
+            case UTCAndDateInquiry ->
+                    AISMessageFactory.createUTCAndDateInquiry(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser);
+            case UTCAndDateResponse ->
+                    AISMessageFactory.createUTCAndDateResponse(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser);
+            case AddressedSafetyRelatedMessage ->
+                    AISMessageFactory.createAddressedSafetyRelatedMessage(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser);
+            case SafetyRelatedAcknowledge ->
+                    AISMessageFactory.createSafetyRelatedAcknowledge(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser);
+            case SafetyRelatedBroadcastMessage ->
+                    AISMessageFactory.createSafetyRelatedBroadcastMessage(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser);
+            case Interrogation ->
+                    AISMessageFactory.createInterrogation(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser);
+            case AssignedModeCommand ->
+                    AISMessageFactory.createAssignedModeCommand(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser);
+            case GNSSBinaryBroadcastMessage ->
+                    AISMessageFactory.createGNSSBinaryBroadcastMessage(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser);
+            case StandardClassBCSPositionReport ->
+                    AISMessageFactory.createStandardClassBCSPositionReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser);
+            case ExtendedClassBEquipmentPositionReport ->
+                    AISMessageFactory.createExtendedClassBEquipmentPositionReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser);
+            case DataLinkManagement ->
+                    AISMessageFactory.createDataLinkManagement(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser);
+            case AidToNavigationReport ->
+                    AISMessageFactory.createAidToNavigationReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser);
+            case ChannelManagement ->
+                    AISMessageFactory.createChannelManagement(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser);
+            case GroupAssignmentCommand ->
+                    AISMessageFactory.createGroupAssignmentCommand(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser);
+            case ClassBCSStaticDataReport ->
+                    AISMessageFactory.createClassBCSStaticDataReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser);
+            case BinaryMessageSingleSlot ->
+                    AISMessageFactory.createBinaryMessageSingleSlot(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser);
+            case BinaryMessageMultipleSlot ->
+                    AISMessageFactory.createBinaryMessageMultipleSlot(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser);
+            case LongRangeBroadcastMessage ->
+                    AISMessageFactory.createLongRangeBroadcastMessage(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received, parser);
+            default -> throw new dk.tbsalling.aismessages.ais.exceptions.UnsupportedMessageType(messageType.getCode());
+        };
+    }
+
+    private static String decodePayloadToBitString(NMEAMessage... nmeaMessages) {
+        if (nmeaMessages == null || nmeaMessages.length == 0) {
+            throw new IllegalArgumentException("nmeaMessages must contain at least one element");
+        }
+        StringBuilder sixBitEncodedPayload = new StringBuilder();
+        Integer fillBits = null;
+        for (int i = 0; i < nmeaMessages.length; i++) {
+            NMEAMessage m = nmeaMessages[i];
+            if (m == null) {
+                throw new IllegalArgumentException("nmeaMessages[" + i + "] is null");
+            }
+            sixBitEncodedPayload.append(m.getEncodedPayload());
+            if (i == nmeaMessages.length - 1) {
+                fillBits = m.getFillBits();
+            }
+        }
+        return toBitString(sixBitEncodedPayload.toString(), fillBits);
+    }
+
+    /**
+     * Checks if the message is valid.
+     *
+     * @return true if the message is valid, false otherwise
+     */
+    private boolean isValid(String bitString) {
+        if (bitString.length() < 6) {
+            // // LOG.log(WARNING, "Message is too short: %d bits.".formatted(bitString.length()));
+            return Boolean.FALSE;
+        }
+
+        int messageType = Integer.parseInt(bitString.substring(0, 6), 2);
+        if (messageType < AISMessageType.MINIMUM_CODE || messageType > AISMessageType.MAXIMUM_CODE) {
+            // // LOG.log(WARNING, "Unsupported message type: %d".formatted(messageType));
+            return Boolean.FALSE;
+        }
+
+        int actualMessageLength = bitString.length();
+        switch (messageType) {
+            case 1:
+                if (actualMessageLength != 168) {
+                    // // LOG.log(WARNING, "Message type 1: Illegal message length: %d bits.".formatted(bitString.length()));
+                    return Boolean.FALSE;
+                }
+                break;
+            case 2:
+                if (actualMessageLength != 168) {
+                    // LOG.log(WARNING, "Message type 2: Illegal message length: %d bits.".formatted(bitString.length()));
+                    return Boolean.FALSE;
+                }
+                break;
+            case 3:
+                if (actualMessageLength != 168) {
+                    // LOG.log(WARNING, "Message type 3: Illegal message length: %d bits.".formatted(bitString.length()));
+                    return Boolean.FALSE;
+                }
+                break;
+            case 4:
+                if (actualMessageLength != 168) return Boolean.FALSE;
+                break;
+            case 5:
+                if (actualMessageLength != 424 && actualMessageLength != 422) {
+                    // LOG.log(WARNING, "Message type 5: Illegal message length: %d bits.".formatted(bitString.length()));
+                    return Boolean.FALSE;
+                }
+                break;
+            case 6:
+                if (actualMessageLength > 1008) {
+                    // LOG.log(WARNING, "Message type 6: Illegal message length: %d bits.".formatted(bitString.length()));
+                    return Boolean.FALSE;
+                }
+                break;
+            case 7:
+                if (actualMessageLength != 72 && actualMessageLength != 104 && actualMessageLength != 136 && actualMessageLength != 168) {
+                    // LOG.log(WARNING, "Message type 7: Illegal message length: %d bits.".formatted(bitString.length()));
+                    return Boolean.FALSE;
+                }
+                break;
+            case 8:
+                if (actualMessageLength > 1008) {
+                    // LOG.log(WARNING, "Message type 8: Illegal message length: %d bits.".formatted(bitString.length()));
+                    return Boolean.FALSE;
+                }
+                break;
+            case 9:
+                if (actualMessageLength != 168) {
+                    // LOG.log(WARNING, "Message type 9: Illegal message length: %d bits.".formatted(bitString.length()));
+                    return Boolean.FALSE;
+                }
+                break;
+            case 10:
+                if (actualMessageLength != 72) {
+                    // LOG.log(WARNING, "Message type 10: Illegal message length: %d bits.".formatted(bitString.length()));
+                    return Boolean.FALSE;
+                }
+                break;
+            case 11:
+                if (actualMessageLength != 168) return Boolean.FALSE;
+                break;
+            case 12:
+                if (actualMessageLength > 1008) {
+                    // LOG.log(WARNING, "Message type 12: Illegal message length: %d bits.".formatted(bitString.length()));
+                    return Boolean.FALSE;
+                }
+                break;
+            case 13:
+                if (actualMessageLength != 72 && actualMessageLength != 104 && actualMessageLength != 136 && actualMessageLength != 168) {
+                    // LOG.log(WARNING, "Message type 13: Illegal message length: %d bits.".formatted(bitString.length()));
+                    return Boolean.FALSE;
+                }
+                break;
+            case 14:
+                if (actualMessageLength > 1008) {
+                    // LOG.log(WARNING, "Message type 14: Illegal message length: %d bits.".formatted(bitString.length()));
+                    return Boolean.FALSE;
+                }
+                break;
+            case 15:
+                if (actualMessageLength != 88 && actualMessageLength != 110 && actualMessageLength != 112 && actualMessageLength != 160)
+                    return Boolean.FALSE;
+                break;
+            case 16:
+                if (actualMessageLength != 96 && actualMessageLength != 144) {
+                    // LOG.log(WARNING, "Message type 16: Illegal message length: %d bits.".formatted(bitString.length()));
+                    return Boolean.FALSE;
+                }
+                break;
+            case 17:
+                if (actualMessageLength < 80 || actualMessageLength > 816) {
+                    // LOG.log(WARNING, "Message type 17: Illegal message length: %d bits.".formatted(bitString.length()));
+                    return Boolean.FALSE;
+                }
+                break;
+            case 18:
+                if (actualMessageLength != 168) {
+                    // LOG.log(WARNING, "Message type 18: Illegal message length: %d bits.".formatted(bitString.length()));
+                    return Boolean.FALSE;
+                }
+                break;
+            case 19:
+                if (actualMessageLength != 312) {
+                    // LOG.log(WARNING, "Message type 19: Illegal message length: %d bits.".formatted(bitString.length()));
+                    return Boolean.FALSE;
+                }
+                break;
+            case 20:
+                if (actualMessageLength < 72 || actualMessageLength > 160) {
+                    // LOG.log(WARNING, "Message type 20: Illegal message length: %d bits.".formatted(bitString.length()));
+                    return Boolean.FALSE;
+                }
+                break;
+            case 21:
+                if (actualMessageLength < 272 || actualMessageLength > 360) {
+                    // LOG.log(WARNING, "Message type 21: Illegal message length: %d bits.".formatted(bitString.length()));
+                    return Boolean.FALSE;
+                }
+                break;
+            case 22:
+                if (actualMessageLength != 168) {
+                    // LOG.log(WARNING, "Message type 22: Illegal message length: %d bits.".formatted(bitString.length()));
+                    return Boolean.FALSE;
+                }
+                break;
+            case 23:
+                if (actualMessageLength != 160) {
+                    // LOG.log(WARNING, "Message type 23: Illegal message length: %d bits.".formatted(bitString.length()));
+                    return Boolean.FALSE;
+                }
+                break;
+            case 24:
+                if (actualMessageLength != 160 && actualMessageLength != 168 && actualMessageLength != 158) {
+                    // LOG.log(WARNING, "Message type 24: Illegal message length: %d bits.".formatted(bitString.length()));
+                    return Boolean.FALSE;
+                }
+                break;
+            case 25:
+                if (actualMessageLength > 168) {
+                    // LOG.log(WARNING, "Message type 25: Illegal message length: %d bits.".formatted(bitString.length()));
+                    return Boolean.FALSE;
+                }
+                break;
+            case 26:
+                // ??
+                break;
+            case 27:
+                if (actualMessageLength != 96 && actualMessageLength != 168) {
+                    // LOG.log(WARNING, "Message type 27: Illegal message length: %d bits.".formatted(bitString.length()));
+                    return Boolean.FALSE;
+                }
+                break;
+            default:
+                return Boolean.FALSE;
+        }
+
+        return Boolean.TRUE;
+    }
+    
 }
