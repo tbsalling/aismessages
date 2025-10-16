@@ -16,15 +16,26 @@
 
 package dk.tbsalling.aismessages.nmea;
 
+import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
+import dk.tbsalling.aismessages.nmea.exceptions.NMEAParseException;
+import dk.tbsalling.aismessages.nmea.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import lombok.extern.java.Log;
 
 import java.io.IOException;
+import java.net.DatagramPacket;
+import java.net.DatagramSocket;
+import java.net.InetAddress;
+import java.net.SocketException;
 import java.net.UnknownHostException;
+import java.nio.charset.StandardCharsets;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
 
 @Log
 public class NMEAMessageUDPSocket {
+
+    private static final int BUFFER_SIZE = 4096;
 
     @SuppressWarnings("unused")
     private NMEAMessageUDPSocket() {
@@ -40,21 +51,71 @@ public class NMEAMessageUDPSocket {
     }
 
     public void requestStop() {
-        if (streamReader != null)
-            streamReader.requestStop();
+        this.stopRequested.set(true);
+        if (datagramSocket != null && !datagramSocket.isClosed()) {
+            datagramSocket.close();
+        }
     }
 
     public void run() throws IOException {
         log.info("NMEAMessageUDPSocket running.");
-        UDPInputStream udpStream = new UDPInputStream(host, port);
-        log.info("Connected to AIS server on " + host + ":" + port);
-        streamReader = new NMEAMessageInputStreamReader(udpStream, nmeaMessageConsumer);
-        streamReader.run();
-        udpStream.close();
+        
+        try {
+            InetAddress address = InetAddress.getByName(host);
+            datagramSocket = new DatagramSocket(port, address);
+            log.info("Listening for UDP packets on " + host + ":" + port);
+
+            byte[] buffer = new byte[BUFFER_SIZE];
+            DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+
+            while (!isStopRequested()) {
+                try {
+                    datagramSocket.receive(packet);
+                    String data = new String(packet.getData(), 0, packet.getLength(), StandardCharsets.UTF_8);
+                    
+                    // Process each line in the received data
+                    String[] lines = data.split("\\r?\\n");
+                    for (String line : lines) {
+                        if (line.trim().isEmpty()) {
+                            continue;
+                        }
+                        
+                        try {
+                            NMEAMessage nmea = new NMEAMessage(line);
+                            nmeaMessageConsumer.accept(nmea);
+                            log.fine("Received: %s".formatted(nmea.toString()));
+                        } catch (InvalidMessage invalidMessageException) {
+                            log.warning("Received invalid AIS message: \"%s\"".formatted(line));
+                        } catch (UnsupportedMessageType unsupportedMessageTypeException) {
+                            log.warning("Received unsupported NMEA message: \"%s\"".formatted(line));
+                        } catch (NMEAParseException parseException) {
+                            log.warning("Received non-compliant NMEA message: \"%s\"".formatted(line));
+                        }
+                    }
+                } catch (SocketException e) {
+                    if (isStopRequested()) {
+                        // Socket was closed intentionally
+                        break;
+                    } else {
+                        throw e;
+                    }
+                }
+            }
+        } finally {
+            if (datagramSocket != null && !datagramSocket.isClosed()) {
+                datagramSocket.close();
+            }
+        }
+
         log.info("NMEAMessageUDPSocket stopping.");
     }
 
-    private NMEAMessageInputStreamReader streamReader;
+    private boolean isStopRequested() {
+        return this.stopRequested.get();
+    }
+
+    private final AtomicBoolean stopRequested = new AtomicBoolean(false);
+    private DatagramSocket datagramSocket;
     private final String host;
     private final Integer port;
     private final Consumer<? super NMEAMessage> nmeaMessageConsumer;

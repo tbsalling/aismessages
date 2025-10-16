@@ -3,7 +3,6 @@ package dk.tbsalling.aismessages.nmea;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import org.junit.jupiter.api.Test;
 
-import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
@@ -19,16 +18,6 @@ import static org.junit.jupiter.api.Assertions.*;
 public class NMEAMessageUDPSocketTest {
 
     @Test
-    public void testUDPInputStreamCanBeCreated() throws Exception {
-        int testPort = 19876;
-        String testHost = "127.0.0.1";
-
-        UDPInputStream udpStream = new UDPInputStream(testHost, testPort);
-        assertNotNull(udpStream);
-        udpStream.close();
-    }
-
-    @Test
     public void testNMEAMessageUDPSocketCanBeCreated() throws Exception {
         int testPort = 19877;
         String testHost = "127.0.0.1";
@@ -39,19 +28,6 @@ public class NMEAMessageUDPSocketTest {
 
         NMEAMessageUDPSocket udpSocket = new NMEAMessageUDPSocket(testHost, testPort, messageHandler);
         assertNotNull(udpSocket);
-    }
-
-    @Test
-    public void testUDPInputStreamMarkNotSupported() throws Exception {
-        int testPort = 19878;
-        String testHost = "127.0.0.1";
-
-        UDPInputStream udpStream = new UDPInputStream(testHost, testPort);
-
-        assertFalse(udpStream.markSupported());
-        assertThrows(IOException.class, () -> udpStream.reset());
-
-        udpStream.close();
     }
 
     @Test
