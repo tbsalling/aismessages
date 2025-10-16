@@ -1,7 +1,13 @@
 package dk.tbsalling.aismessages.ais.messages.asm;
 
 import dk.tbsalling.aismessages.ais.BitDecoder;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import lombok.Value;
 
+@Value
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class InlandShipStaticAndVoyageRelatedData extends ApplicationSpecificMessage {
 
     protected InlandShipStaticAndVoyageRelatedData(int designatedAreaCode, int functionalId, String binaryData) {
@@ -20,54 +26,14 @@ public class InlandShipStaticAndVoyageRelatedData extends ApplicationSpecificMes
         this.qualityOfHeadingInformation = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(103, 104));
     }
 
-    public String getUniqueEuropeanVesselIdentificationNumber() {
-        return uniqueEuropeanVesselIdentificationNumber;
-    }
-
-    public float getLengthOfShip() {
-        return lengthOfShip;
-    }
-
-    public float getBeamOfShip() {
-        return beamOfShip;
-    }
-
-    public int getShipOrCombinationType() {
-        return shipOrCombinationType;
-    }
-
-    public int getHazardousCargo() {
-        return hazardousCargo;
-    }
-
-    public float getDraught() {
-        return draught;
-    }
-
-    public int getLoaded() {
-        return loaded;
-    }
-
-    public int getQualityOfSpeedInformation() {
-        return qualityOfSpeedInformation;
-    }
-
-    public int getQualityOfCourseInformation() {
-        return qualityOfCourseInformation;
-    }
-
-    public int getQualityOfHeadingInformation() {
-        return qualityOfHeadingInformation;
-    }
-
-    private final String uniqueEuropeanVesselIdentificationNumber;
-    private final float lengthOfShip;
-    private final float beamOfShip;
-    private final int shipOrCombinationType;
-    private final int hazardousCargo;
-    private final float draught;
-    private final int loaded;
-    private final int qualityOfSpeedInformation;
-    private final int qualityOfCourseInformation;
-    private final int qualityOfHeadingInformation;
+    String uniqueEuropeanVesselIdentificationNumber;
+    float lengthOfShip;
+    float beamOfShip;
+    int shipOrCombinationType;
+    int hazardousCargo;
+    float draught;
+    int loaded;
+    int qualityOfSpeedInformation;
+    int qualityOfCourseInformation;
+    int qualityOfHeadingInformation;
 }

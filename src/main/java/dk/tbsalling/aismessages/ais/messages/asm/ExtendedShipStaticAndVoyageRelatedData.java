@@ -1,9 +1,15 @@
 package dk.tbsalling.aismessages.ais.messages.asm;
 
 import dk.tbsalling.aismessages.ais.BitDecoder;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import lombok.Value;
 
 import static java.util.Arrays.stream;
 
+@Value
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class ExtendedShipStaticAndVoyageRelatedData extends ApplicationSpecificMessage {
     public ExtendedShipStaticAndVoyageRelatedData(int designatedAreaCode, int functionalId, String binaryData) {
         super(designatedAreaCode, functionalId, binaryData);
@@ -53,216 +59,48 @@ public class ExtendedShipStaticAndVoyageRelatedData extends ApplicationSpecificM
         this.numberOfPersons = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(281, 294));
     }
 
-    public Integer getMessageLinkageId() {
-        return messageLinkageId;
-    }
-
-    public Float getAirDraught() {
-        return airDraught;
-    }
-
-    public String getLastPortOfCall() {
-        return lastPortOfCall;
-    }
-
-    public String getNextPortOfCall() {
-        return nextPortOfCall;
-    }
-
-    public String getSecondPortOfCall() {
-        return secondPortOfCall;
-    }
-
-    public SolasEquipmentStatus getSolasEquipmentStatusAISClassA() {
-        return solasEquipmentStatusAISClassA;
-    }
-
-    public SolasEquipmentStatus getSolasEquipmentStatusAutomaticTrackingAid() {
-        return solasEquipmentStatusAutomaticTrackingAid;
-    }
-
-    public SolasEquipmentStatus getSolasEquipmentStatusBridgeNavigationalWatchAlarmSystem() {
-        return solasEquipmentStatusBridgeNavigationalWatchAlarmSystem;
-    }
-
-    public SolasEquipmentStatus getSolasEquipmentStatusECDISBackup() {
-        return solasEquipmentStatusECDISBackup;
-    }
-
-    public SolasEquipmentStatus getSolasEquipmentStatusECDISPaperNauticalChart() {
-        return solasEquipmentStatusECDISPaperNauticalChart;
-    }
-
-    public SolasEquipmentStatus getSolasEquipmentStatusEchoSounder() {
-        return solasEquipmentStatusEchoSounder;
-    }
-
-    public SolasEquipmentStatus getSolasEquipmentStatusElectronicPlottingAid() {
-        return solasEquipmentStatusElectronicPlottingAid;
-    }
-
-    public SolasEquipmentStatus getSolasEquipmentStatusEmergencySteeringGear() {
-        return solasEquipmentStatusEmergencySteeringGear;
-    }
-
-    public SolasEquipmentStatus getSolasEquipmentStatusNavigationSystem() {
-        return solasEquipmentStatusNavigationSystem;
-    }
-
-    public SolasEquipmentStatus getSolasEquipmentStatusGyroCompass() {
-        return solasEquipmentStatusGyroCompass;
-    }
-
-    public SolasEquipmentStatus getSolasEquipmentStatusLRIT() {
-        return solasEquipmentStatusLRIT;
-    }
-
-    public SolasEquipmentStatus getSolasEquipmentStatusMagneticCompass() {
-        return solasEquipmentStatusMagneticCompass;
-    }
-
-    public SolasEquipmentStatus getSolasEquipmentStatusNAVTEX() {
-        return solasEquipmentStatusNAVTEX;
-    }
-
-    public SolasEquipmentStatus getSolasEquipmentStatusRadarARPA() {
-        return solasEquipmentStatusRadarARPA;
-    }
-
-    public SolasEquipmentStatus getSolasEquipmentStatusRadarSBand() {
-        return solasEquipmentStatusRadarSBand;
-    }
-
-    public SolasEquipmentStatus getSolasEquipmentStatusRadarXBand() {
-        return solasEquipmentStatusRadarXBand;
-    }
-
-    public SolasEquipmentStatus getSolasEquipmentStatusRadioHF() {
-        return solasEquipmentStatusRadioHF;
-    }
-
-    public SolasEquipmentStatus getSolasEquipmentStatusRadioINMARSAT() {
-        return solasEquipmentStatusRadioINMARSAT;
-    }
-
-    public SolasEquipmentStatus getSolasEquipmentStatusRadioMF() {
-        return solasEquipmentStatusRadioMF;
-    }
-
-    public SolasEquipmentStatus getSolasEquipmentStatusRadioVHF() {
-        return solasEquipmentStatusRadioVHF;
-    }
-
-    public SolasEquipmentStatus getSolasEquipmentStatusSpeedLogOverGround() {
-        return solasEquipmentStatusSpeedLogOverGround;
-    }
-
-    public SolasEquipmentStatus getSolasEquipmentStatusSpeedLogThroughWater() {
-        return solasEquipmentStatusSpeedLogThroughWater;
-    }
-
-    public SolasEquipmentStatus getSolasEquipmentStatusTransmittingHeadingDevice() {
-        return solasEquipmentStatusTransmittingHeadingDevice;
-    }
-
-    public SolasEquipmentStatus getSolasEquipmentStatusTrackControlSystem() {
-        return solasEquipmentStatusTrackControlSystem;
-    }
-
-    public SolasEquipmentStatus getSolasEquipmentStatusVDR() {
-        return solasEquipmentStatusVDR;
-    }
-
-    public SolasEquipmentStatus getSolasEquipmentStatusFuture() {
-        return solasEquipmentStatusFuture;
-    }
-
-    public IceClass getIceClass() {
-        return iceClass;
-    }
-
-    public Integer getShaftHorsePower() {
-        return shaftHorsePower;
-    }
-
-    public String getVhfWorkingChannel() {
-        return vhfWorkingChannel;
-    }
-
-    public String getLloydsShipType() {
-        return lloydsShipType;
-    }
-
-    public Integer getGrossTonnage() {
-        return grossTonnage;
-    }
-
-    public BallastStatus getLadenOrBallast() {
-        return ladenOrBallast;
-    }
-
-    public BunkerOilStatus getHeavyFuelOil() {
-        return heavyFuelOil;
-    }
-
-    public BunkerOilStatus getLightFuelOil() {
-        return lightFuelOil;
-    }
-
-    public BunkerOilStatus getDiesel() {
-        return diesel;
-    }
-
-    public Integer getTotalAmountOfBunkerOil() {
-        return totalAmountOfBunkerOil;
-    }
-
-    public Integer getNumberOfPersons() {
-        return numberOfPersons;
-    }
-
-    private final Integer messageLinkageId;
-    private final Float airDraught;
-    private final String lastPortOfCall;
-    private final String nextPortOfCall;
-    private final String secondPortOfCall;
-    private final SolasEquipmentStatus solasEquipmentStatusAISClassA;
-    private final SolasEquipmentStatus solasEquipmentStatusAutomaticTrackingAid;
-    private final SolasEquipmentStatus solasEquipmentStatusBridgeNavigationalWatchAlarmSystem;
-    private final SolasEquipmentStatus solasEquipmentStatusECDISBackup;
-    private final SolasEquipmentStatus solasEquipmentStatusECDISPaperNauticalChart;
-    private final SolasEquipmentStatus solasEquipmentStatusEchoSounder;
-    private final SolasEquipmentStatus solasEquipmentStatusElectronicPlottingAid;
-    private final SolasEquipmentStatus solasEquipmentStatusEmergencySteeringGear;
-    private final SolasEquipmentStatus solasEquipmentStatusNavigationSystem;
-    private final SolasEquipmentStatus solasEquipmentStatusGyroCompass;
-    private final SolasEquipmentStatus solasEquipmentStatusLRIT;
-    private final SolasEquipmentStatus solasEquipmentStatusMagneticCompass;
-    private final SolasEquipmentStatus solasEquipmentStatusNAVTEX;
-    private final SolasEquipmentStatus solasEquipmentStatusRadarARPA;
-    private final SolasEquipmentStatus solasEquipmentStatusRadarSBand;
-    private final SolasEquipmentStatus solasEquipmentStatusRadarXBand;
-    private final SolasEquipmentStatus solasEquipmentStatusRadioHF;
-    private final SolasEquipmentStatus solasEquipmentStatusRadioINMARSAT;
-    private final SolasEquipmentStatus solasEquipmentStatusRadioMF;
-    private final SolasEquipmentStatus solasEquipmentStatusRadioVHF;
-    private final SolasEquipmentStatus solasEquipmentStatusSpeedLogOverGround;
-    private final SolasEquipmentStatus solasEquipmentStatusSpeedLogThroughWater;
-    private final SolasEquipmentStatus solasEquipmentStatusTransmittingHeadingDevice;
-    private final SolasEquipmentStatus solasEquipmentStatusTrackControlSystem;
-    private final SolasEquipmentStatus solasEquipmentStatusVDR;
-    private final SolasEquipmentStatus solasEquipmentStatusFuture;
-    private final IceClass iceClass;
-    private final Integer shaftHorsePower;
-    private final String vhfWorkingChannel;
-    private final String lloydsShipType;
-    private final Integer grossTonnage;
-    private final BallastStatus ladenOrBallast;
-    private final BunkerOilStatus heavyFuelOil;
-    private final BunkerOilStatus lightFuelOil;
-    private final BunkerOilStatus diesel;
-    private final Integer totalAmountOfBunkerOil;
-    private final Integer numberOfPersons;
+    Integer messageLinkageId;
+    Float airDraught;
+    String lastPortOfCall;
+    String nextPortOfCall;
+    String secondPortOfCall;
+    SolasEquipmentStatus solasEquipmentStatusAISClassA;
+    SolasEquipmentStatus solasEquipmentStatusAutomaticTrackingAid;
+    SolasEquipmentStatus solasEquipmentStatusBridgeNavigationalWatchAlarmSystem;
+    SolasEquipmentStatus solasEquipmentStatusECDISBackup;
+    SolasEquipmentStatus solasEquipmentStatusECDISPaperNauticalChart;
+    SolasEquipmentStatus solasEquipmentStatusEchoSounder;
+    SolasEquipmentStatus solasEquipmentStatusElectronicPlottingAid;
+    SolasEquipmentStatus solasEquipmentStatusEmergencySteeringGear;
+    SolasEquipmentStatus solasEquipmentStatusNavigationSystem;
+    SolasEquipmentStatus solasEquipmentStatusGyroCompass;
+    SolasEquipmentStatus solasEquipmentStatusLRIT;
+    SolasEquipmentStatus solasEquipmentStatusMagneticCompass;
+    SolasEquipmentStatus solasEquipmentStatusNAVTEX;
+    SolasEquipmentStatus solasEquipmentStatusRadarARPA;
+    SolasEquipmentStatus solasEquipmentStatusRadarSBand;
+    SolasEquipmentStatus solasEquipmentStatusRadarXBand;
+    SolasEquipmentStatus solasEquipmentStatusRadioHF;
+    SolasEquipmentStatus solasEquipmentStatusRadioINMARSAT;
+    SolasEquipmentStatus solasEquipmentStatusRadioMF;
+    SolasEquipmentStatus solasEquipmentStatusRadioVHF;
+    SolasEquipmentStatus solasEquipmentStatusSpeedLogOverGround;
+    SolasEquipmentStatus solasEquipmentStatusSpeedLogThroughWater;
+    SolasEquipmentStatus solasEquipmentStatusTransmittingHeadingDevice;
+    SolasEquipmentStatus solasEquipmentStatusTrackControlSystem;
+    SolasEquipmentStatus solasEquipmentStatusVDR;
+    SolasEquipmentStatus solasEquipmentStatusFuture;
+    IceClass iceClass;
+    Integer shaftHorsePower;
+    String vhfWorkingChannel;
+    String lloydsShipType;
+    Integer grossTonnage;
+    BallastStatus ladenOrBallast;
+    BunkerOilStatus heavyFuelOil;
+    BunkerOilStatus lightFuelOil;
+    BunkerOilStatus diesel;
+    Integer totalAmountOfBunkerOil;
+    Integer numberOfPersons;
 
     public enum SolasEquipmentStatus {
         EQUIPMENT_NOT_AVAILABLE_OR_REQUESTED(0),
@@ -270,7 +108,7 @@ public class ExtendedShipStaticAndVoyageRelatedData extends ApplicationSpecificM
         EQUIPMENT_NOT_OPERATIONAL(2),
         NO_DATA(3);
 
-        private final int value;
+        int value;
 
         SolasEquipmentStatus(int value) {
             this.value = value;
@@ -302,7 +140,7 @@ public class ExtendedShipStaticAndVoyageRelatedData extends ApplicationSpecificM
         FUTURE_4(14),
         NOT_AVAILABLE(15);
 
-        private final int value;
+        int value;
 
         IceClass(int value) {
             this.value = value;
@@ -322,7 +160,7 @@ public class ExtendedShipStaticAndVoyageRelatedData extends ApplicationSpecificM
         BALLAST(2),
         NOT_IN_USE(3);
 
-        private final int value;
+        int value;
 
         BallastStatus(int value) {
             this.value = value;
@@ -342,7 +180,7 @@ public class ExtendedShipStaticAndVoyageRelatedData extends ApplicationSpecificM
         YES(2),
         NOT_IN_USE(3);
 
-        private final int value;
+        int value;
 
         BunkerOilStatus(int value) {
             this.value = value;

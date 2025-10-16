@@ -1,8 +1,17 @@
 package dk.tbsalling.aismessages.ais.messages.asm;
 
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
+
 import static java.util.Objects.requireNonNull;
 
-public abstract class ApplicationSpecificMessage {
+@AllArgsConstructor
+@Getter
+@ToString
+@EqualsAndHashCode
+public abstract sealed class ApplicationSpecificMessage permits BerthingData, InlandShipStaticAndVoyageRelatedData, ExtendedShipStaticAndVoyageRelatedData, NumberOfPersonsOnBoard, UnknownApplicationSpecificMessage {
 
     /**
      * Create proper type of ApplicationSpecificMessage
@@ -33,27 +42,6 @@ public abstract class ApplicationSpecificMessage {
             asm = new UnknownApplicationSpecificMessage(designatedAreaCode, functionalId, binaryData);
 
         return asm;
-    }
-
-    @SuppressWarnings("unused")
-    public final int getDesignatedAreaCode() {
-        return designatedAreaCode;
-    };
-
-    @SuppressWarnings("unused")
-    public final int getFunctionalId() {
-        return functionalId;
-    }
-
-    @SuppressWarnings("unused")
-    public final String getBinaryData() {
-        return binaryData;
-    }
-
-    protected ApplicationSpecificMessage(int designatedAreaCode, int functionalId, String binaryData) {
-        this.designatedAreaCode = designatedAreaCode;
-        this.functionalId = functionalId;
-        this.binaryData = binaryData;
     }
 
     private final int designatedAreaCode;

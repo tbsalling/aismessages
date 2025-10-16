@@ -1,12 +1,18 @@
 package dk.tbsalling.aismessages.ais.messages.asm;
 
 import dk.tbsalling.aismessages.ais.BitDecoder;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
+import lombok.Value;
 
 import static java.util.Arrays.stream;
 
+@Value
+@EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class BerthingData extends ApplicationSpecificMessage {
 
-    protected BerthingData(int designatedAreaCode, int functionalId, String binaryData) {
+    BerthingData(int designatedAreaCode, int functionalId, String binaryData) {
         super(designatedAreaCode, functionalId, binaryData);
 
         // Eagerly decode all fields
@@ -47,181 +53,41 @@ public class BerthingData extends ApplicationSpecificMessage {
         this.berthLatitude = BitDecoder.INSTANCE.decodeFloat(getBinaryData().substring(243, 267)) / 60000f;
     }
 
-    public int getMessageLinkageId() {
-        return messageLinkageId;
-    }
-
-    public int getBerthLength() {
-        return berthLength;
-    }
-
-    public float getWaterDepthAtBerth() {
-        return waterDepthAtBerth;
-    }
-
-    public MooringPosition getMooringPosition() {
-        return mooringPosition;
-    }
-
-    public int getBerthUtcMonth() {
-        return berthUtcMonth;
-    }
-
-    public int getBerthUtcDay() {
-        return berthUtcDay;
-    }
-
-    public int getBerthUtcHour() {
-        return berthUtcHour;
-    }
-
-    public int getBerthUtcMinute() {
-        return berthUtcMinute;
-    }
-
-    public ServiceStatus getServiceStatusAgent() {
-        return serviceStatusAgent;
-    }
-
-    public ServiceStatus getServiceStatusFuel() {
-        return serviceStatusFuel;
-    }
-
-    public ServiceStatus getServiceStatusChandler() {
-        return serviceStatusChandler;
-    }
-
-    public ServiceStatus getServiceStatusStevedore() {
-        return serviceStatusStevedore;
-    }
-
-    public ServiceStatus getServiceStatusElectrical() {
-        return serviceStatusElectrical;
-    }
-
-    public ServiceStatus getServiceStatusPotableWater() {
-        return serviceStatusPotableWater;
-    }
-
-    public ServiceStatus getServiceStatusCustomsHouse() {
-        return serviceStatusCustomsHouse;
-    }
-
-    public ServiceStatus getServiceStatusCartage() {
-        return serviceStatusCartage;
-    }
-
-    public ServiceStatus getServiceStatusCrane() {
-        return serviceStatusCrane;
-    }
-
-    public ServiceStatus getServiceStatusLift() {
-        return serviceStatusLift;
-    }
-
-    public ServiceStatus getServiceStatusMedical() {
-        return serviceStatusMedical;
-    }
-
-    public ServiceStatus getServiceStatusNavigationRepair() {
-        return serviceStatusNavigationRepair;
-    }
-
-    public ServiceStatus getServiceStatusProvisions() {
-        return serviceStatusProvisions;
-    }
-
-    public ServiceStatus getServiceStatusShipRepair() {
-        return serviceStatusShipRepair;
-    }
-
-    public ServiceStatus getServiceStatusSurveyor() {
-        return serviceStatusSurveyor;
-    }
-
-    public ServiceStatus getServiceStatusSteam() {
-        return serviceStatusSteam;
-    }
-
-    public ServiceStatus getServiceStatusTugs() {
-        return serviceStatusTugs;
-    }
-
-    public ServiceStatus getServiceStatusSolidWasteDisposal() {
-        return serviceStatusSolidWasteDisposal;
-    }
-
-    public ServiceStatus getServiceStatusLiquidWasteDisposal() {
-        return serviceStatusLiquidWasteDisposal;
-    }
-
-    public ServiceStatus getServiceStatusHazardousWasteDisposal() {
-        return serviceStatusHazardousWasteDisposal;
-    }
-
-    public ServiceStatus getServiceStatusReservedBallastExchange() {
-        return serviceStatusReservedBallastExchange;
-    }
-
-    public ServiceStatus getServiceStatusAdditionalServices() {
-        return serviceStatusAdditionalServices;
-    }
-
-    public ServiceStatus getServiceStatusFutureRegionalUse() {
-        return serviceStatusFutureRegionalUse;
-    }
-
-    public ServiceStatus getServiceStatusFutureUse() {
-        return serviceStatusFutureUse;
-    }
-
-    public String getNameOfBerth() {
-        return nameOfBerth;
-    }
-
-    public float getBerthLongitude() {
-        return berthLongitude;
-    }
-
-    public float getBerthLatitude() {
-        return berthLatitude;
-    }
-
-    private final int messageLinkageId;
-    private final int berthLength;
-    private final float waterDepthAtBerth;
-    private final MooringPosition mooringPosition;
-    private final int berthUtcMonth;
-    private final int berthUtcDay;
-    private final int berthUtcHour;
-    private final int berthUtcMinute;
-    private final ServiceStatus serviceStatusAgent;
-    private final ServiceStatus serviceStatusFuel;
-    private final ServiceStatus serviceStatusChandler;
-    private final ServiceStatus serviceStatusStevedore;
-    private final ServiceStatus serviceStatusElectrical;
-    private final ServiceStatus serviceStatusPotableWater;
-    private final ServiceStatus serviceStatusCustomsHouse;
-    private final ServiceStatus serviceStatusCartage;
-    private final ServiceStatus serviceStatusCrane;
-    private final ServiceStatus serviceStatusLift;
-    private final ServiceStatus serviceStatusMedical;
-    private final ServiceStatus serviceStatusNavigationRepair;
-    private final ServiceStatus serviceStatusProvisions;
-    private final ServiceStatus serviceStatusShipRepair;
-    private final ServiceStatus serviceStatusSurveyor;
-    private final ServiceStatus serviceStatusSteam;
-    private final ServiceStatus serviceStatusTugs;
-    private final ServiceStatus serviceStatusSolidWasteDisposal;
-    private final ServiceStatus serviceStatusLiquidWasteDisposal;
-    private final ServiceStatus serviceStatusHazardousWasteDisposal;
-    private final ServiceStatus serviceStatusReservedBallastExchange;
-    private final ServiceStatus serviceStatusAdditionalServices;
-    private final ServiceStatus serviceStatusFutureRegionalUse;
-    private final ServiceStatus serviceStatusFutureUse;
-    private final String nameOfBerth;
-    private final float berthLongitude;
-    private final float berthLatitude;
+    int messageLinkageId;
+    int berthLength;
+    float waterDepthAtBerth;
+    MooringPosition mooringPosition;
+    int berthUtcMonth;
+    int berthUtcDay;
+    int berthUtcHour;
+    int berthUtcMinute;
+    ServiceStatus serviceStatusAgent;
+    ServiceStatus serviceStatusFuel;
+    ServiceStatus serviceStatusChandler;
+    ServiceStatus serviceStatusStevedore;
+    ServiceStatus serviceStatusElectrical;
+    ServiceStatus serviceStatusPotableWater;
+    ServiceStatus serviceStatusCustomsHouse;
+    ServiceStatus serviceStatusCartage;
+    ServiceStatus serviceStatusCrane;
+    ServiceStatus serviceStatusLift;
+    ServiceStatus serviceStatusMedical;
+    ServiceStatus serviceStatusNavigationRepair;
+    ServiceStatus serviceStatusProvisions;
+    ServiceStatus serviceStatusShipRepair;
+    ServiceStatus serviceStatusSurveyor;
+    ServiceStatus serviceStatusSteam;
+    ServiceStatus serviceStatusTugs;
+    ServiceStatus serviceStatusSolidWasteDisposal;
+    ServiceStatus serviceStatusLiquidWasteDisposal;
+    ServiceStatus serviceStatusHazardousWasteDisposal;
+    ServiceStatus serviceStatusReservedBallastExchange;
+    ServiceStatus serviceStatusAdditionalServices;
+    ServiceStatus serviceStatusFutureRegionalUse;
+    ServiceStatus serviceStatusFutureUse;
+    String nameOfBerth;
+    float berthLongitude;
+    float berthLatitude;
 
     public enum MooringPosition {
         UNDEFINED(0),
@@ -233,7 +99,7 @@ public class BerthingData extends ApplicationSpecificMessage {
         RESERVED_FUTURE_USE_1(6),
         RESERVED_FUTURE_USE_2(7);
 
-        private final int value;
+        int value;
 
         MooringPosition(int value) {
             this.value = value;
@@ -253,7 +119,7 @@ public class BerthingData extends ApplicationSpecificMessage {
         NO_DATA_OR_UNKNOWN(2),
         NOT_USED(3);
 
-        private final int value;
+        int value;
 
         ServiceStatus(int value) {
             this.value = value;
