@@ -33,7 +33,7 @@ import lombok.Getter;
  */
 @Getter
 @AllArgsConstructor
-public class BitStringParser {
+public final class BitStringParser {
 
     /**
      * The binary string representation of the AIS message payload (string of 0's and 1's).
@@ -128,7 +128,7 @@ public class BitStringParser {
      * @return the bit pattern as a string
      */
     public String getBitPattern(int beginIndex, int endIndex) {
-        return BitDecoder.INSTANCE.decodeBits(getBits(beginIndex, endIndex));
+        return BitDecoder.INSTANCE.getBitString(getBits(beginIndex, endIndex));
     }
 
     /**

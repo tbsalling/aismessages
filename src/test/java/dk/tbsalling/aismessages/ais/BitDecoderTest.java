@@ -78,9 +78,9 @@ public class BitDecoderTest {
     }
 
     @Test
-    public void decodeBits_identity() {
-        assertEquals("", decoder.decodeBits(""));
-        assertEquals("101010", decoder.decodeBits("101010"));
+    public void getBitString_identity() {
+        assertEquals("", decoder.getBitString(""));
+        assertEquals("101010", decoder.getBitString("101010"));
     }
 
     @Test
