@@ -129,18 +129,18 @@ public class NMEAMessageHandlerTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void strictAcceptRejectsInvalidChecksum() {
+    public void strictHandlerRejectsInvalidChecksum() {
         // Arrange
         Mockery strictContext = new JUnit5Mockery();
         Consumer<AISMessage> strictHandler = (Consumer<AISMessage>) strictContext.mock(Consumer.class);
-        NMEAMessageHandler strictReceiver = new NMEAMessageHandler("TEST", strictHandler);
+        StrictNMEAMessageHandler strictReceiver = new StrictNMEAMessageHandler("TEST", strictHandler);
         NMEAMessage messageWithInvalidChecksum = new NMEAMessage("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3B");
         strictContext.checking(new Expectations() {{
             never(strictHandler).accept(with(any(AISMessage.class)));
         }});
 
         // Act
-        strictReceiver.acceptStrict(messageWithInvalidChecksum);
+        strictReceiver.accept(messageWithInvalidChecksum);
 
         // Assert - message should not be processed (expectation is verified by jmock)
         strictContext.assertIsSatisfied();
@@ -148,11 +148,11 @@ public class NMEAMessageHandlerTest {
 
     @Test
     @SuppressWarnings("unchecked")
-    public void strictAcceptProcessesValidChecksum() {
+    public void strictHandlerProcessesValidChecksum() {
         // Arrange
         Mockery strictContext = new JUnit5Mockery();
         Consumer<AISMessage> strictHandler = (Consumer<AISMessage>) strictContext.mock(Consumer.class);
-        NMEAMessageHandler strictReceiver = new NMEAMessageHandler("TEST", strictHandler);
+        StrictNMEAMessageHandler strictReceiver = new StrictNMEAMessageHandler("TEST", strictHandler);
         NMEAMessage messageWithValidChecksum = new NMEAMessage("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A");
         final ArgumentCaptor<AISMessage> aisMessage = new ArgumentCaptor<>();
         strictContext.checking(new Expectations() {{
@@ -160,7 +160,7 @@ public class NMEAMessageHandlerTest {
         }});
 
         // Act
-        strictReceiver.acceptStrict(messageWithValidChecksum);
+        strictReceiver.accept(messageWithValidChecksum);
 
         // Assert
         strictContext.assertIsSatisfied();

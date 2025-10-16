@@ -62,30 +62,15 @@ public class NMEAMessageHandler implements Consumer<NMEAMessage> {
         if (!checksumValid) {
             log.warning("NMEA message has invalid checksum: %s".formatted(nmeaMessage.getRawMessage()));
         }
-        acceptInternal(nmeaMessage);
+        processMessage(nmeaMessage);
     }
 
     /**
-     * Receive a single NMEA armoured AIS string (strict mode).
-     * This method validates the checksum and only processes messages with valid checksums.
-     * Messages with invalid checksums are logged as errors and not processed.
-     * @param nmeaMessage the NMEAMessage to handle.
+     * Process a NMEA message.
+     * This method can be overridden by subclasses to provide custom behavior.
+     * @param nmeaMessage the NMEAMessage to process.
      */
-    public void acceptStrict(NMEAMessage nmeaMessage) {
-        // Validate checksum once
-        boolean checksumValid = nmeaMessage.isChecksumValid();
-        if (!checksumValid) {
-            log.severe("NMEA message has invalid checksum and will not be processed: %s".formatted(nmeaMessage.getRawMessage()));
-            return;
-        }
-        acceptInternal(nmeaMessage);
-    }
-
-    /**
-     * Internal method to process NMEA messages.
-     * @param nmeaMessage the NMEAMessage to handle.
-     */
-    private void acceptInternal(NMEAMessage nmeaMessage) {
+    protected void processMessage(NMEAMessage nmeaMessage) {
         log.fine("Received for processing: %s".formatted(nmeaMessage.getRawMessage()));
 
         int numberOfFragments = nmeaMessage.getNumberOfFragments();
