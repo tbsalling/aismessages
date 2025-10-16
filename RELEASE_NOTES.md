@@ -4,7 +4,7 @@ Developer-oriented release notes for AISmessages - a Java-based library for deco
 
 ---
 
-## Version 4.0.0-SNAPSHOT (In Development)
+## Version 4.0.0
 
 **Major Version Update - Java 21 Required**
 
@@ -145,16 +145,16 @@ Bug fixes and stability improvements. JDK 7 backport available.
 
 ## Maven Coordinates
 
-### Development Version (4.0.0-SNAPSHOT)
+### Latest Stable Version (4.0.0)
 ```xml
 <dependency>
     <groupId>dk.tbsalling</groupId>
     <artifactId>aismessages</artifactId>
-    <version>4.0.0-SNAPSHOT</version>
+    <version>4.0.0</version>
 </dependency>
 ```
 
-### Latest Stable Version (3.5.1)
+### Previous Stable Version (3.5.1)
 ```xml
 <dependency>
     <groupId>dk.tbsalling</groupId>
