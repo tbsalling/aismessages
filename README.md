@@ -10,7 +10,7 @@ Internally AISmessages uses eager parsing and a fail‑fast design combined with
 
 For more than 15+ years AISmessages has been used in production in many systems and solutions all over the world.
 
-If you are new to AIS you can read a short introduction to it on [my blog](https://tbsalling.dk/2018/09/01/an-introduction-to-ais/). 
+If you are new to AIS you can read a short introduction to it on [my blog](https://tbsalling.dk/blog_000_ais.html).
 
 Other AIS projects
 ---
