@@ -106,14 +106,14 @@ public class AISMessageFactory {
     // Public methods
 
     /**
-     * Converts a six-bit encoded ASCII payload to a binary string representation (sequence of '0' and '1').
+     * Converts a six-bit encoded ASCII payload to a BitString representation.
      *
      * @param encodedString the six-bit encoded payload
      * @param paddingBits   number of pad bits to discard from the end (0..5)
-     * @return the binary string
+     * @return the BitString
      * @throws IllegalArgumentException if inputs are invalid
      */
-    public static String toBitString(String encodedString, int paddingBits) {
+    public static dk.tbsalling.aismessages.ais.BitString toBitString(String encodedString, int paddingBits) {
         if (encodedString == null) {
             throw new IllegalArgumentException("encodedString cannot be null");
         }
@@ -129,7 +129,8 @@ public class AISMessageFactory {
             }
             bitString.append(sixBits);
         }
-        return bitString.substring(0, bitString.length() - paddingBits);
+        String finalBitString = bitString.substring(0, bitString.length() - paddingBits);
+        return new dk.tbsalling.aismessages.ais.BitString(finalBitString);
     }
 
     /**
@@ -137,10 +138,10 @@ public class AISMessageFactory {
      */
     public static AISMessage create(Instant received, String source, NMEATagBlock nmeaTagBlock, NMEAMessage... nmeaMessages) {
         // Decode payload into bit string
-        String bitString = decodePayloadToBitString(nmeaMessages);
+        dk.tbsalling.aismessages.ais.BitString bitString = decodePayloadToBitString(nmeaMessages);
 
         // Determine message type
-        AISMessageType messageType = AISMessageType.fromInteger(Integer.parseInt(bitString.substring(0, 6), 2));
+        AISMessageType messageType = AISMessageType.fromInteger(Integer.parseInt(bitString.substring(0, 6).toString(), 2));
         if (messageType == null) {
             StringBuilder sb = new StringBuilder();
             for (NMEAMessage nmeaMessage : nmeaMessages) {
@@ -163,7 +164,7 @@ public class AISMessageFactory {
                 repeatIndicator,
                 nmeaTagBlock,
                 nmeaMessages,
-                bitString,
+                bitString.toString(),
                 source,
                 received,
                 parser
@@ -881,7 +882,7 @@ public class AISMessageFactory {
         };
     }
 
-    private static String decodePayloadToBitString(NMEAMessage... nmeaMessages) {
+    private static dk.tbsalling.aismessages.ais.BitString decodePayloadToBitString(NMEAMessage... nmeaMessages) {
         if (nmeaMessages == null || nmeaMessages.length == 0) {
             throw new IllegalArgumentException("nmeaMessages must contain at least one element");
         }

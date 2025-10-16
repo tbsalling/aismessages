@@ -16,7 +16,6 @@
 
 package dk.tbsalling.aismessages.ais;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -32,13 +31,31 @@ import lombok.Getter;
  * @author tbsalling
  */
 @Getter
-@AllArgsConstructor
 public final class BitStringParser {
 
     /**
-     * The binary string representation of the AIS message payload (string of 0's and 1's).
+     * The binary string representation of the AIS message payload.
      */
-    private final String bitString;
+    private final BitString bitString;
+
+
+    /**
+     * Creates a BitStringParser from a String representation of bits.
+     *
+     * @param bitString a string of '0' and '1' characters
+     */
+    public BitStringParser(String bitString) {
+        this.bitString = new BitString(bitString);
+    }
+
+    /**
+     * Creates a BitStringParser from a BitString.
+     *
+     * @param bitString the BitString to parse
+     */
+    public BitStringParser(BitString bitString) {
+        this.bitString = bitString;
+    }
 
     /**
      * Retrieves a substring of the zero bit-stuffed string based on the given beginIndex and endIndex.
@@ -47,10 +64,10 @@ public final class BitStringParser {
      *
      * @param beginIndex the starting index (inclusive) of the substring
      * @param endIndex   the ending index (exclusive) of the substring
-     * @return the substring of the zero bit-stuffed string
+     * @return the substring as a String (for compatibility with BitDecoder)
      */
     public String getBits(int beginIndex, int endIndex) {
-        return getZeroBitStuffedString(endIndex).substring(beginIndex, endIndex);
+        return bitString.substring(beginIndex, endIndex).toString();
     }
 
     /**
@@ -141,18 +158,11 @@ public final class BitStringParser {
     }
 
     /**
-     * Returns a zero bit-stuffed string based on the given endIndex.
-     * <p>
-     * If the bitString is shorter than endIndex, it is padded with zeros.
+     * Returns the underlying BitString.
      *
-     * @param endIndex the index where the string should end
-     * @return the zero bit-stuffed string
+     * @return the BitString
      */
-    private String getZeroBitStuffedString(int endIndex) {
-        int deficit = endIndex - bitString.length();
-        if (deficit > 0) {
-            return bitString + "0".repeat(deficit);
-        }
+    public BitString getBitStringObject() {
         return bitString;
     }
 
