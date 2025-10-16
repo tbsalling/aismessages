@@ -1,5 +1,5 @@
 ![Build status](https://travis-ci.org/tbsalling/aismessages.svg?branch=master)
-[![License](http://img.shields.io/badge/license-CCANS3-green.svg)](https://github.com/tbsalling/aismessages/blob/master/LICENSE)
+[![License](http://img.shields.io/badge/license-CCANS4-green.svg)](https://github.com/tbsalling/aismessages/blob/master/LICENSE)
 
 Introduction
 ---
@@ -152,6 +152,40 @@ if (asm instanceof WeatherObservation) {
 
 Unknown or unsupported application specific messages are represented as `UnknownApplicationSpecificMessage`, which provides access to the raw binary data.
 
+Receiving AIS messages via UDP
+---
+AISmessages also supports receiving AIS messages via UDP, which is a common method for receiving AIS data from 
+various sources. Here's how to use it:
+
+```java
+import dk.tbsalling.aismessages.ais.messages.AISMessage;
+import dk.tbsalling.aismessages.nmea.NMEAMessageHandler;
+import dk.tbsalling.aismessages.nmea.NMEAMessageUDPSocket;
+
+public class UDPExample {
+    public static void main(String[] args) {
+        try {
+            NMEAMessageUDPSocket udpSocket = new NMEAMessageUDPSocket(
+                "127.0.0.1",  // Host address to bind to
+                10110,        // UDP port to listen on
+                new NMEAMessageHandler("UDPSRC", aisMessage -> {
+                    // Process each received AIS message
+                    System.out.println("Received: " + aisMessage);
+                })
+            );
+            udpSocket.run();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+The UDP receiver will bind to the specified host and port and process incoming UDP packets containing 
+NMEA-formatted AIS messages. You can stop the receiver by calling `udpSocket.requestStop()`.
+
+A complete demo application is available in the `dk.tbsalling.aismessages.demo.UDPDemoApp` class.
+
 Obtaining AISmessages
 ---
 You do not need to compile AISmessages yourself. It is available in Maven Central. So if you are using Maven, all you
@@ -172,7 +206,13 @@ License
 AISmessages is released under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA
 4.0)
 license - which means that it is free for non-commercial use. For full license details see the
-[LICENSE-full](LICENSE.txt) file or read [the summary](LICENSE-summary.md).
+[LICENSE](LICENSE) file.
 
-To obtain a commercial license and/or commercial support contact
+Commercial License
+---
+AISmessages (C) Copyright 2011- by S-Consult ApS, VAT no. DK31327490, Denmark.
+
+AISmessages is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 Unported License.
+
+To obtain an alternative commercial license and/or support contact
 [Thomas Borg Salling](mailto:tbsalling@tbsalling.dk?subject=[GitHub]%20AISmessages%20license) - tbsalling@tbsalling.dk.
