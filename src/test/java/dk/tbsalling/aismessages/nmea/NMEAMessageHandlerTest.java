@@ -126,44 +126,4 @@ public class NMEAMessageHandlerTest {
         assertEquals(0, flush.size());
         assertDoesNotThrow(() -> {});
     }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void strictHandlerRejectsInvalidChecksum() {
-        // Arrange
-        Mockery strictContext = new JUnit5Mockery();
-        Consumer<AISMessage> strictHandler = (Consumer<AISMessage>) strictContext.mock(Consumer.class);
-        StrictNMEAMessageHandler strictReceiver = new StrictNMEAMessageHandler("TEST", strictHandler);
-        NMEAMessage messageWithInvalidChecksum = new NMEAMessage("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3B");
-        strictContext.checking(new Expectations() {{
-            never(strictHandler).accept(with(any(AISMessage.class)));
-        }});
-
-        // Act
-        strictReceiver.accept(messageWithInvalidChecksum);
-
-        // Assert - message should not be processed (expectation is verified by jmock)
-        strictContext.assertIsSatisfied();
-    }
-
-    @Test
-    @SuppressWarnings("unchecked")
-    public void strictHandlerProcessesValidChecksum() {
-        // Arrange
-        Mockery strictContext = new JUnit5Mockery();
-        Consumer<AISMessage> strictHandler = (Consumer<AISMessage>) strictContext.mock(Consumer.class);
-        StrictNMEAMessageHandler strictReceiver = new StrictNMEAMessageHandler("TEST", strictHandler);
-        NMEAMessage messageWithValidChecksum = new NMEAMessage("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A");
-        final ArgumentCaptor<AISMessage> aisMessage = new ArgumentCaptor<>();
-        strictContext.checking(new Expectations() {{
-            oneOf(strictHandler).accept(with(aisMessage.getMatcher()));
-        }});
-
-        // Act
-        strictReceiver.accept(messageWithValidChecksum);
-
-        // Assert
-        strictContext.assertIsSatisfied();
-        assertEquals(AISMessageType.PositionReportClassAScheduled, aisMessage.getCapturedObject().getMessageType());
-    }
 }

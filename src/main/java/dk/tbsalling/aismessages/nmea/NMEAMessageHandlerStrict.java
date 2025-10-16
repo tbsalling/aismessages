@@ -30,9 +30,9 @@ import java.util.function.Consumer;
  * @author tbsalling
  */
 @Log
-public class StrictNMEAMessageHandler extends NMEAMessageHandler {
+public class NMEAMessageHandlerStrict extends NMEAMessageHandler {
 
-    public StrictNMEAMessageHandler(String source, Consumer<? super AISMessage>... aisMessageReceivers) {
+    public NMEAMessageHandlerStrict(String source, Consumer<? super AISMessage>... aisMessageReceivers) {
         super(source, aisMessageReceivers);
     }
 
