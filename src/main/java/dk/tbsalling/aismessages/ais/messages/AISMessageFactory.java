@@ -810,17 +810,6 @@ public class AISMessageFactory {
                 rawLongitude, rawLatitude, rawSpeedOverGround, rawCourseOverGround);
     }
 
-
-    @FunctionalInterface
-    private interface PositionReportConstructor {
-        PositionReport create(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
-                              NavigationStatus navigationStatus, int rateOfTurn, float speedOverGround,
-                              boolean positionAccuracy, float latitude, float longitude,
-                              float courseOverGround, int trueHeading, int second,
-                              ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState,
-                              int rawRateOfTurn, int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround);
-    }
-
     // Private helper methods (placed last)
     private static AISMessage createByType(
             AISMessageType messageType,
@@ -916,6 +905,16 @@ public class AISMessageFactory {
             throw new IllegalArgumentException("fillBits not set");
         }
         return toBitString(sixBitEncodedPayload.toString(), fillBits);
+    }
+
+    @FunctionalInterface
+    private interface PositionReportConstructor {
+        PositionReport create(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
+                              NavigationStatus navigationStatus, int rateOfTurn, float speedOverGround,
+                              boolean positionAccuracy, float latitude, float longitude,
+                              float courseOverGround, int trueHeading, int second,
+                              ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState,
+                              int rawRateOfTurn, int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround);
     }
     
 }
