@@ -11,7 +11,24 @@ import static java.util.Objects.requireNonNull;
 @Getter
 @ToString
 @EqualsAndHashCode
-public abstract sealed class ApplicationSpecificMessage permits BerthingData, InlandShipStaticAndVoyageRelatedData, ExtendedShipStaticAndVoyageRelatedData, NumberOfPersonsOnBoard, UnknownApplicationSpecificMessage {
+public abstract sealed class ApplicationSpecificMessage permits 
+    AreaNotice,
+    BerthingData, 
+    DangerousCargoIndication,
+    Environmental,
+    ExtendedShipStaticAndVoyageRelatedData, 
+    InlandShipStaticAndVoyageRelatedData, 
+    MarineTrafficSignal,
+    MeteorologicalAndHydrographicalData,
+    NumberOfPersonsOnBoard, 
+    RouteInformation,
+    TextDescription,
+    TidalWindow,
+    UnknownApplicationSpecificMessage,
+    UtcDateInquiry,
+    UtcDateResponse,
+    VtsGeneratedSyntheticTargets,
+    WeatherObservation {
 
     /**
      * Create proper type of ApplicationSpecificMessage
@@ -26,8 +43,24 @@ public abstract sealed class ApplicationSpecificMessage permits BerthingData, In
 
         ApplicationSpecificMessage asm = switch (designatedAreaCode) {
             case 1 -> switch (functionalId) {
+                case 0 -> new TextDescription(designatedAreaCode, functionalId, binaryData);
+                case 1 -> new TextDescription(designatedAreaCode, functionalId, binaryData);
+                case 10 -> new UtcDateInquiry(designatedAreaCode, functionalId, binaryData);
+                case 11 -> new UtcDateResponse(designatedAreaCode, functionalId, binaryData);
+                case 14 -> new TidalWindow(designatedAreaCode, functionalId, binaryData);
+                case 17 -> new VtsGeneratedSyntheticTargets(designatedAreaCode, functionalId, binaryData);
+                case 18 -> new MarineTrafficSignal(designatedAreaCode, functionalId, binaryData);
+                case 19 -> new MarineTrafficSignal(designatedAreaCode, functionalId, binaryData);
                 case 20 -> new BerthingData(designatedAreaCode, functionalId, binaryData);
+                case 21 -> new WeatherObservation(designatedAreaCode, functionalId, binaryData);
+                case 22 -> new AreaNotice(designatedAreaCode, functionalId, binaryData);
+                case 23 -> new AreaNotice(designatedAreaCode, functionalId, binaryData);
                 case 24 -> new ExtendedShipStaticAndVoyageRelatedData(designatedAreaCode, functionalId, binaryData);
+                case 25 -> new DangerousCargoIndication(designatedAreaCode, functionalId, binaryData);
+                case 26 -> new Environmental(designatedAreaCode, functionalId, binaryData);
+                case 27 -> new RouteInformation(designatedAreaCode, functionalId, binaryData);
+                case 28 -> new RouteInformation(designatedAreaCode, functionalId, binaryData);
+                case 31 -> new MeteorologicalAndHydrographicalData(designatedAreaCode, functionalId, binaryData);
                 case 40 -> new NumberOfPersonsOnBoard(designatedAreaCode, functionalId, binaryData);
                 default -> null;
             };
