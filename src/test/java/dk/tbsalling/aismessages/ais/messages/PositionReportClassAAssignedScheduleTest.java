@@ -39,7 +39,7 @@ public class PositionReportClassAAssignedScheduleTest {
 		*/
 
         // Arrange
-        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,24RjBV0028o:pnNEBeU<pJF>0PT@,0*3E");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,24RjBV0028o:pnNEBeU<pJF>0PT@,0*3F");
 
         // Act
         AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);

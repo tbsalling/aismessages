@@ -105,14 +105,14 @@ public class ShipAndVoyageDataTest {
         assertEquals(expectedDigest, digestAsString);
 
         // Change line 1
-        NMEAMessage nmeaMessage1b = new NMEAMessage("!AIVDM,2,1,0,B,539S:k40000000c3G04PPh63<00000000080000o1PVG2uGD:00000000001,0*35");
+        NMEAMessage nmeaMessage1b = new NMEAMessage("!AIVDM,2,1,0,B,539S:k40000000c3G04PPh63<00000000080000o1PVG2uGD:00000000001,0*34");
         aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage1b, nmeaMessage2);
         digest = aisMessage.digest();
         digestAsString = String.format("%040x", new java.math.BigInteger(1, digest));
         assertNotEquals(expectedDigest, digestAsString);
 
         // Change line 2
-        NMEAMessage nmeaMessage2b = new NMEAMessage("!AIVDM,2,2,0,B,00000000001,2*26");
+        NMEAMessage nmeaMessage2b = new NMEAMessage("!AIVDM,2,2,0,B,00000000001,2*27");
         aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage1, nmeaMessage2b);
         digest = aisMessage.digest();
         digestAsString = String.format("%040x", new java.math.BigInteger(1, digest));

@@ -75,11 +75,17 @@ public class NMEAMessage {
     private boolean isValid() {
         if (messageType == null || messageType.length() != 5) return false;
         String type = messageType.substring(2);
-        if (!("VDM".equals(type) || "VDO".equals(type))) return false;
-        return isChecksumValid();
+        return ("VDM".equals(type) || "VDO".equals(type));
     }
 
-    private boolean isChecksumValid() {
+    /**
+     * Validates the NMEA checksum to detect transmission errors.
+     * The checksum is calculated by XORing all characters between '!' and '*' (exclusive)
+     * and comparing with the checksum value in the message.
+     *
+     * @return true if the checksum is valid, false otherwise
+     */
+    public boolean isChecksumValid() {
         // Extract the part between '!' and '*' for checksum calculation
         int startIndex = rawMessage.indexOf('!');
         int endIndex = rawMessage.indexOf('*');

@@ -34,7 +34,7 @@ public class BinaryMessageSingleSlotTest {
     @Test
     public void canDecodeAlternative() {
         // Arrange
-        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,B,I6SW6D5P00a3PO8>KUV00?vNP<65,0*22");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,B,I6SW6D5P00a3PO8>KUV00?vNP<65,0*0E");
 
         // Act
         AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);

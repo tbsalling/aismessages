@@ -13,7 +13,7 @@ public class SafetyRelatedAcknowledgeTest {
     @Test
     public void canDecodeWithOneAck() {
         // Arrange
-        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,=39UOj0jFs9R,0*65");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,=39UOj0jFs9R,0*17");
 
         // Act
         AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
