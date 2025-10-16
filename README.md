@@ -6,9 +6,9 @@ Introduction
 AISmessages is a Java-based light-weight, zero-dependency, and ultra-efficient message decoder for maritime
 navigation and safety messages compliant with ITU 1371 (NMEA armoured AIS messages).
 
-It fully decodes tens of thousands of NMEA armoured AIS messages per second per CPU core on an Intel i7-based laptop.
+Internally AISmessages uses eager parsing and a fail‑fast design combined with immutable value objects. This minimizes runtime surprises and allocation churn, reduces the need for synchronization, and makes message instances safe to share across threads — ideal for high‑throughput, concurrent, or real‑time applications (including non‑blocking/reactive systems). The library’s low‑allocation, zero‑dependency implementation yields predictable performance and low GC impact under heavy load. It fully decodes tens of thousands of NMEA armoured AIS messages per second per CPU core on an Intel i7-based laptop.
 
-For more than 10 years AISmessages has been used in production in many systems and solutions all over the world.
+For more than 15+ years AISmessages has been used in production in many systems and solutions all over the world.
 
 If you are new to AIS you can read a short introduction to it on [my blog](https://tbsalling.dk/2018/09/01/an-introduction-to-ais/). 
 
