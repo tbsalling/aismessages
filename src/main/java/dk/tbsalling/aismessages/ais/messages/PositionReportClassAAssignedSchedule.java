@@ -20,12 +20,14 @@ import dk.tbsalling.aismessages.ais.messages.types.*;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.Value;
 
 import java.time.Instant;
 
 @Value
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class PositionReportClassAAssignedSchedule extends PositionReport {
     protected PositionReportClassAAssignedSchedule(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
                                                    NavigationStatus navigationStatus, int rateOfTurn, float speedOverGround,
@@ -37,13 +39,6 @@ public class PositionReportClassAAssignedSchedule extends PositionReport {
                 navigationStatus, rateOfTurn, speedOverGround, positionAccuracy, latitude, longitude,
                 courseOverGround, trueHeading, second, specialManeuverIndicator, raimFlag, communicationState,
                 rawRateOfTurn, rawSpeedOverGround, rawLatitude, rawLongitude, rawCourseOverGround);
-    }
-
-    @Override
-    public String toString() {
-        return "PositionReportClassAAssignedSchedule{" +
-                "messageType=" + getMessageType() +
-                "} " + super.toString();
     }
 
     @Override

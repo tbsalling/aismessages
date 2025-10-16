@@ -21,6 +21,7 @@ import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.Value;
 
 import java.time.Instant;
@@ -29,6 +30,7 @@ import static java.lang.String.format;
 
 @Value
 @EqualsAndHashCode(callSuper = true)
+@ToString(callSuper = true)
 public class ExtendedClassBEquipmentPositionReport extends AISMessage implements ExtendedDynamicDataReport {
 
     /**

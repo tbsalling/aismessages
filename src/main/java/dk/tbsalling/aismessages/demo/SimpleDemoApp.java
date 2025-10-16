@@ -19,7 +19,6 @@ package dk.tbsalling.aismessages.demo;
 import dk.tbsalling.aismessages.AISInputStreamReader;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 
 public class SimpleDemoApp {
@@ -38,7 +37,7 @@ public class SimpleDemoApp {
         streamReader.run();
 	}
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) {
 		new SimpleDemoApp().runDemo();
 	}
 
