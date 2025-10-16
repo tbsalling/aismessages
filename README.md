@@ -6,6 +6,8 @@ Introduction
 AISmessages is a Java-based light-weight, zero-dependency, and ultra-efficient message decoder for maritime
 navigation and safety messages compliant with ITU 1371 (NMEA armoured AIS messages).
 
+It fully decodes tens of thousands of NMEA armoured AIS messages per second per CPU core on an Intel i7-based laptop.
+
 For more than 10 years AISmessages has been used in production in many systems and solutions all over the world.
 
 If you are new to AIS you can read a short introduction to it on [my blog](https://tbsalling.dk/2018/09/01/an-introduction-to-ais/). 
@@ -35,6 +37,9 @@ There are several demos, intros, and public appearances of AISmessages; like for
 1. See a simple demo applications in the source code in the `dk.tbsalling.aismessages.demo` package (view via 
 [Github](https://github.com/tbsalling/aismessages/tree/master/src/main/java/dk/tbsalling/aismessages/demo)). 
 
+1. AISMessages is used by Pronto, which enables the Port of Rotterdam to optimize port calls and vessel operations.
+
+1. AISMessages is used by Shiptracker, which enables Port of Rotterdam to show its customers the current position and ETA of ships scheduled to arrive in the port.
 
 
 Programmatic usage
