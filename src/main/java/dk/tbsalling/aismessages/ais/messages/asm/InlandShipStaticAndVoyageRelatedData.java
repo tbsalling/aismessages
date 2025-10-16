@@ -1,7 +1,6 @@
 package dk.tbsalling.aismessages.ais.messages.asm;
 
-import static dk.tbsalling.aismessages.ais.BitStringParser.STRING_DECODER;
-import static dk.tbsalling.aismessages.ais.BitStringParser.UNSIGNED_INTEGER_DECODER;
+import dk.tbsalling.aismessages.ais.BitDecoder;
 
 public class InlandShipStaticAndVoyageRelatedData extends ApplicationSpecificMessage {
 
@@ -9,16 +8,16 @@ public class InlandShipStaticAndVoyageRelatedData extends ApplicationSpecificMes
         super(designatedAreaCode, functionalId, binaryData);
 
         // Eagerly decode all fields
-        this.uniqueEuropeanVesselIdentificationNumber = STRING_DECODER.apply(getBinaryData().substring(0, 48));
-        this.lengthOfShip = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(48, 61)) / 10f;
-        this.beamOfShip = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(61, 71)) / 10f;
-        this.shipOrCombinationType = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(71, 85));
-        this.hazardousCargo = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(85, 88));
-        this.draught = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(88, 99)) / 100f;
-        this.loaded = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(99, 101));
-        this.qualityOfSpeedInformation = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(101, 102));
-        this.qualityOfCourseInformation = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(102, 103));
-        this.qualityOfHeadingInformation = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(103, 104));
+        this.uniqueEuropeanVesselIdentificationNumber = BitDecoder.INSTANCE.decodeString(getBinaryData().substring(0, 48));
+        this.lengthOfShip = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(48, 61)) / 10f;
+        this.beamOfShip = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(61, 71)) / 10f;
+        this.shipOrCombinationType = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(71, 85));
+        this.hazardousCargo = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(85, 88));
+        this.draught = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(88, 99)) / 100f;
+        this.loaded = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(99, 101));
+        this.qualityOfSpeedInformation = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(101, 102));
+        this.qualityOfCourseInformation = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(102, 103));
+        this.qualityOfHeadingInformation = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(103, 104));
     }
 
     public String getUniqueEuropeanVesselIdentificationNumber() {

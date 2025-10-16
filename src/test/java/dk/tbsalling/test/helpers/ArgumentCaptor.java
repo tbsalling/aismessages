@@ -5,18 +5,21 @@ import org.hamcrest.Description;
 import org.hamcrest.Matcher;
 
 public class ArgumentCaptor<T> {
-    T capturedObject;
+    private T capturedObject;
 
+    @SuppressWarnings("unchecked")
     public Matcher<T> getMatcher() {
-        return new BaseMatcher<T>() {
-            @SuppressWarnings("unchecked")
+        return new BaseMatcher<>() {
+            @Override
             public boolean matches(Object item) {
                 capturedObject = (T) item;
-                return true;
+                return true; // accept and capture any value
             }
-			
-			public void describeTo(Description paramDescription) {
-			}
+
+            @Override
+            public void describeTo(Description description) {
+                description.appendText("captures argument");
+            }
         };
     }
 

@@ -1,6 +1,6 @@
 package dk.tbsalling.aismessages.ais.messages.asm;
 
-import static dk.tbsalling.aismessages.ais.BitStringParser.UNSIGNED_INTEGER_DECODER;
+import dk.tbsalling.aismessages.ais.BitDecoder;
 
 public class NumberOfPersonsOnBoard extends ApplicationSpecificMessage {
 
@@ -8,7 +8,7 @@ public class NumberOfPersonsOnBoard extends ApplicationSpecificMessage {
         super(designatedAreaCode, functionalId, binaryData);
 
         // Eagerly decode all fields
-        this.numberOfPersons = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(0, 13));
+        this.numberOfPersons = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(0, 13));
     }
 
     public int getNumberOfPersons() {

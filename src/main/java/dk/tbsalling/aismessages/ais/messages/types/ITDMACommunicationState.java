@@ -17,11 +17,10 @@
 package dk.tbsalling.aismessages.ais.messages.types;
 
 
+import dk.tbsalling.aismessages.ais.BitDecoder;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 
-import static dk.tbsalling.aismessages.ais.BitStringParser.BOOLEAN_DECODER;
-import static dk.tbsalling.aismessages.ais.BitStringParser.UNSIGNED_INTEGER_DECODER;
 import static java.util.Objects.requireNonNull;
 
 @Value
@@ -43,10 +42,10 @@ public class ITDMACommunicationState extends CommunicationState {
 			return null;
 
 		return new ITDMACommunicationState(
-			SyncState.fromInteger(UNSIGNED_INTEGER_DECODER.apply(bitString.substring(0, 2))),
-			UNSIGNED_INTEGER_DECODER.apply(bitString.substring(2, 15)),
-			UNSIGNED_INTEGER_DECODER.apply(bitString.substring(15, 18)),
-			BOOLEAN_DECODER.apply(bitString.substring(18, 19))
+                SyncState.fromInteger(BitDecoder.INSTANCE.decodeUnsignedInt(bitString.substring(0, 2))),
+                BitDecoder.INSTANCE.decodeUnsignedInt(bitString.substring(2, 15)),
+                BitDecoder.INSTANCE.decodeUnsignedInt(bitString.substring(15, 18)),
+                BitDecoder.INSTANCE.decodeBoolean(bitString.substring(18, 19))
 		);
 	}
 
