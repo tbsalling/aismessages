@@ -4,6 +4,43 @@ Developer-oriented release notes for AISmessages - a Java-based library for deco
 
 ---
 
+## Version 4.0.0-SNAPSHOT (In Development)
+
+**Major Version Update - Java 21 Required**
+
+### Breaking Changes
+- **Minimum Java version increased from 11 to 21**
+- AIS message classes are now immutable value objects using Lombok @Value
+- Architectural refactoring: parsing logic separated from data models
+
+### New Features & Improvements
+
+**Immutable Message Objects:**
+- All AIS message classes now use Lombok @Value annotation for true immutability
+- Message objects are now pure data carriers with no parsing responsibilities
+- Improved thread-safety and reduced mutation-related bugs
+- Added EqualsAndHashCode support for all message types
+
+**Architecture Improvements:**
+- Introduced BitStringParser class to separate parsing concerns from value objects
+- Cleaner separation between NMEA message handling and AIS message decoding
+- Enhanced maintainability through better single-responsibility design
+
+**Build & Tooling Updates:**
+- Java compiler target updated to Java 21
+- Added Lombok 1.18.42 as provided dependency for compile-time code generation
+- Maven compiler plugin updated to 3.14.1
+- Lombok configuration with @Generated annotations for better tool integration
+
+**Infrastructure:**
+- GitHub Actions workflow updated for Java 21
+- Added AGENTS.md with AI coding agent guidelines
+- Enhanced documentation structure
+
+**Full Changelog:** https://github.com/tbsalling/aismessages/compare/aismessages-3.5.1...HEAD
+
+---
+
 ## Version 3.5.1 (2025-07-22)
 
 **Build & Tooling Updates:**
@@ -108,7 +145,16 @@ Bug fixes and stability improvements. JDK 7 backport available.
 
 ## Maven Coordinates
 
-### Latest Version (3.5.1)
+### Development Version (4.0.0-SNAPSHOT)
+```xml
+<dependency>
+    <groupId>dk.tbsalling</groupId>
+    <artifactId>aismessages</artifactId>
+    <version>4.0.0-SNAPSHOT</version>
+</dependency>
+```
+
+### Latest Stable Version (3.5.1)
 ```xml
 <dependency>
     <groupId>dk.tbsalling</groupId>
