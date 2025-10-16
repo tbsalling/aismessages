@@ -74,7 +74,7 @@ public class BinaryBroadcastMessage extends AISMessage {
                 errorMessage.append(format(" Unparseable binary payload: \"%s\".", bs.substring(40, Math.min(numberOfBits, bs.length()))));
             }
         } else if (numberOfBits > 1008)
-            errorMessage.append(format("Message of type %s should be at least 56 bits long; not %d.", getMessageType(), numberOfBits));
+            errorMessage.append(format("Message of type %s should be at most 1008 bits long; not %d.", getMessageType(), numberOfBits));
 
         if (errorMessage.length() > 0) {
             if (numberOfBits >= 38)

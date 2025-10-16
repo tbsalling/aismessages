@@ -165,4 +165,17 @@ public class BinaryBroadcastMessageTest {
         assertThrows(InvalidMessage.class, () -> dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage));
     }
 
+    @Test
+    public void failsWithCorrectErrorMessageWhenDecodingTooLongMessage() {
+        // Arrange - Create a message with more than 1008 bits (168 6-bit characters = 1008 bits)
+        // This message has 169 characters after the message type/MMSI fields, exceeding the limit
+        String payload = "85MwpK" + "i".repeat(163); // 6 + 163 = 169 chars total
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A," + payload + ",0*00");
+
+        // Act & Assert
+        InvalidMessage exception = assertThrows(InvalidMessage.class, 
+            () -> dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage));
+        assertTrue(exception.getMessage().contains("should be at most 1008 bits long"));
+    }
+
 }
