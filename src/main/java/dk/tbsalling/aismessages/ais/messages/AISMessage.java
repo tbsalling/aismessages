@@ -25,12 +25,12 @@ import dk.tbsalling.aismessages.version.Version;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
+import lombok.extern.java.Log;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.time.Instant;
 
-import static java.lang.System.Logger.Level.INFO;
 import static java.util.Objects.requireNonNull;
 
 /**
@@ -53,12 +53,11 @@ import static java.util.Objects.requireNonNull;
 @Getter
 @ToString
 @EqualsAndHashCode
+@Log
 public abstract sealed class AISMessage permits AddressedBinaryMessage, AddressedSafetyRelatedMessage, AidToNavigationReport, AssignedModeCommand, BaseStationReport, BinaryAcknowledge, BinaryBroadcastMessage, BinaryMessageMultipleSlot, BinaryMessageSingleSlot, ChannelManagement, ClassBCSStaticDataReport, DataLinkManagement, Error, ExtendedClassBEquipmentPositionReport, GNSSBinaryBroadcastMessage, GroupAssignmentCommand, Interrogation, LongRangeBroadcastMessage, PositionReport, SafetyRelatedAcknowledge, SafetyRelatedBroadcastMessage, ShipAndVoyageData, StandardClassBCSPositionReport, StandardSARAircraftPositionReport, UTCAndDateInquiry, UTCAndDateResponse {
 
-    private static final System.Logger LOG = System.getLogger(AISMessage.class.getName());
-
     static {
-        LOG.log(INFO, """
+        log.info("""
 
                 AISMessages v%s // Copyright (c) 2011- by S-Consult ApS, Denmark, CVR DK31327490. http://tbsalling.dk.
                 

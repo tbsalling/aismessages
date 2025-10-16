@@ -18,16 +18,15 @@ package dk.tbsalling.aismessages.ais.messages.types;
 
 import lombok.EqualsAndHashCode;
 import lombok.Value;
+import lombok.extern.java.Log;
 
 import static dk.tbsalling.aismessages.ais.BitStringParser.UNSIGNED_INTEGER_DECODER;
-import static java.lang.System.Logger.Level.WARNING;
 import static java.util.Objects.requireNonNull;
 
 @Value
 @EqualsAndHashCode(callSuper = true)
+@Log
 public class SOTDMACommunicationState extends CommunicationState {
-
-	private static final System.Logger LOG = System.getLogger(SOTDMACommunicationState.class.getName());
 
 	private SOTDMACommunicationState(SyncState syncState, Integer slotTimeout, Integer numberOfReceivedStations, Integer slotNumber, Integer utcHour, Integer utcMinute, Integer slotOffset) {
 		super(syncState);
@@ -53,18 +52,18 @@ public class SOTDMACommunicationState extends CommunicationState {
 		if (slotTimeout == 3 || slotTimeout == 5 || slotTimeout == 7) {
 			numberOfReceivedStations = UNSIGNED_INTEGER_DECODER.apply(bitString.substring(5, 19));
 			if (numberOfReceivedStations > 16383)
-				LOG.log(WARNING,"numberOfReceivedStations: " + numberOfReceivedStations + ": Out of range.");
+                log.warning("numberOfReceivedStations: " + numberOfReceivedStations + ": Out of range.");
 		} else if (slotTimeout == 2 || slotTimeout == 4 || slotTimeout == 6) {
 			slotNumber = UNSIGNED_INTEGER_DECODER.apply(bitString.substring(5, 19));
 			if (slotNumber > 2249)
-				LOG.log(WARNING,"slotNumber: " + slotNumber + ": Out of range.");
+                log.warning("slotNumber: " + slotNumber + ": Out of range.");
 		}  else if (slotTimeout == 1) {
 			utcHour = UNSIGNED_INTEGER_DECODER.apply(bitString.substring(5, 10));
 			if (utcHour > 23)
-				LOG.log(WARNING,"utcHour: " + utcHour + ": Out of range.");
+                log.warning("utcHour: " + utcHour + ": Out of range.");
 			utcMinute = UNSIGNED_INTEGER_DECODER.apply(bitString.substring(10, 17));
 			if (utcMinute > 59)
-				LOG.log(WARNING,"utcMinute: " + utcMinute + ": Out of range.");
+                log.warning("utcMinute: " + utcMinute + ": Out of range.");
 		}  else if (slotTimeout == 0) {
 			slotOffset = UNSIGNED_INTEGER_DECODER.apply(bitString.substring(5, 19));
 		}
