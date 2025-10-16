@@ -11,168 +11,276 @@ public class ApplicationSpecificMessageTest {
 
     @Test
     public void canDecodeTextDescription() {
-        // Test that TextDescription messages are created for FI 0 and FI 1
-        ApplicationSpecificMessage asm0 = ApplicationSpecificMessage.create(1, 0, "");
-        assertInstanceOf(TextDescription.class, asm0);
-        assertEquals(1, asm0.getDesignatedAreaCode());
-        assertEquals(0, asm0.getFunctionalId());
+        // Arrange
+        String binaryData = "";
 
-        ApplicationSpecificMessage asm1 = ApplicationSpecificMessage.create(1, 1, "");
-        assertInstanceOf(TextDescription.class, asm1);
-        assertEquals(1, asm1.getDesignatedAreaCode());
-        assertEquals(1, asm1.getFunctionalId());
+        // Act
+        ApplicationSpecificMessage asm0 = ApplicationSpecificMessage.create(1, 0, binaryData);
+        ApplicationSpecificMessage asm1 = ApplicationSpecificMessage.create(1, 1, binaryData);
+
+        // Assert
+        assertTrue(asm0 instanceof TextDescription);
+        if (asm0 instanceof TextDescription textDescription) {
+            assertEquals(1, textDescription.getDesignatedAreaCode());
+            assertEquals(0, textDescription.getFunctionalId());
+        }
+
+        assertTrue(asm1 instanceof TextDescription);
+        if (asm1 instanceof TextDescription textDescription) {
+            assertEquals(1, textDescription.getDesignatedAreaCode());
+            assertEquals(1, textDescription.getFunctionalId());
+        }
     }
 
     @Test
     public void canDecodeUtcDateInquiry() {
-        // Test that UtcDateInquiry is created for FI 10
-        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 10, "");
-        assertInstanceOf(UtcDateInquiry.class, asm);
-        assertEquals(1, asm.getDesignatedAreaCode());
-        assertEquals(10, asm.getFunctionalId());
+        // Arrange
+        String binaryData = "";
+
+        // Act
+        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 10, binaryData);
+
+        // Assert
+        assertTrue(asm instanceof UtcDateInquiry);
+        if (asm instanceof UtcDateInquiry inquiry) {
+            assertEquals(1, inquiry.getDesignatedAreaCode());
+            assertEquals(10, inquiry.getFunctionalId());
+        }
     }
 
     @Test
     public void canDecodeUtcDateResponse() {
-        // Test that UtcDateResponse is created for FI 11
-        // Just verify the message type is decoded correctly with basic data
+        // Arrange
         String binaryData = "00000000000000000000000000000000000000000000000000";
+
+        // Act
         ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 11, binaryData);
-        assertInstanceOf(UtcDateResponse.class, asm);
-        
-        UtcDateResponse response = (UtcDateResponse) asm;
-        assertEquals(1, response.getDesignatedAreaCode());
-        assertEquals(11, response.getFunctionalId());
-        assertEquals(0, response.getYear());
-        assertEquals(0, response.getMonth());
-        assertEquals(0, response.getDay());
-        assertEquals(0, response.getHour());
-        assertEquals(0, response.getMinute());
-        assertEquals(0, response.getSecond());
+
+        // Assert
+        assertTrue(asm instanceof UtcDateResponse);
+        if (asm instanceof UtcDateResponse response) {
+            assertEquals(1, response.getDesignatedAreaCode());
+            assertEquals(11, response.getFunctionalId());
+            assertEquals(0, response.getYear());
+            assertEquals(0, response.getMonth());
+            assertEquals(0, response.getDay());
+            assertEquals(0, response.getHour());
+            assertEquals(0, response.getMinute());
+            assertEquals(0, response.getSecond());
+        }
     }
 
     @Test
     public void canDecodeTidalWindow() {
-        // Test that TidalWindow is created for FI 14
-        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 14, "000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
-        assertInstanceOf(TidalWindow.class, asm);
-        assertEquals(1, asm.getDesignatedAreaCode());
-        assertEquals(14, asm.getFunctionalId());
+        // Arrange
+        String binaryData = "000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+
+        // Act
+        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 14, binaryData);
+
+        // Assert
+        assertTrue(asm instanceof TidalWindow);
+        if (asm instanceof TidalWindow tidalWindow) {
+            assertEquals(1, tidalWindow.getDesignatedAreaCode());
+            assertEquals(14, tidalWindow.getFunctionalId());
+        }
     }
 
     @Test
     public void canDecodeVtsGeneratedSyntheticTargets() {
-        // Test that VtsGeneratedSyntheticTargets is created for FI 17
-        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 17, "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
-        assertInstanceOf(VtsGeneratedSyntheticTargets.class, asm);
-        assertEquals(1, asm.getDesignatedAreaCode());
-        assertEquals(17, asm.getFunctionalId());
+        // Arrange
+        String binaryData = "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+
+        // Act
+        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 17, binaryData);
+
+        // Assert
+        assertTrue(asm instanceof VtsGeneratedSyntheticTargets);
+        if (asm instanceof VtsGeneratedSyntheticTargets vtsTargets) {
+            assertEquals(1, vtsTargets.getDesignatedAreaCode());
+            assertEquals(17, vtsTargets.getFunctionalId());
+        }
     }
 
     @Test
     public void canDecodeMarineTrafficSignal() {
-        // Test that MarineTrafficSignal is created for FI 18 and 19
-        ApplicationSpecificMessage asm18 = ApplicationSpecificMessage.create(1, 18, "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
-        assertInstanceOf(MarineTrafficSignal.class, asm18);
-        assertEquals(1, asm18.getDesignatedAreaCode());
-        assertEquals(18, asm18.getFunctionalId());
+        // Arrange
+        String binaryData = "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
 
-        ApplicationSpecificMessage asm19 = ApplicationSpecificMessage.create(1, 19, "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
-        assertInstanceOf(MarineTrafficSignal.class, asm19);
-        assertEquals(1, asm19.getDesignatedAreaCode());
-        assertEquals(19, asm19.getFunctionalId());
+        // Act
+        ApplicationSpecificMessage asm18 = ApplicationSpecificMessage.create(1, 18, binaryData);
+        ApplicationSpecificMessage asm19 = ApplicationSpecificMessage.create(1, 19, binaryData);
+
+        // Assert
+        assertTrue(asm18 instanceof MarineTrafficSignal);
+        if (asm18 instanceof MarineTrafficSignal signal18) {
+            assertEquals(1, signal18.getDesignatedAreaCode());
+            assertEquals(18, signal18.getFunctionalId());
+        }
+
+        assertTrue(asm19 instanceof MarineTrafficSignal);
+        if (asm19 instanceof MarineTrafficSignal signal19) {
+            assertEquals(1, signal19.getDesignatedAreaCode());
+            assertEquals(19, signal19.getFunctionalId());
+        }
     }
 
     @Test
     public void canDecodeWeatherObservation() {
-        // Test that WeatherObservation is created for FI 21
-        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 21, "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
-        assertInstanceOf(WeatherObservation.class, asm);
-        assertEquals(1, asm.getDesignatedAreaCode());
-        assertEquals(21, asm.getFunctionalId());
+        // Arrange
+        String binaryData = "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+
+        // Act
+        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 21, binaryData);
+
+        // Assert
+        assertTrue(asm instanceof WeatherObservation);
+        if (asm instanceof WeatherObservation weather) {
+            assertEquals(1, weather.getDesignatedAreaCode());
+            assertEquals(21, weather.getFunctionalId());
+        }
     }
 
     @Test
     public void canDecodeAreaNotice() {
-        // Test that AreaNotice is created for FI 22 and 23
-        ApplicationSpecificMessage asm22 = ApplicationSpecificMessage.create(1, 22, "000000000000000000000000000000000000000000000000000000000000");
-        assertInstanceOf(AreaNotice.class, asm22);
-        assertEquals(1, asm22.getDesignatedAreaCode());
-        assertEquals(22, asm22.getFunctionalId());
+        // Arrange
+        String binaryData = "000000000000000000000000000000000000000000000000000000000000";
 
-        ApplicationSpecificMessage asm23 = ApplicationSpecificMessage.create(1, 23, "000000000000000000000000000000000000000000000000000000000000");
-        assertInstanceOf(AreaNotice.class, asm23);
-        assertEquals(1, asm23.getDesignatedAreaCode());
-        assertEquals(23, asm23.getFunctionalId());
+        // Act
+        ApplicationSpecificMessage asm22 = ApplicationSpecificMessage.create(1, 22, binaryData);
+        ApplicationSpecificMessage asm23 = ApplicationSpecificMessage.create(1, 23, binaryData);
+
+        // Assert
+        assertTrue(asm22 instanceof AreaNotice);
+        if (asm22 instanceof AreaNotice notice22) {
+            assertEquals(1, notice22.getDesignatedAreaCode());
+            assertEquals(22, notice22.getFunctionalId());
+        }
+
+        assertTrue(asm23 instanceof AreaNotice);
+        if (asm23 instanceof AreaNotice notice23) {
+            assertEquals(1, notice23.getDesignatedAreaCode());
+            assertEquals(23, notice23.getFunctionalId());
+        }
     }
 
     @Test
     public void canDecodeDangerousCargoIndication() {
-        // Test that DangerousCargoIndication is created for FI 25
-        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 25, "000000000000000000000000000000000000000000000000");
-        assertInstanceOf(DangerousCargoIndication.class, asm);
-        assertEquals(1, asm.getDesignatedAreaCode());
-        assertEquals(25, asm.getFunctionalId());
+        // Arrange
+        String binaryData = "000000000000000000000000000000000000000000000000";
+
+        // Act
+        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 25, binaryData);
+
+        // Assert
+        assertTrue(asm instanceof DangerousCargoIndication);
+        if (asm instanceof DangerousCargoIndication cargo) {
+            assertEquals(1, cargo.getDesignatedAreaCode());
+            assertEquals(25, cargo.getFunctionalId());
+        }
     }
 
     @Test
     public void canDecodeEnvironmental() {
-        // Test that Environmental is created for FI 26
-        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 26, "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
-        assertInstanceOf(Environmental.class, asm);
-        assertEquals(1, asm.getDesignatedAreaCode());
-        assertEquals(26, asm.getFunctionalId());
+        // Arrange
+        String binaryData = "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+
+        // Act
+        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 26, binaryData);
+
+        // Assert
+        assertTrue(asm instanceof Environmental);
+        if (asm instanceof Environmental environmental) {
+            assertEquals(1, environmental.getDesignatedAreaCode());
+            assertEquals(26, environmental.getFunctionalId());
+        }
     }
 
     @Test
     public void canDecodeRouteInformation() {
-        // Test that RouteInformation is created for FI 27 and 28
-        ApplicationSpecificMessage asm27 = ApplicationSpecificMessage.create(1, 27, "000000000000000000000000000000000000000000000000000000000000");
-        assertInstanceOf(RouteInformation.class, asm27);
-        assertEquals(1, asm27.getDesignatedAreaCode());
-        assertEquals(27, asm27.getFunctionalId());
+        // Arrange
+        String binaryData = "000000000000000000000000000000000000000000000000000000000000";
 
-        ApplicationSpecificMessage asm28 = ApplicationSpecificMessage.create(1, 28, "000000000000000000000000000000000000000000000000000000000000");
-        assertInstanceOf(RouteInformation.class, asm28);
-        assertEquals(1, asm28.getDesignatedAreaCode());
-        assertEquals(28, asm28.getFunctionalId());
+        // Act
+        ApplicationSpecificMessage asm27 = ApplicationSpecificMessage.create(1, 27, binaryData);
+        ApplicationSpecificMessage asm28 = ApplicationSpecificMessage.create(1, 28, binaryData);
+
+        // Assert
+        assertTrue(asm27 instanceof RouteInformation);
+        if (asm27 instanceof RouteInformation route27) {
+            assertEquals(1, route27.getDesignatedAreaCode());
+            assertEquals(27, route27.getFunctionalId());
+        }
+
+        assertTrue(asm28 instanceof RouteInformation);
+        if (asm28 instanceof RouteInformation route28) {
+            assertEquals(1, route28.getDesignatedAreaCode());
+            assertEquals(28, route28.getFunctionalId());
+        }
     }
 
     @Test
     public void canDecodeMeteorologicalAndHydrographicalData() {
-        // Test that MeteorologicalAndHydrographicalData is created for FI 31
-        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 31, "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
-        assertInstanceOf(MeteorologicalAndHydrographicalData.class, asm);
-        assertEquals(1, asm.getDesignatedAreaCode());
-        assertEquals(31, asm.getFunctionalId());
+        // Arrange
+        String binaryData = "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+
+        // Act
+        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 31, binaryData);
+
+        // Assert
+        assertTrue(asm instanceof MeteorologicalAndHydrographicalData);
+        if (asm instanceof MeteorologicalAndHydrographicalData metHydro) {
+            assertEquals(1, metHydro.getDesignatedAreaCode());
+            assertEquals(31, metHydro.getFunctionalId());
+        }
     }
 
     @Test
     public void canDecodeExistingMessages() {
-        // Test that existing messages still work
-        ApplicationSpecificMessage asm20 = ApplicationSpecificMessage.create(1, 20, "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
-        assertInstanceOf(BerthingData.class, asm20);
-        assertEquals(1, asm20.getDesignatedAreaCode());
-        assertEquals(20, asm20.getFunctionalId());
+        // Arrange
+        String binaryDataFi20 = "0000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+        String binaryDataFi24 = "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000";
+        String binaryDataFi40 = "0000000000000";
 
-        ApplicationSpecificMessage asm24 = ApplicationSpecificMessage.create(1, 24, "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000");
-        assertInstanceOf(ExtendedShipStaticAndVoyageRelatedData.class, asm24);
-        assertEquals(1, asm24.getDesignatedAreaCode());
-        assertEquals(24, asm24.getFunctionalId());
+        // Act
+        ApplicationSpecificMessage asm20 = ApplicationSpecificMessage.create(1, 20, binaryDataFi20);
+        ApplicationSpecificMessage asm24 = ApplicationSpecificMessage.create(1, 24, binaryDataFi24);
+        ApplicationSpecificMessage asm40 = ApplicationSpecificMessage.create(1, 40, binaryDataFi40);
 
-        ApplicationSpecificMessage asm40 = ApplicationSpecificMessage.create(1, 40, "0000000000000");
-        assertInstanceOf(NumberOfPersonsOnBoard.class, asm40);
-        assertEquals(1, asm40.getDesignatedAreaCode());
-        assertEquals(40, asm40.getFunctionalId());
+        // Assert
+        assertTrue(asm20 instanceof BerthingData);
+        if (asm20 instanceof BerthingData berthingData) {
+            assertEquals(1, berthingData.getDesignatedAreaCode());
+            assertEquals(20, berthingData.getFunctionalId());
+        }
+
+        assertTrue(asm24 instanceof ExtendedShipStaticAndVoyageRelatedData);
+        if (asm24 instanceof ExtendedShipStaticAndVoyageRelatedData extendedData) {
+            assertEquals(1, extendedData.getDesignatedAreaCode());
+            assertEquals(24, extendedData.getFunctionalId());
+        }
+
+        assertTrue(asm40 instanceof NumberOfPersonsOnBoard);
+        if (asm40 instanceof NumberOfPersonsOnBoard personsOnBoard) {
+            assertEquals(1, personsOnBoard.getDesignatedAreaCode());
+            assertEquals(40, personsOnBoard.getFunctionalId());
+        }
     }
 
     @Test
     public void canDecodeUnknownMessage() {
-        // Test that unknown messages fall back to UnknownApplicationSpecificMessage
-        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 99, "0000000000");
-        assertInstanceOf(UnknownApplicationSpecificMessage.class, asm);
-        assertEquals(1, asm.getDesignatedAreaCode());
-        assertEquals(99, asm.getFunctionalId());
+        // Arrange
+        String binaryData = "0000000000";
+
+        // Act
+        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 99, binaryData);
+
+        // Assert
+        assertTrue(asm instanceof UnknownApplicationSpecificMessage);
+        if (asm instanceof UnknownApplicationSpecificMessage unknown) {
+            assertEquals(1, unknown.getDesignatedAreaCode());
+            assertEquals(99, unknown.getFunctionalId());
+        }
     }
 
 }
