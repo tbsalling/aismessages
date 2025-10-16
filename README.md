@@ -104,6 +104,54 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
 }
 ```
 
+Application Specific Messages (ASM)
+---
+AISmessages supports decoding of Application Specific Messages (ASM) transmitted via AIS messages type 6 (addressed binary message) and type 8 (binary broadcast message). These messages carry specialized information according to various standards.
+
+### IMO SN.1/Circ.289 - International Application Specific Messages (DAC=001)
+
+The library implements the 24 standardized application-specific messages defined by IMO SN.1/Circ.289 for international use (Designated Area Code = 001):
+
+| FI | Message Type | Class |
+|----|--------------|-------|
+| 0, 1 | Text Description | `TextDescription` |
+| 10 | UTC/Date Inquiry | `UtcDateInquiry` |
+| 11 | UTC/Date Response | `UtcDateResponse` |
+| 14 | Tidal Window | `TidalWindow` |
+| 17 | VTS Generated/Synthetic Targets | `VtsGeneratedSyntheticTargets` |
+| 18, 19 | Marine Traffic Signal | `MarineTrafficSignal` |
+| 20 | Berthing Data | `BerthingData` |
+| 21 | Weather Observation Report from Ship | `WeatherObservation` |
+| 22, 23 | Area Notice (broadcast/addressed) | `AreaNotice` |
+| 24 | Extended Ship Static and Voyage Related Data | `ExtendedShipStaticAndVoyageRelatedData` |
+| 25 | Dangerous Cargo Indication | `DangerousCargoIndication` |
+| 26 | Environmental | `Environmental` |
+| 27, 28 | Route Information (broadcast/addressed) | `RouteInformation` |
+| 31 | Meteorological and Hydrographical Data | `MeteorologicalAndHydrographicalData` |
+| 40 | Number of Persons on Board | `NumberOfPersonsOnBoard` |
+
+### Other Regional Application Specific Messages
+
+- **DAC=200, FI=10**: Inland Ship Static and Voyage Related Data (`InlandShipStaticAndVoyageRelatedData`)
+
+### Using Application Specific Messages
+
+Application Specific Messages can be accessed from the parent binary message:
+
+```java
+BinaryBroadcastMessage binaryMessage = (BinaryBroadcastMessage) aisMessage;
+ApplicationSpecificMessage asm = binaryMessage.getApplicationSpecificMessage();
+
+if (asm instanceof WeatherObservation) {
+    WeatherObservation weather = (WeatherObservation) asm;
+    System.out.println("Temperature: " + weather.getAirTemperature());
+    System.out.println("Wind Speed: " + weather.getAverageWindSpeed());
+    // ... access other weather data
+}
+```
+
+Unknown or unsupported application specific messages are represented as `UnknownApplicationSpecificMessage`, which provides access to the raw binary data.
+
 Receiving AIS messages via UDP
 ---
 AISmessages also supports receiving AIS messages via UDP, which is a common method for receiving AIS data from 
