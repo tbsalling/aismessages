@@ -51,11 +51,41 @@ public class NMEAMessageHandler implements Consumer<NMEAMessage> {
     }
 
     /**
-     * Receive a single NMEA amoured AIS string
+     * Receive a single NMEA armoured AIS string (lenient mode).
+     * This method logs a warning if the checksum is invalid but continues processing.
      * @param nmeaMessage the NMEAMessage to handle.
      */
     @Override
     public void accept(NMEAMessage nmeaMessage) {
+        // Validate checksum once and log warning if invalid, but continue processing
+        boolean checksumValid = nmeaMessage.isChecksumValid();
+        if (!checksumValid) {
+            log.warning("NMEA message has invalid checksum: %s".formatted(nmeaMessage.getRawMessage()));
+        }
+        acceptInternal(nmeaMessage);
+    }
+
+    /**
+     * Receive a single NMEA armoured AIS string (strict mode).
+     * This method validates the checksum and only processes messages with valid checksums.
+     * Messages with invalid checksums are logged as errors and not processed.
+     * @param nmeaMessage the NMEAMessage to handle.
+     */
+    public void acceptStrict(NMEAMessage nmeaMessage) {
+        // Validate checksum once
+        boolean checksumValid = nmeaMessage.isChecksumValid();
+        if (!checksumValid) {
+            log.severe("NMEA message has invalid checksum and will not be processed: %s".formatted(nmeaMessage.getRawMessage()));
+            return;
+        }
+        acceptInternal(nmeaMessage);
+    }
+
+    /**
+     * Internal method to process NMEA messages.
+     * @param nmeaMessage the NMEAMessage to handle.
+     */
+    private void acceptInternal(NMEAMessage nmeaMessage) {
         log.fine("Received for processing: %s".formatted(nmeaMessage.getRawMessage()));
 
         int numberOfFragments = nmeaMessage.getNumberOfFragments();
