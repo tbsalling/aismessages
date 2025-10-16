@@ -63,10 +63,6 @@ public class AISMessageFactoryTest {
                 () -> AISMessageFactory.toBitString(input, tooLargePadding));
         assertTrue(ex2.getMessage().contains("0..5"));
 
-        // Act + Assert: null padding
-        IllegalArgumentException ex3 = assertThrows(IllegalArgumentException.class,
-                () -> AISMessageFactory.toBitString(input, null));
-        assertTrue(ex3.getMessage().contains("0..5"));
     }
 
     @Test

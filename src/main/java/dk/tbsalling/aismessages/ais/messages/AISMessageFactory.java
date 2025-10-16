@@ -113,11 +113,11 @@ public class AISMessageFactory {
      * @return the binary string
      * @throws IllegalArgumentException if inputs are invalid
      */
-    public static String toBitString(String encodedString, Integer paddingBits) {
+    public static String toBitString(String encodedString, int paddingBits) {
         if (encodedString == null) {
             throw new IllegalArgumentException("encodedString cannot be null");
         }
-        if (paddingBits == null || paddingBits < 0 || paddingBits > 5) {
+        if (paddingBits < 0 || paddingBits > 5) {
             throw new IllegalArgumentException("paddingBits must be in range 0..5");
         }
         StringBuilder bitString = new StringBuilder(encodedString.length() * 6);
@@ -897,7 +897,7 @@ public class AISMessageFactory {
             throw new IllegalArgumentException("nmeaMessages must contain at least one element");
         }
         StringBuilder sixBitEncodedPayload = new StringBuilder();
-        Integer fillBits = null;
+        int fillBits = -1;
         for (int i = 0; i < nmeaMessages.length; i++) {
             NMEAMessage m = nmeaMessages[i];
             if (m == null) {
@@ -905,8 +905,15 @@ public class AISMessageFactory {
             }
             sixBitEncodedPayload.append(m.getEncodedPayload());
             if (i == nmeaMessages.length - 1) {
-                fillBits = m.getFillBits();
+                Integer fb = m.getFillBits();
+                if (fb == null) {
+                    throw new IllegalArgumentException("fillBits cannot be null on the last NMEAMessage");
+                }
+                fillBits = fb;
             }
+        }
+        if (fillBits < 0) {
+            throw new IllegalArgumentException("fillBits not set");
         }
         return toBitString(sixBitEncodedPayload.toString(), fillBits);
     }
