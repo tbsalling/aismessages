@@ -16,7 +16,6 @@
 
 package dk.tbsalling.aismessages.ais;
 
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 /**
@@ -32,13 +31,28 @@ import lombok.Getter;
  * @author tbsalling
  */
 @Getter
-@AllArgsConstructor
 public final class BitStringParser {
 
     /**
      * The binary string representation of the AIS message payload (string of 0's and 1's).
      */
     private final String bitString;
+    
+    /**
+     * Cached zero-bit-stuffed string. Computed lazily on first access and reused thereafter.
+     */
+    private String cachedZeroBitStuffedString;
+    
+    /**
+     * The length to which cachedZeroBitStuffedString has been padded.
+     */
+    private int cachedPaddedLength;
+
+    public BitStringParser(String bitString) {
+        this.bitString = bitString;
+        this.cachedZeroBitStuffedString = null;
+        this.cachedPaddedLength = -1;
+    }
 
     /**
      * Retrieves a substring of the zero bit-stuffed string based on the given beginIndex and endIndex.
@@ -144,16 +158,27 @@ public final class BitStringParser {
      * Returns a zero bit-stuffed string based on the given endIndex.
      * <p>
      * If the bitString is shorter than endIndex, it is padded with zeros.
+     * The result is cached to avoid recomputation on subsequent calls.
      *
      * @param endIndex the index where the string should end
      * @return the zero bit-stuffed string
      */
     private String getZeroBitStuffedString(int endIndex) {
-        int deficit = endIndex - bitString.length();
-        if (deficit > 0) {
-            return bitString + "0".repeat(deficit);
+        // Fast path: no padding needed
+        if (endIndex <= bitString.length()) {
+            return bitString;
         }
-        return bitString;
+        
+        // Check if we have a cached padded string that's long enough
+        if (cachedZeroBitStuffedString != null && endIndex <= cachedPaddedLength) {
+            return cachedZeroBitStuffedString;
+        }
+        
+        // Need to create a new padded string
+        int deficit = endIndex - bitString.length();
+        cachedZeroBitStuffedString = bitString + "0".repeat(deficit);
+        cachedPaddedLength = endIndex;
+        return cachedZeroBitStuffedString;
     }
 
 }
