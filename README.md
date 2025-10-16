@@ -104,6 +104,40 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
 }
 ```
 
+Receiving AIS messages via UDP
+---
+AISmessages also supports receiving AIS messages via UDP, which is a common method for receiving AIS data from 
+various sources. Here's how to use it:
+
+```java
+import dk.tbsalling.aismessages.ais.messages.AISMessage;
+import dk.tbsalling.aismessages.nmea.NMEAMessageHandler;
+import dk.tbsalling.aismessages.nmea.NMEAMessageUDPSocket;
+
+public class UDPExample {
+    public static void main(String[] args) {
+        try {
+            NMEAMessageUDPSocket udpSocket = new NMEAMessageUDPSocket(
+                "127.0.0.1",  // Host address to bind to
+                10110,        // UDP port to listen on
+                new NMEAMessageHandler("UDPSRC", aisMessage -> {
+                    // Process each received AIS message
+                    System.out.println("Received: " + aisMessage);
+                })
+            );
+            udpSocket.run();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+The UDP receiver will bind to the specified host and port and process incoming UDP packets containing 
+NMEA-formatted AIS messages. You can stop the receiver by calling `udpSocket.requestStop()`.
+
+A complete demo application is available in the `dk.tbsalling.aismessages.demo.UDPDemoApp` class.
+
 Obtaining AISmessages
 ---
 You do not need to compile AISmessages yourself. It is available in Maven Central. So if you are using Maven, all you
