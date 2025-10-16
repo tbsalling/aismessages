@@ -12,7 +12,7 @@ public class AddressedSafetyRelatedMessageTest {
     @Test
     public void canDecode() {
         // Arrange
-        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,<42Lati0W:Ov=C7P6B?=Pjoihhjhqq,2*2B");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,<42Lati0W:Ov=C7P6B?=Pjoihhjhqq,2*1B");
 
         // Act
         AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
@@ -34,7 +34,7 @@ public class AddressedSafetyRelatedMessageTest {
     @Test
     public void canDecodeWithLongerText() {
         // Arrange
-        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,<5?Per18=HB1U:1@E=B0m<L,2*51");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,<5?Per18=HB1U:1@E=B0m<L,2*53");
 
         // Act
         AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);

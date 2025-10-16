@@ -30,7 +30,7 @@ public class UTCAndDateInquiryTest {
     @Test
     public void canDecodeAlternative() {
         // Arrange
-        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,B,:6TMCD1GOS60,0*11");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,B,:6TMCD1GOS60,0*5B");
 
         // Act
         AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);

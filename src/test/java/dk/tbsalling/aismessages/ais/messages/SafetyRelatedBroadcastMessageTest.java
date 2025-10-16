@@ -31,7 +31,7 @@ public class SafetyRelatedBroadcastMessageTest {
     @Test
     public void canDecodeShortMessage() {
         // Arrange
-        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,B,>3R1p10E3;;R0USCR0HO>0@gN10kGJp,0*37");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,B,>3R1p10E3;;R0USCR0HO>0@gN10kGJp,0*7E");
 
         // Act
         AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);

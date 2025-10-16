@@ -75,7 +75,27 @@ public class NMEAMessage {
     private boolean isValid() {
         if (messageType == null || messageType.length() != 5) return false;
         String type = messageType.substring(2);
-        return ("VDM".equals(type) || "VDO".equals(type));
+        if (!("VDM".equals(type) || "VDO".equals(type))) return false;
+        return isChecksumValid();
+    }
+
+    private boolean isChecksumValid() {
+        // Extract the part between '!' and '*' for checksum calculation
+        int startIndex = rawMessage.indexOf('!');
+        int endIndex = rawMessage.indexOf('*');
+        
+        if (startIndex == -1 || endIndex == -1 || startIndex >= endIndex) {
+            return false;
+        }
+        
+        // Calculate checksum by XORing all characters between '!' and '*' (exclusive)
+        String checksumString = rawMessage.substring(startIndex + 1, endIndex);
+        int calculatedChecksum = 0;
+        for (int i = 0; i < checksumString.length(); i++) {
+            calculatedChecksum ^= (byte) checksumString.charAt(i);
+        }
+        
+        return calculatedChecksum == this.checksum;
     }
 
     private static boolean isBlank(String s) {

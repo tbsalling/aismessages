@@ -159,7 +159,7 @@ public class BinaryBroadcastMessageTest {
     @Test
     public void failsWithInvalidMessageWhenDecodingShortMessage() {
         // Arrange
-        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,83aDCr@,0*5F");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,83aDCr@,0*79");
 
         // Act & Assert
         assertThrows(InvalidMessage.class, () -> dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage));
