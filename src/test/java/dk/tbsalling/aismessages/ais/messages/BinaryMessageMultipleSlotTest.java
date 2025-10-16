@@ -12,47 +12,46 @@ public class BinaryMessageMultipleSlotTest {
     @Test
     public void canDecode() {
         // Arrange
-        NMEAMessage nmeaMessage1 = NMEAMessage.fromString("!AIVDM,2,1,4,A,J6SUcDh0000000000000000000000000000000000000000000000000000,0*0E");
-        NMEAMessage nmeaMessage2 = NMEAMessage.fromString("!AIVDM,2,2,4,A,00000000000,2*23");
+        NMEAMessage nmeaMessage1 = new NMEAMessage("!AIVDM,2,1,4,A,J6SUcDh0000000000000000000000000000000000000000000000000000,0*0E");
+        NMEAMessage nmeaMessage2 = new NMEAMessage("!AIVDM,2,2,4,A,00000000000,2*23");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage1, nmeaMessage2);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage1, nmeaMessage2);
 
         System.out.println(aisMessage.toString());
 
         // Assert
         assertEquals(AISMessageType.BinaryMessageMultipleSlot, aisMessage.getMessageType());
         BinaryMessageMultipleSlot message = (BinaryMessageMultipleSlot) aisMessage;
-        assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(439970643), message.getSourceMmsi());
-        assertFalse(message.getAddressed());
-        assertFalse(message.getStructured());
-        assertEquals(MMSI.valueOf(0), message.getDestinationMmsi());
-        assertEquals(Integer.valueOf(0), message.getApplicationId());
+        assertEquals(0, message.getRepeatIndicator());
+        assertEquals(new MMSI(439970643), message.getSourceMmsi());
+        assertFalse(message.isAddressed());
+        assertFalse(message.isStructured());
+        assertEquals(new MMSI(0), message.getDestinationMmsi());
+        assertEquals(0, message.getApplicationId());
         assertEquals("000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", message.getData());
-        assertNull(message.getRadioStatus());
     }
 
     @Test
     public void canDecodeAlternative() {
         // Arrange
-        NMEAMessage nmeaMessage1 = NMEAMessage.fromString("!AIVDM,2,1,1,A,J5NJP<82<mN1<tn4GfOl1lTp8h6000000000000000000000000000000000,0*38");
-        NMEAMessage nmeaMessage2 = NMEAMessage.fromString("!AIVDM,2,2,1,A,00000000000,2*26");
+        NMEAMessage nmeaMessage1 = new NMEAMessage("!AIVDM,2,1,1,A,J5NJP<82<mN1<tn4GfOl1lTp8h6000000000000000000000000000000000,0*38");
+        NMEAMessage nmeaMessage2 = new NMEAMessage("!AIVDM,2,2,1,A,00000000000,2*26");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage1, nmeaMessage2);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage1, nmeaMessage2);
 
         System.out.println(aisMessage.toString());
 
         // Assert
         assertEquals(AISMessageType.BinaryMessageMultipleSlot, aisMessage.getMessageType());
         BinaryMessageMultipleSlot message = (BinaryMessageMultipleSlot) aisMessage;
-        assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(367435824), message.getSourceMmsi());
-        assertTrue(message.getAddressed());
-        assertFalse(message.getStructured());
-        assertEquals(MMSI.valueOf(9229792), message.getDestinationMmsi());
-        assertEquals(Integer.valueOf(19699), message.getApplicationId());
+        assertEquals(0, message.getRepeatIndicator());
+        assertEquals(new MMSI(367435824), message.getSourceMmsi());
+        assertTrue(message.isAddressed());
+        assertFalse(message.isStructured());
+        assertEquals(new MMSI(9229792), message.getDestinationMmsi());
+        assertEquals(19699, message.getApplicationId());
         assertEquals("011000010001011110111001111111010000000111010010010011100000100011000000011000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", message.getData());
     }
 }

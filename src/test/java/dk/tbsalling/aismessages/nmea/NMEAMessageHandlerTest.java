@@ -12,12 +12,10 @@ import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestMethodOrder;
 
-import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.*;
 
 @TestMethodOrder(MethodOrderer.MethodName.class)
 public class NMEAMessageHandlerTest {
@@ -35,74 +33,76 @@ public class NMEAMessageHandlerTest {
 
     @Test
     public void a_canHandleUnfragmentedMessageReceived() {
-        NMEAMessage unfragmentedNMEAMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A");
-
+        // Arrange
+        NMEAMessage unfragmentedNMEAMessage = new NMEAMessage("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A");
         final ArgumentCaptor<AISMessage> aisMessage = new ArgumentCaptor<>();
-
         context.checking(new Expectations() {{
             oneOf(aisMessageHandler).accept(with(aisMessage.getMatcher()));
         }});
 
+        // Act
         aisMessageReceiver.accept(unfragmentedNMEAMessage);
 
+        // Assert
         assertEquals(AISMessageType.PositionReportClassAScheduled, aisMessage.getCapturedObject().getMessageType());
     }
 
     @Test
     public void b_canHandleFragmentedMessageReceived() {
-        NMEAMessage fragmentedNMEAMessage1 = NMEAMessage.fromString("!AIVDM,2,1,3,B,55DA><02=6wpPuID000qTf059@DlU<00000000171lMDD4q20LmDp3hB,0*27");
-        NMEAMessage fragmentedNMEAMessage2 = NMEAMessage.fromString("!AIVDM,2,2,3,B,p=Mh00000000000,2*4C");
-
+        // Arrange
+        NMEAMessage fragmentedNMEAMessage1 = new NMEAMessage("!AIVDM,2,1,3,B,55DA><02=6wpPuID000qTf059@DlU<00000000171lMDD4q20LmDp3hB,0*27");
+        NMEAMessage fragmentedNMEAMessage2 = new NMEAMessage("!AIVDM,2,2,3,B,p=Mh00000000000,2*4C");
         final ArgumentCaptor<AISMessage> aisMessage = new ArgumentCaptor<>();
-
         context.checking(new Expectations() {{
             oneOf(aisMessageHandler).accept(with(aisMessage.getMatcher()));
         }});
 
+        // Act
         aisMessageReceiver.accept(fragmentedNMEAMessage1);
         aisMessageReceiver.accept(fragmentedNMEAMessage2);
 
+        // Assert
         assertEquals(AISMessageType.ShipAndVoyageRelatedData, aisMessage.getCapturedObject().getMessageType());
     }
 
     @Test
     public void c_canFlushEmpty() {
-        NMEAMessage unfragmentedNMEAMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A");
-        NMEAMessage fragmentedNMEAMessage1 = NMEAMessage.fromString("!AIVDM,2,1,3,B,55DA><02=6wpPuID000qTf059@DlU<00000000171lMDD4q20LmDp3hB,0*27");
-        NMEAMessage fragmentedNMEAMessage2 = NMEAMessage.fromString("!AIVDM,2,2,3,B,p=Mh00000000000,2*4C");
-
+        // Arrange
+        NMEAMessage unfragmentedNMEAMessage = new NMEAMessage("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A");
+        NMEAMessage fragmentedNMEAMessage1 = new NMEAMessage("!AIVDM,2,1,3,B,55DA><02=6wpPuID000qTf059@DlU<00000000171lMDD4q20LmDp3hB,0*27");
+        NMEAMessage fragmentedNMEAMessage2 = new NMEAMessage("!AIVDM,2,2,3,B,p=Mh00000000000,2*4C");
         final ArgumentCaptor<AISMessage> aisMessage = new ArgumentCaptor<>();
-
         context.checking(new Expectations() {{
             exactly(3).of(aisMessageHandler).accept(with(aisMessage.getMatcher()));
         }});
 
+        // Act
         aisMessageReceiver.accept(unfragmentedNMEAMessage);
         aisMessageReceiver.accept(fragmentedNMEAMessage1);
         aisMessageReceiver.accept(fragmentedNMEAMessage2);
+        List<NMEAMessage> flush = aisMessageReceiver.flush();
 
-        ArrayList<NMEAMessage> flush = aisMessageReceiver.flush();
-
+        // Assert
         assertNotNull(flush);
         assertEquals(0, flush.size());
     }
 
     @Test
     public void d_canFlushUnhandled() {
-        NMEAMessage unfragmentedNMEAMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A");
-        NMEAMessage fragmentedNMEAMessage1 = NMEAMessage.fromString("!AIVDM,2,1,3,B,55DA><02=6wpPuID000qTf059@DlU<00000000171lMDD4q20LmDp3hB,0*27");
-
+        // Arrange
+        NMEAMessage unfragmentedNMEAMessage = new NMEAMessage("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A");
+        NMEAMessage fragmentedNMEAMessage1 = new NMEAMessage("!AIVDM,2,1,3,B,55DA><02=6wpPuID000qTf059@DlU<00000000171lMDD4q20LmDp3hB,0*27");
         final ArgumentCaptor<AISMessage> aisMessage = new ArgumentCaptor<>();
-
         context.checking(new Expectations() {{
             exactly(2).of(aisMessageHandler).accept(with(aisMessage.getMatcher()));
         }});
 
+        // Act
         aisMessageReceiver.accept(unfragmentedNMEAMessage);
         aisMessageReceiver.accept(fragmentedNMEAMessage1);
+        List<NMEAMessage> flush = aisMessageReceiver.flush();
 
-        ArrayList<NMEAMessage> flush = aisMessageReceiver.flush();
-
+        // Assert
         assertNotNull(flush);
         assertEquals(1, flush.size());
         assertEquals(fragmentedNMEAMessage1, flush.get(0));
@@ -110,18 +110,18 @@ public class NMEAMessageHandlerTest {
 
     @Test
     public void canHandleInvalidFragmentMessageReceived() {
-        NMEAMessage invalidFragmentNMEAMessage = NMEAMessage.fromString("!AIVDM,,1,,B,13cpFJ0P0100`lE4IIvW8@Ow`052p,0*53");
-
+        // Arrange
+        NMEAMessage invalidFragmentNMEAMessage = new NMEAMessage("!AIVDM,,1,,B,13cpFJ0P0100`lE4IIvW8@Ow`052p,0*53");
         final ArgumentCaptor<AISMessage> aisMessage = new ArgumentCaptor<>();
-
         context.checking(new Expectations() {{
             oneOf(aisMessageHandler).accept(with(aisMessage.getMatcher()));
         }});
 
+        // Act
         aisMessageReceiver.accept(invalidFragmentNMEAMessage);
+        List<NMEAMessage> flush = aisMessageReceiver.flush();
 
-        ArrayList<NMEAMessage> flush = aisMessageReceiver.flush();
-
+        // Assert
         assertNotNull(flush);
         assertEquals(0, flush.size());
         assertDoesNotThrow(() -> {});

@@ -7,119 +7,75 @@ import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import org.junit.jupiter.api.Test;
 
-import java.util.Map;
-import java.util.UUID;
-
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 public class AidToNavigationReportTest {
 
     @Test
     public void canDecode1() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDO,1,1,,A,E>lt;Lqaps0h3V:@;4a:@0b7W005J`6Dq9e<000003v010,4*7E");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDO,1,1,,A,E>lt;Lqaps0h3V:@;4a:@0b7W005J`6Dq9e<000003v010,4*7E");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
         // Assert
         assertEquals(AISMessageType.AidToNavigationReport, aisMessage.getMessageType());
-        assertEquals((Integer) 0, aisMessage.getRepeatIndicator());
+        assertEquals(0, aisMessage.getRepeatIndicator());
         AidToNavigationReport message = (AidToNavigationReport) aisMessage;
-        assertEquals(MMSI.valueOf(995036019), message.getSourceMmsi());
+        assertEquals(new MMSI(995036019), message.getSourceMmsi());
         assertEquals(AidType.BeaconSpecialMark, message.getAidType());
-        assertEquals(false, message.getAssignedMode());
+        assertEquals(false, message.isAssignedMode());
         assertEquals("S16A GLT VIRT ATON", message.getName());
         assertEquals(null, message.getNameExtension());
-        assertEquals(false, message.getOffPosition());
-        assertEquals(Integer.valueOf(60), message.getSecond());
-        assertEquals(Integer.valueOf(0), message.getToBow());
-        assertEquals(Integer.valueOf(0), message.getToPort());
-        assertEquals(Integer.valueOf(0), message.getToStern());
-        assertEquals(Integer.valueOf(0), message.getToStarboard());
-        assertEquals(true, message.getVirtualAid());
-        assertEquals(false, message.getPositionAccurate());
-        assertEquals(Float.valueOf(-23.936693f), message.getLatitude()); // lat = 111001001001101101001100000b = -23,9366933333
-        assertEquals(Float.valueOf(151.44344f), message.getLongitude());
+        assertEquals(false, message.isOffPosition());
+        assertEquals(60, message.getSecond());
+        assertEquals(0, message.getToBow());
+        assertEquals(0, message.getToPort());
+        assertEquals(0, message.getToStern());
+        assertEquals(0, message.getToStarboard());
+        assertEquals(true, message.isVirtualAid());
+        assertEquals(false, message.isPositionAccurate());
+        assertEquals(-23.936693f, message.getLatitude(), 0.0f); // lat = 111001001001101101001100000b = -23,9366933333
+        assertEquals(151.44344f, message.getLongitude(), 0.0f);
         assertEquals(PositionFixingDevice.Surveyed, message.getPositionFixingDevice());
-        assertFalse(message.getRaimFlag());
+        assertFalse(message.isRaimFlag());
     }
 
     @Test
     public void canDecode2() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDO,1,1,,A,E>lt;MIas0h3V:@;4a::h0b7W005Jh4nq:3l800003v010,4*08");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDO,1,1,,A,E>lt;MIas0h3V:@;4a::h0b7W005Jh4nq:3l800003v010,4*08");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
         // Assert
         assertEquals(AISMessageType.AidToNavigationReport, aisMessage.getMessageType());
-        assertEquals((Integer) 0, aisMessage.getRepeatIndicator());
+        assertEquals(0, aisMessage.getRepeatIndicator());
         AidToNavigationReport message = (AidToNavigationReport) aisMessage;
-        assertEquals(MMSI.valueOf(995036021), message.getSourceMmsi());
+        assertEquals(new MMSI(995036021), message.getSourceMmsi());
         assertEquals(AidType.BeaconSpecialMark, message.getAidType());
-        assertEquals(false, message.getAssignedMode());
+        assertEquals(false, message.isAssignedMode());
         assertEquals("S6A GLT VIRTU ATON", message.getName());
         assertEquals(null, message.getNameExtension());
-        assertEquals(false, message.getOffPosition());
-        assertEquals(Integer.valueOf(60), message.getSecond());
-        assertEquals(Integer.valueOf(0), message.getToBow());
-        assertEquals(Integer.valueOf(0), message.getToPort());
-        assertEquals(Integer.valueOf(0), message.getToStern());
-        assertEquals(Integer.valueOf(0), message.getToStarboard());
-        assertEquals(true, message.getVirtualAid());
-        assertEquals(false, message.getPositionAccurate());
-        assertEquals(Float.valueOf(-23.917385f), message.getLatitude());
-        assertEquals(Float.valueOf(151.49791f), message.getLongitude());
+        assertEquals(false, message.isOffPosition());
+        assertEquals(60, message.getSecond());
+        assertEquals(0, message.getToBow());
+        assertEquals(0, message.getToPort());
+        assertEquals(0, message.getToStern());
+        assertEquals(0, message.getToStarboard());
+        assertEquals(true, message.isVirtualAid());
+        assertEquals(false, message.isPositionAccurate());
+        assertEquals(-23.917385f, message.getLatitude(), 0.0f);
+        assertEquals(151.49791f, message.getLongitude(), 0.0f);
         assertEquals(PositionFixingDevice.Surveyed, message.getPositionFixingDevice());
-        assertFalse(message.getRaimFlag());
-    }
-
-    @Test
-    public void testDataFields() {
-        // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDO,1,1,,A,E>lt;MIas0h3V:@;4a::h0b7W005Jh4nq:3l800003v010,4*08");
-
-        // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
-        Map<String, Object> dataFields = aisMessage.dataFields();
-
-        // Assert
-        assertNotNull(dataFields);
-        dataFields.forEach((k,v) -> System.out.format("%s=%s\n", k, v));
-
-        assertEquals(25, dataFields.size());
-
-        assertEquals("AidToNavigationReport", dataFields.get("messageType"));
-        assertEquals(0, dataFields.get("repeatIndicator"));
-        assertEquals(995036021, dataFields.get("sourceMmsi.MMSI"));
-        assertEquals("BeaconSpecialMark", dataFields.get("aidType"));
-        assertEquals("S6A GLT VIRTU ATON", dataFields.get("name"));
-        assertEquals(false, dataFields.get("positionAccurate"));
-        assertEquals(151.49791f, dataFields.get("longitude"));
-        assertEquals(-23.917385f, dataFields.get("latitude"));
-        assertEquals(0, dataFields.get("toStern"));
-        assertEquals(0, dataFields.get("toBow"));
-        assertEquals(0, dataFields.get("toPort"));
-        assertEquals(0, dataFields.get("toStarboard"));
-        assertEquals("Surveyed", dataFields.get("positionFixingDevice"));
-        assertEquals(60, dataFields.get("second"));
-        assertEquals(false, dataFields.get("offPosition"));
-        assertEquals("00000000", dataFields.get("atoNStatus"));
-        assertEquals(false, dataFields.get("raimFlag"));
-        assertEquals(true, dataFields.get("virtualAid"));
-        assertEquals(false, dataFields.get("assignedMode"));
-        assertEquals(0, dataFields.get("spare1"));
-        assertEquals(0, dataFields.get("spare2"));
-        assertNull(dataFields.get("nameExtension"));
-
-        assertFalse(dataFields.containsKey("class"));
-        assertFalse(dataFields.containsKey(UUID.randomUUID().toString()));
+        assertFalse(message.isRaimFlag());
     }
 
 }

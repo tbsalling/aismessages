@@ -17,10 +17,15 @@
 package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
-import static dk.tbsalling.aismessages.ais.Decoders.*;
+import java.time.Instant;
+
 import static java.lang.String.format;
 
 /**
@@ -30,15 +35,30 @@ import static java.lang.String.format;
  * 
  * @author tbsalling
  */
-@SuppressWarnings("serial")
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class GNSSBinaryBroadcastMessage extends AISMessage {
 
-    public GNSSBinaryBroadcastMessage(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
-
-    protected GNSSBinaryBroadcastMessage(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
+    /**
+     * Constructor accepting pre-parsed values for true immutability.
+     */
+    protected GNSSBinaryBroadcastMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
+                                         int spare1, float latitude, float longitude, int spare2,
+                                         Integer mType, Integer stationId, Integer zCount,
+                                         Integer sequenceNumber, Integer numOfWords, Integer health,
+                                         String binaryData) {
+        super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
+        this.spare1 = spare1;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.spare2 = spare2;
+        this.mType = mType;
+        this.stationId = stationId;
+        this.zCount = zCount;
+        this.sequenceNumber = sequenceNumber;
+        this.numOfWords = numOfWords;
+        this.health = health;
+        this.binaryData = binaryData;
     }
 
     @Override
@@ -53,98 +73,25 @@ public class GNSSBinaryBroadcastMessage extends AISMessage {
 
         if (errorMessage.length() > 0) {
             if (numberOfBits >= 38)
-                errorMessage.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().getMMSI()));
+                errorMessage.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().getMmsi()));
 
             throw new InvalidMessage(errorMessage.toString());
         }
     }
 
-    public final AISMessageType getMessageType() {
+    public AISMessageType getMessageType() {
         return AISMessageType.GNSSBinaryBroadcastMessage;
     }
 
-    @SuppressWarnings("unused")
-	public Integer getSpare1() {
-        return getDecodedValue(() -> spare1, value -> spare1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40)));
-	}
-
-    @SuppressWarnings("unused")
-	public Float getLatitude() {
-        return getDecodedValue(() -> latitude, value -> latitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(58, 75)) / 10f);
-	}
-
-    @SuppressWarnings("unused")
-	public Float getLongitude() {
-        return getDecodedValue(() -> longitude, value -> longitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(40, 58)) / 10f);
-	}
-
-    @SuppressWarnings("unused")
-	public Integer getSpare2() {
-        return getDecodedValue(() -> spare2, value -> spare2 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(75, 80)));
-	}
-
-    @SuppressWarnings("unused")
-	public Integer getMType() {
-        return getDecodedValue(() -> mType, value -> mType = value, () -> getNumberOfBits() > 80, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(80, 86)));
-	}
-
-    @SuppressWarnings("unused")
-	public Integer getStationId() {
-        return getDecodedValue(() -> stationId, value -> stationId = value, () -> getNumberOfBits() > 80, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(86, 96)));
-	}
-
-    @SuppressWarnings("unused")
-	public Integer getZCount() {
-        return getDecodedValue(() -> zCount, value -> zCount = value, () -> getNumberOfBits() > 80, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(96, 109)));
-	}
-
-    @SuppressWarnings("unused")
-	public Integer getSequenceNumber() {
-        return getDecodedValue(() -> sequenceNumber, value -> sequenceNumber = value, () -> getNumberOfBits() > 80, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(109, 112)));
-	}
-
-    @SuppressWarnings("unused")
-	public Integer getNumOfWords() {
-        return getDecodedValue(() -> numOfWords, value -> numOfWords = value, () -> getNumberOfBits() > 80, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(112, 117)));
-	}
-
-    @SuppressWarnings("unused")
-	public Integer getHealth() {
-        return getDecodedValue(() -> health, value -> health = value, () -> getNumberOfBits() > 80, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(117, 120)));
-	}
-
-    @SuppressWarnings("unused")
-	public String getBinaryData() {
-        return getDecodedValue(() -> binaryData, value -> binaryData = value, () -> getNumberOfBits() > 80, () -> BIT_DECODER.apply(getBits(80, getNumberOfBits())));
-	}
-
-    @Override
-    public String toString() {
-        return "GNSSBinaryBroadcastMessage{" +
-                "messageType=" + getMessageType() +
-                ", spare1=" + getSpare1() +
-                ", latitude=" + getLatitude() +
-                ", longitude=" + getLongitude() +
-                ", spare2=" + getSpare2() +
-                ", mType=" + getMType() +
-                ", stationId=" + getStationId() +
-                ", zCount=" + getZCount() +
-                ", sequenceNumber=" + getSequenceNumber() +
-                ", numOfWords=" + getNumOfWords() +
-                ", health=" + getHealth() +
-                ", binaryData='" + getBinaryData() + '\'' +
-                "} " + super.toString();
-    }
-
-    private transient Integer spare1;
-    private transient Float latitude;
-    private transient Float longitude;
-    private transient Integer spare2;
-    private transient Integer mType;
-    private transient Integer stationId;
-    private transient Integer zCount;
-    private transient Integer sequenceNumber;
-    private transient Integer numOfWords;
-    private transient Integer health;
-    private transient String binaryData;
+    int spare1;
+    float latitude;
+    float longitude;
+    int spare2;
+    Integer mType;
+    Integer stationId;
+    Integer zCount;
+    Integer sequenceNumber;
+    Integer numOfWords;
+    Integer health;
+    String binaryData;
 }

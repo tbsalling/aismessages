@@ -12,36 +12,36 @@ public class UTCAndDateInquiryTest {
     @Test
     public void canDecode() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,:5AKhr1GORMH,0*57");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,:5AKhr1GORMH,0*57");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
         // Assert
         assertEquals(AISMessageType.UTCAndDateInquiry, aisMessage.getMessageType());
         UTCAndDateInquiry message = (UTCAndDateInquiry) aisMessage;
-        assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(353825000), message.getSourceMmsi());
-        assertEquals(MMSI.valueOf(366971350), message.getDestinationMmsi());
+        assertEquals(0, message.getRepeatIndicator());
+        assertEquals(new MMSI(353825000), message.getSourceMmsi());
+        assertEquals(new MMSI(366971350), message.getDestinationMmsi());
     }
 
     @Test
     public void canDecodeAlternative() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,:6TMCD1GOS60,0*11");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,B,:6TMCD1GOS60,0*11");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
         // Assert
         assertEquals(AISMessageType.UTCAndDateInquiry, aisMessage.getMessageType());
         UTCAndDateInquiry message = (UTCAndDateInquiry) aisMessage;
-        assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(440882000), message.getSourceMmsi());
-        assertEquals(MMSI.valueOf(366972000), message.getDestinationMmsi());
+        assertEquals(0, message.getRepeatIndicator());
+        assertEquals(new MMSI(440882000), message.getSourceMmsi());
+        assertEquals(new MMSI(366972000), message.getDestinationMmsi());
     }
 }

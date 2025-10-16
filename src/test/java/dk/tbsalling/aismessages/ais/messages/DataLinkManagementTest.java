@@ -13,22 +13,22 @@ public class DataLinkManagementTest {
     @Test
     public void canDecodeShortVariant1() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,Dh3Ovk1UAN>4,0*0A");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,Dh3Ovk1UAN>4,0*0A");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
         // Assert
         assertEquals(AISMessageType.DataLinkManagement, aisMessage.getMessageType());
         DataLinkManagement message = (DataLinkManagement) aisMessage;
-        assertEquals(Integer.valueOf(3), message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(3669708), message.getSourceMmsi());
-        assertEquals((Integer) 1620, message.getOffsetNumber1());
-        assertEquals((Integer) 5, message.getReservedSlots1());
-        assertEquals((Integer) 7, message.getTimeout1());
-        assertEquals((Integer) 225, message.getIncrement1());
+        assertEquals(3, message.getRepeatIndicator());
+        assertEquals(new MMSI(3669708), message.getSourceMmsi());
+        assertEquals(1620, message.getOffsetNumber1());
+        assertEquals(5, message.getReservedSlots1());
+        assertEquals(7, message.getTimeout1());
+        assertEquals(225, message.getIncrement1());
         assertNull(message.getOffsetNumber2());
         assertNull(message.getReservedSlots2());
         assertNull(message.getTimeout2());
@@ -42,22 +42,22 @@ public class DataLinkManagementTest {
     @Test
     public void canDecodeShortVariant2() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,Dh3Ovk1cEN>4,0*3B");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,B,Dh3Ovk1cEN>4,0*3B");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
         // Assert
         assertEquals(AISMessageType.DataLinkManagement, aisMessage.getMessageType());
         DataLinkManagement message = (DataLinkManagement) aisMessage;
-        assertEquals(Integer.valueOf(3), message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(3669708), message.getSourceMmsi());
-        assertEquals((Integer) 1717, message.getOffsetNumber1());
-        assertEquals((Integer) 5, message.getReservedSlots1());
-        assertEquals((Integer) 7, message.getTimeout1());
-        assertEquals((Integer) 225, message.getIncrement1());
+        assertEquals(3, message.getRepeatIndicator());
+        assertEquals(new MMSI(3669708), message.getSourceMmsi());
+        assertEquals(1717, message.getOffsetNumber1());
+        assertEquals(5, message.getReservedSlots1());
+        assertEquals(7, message.getTimeout1());
+        assertEquals(225, message.getIncrement1());
         assertNull(message.getOffsetNumber2());
         assertNull(message.getReservedSlots2());
         assertNull(message.getTimeout2());

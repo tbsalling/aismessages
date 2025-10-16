@@ -1,189 +1,226 @@
 package dk.tbsalling.aismessages.ais.messages.asm;
 
-import static dk.tbsalling.aismessages.ais.Decoders.*;
+import static dk.tbsalling.aismessages.ais.BitStringParser.*;
 import static java.util.Arrays.stream;
 
 public class BerthingData extends ApplicationSpecificMessage {
 
     protected BerthingData(int designatedAreaCode, int functionalId, String binaryData) {
         super(designatedAreaCode, functionalId, binaryData);
+
+        // Eagerly decode all fields
+        this.messageLinkageId = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(0, 10));
+        this.berthLength = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(10, 19));
+        this.waterDepthAtBerth = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(19, 27)) / 10f;
+        this.mooringPosition = MooringPosition.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(27, 30)));
+        this.berthUtcMonth = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(30, 34));
+        this.berthUtcDay = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(34, 39));
+        this.berthUtcHour = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(39, 44));
+        this.berthUtcMinute = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(44, 50));
+        this.serviceStatusAgent = ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(50, 52)));
+        this.serviceStatusFuel = ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(52, 54)));
+        this.serviceStatusChandler = ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(54, 56)));
+        this.serviceStatusStevedore = ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(56, 58)));
+        this.serviceStatusElectrical = ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(58, 60)));
+        this.serviceStatusPotableWater = ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(60, 62)));
+        this.serviceStatusCustomsHouse = ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(62, 64)));
+        this.serviceStatusCartage = ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(64, 66)));
+        this.serviceStatusCrane = ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(66, 68)));
+        this.serviceStatusLift = ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(68, 70)));
+        this.serviceStatusMedical = ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(70, 72)));
+        this.serviceStatusNavigationRepair = ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(72, 74)));
+        this.serviceStatusProvisions = ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(74, 76)));
+        this.serviceStatusShipRepair = ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(76, 78)));
+        this.serviceStatusSurveyor = ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(78, 80)));
+        this.serviceStatusSteam = ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(80, 82)));
+        this.serviceStatusTugs = ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(82, 84)));
+        this.serviceStatusSolidWasteDisposal = ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(84, 86)));
+        this.serviceStatusLiquidWasteDisposal = ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(86, 88)));
+        this.serviceStatusHazardousWasteDisposal = ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(88, 90)));
+        this.serviceStatusReservedBallastExchange = ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(90, 92)));
+        this.serviceStatusAdditionalServices = ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(92, 94)));
+        this.serviceStatusFutureRegionalUse = ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(94, 96)));
+        this.serviceStatusFutureUse = ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(96, 98)));
+        this.nameOfBerth = STRING_DECODER.apply(getBinaryData().substring(98, 218));
+        this.berthLongitude = FLOAT_DECODER.apply(getBinaryData().substring(218, 243)) / 60000f;
+        this.berthLatitude = FLOAT_DECODER.apply(getBinaryData().substring(243, 267)) / 60000f;
     }
 
-    public Integer getMessageLinkageId() {
-        return getDecodedValue(() -> messageLinkageId, value -> messageLinkageId = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(0,10)));
+    public int getMessageLinkageId() {
+        return messageLinkageId;
     }
 
-    public Integer getBerthLength() {
-        return getDecodedValue(() -> berthLength, value -> berthLength = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(10,19)));
+    public int getBerthLength() {
+        return berthLength;
     }
 
-    public Float getWaterDepthAtBerth() {
-        return getDecodedValue(() -> waterDepthAtBerth, value -> waterDepthAtBerth = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(19,27)) / 10f);
+    public float getWaterDepthAtBerth() {
+        return waterDepthAtBerth;
     }
 
     public MooringPosition getMooringPosition() {
-        return getDecodedValue(() -> mooringPosition, value -> mooringPosition = value, () -> Boolean.TRUE, () -> MooringPosition.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(27,30))));
+        return mooringPosition;
     }
 
-    public Integer getBerthUtcMonth() {
-        return getDecodedValue(() -> berthUtcMonth, value -> berthUtcMonth = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(30,34)));
+    public int getBerthUtcMonth() {
+        return berthUtcMonth;
     }
 
-    public Integer getBerthUtcDay() {
-        return getDecodedValue(() -> berthUtcDay, value -> berthUtcDay = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(34,39)));
+    public int getBerthUtcDay() {
+        return berthUtcDay;
     }
 
-    public Integer getBerthUtcHour() {
-        return getDecodedValue(() -> berthUtcHour, value -> berthUtcHour = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(39,44)));
+    public int getBerthUtcHour() {
+        return berthUtcHour;
     }
 
-    public Integer getBerthUtcMinute() {
-        return getDecodedValue(() -> berthUtcMinute, value -> berthUtcMinute = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(44,50)));
+    public int getBerthUtcMinute() {
+        return berthUtcMinute;
     }
 
     public ServiceStatus getServiceStatusAgent() {
-        return getDecodedValue(() -> serviceStatusAgent, value -> serviceStatusAgent = value, () -> Boolean.TRUE, () -> ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(50,52))));
+        return serviceStatusAgent;
     }
 
     public ServiceStatus getServiceStatusFuel() {
-        return getDecodedValue(() -> serviceStatusFuel, value -> serviceStatusFuel = value, () -> Boolean.TRUE, () -> ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(52,54))));
+        return serviceStatusFuel;
     }
 
     public ServiceStatus getServiceStatusChandler() {
-        return getDecodedValue(() -> serviceStatusChandler, value -> serviceStatusChandler = value, () -> Boolean.TRUE, () -> ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(54,56))));
+        return serviceStatusChandler;
     }
 
     public ServiceStatus getServiceStatusStevedore() {
-        return getDecodedValue(() -> serviceStatusStevedore, value -> serviceStatusStevedore = value, () -> Boolean.TRUE, () -> ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(56,58))));
+        return serviceStatusStevedore;
     }
 
     public ServiceStatus getServiceStatusElectrical() {
-        return getDecodedValue(() -> serviceStatusElectrical, value -> serviceStatusElectrical = value, () -> Boolean.TRUE, () -> ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(58,60))));
+        return serviceStatusElectrical;
     }
 
     public ServiceStatus getServiceStatusPotableWater() {
-        return getDecodedValue(() -> serviceStatusPotableWater, value -> serviceStatusPotableWater = value, () -> Boolean.TRUE, () -> ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(60,62))));
+        return serviceStatusPotableWater;
     }
 
     public ServiceStatus getServiceStatusCustomsHouse() {
-        return getDecodedValue(() -> serviceStatusCustomsHouse, value -> serviceStatusCustomsHouse = value, () -> Boolean.TRUE, () -> ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(62,64))));
+        return serviceStatusCustomsHouse;
     }
 
     public ServiceStatus getServiceStatusCartage() {
-        return getDecodedValue(() -> serviceStatusCartage, value -> serviceStatusCartage = value, () -> Boolean.TRUE, () -> ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(64,66))));
+        return serviceStatusCartage;
     }
 
     public ServiceStatus getServiceStatusCrane() {
-        return getDecodedValue(() -> serviceStatusCrane, value -> serviceStatusCrane = value, () -> Boolean.TRUE, () -> ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(66,68))));
+        return serviceStatusCrane;
     }
 
     public ServiceStatus getServiceStatusLift() {
-        return getDecodedValue(() -> serviceStatusLift, value -> serviceStatusLift = value, () -> Boolean.TRUE, () -> ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(68,70))));
+        return serviceStatusLift;
     }
 
     public ServiceStatus getServiceStatusMedical() {
-        return getDecodedValue(() -> serviceStatusMedical, value -> serviceStatusMedical = value, () -> Boolean.TRUE, () -> ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(70,72))));
+        return serviceStatusMedical;
     }
 
     public ServiceStatus getServiceStatusNavigationRepair() {
-        return getDecodedValue(() -> serviceStatusNavigationRepair, value -> serviceStatusNavigationRepair = value, () -> Boolean.TRUE, () -> ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(72,74))));
+        return serviceStatusNavigationRepair;
     }
 
     public ServiceStatus getServiceStatusProvisions() {
-        return getDecodedValue(() -> serviceStatusProvisions, value -> serviceStatusProvisions = value, () -> Boolean.TRUE, () -> ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(74,76))));
+        return serviceStatusProvisions;
     }
 
     public ServiceStatus getServiceStatusShipRepair() {
-        return getDecodedValue(() -> serviceStatusShipRepair, value -> serviceStatusShipRepair = value, () -> Boolean.TRUE, () -> ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(76,78))));
+        return serviceStatusShipRepair;
     }
 
     public ServiceStatus getServiceStatusSurveyor() {
-        return getDecodedValue(() -> serviceStatusSurveyor, value -> serviceStatusSurveyor = value, () -> Boolean.TRUE, () -> ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(78,80))));
+        return serviceStatusSurveyor;
     }
 
     public ServiceStatus getServiceStatusSteam() {
-        return getDecodedValue(() -> serviceStatusSteam, value -> serviceStatusSteam = value, () -> Boolean.TRUE, () -> ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(80,82))));
+        return serviceStatusSteam;
     }
 
     public ServiceStatus getServiceStatusTugs() {
-        return getDecodedValue(() -> serviceStatusTugs, value -> serviceStatusTugs = value, () -> Boolean.TRUE, () -> ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(82,84))));
+        return serviceStatusTugs;
     }
 
     public ServiceStatus getServiceStatusSolidWasteDisposal() {
-        return getDecodedValue(() -> serviceStatusSolidWasteDisposal, value -> serviceStatusSolidWasteDisposal = value, () -> Boolean.TRUE, () -> ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(84,86))));
+        return serviceStatusSolidWasteDisposal;
     }
 
     public ServiceStatus getServiceStatusLiquidWasteDisposal() {
-        return getDecodedValue(() -> serviceStatusLiquidWasteDisposal, value -> serviceStatusLiquidWasteDisposal = value, () -> Boolean.TRUE, () -> ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(86,88))));
+        return serviceStatusLiquidWasteDisposal;
     }
 
     public ServiceStatus getServiceStatusHazardousWasteDisposal() {
-        return getDecodedValue(() -> serviceStatusHazardousWasteDisposal, value -> serviceStatusHazardousWasteDisposal = value, () -> Boolean.TRUE, () -> ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(88,90))));
+        return serviceStatusHazardousWasteDisposal;
     }
 
     public ServiceStatus getServiceStatusReservedBallastExchange() {
-        return getDecodedValue(() -> serviceStatusReservedBallastExchange, value -> serviceStatusReservedBallastExchange = value, () -> Boolean.TRUE, () -> ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(90,92))));
+        return serviceStatusReservedBallastExchange;
     }
 
     public ServiceStatus getServiceStatusAdditionalServices() {
-        return getDecodedValue(() -> serviceStatusAdditionalServices, value -> serviceStatusAdditionalServices = value, () -> Boolean.TRUE, () -> ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(92,94))));
+        return serviceStatusAdditionalServices;
     }
 
     public ServiceStatus getServiceStatusFutureRegionalUse() {
-        return getDecodedValue(() -> serviceStatusFutureRegionalUse, value -> serviceStatusFutureRegionalUse = value, () -> Boolean.TRUE, () -> ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(94,96))));
+        return serviceStatusFutureRegionalUse;
     }
 
     public ServiceStatus getServiceStatusFutureUse() {
-        return getDecodedValue(() -> serviceStatusFutureUse, value -> serviceStatusFutureUse = value, () -> Boolean.TRUE, () -> ServiceStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(96,98))));
+        return serviceStatusFutureUse;
     }
 
     public String getNameOfBerth() {
-        return getDecodedValue(() -> nameOfBerth, value -> nameOfBerth = value, () -> Boolean.TRUE, () -> STRING_DECODER.apply(getBinaryData().substring(98,218)));
+        return nameOfBerth;
     }
 
-    public Float getBerthLongitude() {
-        return getDecodedValue(() -> berthLongitude, value -> berthLongitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBinaryData().substring(218,243)) / 60000f);
+    public float getBerthLongitude() {
+        return berthLongitude;
     }
 
-    public Float getBerthLatitude() {
-        return getDecodedValue(() -> berthLatitude, value -> berthLatitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBinaryData().substring(243,267)) / 60000f);
+    public float getBerthLatitude() {
+        return berthLatitude;
     }
 
-    private transient Integer messageLinkageId;
-    private transient Integer berthLength;
-    private transient Float waterDepthAtBerth;
-    private transient MooringPosition mooringPosition;
-    private transient Integer berthUtcMonth;
-    private transient Integer berthUtcDay;
-    private transient Integer berthUtcHour;
-    private transient Integer berthUtcMinute;
-    private transient ServiceStatus serviceStatusAgent;
-    private transient ServiceStatus serviceStatusFuel;
-    private transient ServiceStatus serviceStatusChandler;
-    private transient ServiceStatus serviceStatusStevedore;
-    private transient ServiceStatus serviceStatusElectrical;
-    private transient ServiceStatus serviceStatusPotableWater;
-    private transient ServiceStatus serviceStatusCustomsHouse;
-    private transient ServiceStatus serviceStatusCartage;
-    private transient ServiceStatus serviceStatusCrane;
-    private transient ServiceStatus serviceStatusLift;
-    private transient ServiceStatus serviceStatusMedical;
-    private transient ServiceStatus serviceStatusNavigationRepair;
-    private transient ServiceStatus serviceStatusProvisions;
-    private transient ServiceStatus serviceStatusShipRepair;
-    private transient ServiceStatus serviceStatusSurveyor;
-    private transient ServiceStatus serviceStatusSteam;
-    private transient ServiceStatus serviceStatusTugs;
-    private transient ServiceStatus serviceStatusSolidWasteDisposal;
-    private transient ServiceStatus serviceStatusLiquidWasteDisposal;
-    private transient ServiceStatus serviceStatusHazardousWasteDisposal;
-    private transient ServiceStatus serviceStatusReservedBallastExchange;
-    private transient ServiceStatus serviceStatusAdditionalServices;
-    private transient ServiceStatus serviceStatusFutureRegionalUse;
-    private transient ServiceStatus serviceStatusFutureUse;
-    private transient String nameOfBerth;
-    private transient Float berthLongitude;
-    private transient Float berthLatitude;
+    private final int messageLinkageId;
+    private final int berthLength;
+    private final float waterDepthAtBerth;
+    private final MooringPosition mooringPosition;
+    private final int berthUtcMonth;
+    private final int berthUtcDay;
+    private final int berthUtcHour;
+    private final int berthUtcMinute;
+    private final ServiceStatus serviceStatusAgent;
+    private final ServiceStatus serviceStatusFuel;
+    private final ServiceStatus serviceStatusChandler;
+    private final ServiceStatus serviceStatusStevedore;
+    private final ServiceStatus serviceStatusElectrical;
+    private final ServiceStatus serviceStatusPotableWater;
+    private final ServiceStatus serviceStatusCustomsHouse;
+    private final ServiceStatus serviceStatusCartage;
+    private final ServiceStatus serviceStatusCrane;
+    private final ServiceStatus serviceStatusLift;
+    private final ServiceStatus serviceStatusMedical;
+    private final ServiceStatus serviceStatusNavigationRepair;
+    private final ServiceStatus serviceStatusProvisions;
+    private final ServiceStatus serviceStatusShipRepair;
+    private final ServiceStatus serviceStatusSurveyor;
+    private final ServiceStatus serviceStatusSteam;
+    private final ServiceStatus serviceStatusTugs;
+    private final ServiceStatus serviceStatusSolidWasteDisposal;
+    private final ServiceStatus serviceStatusLiquidWasteDisposal;
+    private final ServiceStatus serviceStatusHazardousWasteDisposal;
+    private final ServiceStatus serviceStatusReservedBallastExchange;
+    private final ServiceStatus serviceStatusAdditionalServices;
+    private final ServiceStatus serviceStatusFutureRegionalUse;
+    private final ServiceStatus serviceStatusFutureUse;
+    private final String nameOfBerth;
+    private final float berthLongitude;
+    private final float berthLatitude;
 
     public enum MooringPosition {
         UNDEFINED(0),

@@ -3,56 +3,27 @@ package dk.tbsalling.aismessages.nmea.tagblock;
 import dk.tbsalling.aismessages.ais.messages.types.TAGBlockParameterCodeType;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidTagBlock;
 import dk.tbsalling.aismessages.nmea.exceptions.NMEAParseException;
+import lombok.Value;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Value
 public class NMEATagBlock {
-    private final Long timestamp;
-    private final String destinationId;
-    private final String sentenceGrouping;
-    private final Integer lineCount;
-    private final Long relativeTime;
-    private final String sourceId;
-    private final String text;
-    private final Integer checksum;
-    private final String rawMessage;
-    private final Boolean valid;
-    private Map<TAGBlockParameterCodeType, NMEATagBlockParameterCode> parameterMap;
 
-    public final Long getTimestamp() {
-        return timestamp;
-    }
-
-    public final String getDestinationId() {
-        return destinationId;
-    }
-
-    public final String getSentenceGrouping() {
-        return sentenceGrouping;
-    }
-
-    public final Integer getLineCount() {
-        return lineCount;
-    }
-
-    public final Long getRelativeTime() {
-        return relativeTime;
-    }
-
-    public final String getSourceId() {
-        return sourceId;
-    }
-
-    public final String getText() {
-        return text;
-    }
-
-    public final String getRawMessage() {
-        return rawMessage;
-    }
+    Long timestamp;
+    String destinationId;
+    String sentenceGrouping;
+    Integer lineCount;
+    Long relativeTime;
+    String sourceId;
+    String text;
+    Integer checksum;
+    String rawMessage;
+    Boolean valid;
+    Map<TAGBlockParameterCodeType, NMEATagBlockParameterCode> parameterMap;
 
     public static NMEATagBlock fromString(String nmeaTagBlockString) {
         return new NMEATagBlock(nmeaTagBlockString);
@@ -61,7 +32,7 @@ public class NMEATagBlock {
     private NMEATagBlock(String rawMessage) {
         final String nmeaTagBlockRegEx = "^\\\\.*\\*[0-9A-Fa-f]{2}\\\\$";
 
-        if (! rawMessage.matches(nmeaTagBlockRegEx))
+        if (!rawMessage.matches(nmeaTagBlockRegEx))
             throw new NMEAParseException(rawMessage, "Message does not comply with regexp \"%s\"".formatted(nmeaTagBlockRegEx));
 
         String rawMessageCleaned = rawMessage.substring(1, rawMessage.length() - 1);
@@ -80,8 +51,8 @@ public class NMEATagBlock {
             if (code.length != 2)
                 throw new NMEAParseException(rawMessage, "Parameter code and its value has to be separated by colon(:)");
             if (TAGBlockParameterCodeType.contains(code[0])) {
-                NMEATagBlockParameterCode nmeaTagBlockParameterCode = NMEATagBlockParameterCode.fromString(TAGBlockParameterCodeType.valueOf(code[0]), code[1]);
-                parameterMap.put(nmeaTagBlockParameterCode.getCode() , nmeaTagBlockParameterCode);
+                NMEATagBlockParameterCode nmeaTagBlockParameterCode = new NMEATagBlockParameterCode(TAGBlockParameterCodeType.valueOf(code[0]), code[1]);
+                parameterMap.put(nmeaTagBlockParameterCode.getCode(), nmeaTagBlockParameterCode);
             }
         }
 
@@ -110,7 +81,7 @@ public class NMEATagBlock {
     private Boolean validate(String checkString) {
         int checksum = 0;
         for (int i = 0; i < checkString.length(); i++) {
-            checksum ^= (byte)(checkString.charAt(i));
+            checksum ^= (byte) (checkString.charAt(i));
         }
 
         return checksum == this.checksum;
@@ -135,7 +106,7 @@ public class NMEATagBlock {
             parameters.add(String.format(" %s: %s", TAGBlockParameterCodeType.s.getName(), sourceId));
         if (text != null)
             parameters.add(String.format(" %s: %s", TAGBlockParameterCodeType.t.getName(), text));
-        builder.append(String.join(",", parameters)).append(" }");;
+        builder.append(String.join(",", parameters)).append(" }");
         return builder.toString();
     }
 }

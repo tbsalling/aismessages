@@ -1,62 +1,74 @@
 package dk.tbsalling.aismessages.ais.messages.asm;
 
-import static dk.tbsalling.aismessages.ais.Decoders.STRING_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
+import static dk.tbsalling.aismessages.ais.BitStringParser.STRING_DECODER;
+import static dk.tbsalling.aismessages.ais.BitStringParser.UNSIGNED_INTEGER_DECODER;
 
 public class InlandShipStaticAndVoyageRelatedData extends ApplicationSpecificMessage {
 
     protected InlandShipStaticAndVoyageRelatedData(int designatedAreaCode, int functionalId, String binaryData) {
         super(designatedAreaCode, functionalId, binaryData);
+
+        // Eagerly decode all fields
+        this.uniqueEuropeanVesselIdentificationNumber = STRING_DECODER.apply(getBinaryData().substring(0, 48));
+        this.lengthOfShip = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(48, 61)) / 10f;
+        this.beamOfShip = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(61, 71)) / 10f;
+        this.shipOrCombinationType = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(71, 85));
+        this.hazardousCargo = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(85, 88));
+        this.draught = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(88, 99)) / 100f;
+        this.loaded = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(99, 101));
+        this.qualityOfSpeedInformation = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(101, 102));
+        this.qualityOfCourseInformation = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(102, 103));
+        this.qualityOfHeadingInformation = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(103, 104));
     }
 
     public String getUniqueEuropeanVesselIdentificationNumber() {
-        return getDecodedValue(() -> uniqueEuropeanVesselIdentificationNumber, value -> uniqueEuropeanVesselIdentificationNumber = value, () -> Boolean.TRUE, () -> STRING_DECODER.apply(getBinaryData().substring(0,48)));
+        return uniqueEuropeanVesselIdentificationNumber;
     }
 
-    public Float getLengthOfShip() {
-        return getDecodedValue(() -> lengthOfShip, value -> lengthOfShip = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(48, 61)) / 10f);
+    public float getLengthOfShip() {
+        return lengthOfShip;
     }
 
-    public Float getBeamOfShip() {
-        return getDecodedValue(() -> beamOfShip, value -> beamOfShip = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(61, 71)) / 10f);
+    public float getBeamOfShip() {
+        return beamOfShip;
     }
 
-    public Integer getShipOrCombinationType() {
-        return getDecodedValue(() -> shipOrCombinationType, value -> shipOrCombinationType = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(71, 85)));
+    public int getShipOrCombinationType() {
+        return shipOrCombinationType;
     }
 
-    public Integer getHazardousCargo() {
-        return getDecodedValue(() -> hazardousCargo, value -> hazardousCargo = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(85, 88)));
+    public int getHazardousCargo() {
+        return hazardousCargo;
     }
 
-    public Float getDraught() {
-        return getDecodedValue(() -> draught, value -> draught = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(88, 99)) / 100f);
+    public float getDraught() {
+        return draught;
     }
 
-    public Integer getLoaded() {
-        return getDecodedValue(() -> loaded, value -> loaded = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(99, 101)));
+    public int getLoaded() {
+        return loaded;
     }
 
-    public Integer getQualityOfSpeedInformation() {
-        return getDecodedValue(() -> qualityOfSpeedInformation, value -> qualityOfSpeedInformation = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(101, 102)));
+    public int getQualityOfSpeedInformation() {
+        return qualityOfSpeedInformation;
     }
 
-    public Integer getQualityOfCourseInformation() {
-        return getDecodedValue(() -> qualityOfCourseInformation, value -> qualityOfCourseInformation = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(102, 103)));
+    public int getQualityOfCourseInformation() {
+        return qualityOfCourseInformation;
     }
 
-    public Integer getQualityOfHeadingInformation() {
-        return getDecodedValue(() -> qualityOfHeadingInformation, value -> qualityOfHeadingInformation = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(103, 104)));
+    public int getQualityOfHeadingInformation() {
+        return qualityOfHeadingInformation;
     }
 
-    private transient String uniqueEuropeanVesselIdentificationNumber;
-    private transient Float lengthOfShip;
-    private transient Float beamOfShip;
-    private transient Integer shipOrCombinationType;
-    private transient Integer hazardousCargo;
-    private transient Float draught;
-    private transient Integer loaded;
-    private transient Integer qualityOfSpeedInformation;
-    private transient Integer qualityOfCourseInformation;
-    private transient Integer qualityOfHeadingInformation;
+    private final String uniqueEuropeanVesselIdentificationNumber;
+    private final float lengthOfShip;
+    private final float beamOfShip;
+    private final int shipOrCombinationType;
+    private final int hazardousCargo;
+    private final float draught;
+    private final int loaded;
+    private final int qualityOfSpeedInformation;
+    private final int qualityOfCourseInformation;
+    private final int qualityOfHeadingInformation;
 }

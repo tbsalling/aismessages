@@ -12,44 +12,44 @@ public class AddressedSafetyRelatedMessageTest {
     @Test
     public void canDecode() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,<42Lati0W:Ov=C7P6B?=Pjoihhjhqq,2*2B");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,<42Lati0W:Ov=C7P6B?=Pjoihhjhqq,2*2B");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
         // Assert
         assertEquals(AISMessageType.AddressedSafetyRelatedMessage, aisMessage.getMessageType());
         AddressedSafetyRelatedMessage message = (AddressedSafetyRelatedMessage) aisMessage;
-        assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(271002099), message.getSourceMmsi());
-        assertEquals(Integer.valueOf(0), message.getSequenceNumber());
-        assertEquals(MMSI.valueOf(271002111), message.getDestinationMmsi());
-        assertTrue(message.getRetransmit());
-        assertEquals(Integer.valueOf(0), message.getSpare());
+        assertEquals(0, message.getRepeatIndicator());
+        assertEquals(new MMSI(271002099), message.getSourceMmsi());
+        assertEquals(0, message.getSequenceNumber());
+        assertEquals(new MMSI(271002111), message.getDestinationMmsi());
+        assertTrue(message.isRetransmit());
+        assertEquals(0, message.getSpare());
         assertEquals("MSG FROM 27100209", message.getText());
     }
 
     @Test
     public void canDecodeWithLongerText() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,<5?Per18=HB1U:1@E=B0m<L,2*51");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,<5?Per18=HB1U:1@E=B0m<L,2*51");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
         // Assert
         assertEquals(AISMessageType.AddressedSafetyRelatedMessage, aisMessage.getMessageType());
         AddressedSafetyRelatedMessage message = (AddressedSafetyRelatedMessage) aisMessage;
-        assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(351809000), message.getSourceMmsi());
-        assertEquals(Integer.valueOf(0), message.getSequenceNumber());
-        assertEquals(MMSI.valueOf(302866720), message.getDestinationMmsi());
-        assertFalse(message.getRetransmit());
-        assertEquals(Integer.valueOf(1), message.getSpare());
+        assertEquals(0, message.getRepeatIndicator());
+        assertEquals(new MMSI(351809000), message.getSourceMmsi());
+        assertEquals(0, message.getSequenceNumber());
+        assertEquals(new MMSI(302866720), message.getDestinationMmsi());
+        assertFalse(message.isRetransmit());
+        assertEquals(1, message.getSpare());
         assertEquals("%JAPUMR 5L", message.getText());
     }
 }

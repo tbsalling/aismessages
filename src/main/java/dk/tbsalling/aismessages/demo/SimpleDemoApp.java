@@ -32,7 +32,7 @@ public class SimpleDemoApp {
         System.out.println("--------------------");
 
         AISInputStreamReader streamReader = new AISInputStreamReader(inputStream, aisMessage ->
-                System.out.println("Received AIS message from MMSI " + aisMessage.getSourceMmsi().getMMSI() + ": " + aisMessage)
+                System.out.println("Received AIS message from MMSI " + aisMessage.getSourceMmsi().getMmsi() + ": " + aisMessage)
         );
 
         streamReader.run();

@@ -20,19 +20,29 @@ import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
-import static dk.tbsalling.aismessages.ais.Decoders.*;
+import java.time.Instant;
+
 import static java.lang.String.format;
 
-@SuppressWarnings("serial")
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class BinaryMessageSingleSlot extends AISMessage {
 
-    public BinaryMessageSingleSlot(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
-
-    protected BinaryMessageSingleSlot(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
+    /**
+     * Constructor accepting pre-parsed values for true immutability.
+     */
+    protected BinaryMessageSingleSlot(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
+                                      boolean destinationIndicator, boolean binaryDataFlag,
+                                      MMSI destinationMMSI, String binaryData) {
+        super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
+        this.destinationIndicator = destinationIndicator;
+        this.binaryDataFlag = binaryDataFlag;
+        this.destinationMMSI = destinationMMSI;
+        this.binaryData = binaryData;
     }
 
     @Override
@@ -47,49 +57,18 @@ public class BinaryMessageSingleSlot extends AISMessage {
 
         if (errorMessage.length() > 0) {
             if (numberOfBits >= 38)
-                errorMessage.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().getMMSI()));
+                errorMessage.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().getMmsi()));
 
             throw new InvalidMessage(errorMessage.toString());
         }
     }
 
-    public final AISMessageType getMessageType() {
+    public AISMessageType getMessageType() {
         return AISMessageType.BinaryMessageSingleSlot;
     }
 
-    @SuppressWarnings("unused")
-	public Boolean getDestinationIndicator() {
-        return getDecodedValue(() -> destinationIndicator, value -> destinationIndicator = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(38, 39)));
-	}
-
-    @SuppressWarnings("unused")
-	public Boolean getBinaryDataFlag() {
-        return getDecodedValue(() -> binaryDataFlag, value -> binaryDataFlag = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(39, 40)));
-	}
-
-    @SuppressWarnings("unused")
-	public MMSI getDestinationMMSI() {
-        return getDecodedValue(() -> destinationMMSI, value -> destinationMMSI = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70))));
-	}
-
-    @SuppressWarnings("unused")
-	public String getBinaryData() {
-        return getDecodedValue(() -> binaryData, value -> binaryData = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(40, 168)));
-	}
-
-    @Override
-    public String toString() {
-        return "BinaryMessageSingleSlot{" +
-                "messageType=" + getMessageType() +
-                ", destinationIndicator=" + getDestinationIndicator() +
-                ", destinationMMSI=" + getDestinationMMSI() +
-                ", binaryDataFlag=" + getBinaryDataFlag() +
-                ", binaryData='" + getBinaryData() + '\'' +
-                "} " + super.toString();
-    }
-
-    private transient Boolean destinationIndicator;
-    private transient Boolean binaryDataFlag;
-    private transient MMSI destinationMMSI;
-    private transient String binaryData;
+    boolean destinationIndicator;
+    boolean binaryDataFlag;
+    MMSI destinationMMSI;
+    String binaryData;
 }

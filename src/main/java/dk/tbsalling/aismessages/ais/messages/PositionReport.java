@@ -22,25 +22,74 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.messages.types.*;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
-import java.lang.ref.WeakReference;
+import java.time.Instant;
 
-import static dk.tbsalling.aismessages.ais.Decoders.*;
 import static java.lang.String.format;
 
 /**
  * @author tbsalling
  *
  */
-@SuppressWarnings("serial")
-public abstract class PositionReport extends AISMessage implements ExtendedDynamicDataReport {
+@Getter
+@ToString
+@EqualsAndHashCode(callSuper = true)
+public abstract sealed class PositionReport extends AISMessage implements ExtendedDynamicDataReport permits PositionReportClassAScheduled, PositionReportClassAAssignedSchedule, PositionReportClassAResponseToInterrogation {
 
-    public PositionReport(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
-
-    protected PositionReport(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
+    /**
+     * Constructor accepting pre-parsed values for true immutability.
+     *
+     * @param sourceMmsi               the pre-parsed source MMSI
+     * @param repeatIndicator          the pre-parsed repeat indicator
+     * @param nmeaTagBlock             the NMEA tag block
+     * @param nmeaMessages             the NMEA messages
+     * @param bitString                the bit string
+     * @param navigationStatus         the navigation status
+     * @param rateOfTurn               the rate of turn (calculated from raw value)
+     * @param speedOverGround          the speed over ground
+     * @param positionAccuracy         the position accuracy flag
+     * @param latitude                 the latitude
+     * @param longitude                the longitude
+     * @param courseOverGround         the course over ground
+     * @param trueHeading              the true heading
+     * @param second                   the timestamp second
+     * @param specialManeuverIndicator the special maneuver indicator
+     * @param raimFlag                 the RAIM flag
+     * @param communicationState       the communication state
+     * @param rawRateOfTurn            the raw rate of turn value
+     * @param rawSpeedOverGround       the raw speed over ground value
+     * @param rawLatitude              the raw latitude value
+     * @param rawLongitude             the raw longitude value
+     * @param rawCourseOverGround      the raw course over ground value
+     */
+    protected PositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
+                             NavigationStatus navigationStatus, int rateOfTurn, float speedOverGround,
+                             boolean positionAccuracy, float latitude, float longitude,
+                             float courseOverGround, int trueHeading, int second,
+                             ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState,
+                             int rawRateOfTurn, int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround) {
+        super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
+        this.navigationStatus = navigationStatus;
+        this.rateOfTurn = rateOfTurn;
+        this.speedOverGround = speedOverGround;
+        this.positionAccuracy = positionAccuracy;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.courseOverGround = courseOverGround;
+        this.trueHeading = trueHeading;
+        this.second = second;
+        this.specialManeuverIndicator = specialManeuverIndicator;
+        this.raimFlag = raimFlag;
+        this.communicationState = communicationState;
+        this.rawRateOfTurn = rawRateOfTurn;
+        this.rawSpeedOverGround = rawSpeedOverGround;
+        this.rawLatitude = rawLatitude;
+        this.rawLongitude = rawLongitude;
+        this.rawCourseOverGround = rawCourseOverGround;
     }
 
     @Override
@@ -56,7 +105,7 @@ public abstract class PositionReport extends AISMessage implements ExtendedDynam
 
         if (errorMessage.length() > 0) {
             if (numberOfBits >= 38)
-                errorMessage.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().getMMSI()));
+                errorMessage.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().getMmsi()));
 
             throw new InvalidMessage(errorMessage.toString());
         }
@@ -67,118 +116,21 @@ public abstract class PositionReport extends AISMessage implements ExtendedDynam
         return TransponderClass.A;
     }
 
-    @SuppressWarnings("unused")
-	public NavigationStatus getNavigationStatus() {
-        return getDecodedValue(() -> navigationStatus, value -> navigationStatus = value, () -> Boolean.TRUE, () -> NavigationStatus.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(38, 42))));
-	}
-
-    @SuppressWarnings("unused")
-	public Integer getRateOfTurn() {
-        return getDecodedValue(() -> rateOfTurn, value -> rateOfTurn = value, () -> Boolean.TRUE, () -> {int rot = INTEGER_DECODER.apply(getBits(42, 50));return (int) (Math.signum(rot) * Math.pow(rot / 4.733, 2));});
-	}
-
-    @SuppressWarnings("unused")
-	public Float getSpeedOverGround() {
-        return getDecodedValue(() -> speedOverGround, value -> speedOverGround = value, () -> Boolean.TRUE, () -> UNSIGNED_FLOAT_DECODER.apply(getBits(50, 60)) / 10f);
-	}
-
-    @SuppressWarnings("unused")
-	public Integer getRawSpeedOverGround() {
-        return UNSIGNED_INTEGER_DECODER.apply(getBits(50, 60));
-    }
-
-    @SuppressWarnings("unused")
-	public Boolean getPositionAccuracy() {
-        return getDecodedValue(() -> positionAccuracy, value -> positionAccuracy = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(60, 61)));
-	}
-
-    @SuppressWarnings("unused")
-	public Float getLatitude() {
-        return getDecodedValue(() -> latitude, value -> latitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(89, 116)) / 600000f);
-	}
-
-    @SuppressWarnings("unused")
-    public Integer getRawLatitude() {
-        return INTEGER_DECODER.apply(getBits(89, 116));
-    }
-
-    @SuppressWarnings("unused")
-	public Float getLongitude() {
-        return getDecodedValue(() -> longitude, value -> longitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(61, 89)) / 600000f);
-	}
-
-    @SuppressWarnings("unused")
-    public Integer getRawLongitude() {
-        return INTEGER_DECODER.apply(getBits(61, 89));
-    }
-
-    @SuppressWarnings("unused")
-	public Float getCourseOverGround() {
-        return getDecodedValue(() -> courseOverGround, value -> courseOverGround = value, () -> Boolean.TRUE, () -> UNSIGNED_FLOAT_DECODER.apply(getBits(116, 128)) / 10f);
-	}
-
-    @SuppressWarnings("unused")
-    public Integer getRawCourseOverGround() {
-        return UNSIGNED_INTEGER_DECODER.apply(getBits(116, 128));
-    }
-
-    @SuppressWarnings("unused")
-	public Integer getTrueHeading() {
-        return getDecodedValue(() -> trueHeading, value -> trueHeading = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(128, 137)) );
-	}
-
-    @SuppressWarnings("unused")
-	public Integer getSecond() {
-        return getDecodedValue(() -> second, value -> second = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(137, 143)));
-	}
-
-    @SuppressWarnings("unused")
-	public ManeuverIndicator getSpecialManeuverIndicator() {
-        return getDecodedValue(() -> specialManeuverIndicator, value -> specialManeuverIndicator = value, () -> Boolean.TRUE, () -> ManeuverIndicator.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(143, 145))));
-	}
-
-    @SuppressWarnings("unused")
-	public Boolean getRaimFlag() {
-        return getDecodedValue(() -> raimFlag, value -> raimFlag = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(148, 149)));
-	}
-
-    @SuppressWarnings("unused")
-    public CommunicationState getCommunicationState() {
-        if (this instanceof PositionReportClassAScheduled || this instanceof PositionReportClassAAssignedSchedule)
-            return getDecodedValueByWeakReference(() -> communicationState, value -> communicationState = value, () -> Boolean.TRUE, () -> SOTDMACommunicationState.fromBitString(getBits(149, 168)));
-        else if (this instanceof PositionReportClassAResponseToInterrogation)
-            return getDecodedValueByWeakReference(() -> communicationState, value -> communicationState = value, () -> Boolean.TRUE, () -> ITDMACommunicationState.fromBitString(getBits(149, 168)));
-        else
-            return null;
-    }
-
-    @Override
-    public String toString() {
-        return "PositionReport{" +
-                "navigationStatus=" + getNavigationStatus() +
-                ", rateOfTurn=" + getRateOfTurn() +
-                ", speedOverGround=" + getSpeedOverGround() +
-                ", positionAccuracy=" + getPositionAccuracy() +
-                ", latitude=" + getLatitude() +
-                ", longitude=" + getLongitude() +
-                ", courseOverGround=" + getCourseOverGround() +
-                ", trueHeading=" + getTrueHeading() +
-                ", second=" + getSecond() +
-                ", specialManeuverIndicator=" + getSpecialManeuverIndicator() +
-                ", raimFlag=" + getRaimFlag() +
-                "} " + super.toString();
-    }
-
-    private transient NavigationStatus navigationStatus;
-	private transient Integer rateOfTurn;
-	private transient Float speedOverGround;
-	private transient Boolean positionAccuracy;
-	private transient Float latitude;
-	private transient Float longitude;
-	private transient Float courseOverGround;
-	private transient Integer trueHeading;
-	private transient Integer second;
-	private transient ManeuverIndicator specialManeuverIndicator;
-	private transient Boolean raimFlag;
-	private transient WeakReference<CommunicationState> communicationState;
+    NavigationStatus navigationStatus;
+    int rateOfTurn;
+    float speedOverGround;
+    boolean positionAccuracy;
+    float latitude;
+    float longitude;
+    float courseOverGround;
+    int trueHeading;
+    int second;
+    ManeuverIndicator specialManeuverIndicator;
+    boolean raimFlag;
+    CommunicationState communicationState;
+    int rawRateOfTurn;
+    int rawSpeedOverGround;
+    int rawLatitude;
+    int rawLongitude;
+    int rawCourseOverGround;
 }

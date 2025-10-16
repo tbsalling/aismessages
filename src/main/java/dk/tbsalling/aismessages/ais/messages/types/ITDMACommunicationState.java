@@ -16,13 +16,17 @@
 
 package dk.tbsalling.aismessages.ais.messages.types;
 
-import java.io.Serializable;
 
-import static dk.tbsalling.aismessages.ais.Decoders.BOOLEAN_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
+
+import static dk.tbsalling.aismessages.ais.BitStringParser.BOOLEAN_DECODER;
+import static dk.tbsalling.aismessages.ais.BitStringParser.UNSIGNED_INTEGER_DECODER;
 import static java.util.Objects.requireNonNull;
 
-public class ITDMACommunicationState extends CommunicationState implements Serializable {
+@Value
+@EqualsAndHashCode(callSuper = true)
+public class ITDMACommunicationState extends CommunicationState {
 
 	private ITDMACommunicationState(SyncState syncState, Integer slotIncrement, Integer numberOfSlots, Boolean keepFlag) {
 		super(syncState);
@@ -46,22 +50,7 @@ public class ITDMACommunicationState extends CommunicationState implements Seria
 		);
 	}
 
-	@SuppressWarnings("unused")
-	public Integer getSlotIncrement() {
-		return slotIncrement;
-	}
-
-	@SuppressWarnings("unused")
-	public Integer getNumberOfSlots() {
-		return numberOfSlots;
-	}
-
-	@SuppressWarnings("unused")
-	public Boolean getKeepFlag() {
-		return keepFlag;
-	}
-
-	private final Integer slotIncrement;
-	private final Integer numberOfSlots;
-	private final Boolean keepFlag;
+    Integer slotIncrement;
+    Integer numberOfSlots;
+    Boolean keepFlag;
 }

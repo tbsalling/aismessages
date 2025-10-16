@@ -20,19 +20,25 @@ import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
+import java.time.Instant;
+
 import static java.lang.String.format;
 
-@SuppressWarnings("serial")
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class UTCAndDateInquiry extends AISMessage {
 
-    public UTCAndDateInquiry(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
-
-    protected UTCAndDateInquiry(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
+    /**
+     * Constructor accepting pre-parsed values for true immutability.
+     */
+    protected UTCAndDateInquiry(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
+                                MMSI destinationMmsi) {
+        super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
+        this.destinationMmsi = destinationMmsi;
     }
 
     @Override
@@ -48,28 +54,16 @@ public class UTCAndDateInquiry extends AISMessage {
 
         if (errorMessage.length() > 0) {
             if (numberOfBits >= 38)
-                errorMessage.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().getMMSI()));
+                errorMessage.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().getMmsi()));
 
             throw new InvalidMessage(errorMessage.toString());
         }
     }
 
-    public final AISMessageType getMessageType() {
+    public AISMessageType getMessageType() {
         return AISMessageType.UTCAndDateInquiry;
     }
 
     @SuppressWarnings("unused")
-	public MMSI getDestinationMmsi() {
-        return getDecodedValue(() -> destinationMmsi, value -> destinationMmsi = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70))));
-	}
-
-    @Override
-    public String toString() {
-        return "UTCAndDateInquiry{" +
-                "messageType=" + getMessageType() +
-                ", destinationMmsi=" + getDestinationMmsi() +
-                "} " + super.toString();
-    }
-
-    private transient MMSI destinationMmsi;
+    MMSI destinationMmsi;
 }

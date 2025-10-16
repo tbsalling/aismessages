@@ -1,224 +1,268 @@
 package dk.tbsalling.aismessages.ais.messages.asm;
 
-import static dk.tbsalling.aismessages.ais.Decoders.STRING_DECODER;
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
+import static dk.tbsalling.aismessages.ais.BitStringParser.STRING_DECODER;
+import static dk.tbsalling.aismessages.ais.BitStringParser.UNSIGNED_INTEGER_DECODER;
 import static java.util.Arrays.stream;
 
 public class ExtendedShipStaticAndVoyageRelatedData extends ApplicationSpecificMessage {
     public ExtendedShipStaticAndVoyageRelatedData(int designatedAreaCode, int functionalId, String binaryData) {
         super(designatedAreaCode, functionalId, binaryData);
+
+        // Eagerly decode all fields
+        this.messageLinkageId = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(0, 10));
+        this.airDraught = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(10, 23)) / 10f;
+        this.lastPortOfCall = STRING_DECODER.apply(getBinaryData().substring(23, 53));
+        this.nextPortOfCall = STRING_DECODER.apply(getBinaryData().substring(53, 83));
+        this.secondPortOfCall = STRING_DECODER.apply(getBinaryData().substring(83, 113));
+        this.solasEquipmentStatusAISClassA = SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(113, 115)));
+        this.solasEquipmentStatusAutomaticTrackingAid = SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(115, 117)));
+        this.solasEquipmentStatusBridgeNavigationalWatchAlarmSystem = SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(117, 119)));
+        this.solasEquipmentStatusECDISBackup = SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(119, 121)));
+        this.solasEquipmentStatusECDISPaperNauticalChart = SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(121, 123)));
+        this.solasEquipmentStatusEchoSounder = SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(123, 125)));
+        this.solasEquipmentStatusElectronicPlottingAid = SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(125, 127)));
+        this.solasEquipmentStatusEmergencySteeringGear = SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(127, 129)));
+        this.solasEquipmentStatusNavigationSystem = SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(129, 131)));
+        this.solasEquipmentStatusGyroCompass = SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(131, 133)));
+        this.solasEquipmentStatusLRIT = SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(133, 135)));
+        this.solasEquipmentStatusMagneticCompass = SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(135, 137)));
+        this.solasEquipmentStatusNAVTEX = SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(137, 139)));
+        this.solasEquipmentStatusRadarARPA = SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(139, 141)));
+        this.solasEquipmentStatusRadarSBand = SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(141, 143)));
+        this.solasEquipmentStatusRadarXBand = SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(143, 145)));
+        this.solasEquipmentStatusRadioHF = SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(145, 147)));
+        this.solasEquipmentStatusRadioINMARSAT = SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(147, 149)));
+        this.solasEquipmentStatusRadioMF = SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(149, 151)));
+        this.solasEquipmentStatusRadioVHF = SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(151, 153)));
+        this.solasEquipmentStatusSpeedLogOverGround = SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(153, 155)));
+        this.solasEquipmentStatusSpeedLogThroughWater = SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(155, 157)));
+        this.solasEquipmentStatusTransmittingHeadingDevice = SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(157, 159)));
+        this.solasEquipmentStatusTrackControlSystem = SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(159, 161)));
+        this.solasEquipmentStatusVDR = SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(161, 163)));
+        this.solasEquipmentStatusFuture = SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(163, 165)));
+        this.iceClass = IceClass.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(165, 169)));
+        this.shaftHorsePower = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(169, 187));
+        this.vhfWorkingChannel = STRING_DECODER.apply(getBinaryData().substring(187, 199));
+        this.lloydsShipType = STRING_DECODER.apply(getBinaryData().substring(199, 241));
+        this.grossTonnage = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(241, 259));
+        this.ladenOrBallast = BallastStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(259, 261)));
+        this.heavyFuelOil = BunkerOilStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(261, 263)));
+        this.lightFuelOil = BunkerOilStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(263, 265)));
+        this.diesel = BunkerOilStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(265, 267)));
+        this.totalAmountOfBunkerOil = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(267, 281));
+        this.numberOfPersons = UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(281, 294));
     }
 
     public Integer getMessageLinkageId() {
-        return getDecodedValue(() -> messageLinkageId, value -> messageLinkageId = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(0,10)));
+        return messageLinkageId;
     }
 
     public Float getAirDraught() {
-        return getDecodedValue(() -> airDraught, value -> airDraught = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(10,23))/10f);
+        return airDraught;
     }
 
     public String getLastPortOfCall() {
-        return getDecodedValue(() -> lastPortOfCall, value -> lastPortOfCall = value, () -> Boolean.TRUE, () -> STRING_DECODER.apply(getBinaryData().substring(23,53)));
+        return lastPortOfCall;
     }
 
     public String getNextPortOfCall() {
-        return getDecodedValue(() -> nextPortOfCall, value -> nextPortOfCall = value, () -> Boolean.TRUE, () -> STRING_DECODER.apply(getBinaryData().substring(53,83)));
+        return nextPortOfCall;
     }
 
     public String getSecondPortOfCall() {
-        return getDecodedValue(() -> secondPortOfCall, value -> secondPortOfCall = value, () -> Boolean.TRUE, () -> STRING_DECODER.apply(getBinaryData().substring(83,113)));
+        return secondPortOfCall;
     }
 
     public SolasEquipmentStatus getSolasEquipmentStatusAISClassA() {
-        return getDecodedValue(() -> solasEquipmentStatusAISClassA, value -> solasEquipmentStatusAISClassA = value, () -> Boolean.TRUE, () -> SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(113,115))));
+        return solasEquipmentStatusAISClassA;
     }
 
     public SolasEquipmentStatus getSolasEquipmentStatusAutomaticTrackingAid() {
-        return getDecodedValue(() -> solasEquipmentStatusAutomaticTrackingAid, value -> solasEquipmentStatusAutomaticTrackingAid = value, () -> Boolean.TRUE, () -> SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(115,117))));
+        return solasEquipmentStatusAutomaticTrackingAid;
     }
 
     public SolasEquipmentStatus getSolasEquipmentStatusBridgeNavigationalWatchAlarmSystem() {
-        return getDecodedValue(() -> solasEquipmentStatusBridgeNavigationalWatchAlarmSystem, value -> solasEquipmentStatusBridgeNavigationalWatchAlarmSystem = value, () -> Boolean.TRUE, () -> SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(117,119))));
+        return solasEquipmentStatusBridgeNavigationalWatchAlarmSystem;
     }
 
     public SolasEquipmentStatus getSolasEquipmentStatusECDISBackup() {
-        return getDecodedValue(() -> solasEquipmentStatusECDISBackup, value -> solasEquipmentStatusECDISBackup = value, () -> Boolean.TRUE, () -> SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(119,121))));
+        return solasEquipmentStatusECDISBackup;
     }
 
     public SolasEquipmentStatus getSolasEquipmentStatusECDISPaperNauticalChart() {
-        return getDecodedValue(() -> solasEquipmentStatusECDISPaperNauticalChart, value -> solasEquipmentStatusECDISPaperNauticalChart = value, () -> Boolean.TRUE, () -> SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(121,123))));
+        return solasEquipmentStatusECDISPaperNauticalChart;
     }
 
     public SolasEquipmentStatus getSolasEquipmentStatusEchoSounder() {
-        return getDecodedValue(() -> solasEquipmentStatusEchoSounder, value -> solasEquipmentStatusEchoSounder = value, () -> Boolean.TRUE, () -> SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(123,125))));
+        return solasEquipmentStatusEchoSounder;
     }
 
     public SolasEquipmentStatus getSolasEquipmentStatusElectronicPlottingAid() {
-        return getDecodedValue(() -> solasEquipmentStatusElectronicPlottingAid, value -> solasEquipmentStatusElectronicPlottingAid = value, () -> Boolean.TRUE, () -> SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(125,127))));
+        return solasEquipmentStatusElectronicPlottingAid;
     }
 
     public SolasEquipmentStatus getSolasEquipmentStatusEmergencySteeringGear() {
-        return getDecodedValue(() -> solasEquipmentStatusEmergencySteeringGear, value -> solasEquipmentStatusEmergencySteeringGear = value, () -> Boolean.TRUE, () -> SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(127,129))));
+        return solasEquipmentStatusEmergencySteeringGear;
     }
 
     public SolasEquipmentStatus getSolasEquipmentStatusNavigationSystem() {
-        return getDecodedValue(() -> solasEquipmentStatusNavigationSystem, value -> solasEquipmentStatusNavigationSystem = value, () -> Boolean.TRUE, () -> SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(129,131))));
+        return solasEquipmentStatusNavigationSystem;
     }
 
     public SolasEquipmentStatus getSolasEquipmentStatusGyroCompass() {
-        return getDecodedValue(() -> solasEquipmentStatusGyroCompass, value -> solasEquipmentStatusGyroCompass = value, () -> Boolean.TRUE, () -> SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(131,133))));
+        return solasEquipmentStatusGyroCompass;
     }
 
     public SolasEquipmentStatus getSolasEquipmentStatusLRIT() {
-        return getDecodedValue(() -> solasEquipmentStatusLRIT, value -> solasEquipmentStatusLRIT = value, () -> Boolean.TRUE, () -> SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(133,135))));
+        return solasEquipmentStatusLRIT;
     }
 
     public SolasEquipmentStatus getSolasEquipmentStatusMagneticCompass() {
-        return getDecodedValue(() -> solasEquipmentStatusMagneticCompass, value -> solasEquipmentStatusMagneticCompass = value, () -> Boolean.TRUE, () -> SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(135,137))));
+        return solasEquipmentStatusMagneticCompass;
     }
 
     public SolasEquipmentStatus getSolasEquipmentStatusNAVTEX() {
-        return getDecodedValue(() -> solasEquipmentStatusNAVTEX, value -> solasEquipmentStatusNAVTEX = value, () -> Boolean.TRUE, () -> SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(137,139))));
+        return solasEquipmentStatusNAVTEX;
     }
 
     public SolasEquipmentStatus getSolasEquipmentStatusRadarARPA() {
-        return getDecodedValue(() -> solasEquipmentStatusRadarARPA, value -> solasEquipmentStatusRadarARPA = value, () -> Boolean.TRUE, () -> SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(139,141))));
+        return solasEquipmentStatusRadarARPA;
     }
 
     public SolasEquipmentStatus getSolasEquipmentStatusRadarSBand() {
-        return getDecodedValue(() -> solasEquipmentStatusRadarSBand, value -> solasEquipmentStatusRadarSBand = value, () -> Boolean.TRUE, () -> SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(141,143))));
+        return solasEquipmentStatusRadarSBand;
     }
 
     public SolasEquipmentStatus getSolasEquipmentStatusRadarXBand() {
-        return getDecodedValue(() -> solasEquipmentStatusRadarXBand, value -> solasEquipmentStatusRadarXBand = value, () -> Boolean.TRUE, () -> SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(143,145))));
+        return solasEquipmentStatusRadarXBand;
     }
 
     public SolasEquipmentStatus getSolasEquipmentStatusRadioHF() {
-        return getDecodedValue(() -> solasEquipmentStatusRadioHF, value -> solasEquipmentStatusRadioHF = value, () -> Boolean.TRUE, () -> SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(145,147))));
+        return solasEquipmentStatusRadioHF;
     }
 
     public SolasEquipmentStatus getSolasEquipmentStatusRadioINMARSAT() {
-        return getDecodedValue(() -> solasEquipmentStatusRadioINMARSAT, value -> solasEquipmentStatusRadioINMARSAT = value, () -> Boolean.TRUE, () -> SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(147,149))));
+        return solasEquipmentStatusRadioINMARSAT;
     }
 
     public SolasEquipmentStatus getSolasEquipmentStatusRadioMF() {
-        return getDecodedValue(() -> solasEquipmentStatusRadioMF, value -> solasEquipmentStatusRadioMF = value, () -> Boolean.TRUE, () -> SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(149,151))));
+        return solasEquipmentStatusRadioMF;
     }
 
     public SolasEquipmentStatus getSolasEquipmentStatusRadioVHF() {
-        return getDecodedValue(() -> solasEquipmentStatusRadioVHF, value -> solasEquipmentStatusRadioVHF = value, () -> Boolean.TRUE, () -> SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(151,153))));
+        return solasEquipmentStatusRadioVHF;
     }
 
     public SolasEquipmentStatus getSolasEquipmentStatusSpeedLogOverGround() {
-        return getDecodedValue(() -> solasEquipmentStatusSpeedLogOverGround, value -> solasEquipmentStatusSpeedLogOverGround = value, () -> Boolean.TRUE, () -> SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(153,155))));
+        return solasEquipmentStatusSpeedLogOverGround;
     }
 
     public SolasEquipmentStatus getSolasEquipmentStatusSpeedLogThroughWater() {
-        return getDecodedValue(() -> solasEquipmentStatusSpeedLogThroughWater, value -> solasEquipmentStatusSpeedLogThroughWater = value, () -> Boolean.TRUE, () -> SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(155,157))));
+        return solasEquipmentStatusSpeedLogThroughWater;
     }
 
     public SolasEquipmentStatus getSolasEquipmentStatusTransmittingHeadingDevice() {
-        return getDecodedValue(() -> solasEquipmentStatusTransmittingHeadingDevice, value -> solasEquipmentStatusTransmittingHeadingDevice = value, () -> Boolean.TRUE, () -> SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(157,159))));
+        return solasEquipmentStatusTransmittingHeadingDevice;
     }
 
     public SolasEquipmentStatus getSolasEquipmentStatusTrackControlSystem() {
-        return getDecodedValue(() -> solasEquipmentStatusTrackControlSystem, value -> solasEquipmentStatusTrackControlSystem = value, () -> Boolean.TRUE, () -> SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(159,161))));
+        return solasEquipmentStatusTrackControlSystem;
     }
 
     public SolasEquipmentStatus getSolasEquipmentStatusVDR() {
-        return getDecodedValue(() -> solasEquipmentStatusVDR, value -> solasEquipmentStatusVDR = value, () -> Boolean.TRUE, () -> SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(161,163))));
+        return solasEquipmentStatusVDR;
     }
 
     public SolasEquipmentStatus getSolasEquipmentStatusFuture() {
-        return getDecodedValue(() -> solasEquipmentStatusFuture, value -> solasEquipmentStatusFuture = value, () -> Boolean.TRUE, () -> SolasEquipmentStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(163,165))));
+        return solasEquipmentStatusFuture;
     }
 
     public IceClass getIceClass() {
-        return getDecodedValue(() -> iceClass, value -> iceClass = value, () -> Boolean.TRUE, () -> IceClass.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(165,169))));
+        return iceClass;
     }
 
     public Integer getShaftHorsePower() {
-        return getDecodedValue(() -> shaftHorsePower, value -> shaftHorsePower = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(169,187)));
+        return shaftHorsePower;
     }
 
     public String getVhfWorkingChannel() {
-        return getDecodedValue(() -> vhfWorkingChannel, value -> vhfWorkingChannel = value, () -> Boolean.TRUE, () -> STRING_DECODER.apply(getBinaryData().substring(187,199)));
+        return vhfWorkingChannel;
     }
 
     public String getLloydsShipType() {
-        return getDecodedValue(() -> lloydsShipType, value -> lloydsShipType = value, () -> Boolean.TRUE, () -> STRING_DECODER.apply(getBinaryData().substring(199,241)));
+        return lloydsShipType;
     }
 
     public Integer getGrossTonnage() {
-        return getDecodedValue(() -> grossTonnage, value -> grossTonnage = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(241,259)));
+        return grossTonnage;
     }
 
     public BallastStatus getLadenOrBallast() {
-        return getDecodedValue(() -> ladenOrBallast, value -> ladenOrBallast = value, () -> Boolean.TRUE, () -> BallastStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(259,261))));
+        return ladenOrBallast;
     }
 
     public BunkerOilStatus getHeavyFuelOil() {
-        return getDecodedValue(() -> heavyFuelOil, value -> heavyFuelOil = value, () -> Boolean.TRUE, () -> BunkerOilStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(261,263))));
+        return heavyFuelOil;
     }
 
     public BunkerOilStatus getLightFuelOil() {
-        return getDecodedValue(() -> lightFuelOil, value -> lightFuelOil = value, () -> Boolean.TRUE, () -> BunkerOilStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(263,265))));
+        return lightFuelOil;
     }
 
     public BunkerOilStatus getDiesel() {
-        return getDecodedValue(() -> diesel, value -> diesel = value, () -> Boolean.TRUE, () -> BunkerOilStatus.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(265,267))));
+        return diesel;
     }
 
     public Integer getTotalAmountOfBunkerOil() {
-        return getDecodedValue(() -> totalAmountOfBunkerOil, value -> totalAmountOfBunkerOil = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(267,281)));
+        return totalAmountOfBunkerOil;
     }
 
     public Integer getNumberOfPersons() {
-        return getDecodedValue(() -> numberOfPersons, value -> numberOfPersons = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBinaryData().substring(281,294)));
+        return numberOfPersons;
     }
 
-    private transient Integer messageLinkageId;
-    private transient Float airDraught;
-    private transient String lastPortOfCall;
-    private transient String nextPortOfCall;
-    private transient String secondPortOfCall;
-    private transient SolasEquipmentStatus solasEquipmentStatusAISClassA;
-    private transient SolasEquipmentStatus solasEquipmentStatusAutomaticTrackingAid;
-    private transient SolasEquipmentStatus solasEquipmentStatusBridgeNavigationalWatchAlarmSystem;
-    private transient SolasEquipmentStatus solasEquipmentStatusECDISBackup;
-    private transient SolasEquipmentStatus solasEquipmentStatusECDISPaperNauticalChart;
-    private transient SolasEquipmentStatus solasEquipmentStatusEchoSounder;
-    private transient SolasEquipmentStatus solasEquipmentStatusElectronicPlottingAid;
-    private transient SolasEquipmentStatus solasEquipmentStatusEmergencySteeringGear;
-    private transient SolasEquipmentStatus solasEquipmentStatusNavigationSystem;
-    private transient SolasEquipmentStatus solasEquipmentStatusGyroCompass;
-    private transient SolasEquipmentStatus solasEquipmentStatusLRIT;
-    private transient SolasEquipmentStatus solasEquipmentStatusMagneticCompass;
-    private transient SolasEquipmentStatus solasEquipmentStatusNAVTEX;
-    private transient SolasEquipmentStatus solasEquipmentStatusRadarARPA;
-    private transient SolasEquipmentStatus solasEquipmentStatusRadarSBand;
-    private transient SolasEquipmentStatus solasEquipmentStatusRadarXBand;
-    private transient SolasEquipmentStatus solasEquipmentStatusRadioHF;
-    private transient SolasEquipmentStatus solasEquipmentStatusRadioINMARSAT;
-    private transient SolasEquipmentStatus solasEquipmentStatusRadioMF;
-    private transient SolasEquipmentStatus solasEquipmentStatusRadioVHF;
-    private transient SolasEquipmentStatus solasEquipmentStatusSpeedLogOverGround;
-    private transient SolasEquipmentStatus solasEquipmentStatusSpeedLogThroughWater;
-    private transient SolasEquipmentStatus solasEquipmentStatusTransmittingHeadingDevice;
-    private transient SolasEquipmentStatus solasEquipmentStatusTrackControlSystem;
-    private transient SolasEquipmentStatus solasEquipmentStatusVDR;
-    private transient SolasEquipmentStatus solasEquipmentStatusFuture;
-    private transient IceClass iceClass;
-    private transient Integer shaftHorsePower;
-    private transient String vhfWorkingChannel;
-    private transient String lloydsShipType;
-    private transient Integer grossTonnage;
-    private transient BallastStatus ladenOrBallast;
-    private transient BunkerOilStatus heavyFuelOil;
-    private transient BunkerOilStatus lightFuelOil;
-    private transient BunkerOilStatus diesel;
-    private transient Integer totalAmountOfBunkerOil;
-    private transient Integer numberOfPersons;
+    private final Integer messageLinkageId;
+    private final Float airDraught;
+    private final String lastPortOfCall;
+    private final String nextPortOfCall;
+    private final String secondPortOfCall;
+    private final SolasEquipmentStatus solasEquipmentStatusAISClassA;
+    private final SolasEquipmentStatus solasEquipmentStatusAutomaticTrackingAid;
+    private final SolasEquipmentStatus solasEquipmentStatusBridgeNavigationalWatchAlarmSystem;
+    private final SolasEquipmentStatus solasEquipmentStatusECDISBackup;
+    private final SolasEquipmentStatus solasEquipmentStatusECDISPaperNauticalChart;
+    private final SolasEquipmentStatus solasEquipmentStatusEchoSounder;
+    private final SolasEquipmentStatus solasEquipmentStatusElectronicPlottingAid;
+    private final SolasEquipmentStatus solasEquipmentStatusEmergencySteeringGear;
+    private final SolasEquipmentStatus solasEquipmentStatusNavigationSystem;
+    private final SolasEquipmentStatus solasEquipmentStatusGyroCompass;
+    private final SolasEquipmentStatus solasEquipmentStatusLRIT;
+    private final SolasEquipmentStatus solasEquipmentStatusMagneticCompass;
+    private final SolasEquipmentStatus solasEquipmentStatusNAVTEX;
+    private final SolasEquipmentStatus solasEquipmentStatusRadarARPA;
+    private final SolasEquipmentStatus solasEquipmentStatusRadarSBand;
+    private final SolasEquipmentStatus solasEquipmentStatusRadarXBand;
+    private final SolasEquipmentStatus solasEquipmentStatusRadioHF;
+    private final SolasEquipmentStatus solasEquipmentStatusRadioINMARSAT;
+    private final SolasEquipmentStatus solasEquipmentStatusRadioMF;
+    private final SolasEquipmentStatus solasEquipmentStatusRadioVHF;
+    private final SolasEquipmentStatus solasEquipmentStatusSpeedLogOverGround;
+    private final SolasEquipmentStatus solasEquipmentStatusSpeedLogThroughWater;
+    private final SolasEquipmentStatus solasEquipmentStatusTransmittingHeadingDevice;
+    private final SolasEquipmentStatus solasEquipmentStatusTrackControlSystem;
+    private final SolasEquipmentStatus solasEquipmentStatusVDR;
+    private final SolasEquipmentStatus solasEquipmentStatusFuture;
+    private final IceClass iceClass;
+    private final Integer shaftHorsePower;
+    private final String vhfWorkingChannel;
+    private final String lloydsShipType;
+    private final Integer grossTonnage;
+    private final BallastStatus ladenOrBallast;
+    private final BunkerOilStatus heavyFuelOil;
+    private final BunkerOilStatus lightFuelOil;
+    private final BunkerOilStatus diesel;
+    private final Integer totalAmountOfBunkerOil;
+    private final Integer numberOfPersons;
 
     public enum SolasEquipmentStatus {
         EQUIPMENT_NOT_AVAILABLE_OR_REQUESTED(0),

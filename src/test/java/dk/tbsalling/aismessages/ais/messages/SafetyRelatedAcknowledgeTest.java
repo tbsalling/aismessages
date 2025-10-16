@@ -13,48 +13,48 @@ public class SafetyRelatedAcknowledgeTest {
     @Test
     public void canDecodeWithOneAck() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,=39UOj0jFs9R,0*17");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,=39UOj0jFs9R,0*17");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
         // Assert
         assertEquals(AISMessageType.SafetyRelatedAcknowledge, aisMessage.getMessageType());
         SafetyRelatedAcknowledge message = (SafetyRelatedAcknowledge) aisMessage;
-        assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(211378120), message.getSourceMmsi());
-        assertEquals(Integer.valueOf(0), message.getSpare());
-        assertEquals(MMSI.valueOf(211217560), message.getMmsi1());
-        assertEquals(Integer.valueOf(2), message.getSequence1());
+        assertEquals(0, message.getRepeatIndicator());
+        assertEquals(new MMSI(211378120), message.getSourceMmsi());
+        assertEquals(0, message.getSpare());
+        assertEquals(new MMSI(211217560), message.getMmsi1());
+        assertEquals(2, message.getSequence1());
         assertNull(message.getMmsi2());
-        assertNull(message.getSequence2());
+        assertEquals(-1, message.getSequence2());
         assertNull(message.getMmsi3());
-        assertNull(message.getSequence3());
+        assertEquals(-1, message.getSequence3());
         assertNull(message.getMmsi4());
-        assertNull(message.getSequence4());
-        assertEquals(Integer.valueOf(1), message.getNumOfAcks());
+        assertEquals(-1, message.getSequence4());
+        assertEquals(1, message.getNumOfAcks());
     }
 
     @Test
     public void canDecodeWithMultipleAcks() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,=8157oQGOv9f,0*0F");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,=8157oQGOv9f,0*0F");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
         // Assert
         assertEquals(AISMessageType.SafetyRelatedAcknowledge, aisMessage.getMessageType());
         SafetyRelatedAcknowledge message = (SafetyRelatedAcknowledge) aisMessage;
-        assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(538003422), message.getSourceMmsi());
-        assertEquals(Integer.valueOf(0), message.getSpare());
-        assertEquals(MMSI.valueOf(366999707), message.getMmsi1());
-        assertEquals(Integer.valueOf(2), message.getSequence1());
-        assertEquals(Integer.valueOf(1), message.getNumOfAcks());
+        assertEquals(0, message.getRepeatIndicator());
+        assertEquals(new MMSI(538003422), message.getSourceMmsi());
+        assertEquals(0, message.getSpare());
+        assertEquals(new MMSI(366999707), message.getMmsi1());
+        assertEquals(2, message.getSequence1());
+        assertEquals(1, message.getNumOfAcks());
     }
 }

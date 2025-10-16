@@ -5,7 +5,7 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class StandardSARAircraftPositionReportTest {
 
@@ -15,26 +15,26 @@ class StandardSARAircraftPositionReportTest {
         String nmea = "!AIVDM,1,1,,A,9>rAUn00GiU7gi<COH913Pu:0@6:,0*4B";
 
         // Act
-        AISMessage aisMessage = AISMessage.create(NMEAMessage.fromString(nmea));
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, new NMEAMessage(nmea));
         System.out.println(aisMessage.toString());
 
         // Assert
         assertEquals(AISMessageType.StandardSARAircraftPositionReport, aisMessage.getMessageType());
         StandardSARAircraftPositionReport message = (StandardSARAircraftPositionReport) aisMessage;
 
-        assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(1000629720), message.getSourceMmsi());
-        assertEquals(Integer.valueOf(1), message.getAltitude());
-        assertEquals(Float.valueOf(497.0f), message.getSpeedOverGround());
-        assertEquals(Boolean.TRUE, message.getPositionAccuracy());
-        assertEquals(Float.valueOf(71.6f), message.getLongitude(), 0.1f);
-        assertEquals(Float.valueOf(34.1f), message.getLatitude(), 0.1f);
-        assertEquals(Float.valueOf(27.0f), message.getCourseOverGround());
-        assertEquals(Integer.valueOf(3), message.getSecond());
+        assertEquals(0, message.getRepeatIndicator());
+        assertEquals(new MMSI(1000629720), message.getSourceMmsi());
+        assertEquals(1, message.getAltitude());
+        assertEquals(497.0f, message.getSpeedOverGround(), 0.0f);
+        assertTrue(message.isPositionAccuracy());
+        assertEquals(71.6f, message.getLongitude(), 0.1f);
+        assertEquals(34.1f, message.getLatitude(), 0.1f);
+        assertEquals(27.0f, message.getCourseOverGround(), 0.0f);
+        assertEquals(3, message.getSecond());
         assertEquals("11010010", message.getRegionalReserved());
-        assertEquals(Boolean.TRUE, message.getDataTerminalReady());
-        assertEquals(Boolean.FALSE, message.getAssigned());
-        assertEquals(Boolean.FALSE, message.getRaimFlag());
+        assertTrue(message.isDataTerminalReady());
+        assertFalse(message.isAssigned());
+        assertEquals(Boolean.FALSE, message.isRaimFlag());
         assertEquals("00010000000110001010", message.getRadioStatus());
     }
 

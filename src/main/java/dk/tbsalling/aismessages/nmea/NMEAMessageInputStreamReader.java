@@ -20,6 +20,7 @@ import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.exceptions.NMEAParseException;
 import dk.tbsalling.aismessages.nmea.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import lombok.extern.java.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -35,22 +36,19 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-import static java.lang.System.Logger.Level.*;
-
+@Log
 public class NMEAMessageInputStreamReader {
-
-	private static final System.Logger LOG = System.getLogger(NMEAMessageInputStreamReader.class.getName());
 
 	public NMEAMessageInputStreamReader(List<String> nmeaStrings, Function<String, String> nmeaStringPreProcessor, Consumer<? super NMEAMessage> nmeaMessageHandler) {
 		Objects.requireNonNull(nmeaStrings, "nmeaStrings cannot be null.");
 		Objects.requireNonNull(nmeaStringPreProcessor, "nmeaStringPreProcessor cannot be null.");
 		Objects.requireNonNull(nmeaMessageHandler, "nmeaMessageHandler cannot be null.");
 
-		if (nmeaStrings instanceof Queue)
-			this.stringSupplier = () -> ((Queue<String>) nmeaStrings).poll();
+        if (nmeaStrings instanceof Queue<?> q)
+            this.stringSupplier = () -> (String) q.poll();
 		else {
 			final Queue<String> nmeaStringsQueue = new LinkedList<>(nmeaStrings);
-			this.stringSupplier = () -> nmeaStringsQueue.poll();
+            this.stringSupplier = nmeaStringsQueue::poll;
 		}
 
 		this.nmeaMessagePreProcessor = nmeaStringPreProcessor;
@@ -85,7 +83,7 @@ public class NMEAMessageInputStreamReader {
 	}
 
 	public void run() {
-		LOG.log(INFO, "NMEAMessageInputStreamReader running.");
+        log.info("NMEAMessageInputStreamReader running.");
 
 		String string;
 		while ((string = stringSupplier.get()) != null) {
@@ -95,19 +93,19 @@ public class NMEAMessageInputStreamReader {
 			string = nmeaMessagePreProcessor.apply(string);
 
 			try {
-				NMEAMessage nmea = NMEAMessage.fromString(string);
+                NMEAMessage nmea = new NMEAMessage(string);
 				nmeaMessageHandler.accept(nmea);
-                LOG.log(DEBUG, "Received: %s".formatted(nmea.toString()));
+                log.fine("Received: %s".formatted(nmea.toString()));
 			} catch (InvalidMessage invalidMessageException) {
-                LOG.log(WARNING, "Received invalid AIS message: \"%s\"".formatted(string));
+                log.warning("Received invalid AIS message: \"%s\"".formatted(string));
 			} catch (UnsupportedMessageType unsupportedMessageTypeException) {
-                LOG.log(WARNING, "Received unsupported NMEA message: \"%s\"".formatted(string));
+                log.warning("Received unsupported NMEA message: \"%s\"".formatted(string));
 			} catch (NMEAParseException parseException) {
-                LOG.log(WARNING, "Received non-compliant NMEA message: \"%s\"".formatted(string));
+                log.warning("Received non-compliant NMEA message: \"%s\"".formatted(string));
 			}
 		}
 
-		LOG.log(INFO, "NMEAMessageInputStreamReader stopping.");
+        log.info("NMEAMessageInputStreamReader stopping.");
 	}
 
 	public final Boolean isStopRequested() {

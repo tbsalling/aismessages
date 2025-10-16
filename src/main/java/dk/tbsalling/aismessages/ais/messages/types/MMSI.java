@@ -16,36 +16,10 @@
 
 package dk.tbsalling.aismessages.ais.messages.types;
 
-import java.io.Serializable;
-import java.util.Objects;
+import lombok.Value;
 
-@SuppressWarnings("serial")
-public class MMSI implements Serializable {
-
-	public MMSI(int mmsi) {
-		this.mmsi = mmsi;
-	}
-
-    public static MMSI valueOf(int mmsi) {
-        return new MMSI(mmsi);
-    }
-
-    @Override
-    public String toString() {
-        return "MMSI [mmsi=%d]".formatted(mmsi);
-    }
-
-    /**
-     * @deprecated Use {@link #intValue()} instead.
-     */
-    @Deprecated(forRemoval = true)
-    public Integer getMMSI() {
-        return Integer.valueOf(mmsi);
-    }
-
-    public int intValue() {
-        return mmsi;
-    }
+@Value
+public class MMSI {
 
     /**
      * Returns the MMSI as a 9-digit string.
@@ -74,22 +48,5 @@ public class MMSI implements Serializable {
         return String.format("%09d", mmsi);
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        MMSI mmsi1 = (MMSI) o;
-
-        if (mmsi != mmsi1.mmsi) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hashCode(mmsi);
-    }
-
-    private final int mmsi;
+    int mmsi;
 }

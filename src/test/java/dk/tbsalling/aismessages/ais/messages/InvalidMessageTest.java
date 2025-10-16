@@ -11,10 +11,10 @@ public class InvalidMessageTest {
     @Test
     public void invalid() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,58LAM242B9POUKWWW<0a>0<4E<58,0*6E");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,B,58LAM242B9POUKWWW<0a>0<4E<58,0*6E");
 
         // Act & Assert
-        assertThrows(InvalidMessage.class, () -> AISMessage.create(nmeaMessage));
+        assertThrows(InvalidMessage.class, () -> dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage));
     }
 
 }

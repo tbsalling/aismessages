@@ -16,51 +16,11 @@
 
 package dk.tbsalling.aismessages.ais.messages.types;
 
-import java.io.Serializable;
+import lombok.Value;
 
-public class IMO implements Serializable {
+@Value
+public class IMO {
 
-	public IMO(int imo) {
-		this.imo = imo;
-	}
-	
-	public static IMO valueOf(int imo) {
-		return new IMO(imo);
-	}
+    int imo;
 
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        IMO imo1 = (IMO) o;
-
-        if (imo != imo1.imo) return false;
-
-        return true;
-    }
-
-    @Override
-    public int hashCode() {
-        return imo;
-    }
-
-    @Override
-	public String toString() {
-        return "IMO [imo=%d]".formatted(imo);
-	}
-
-    /**
-     * @deprecated Use {@link #intValue()} instead.
-     */
-    @Deprecated(forRemoval = true)
-    public Integer getIMO() {
-	    return imo;
-	}
-
-    public int intValue() {
-        return imo;
-    }
-
-	private final int imo;
 }

@@ -11,54 +11,54 @@ public class GroupAssignmentCommandTest {
     @Test
     public void canDecode() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,G02:Kn01R`sn@291nj600000900,2*12");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,B,G02:Kn01R`sn@291nj600000900,2*12");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
         // Assert
         assertEquals(AISMessageType.GroupAssignmentCommand, aisMessage.getMessageType());
         GroupAssignmentCommand message = (GroupAssignmentCommand) aisMessage;
-        assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(2268120), message.getSourceMmsi());
+        assertEquals(0, message.getRepeatIndicator());
+        assertEquals(new MMSI(2268120), message.getSourceMmsi());
         assertEquals("", message.getSpare1());
-        assertEquals(Float.valueOf(157.8f), message.getNorthEastLongitude());
-        assertEquals(Float.valueOf(3064.2f), message.getNorthEastLatitude());
-        assertEquals(Float.valueOf(109.6f), message.getSouthWestLongitude());
-        assertEquals(Float.valueOf(3040.8f), message.getSouthWestLatitude());
+        assertEquals(157.8f, message.getNorthEastLongitude(), 0.0f);
+        assertEquals(3064.2f, message.getNorthEastLatitude(), 0.0f);
+        assertEquals(109.6f, message.getSouthWestLongitude(), 0.0f);
+        assertEquals(3040.8f, message.getSouthWestLatitude(), 0.0f);
         assertEquals(StationType.InlandWaterways, message.getStationType());
         assertEquals(ShipType.NotAvailable, message.getShipType());
         assertEquals("$", message.getSpare2());
         assertEquals(TxRxMode.TxABRxAB, message.getTransmitReceiveMode());
         assertEquals(ReportingInterval.Autonomous, message.getReportingInterval());
-        assertEquals(Integer.valueOf(0), message.getQuietTime());
+        assertEquals(0, message.getQuietTime());
     }
 
     @Test
     public void canDecodeAlternative() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,B,G02:Kn01R`sn@291nj600000900,2*12");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,B,G02:Kn01R`sn@291nj600000900,2*12");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
         // Assert
         assertEquals(AISMessageType.GroupAssignmentCommand, aisMessage.getMessageType());
         GroupAssignmentCommand message = (GroupAssignmentCommand) aisMessage;
-        assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(2268120), message.getSourceMmsi());
-        assertEquals(Float.valueOf(157.8f), message.getNorthEastLongitude());
-        assertEquals(Float.valueOf(3064.2f), message.getNorthEastLatitude());
-        assertEquals(Float.valueOf(109.6f), message.getSouthWestLongitude());
-        assertEquals(Float.valueOf(3040.8f), message.getSouthWestLatitude());
+        assertEquals(0, message.getRepeatIndicator());
+        assertEquals(new MMSI(2268120), message.getSourceMmsi());
+        assertEquals(157.8f, message.getNorthEastLongitude(), 0.0f);
+        assertEquals(3064.2f, message.getNorthEastLatitude(), 0.0f);
+        assertEquals(109.6f, message.getSouthWestLongitude(), 0.0f);
+        assertEquals(3040.8f, message.getSouthWestLatitude(), 0.0f);
         assertEquals(StationType.InlandWaterways, message.getStationType());
         assertEquals(ShipType.NotAvailable, message.getShipType());
         assertEquals(TxRxMode.TxABRxAB, message.getTransmitReceiveMode());
         assertEquals(ReportingInterval.Autonomous, message.getReportingInterval());
-        assertEquals(Integer.valueOf(0), message.getQuietTime());
+        assertEquals(0, message.getQuietTime());
     }
 }

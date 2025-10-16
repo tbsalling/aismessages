@@ -17,16 +17,15 @@
 package dk.tbsalling.aismessages.nmea;
 
 import dk.tbsalling.aismessages.ais.messages.AISMessage;
-import dk.tbsalling.aismessages.ais.messages.Metadata;
+import dk.tbsalling.aismessages.ais.messages.AISMessageFactory;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import lombok.extern.java.Log;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.function.Consumer;
-
-import static java.lang.System.Logger.Level.DEBUG;
-import static java.lang.System.Logger.Level.WARNING;
 
 /**
  * This class receives NMEA messages containing armoured and encoded AIS strings.
@@ -37,12 +36,11 @@ import static java.lang.System.Logger.Level.WARNING;
  * @author tbsalling
  *
  */
+@Log
 public class NMEAMessageHandler implements Consumer<NMEAMessage> {
 
-	private static final System.Logger LOG = System.getLogger(NMEAMessageHandler.class.getName());
-
 	private final String source;
-    private final ArrayList<NMEAMessage> messageFragments = new ArrayList<>();
+    private final List<NMEAMessage> messageFragments = new ArrayList<>();
     private final List<Consumer<? super AISMessage>> aisMessageReceivers = new LinkedList<>();
 
     public NMEAMessageHandler(String source, Consumer<? super AISMessage>... aisMessageReceivers) {
@@ -58,48 +56,43 @@ public class NMEAMessageHandler implements Consumer<NMEAMessage> {
      */
     @Override
     public void accept(NMEAMessage nmeaMessage) {
-        LOG.log(DEBUG, "Received for processing: %s".formatted(nmeaMessage.getRawMessage()));
+        log.fine("Received for processing: %s".formatted(nmeaMessage.getRawMessage()));
 
-		if (! nmeaMessage.isValid()) {
-            LOG.log(WARNING, "NMEA message is invalid: %s".formatted(nmeaMessage.toString()));
-			return;
-		}
-
-		int numberOfFragments = nmeaMessage.getNumberOfFragments() == null ? -1 : nmeaMessage.getNumberOfFragments();
+        int numberOfFragments = nmeaMessage.getNumberOfFragments();
 		if (numberOfFragments <= 0) {
-            LOG.log(WARNING, "NMEA message is invalid: %s".formatted(nmeaMessage.toString()));
+            log.warning("NMEA message is invalid: %s".formatted(nmeaMessage.toString()));
 			messageFragments.clear();
 		} else if (numberOfFragments == 1) {
-			LOG.log(DEBUG, "Handling unfragmented NMEA message");
-            AISMessage aisMessage = AISMessage.create(new Metadata(source), nmeaMessage.getTagBlock(), nmeaMessage);
+            log.fine("Handling unfragmented NMEA message");
+            AISMessage aisMessage = AISMessageFactory.create(Instant.now(), source, nmeaMessage.getTagBlock(), nmeaMessage);
             sendToAisMessageReceivers(aisMessage);
 			messageFragments.clear();
 		} else {
 			int fragmentNumber = nmeaMessage.getFragmentNumber();
-            LOG.log(DEBUG, "Handling fragmented NMEA message with fragment number %d".formatted(fragmentNumber));
+            log.fine("Handling fragmented NMEA message with fragment number %d".formatted(fragmentNumber));
 			if (fragmentNumber < 0) {
-                LOG.log(WARNING, "Fragment number cannot be negative: %d: %s".formatted(fragmentNumber, nmeaMessage.getRawMessage()));
+                log.warning("Fragment number cannot be negative: %d: %s".formatted(fragmentNumber, nmeaMessage.getRawMessage()));
 				messageFragments.clear();
 			} else if (fragmentNumber > numberOfFragments) {
-                LOG.log(DEBUG, "Fragment number %d higher than expected %d: %s".formatted(fragmentNumber, numberOfFragments, nmeaMessage.getRawMessage()));
+                log.fine("Fragment number %d higher than expected %d: %s".formatted(fragmentNumber, numberOfFragments, nmeaMessage.getRawMessage()));
 				messageFragments.clear();
 			} else {
 				int expectedFragmentNumber = messageFragments.size() + 1;
-                LOG.log(DEBUG, "Expected fragment number is: %d: %s".formatted(expectedFragmentNumber, nmeaMessage.getRawMessage()));
+                log.fine("Expected fragment number is: %d: %s".formatted(expectedFragmentNumber, nmeaMessage.getRawMessage()));
 
 				if (expectedFragmentNumber != fragmentNumber) {
-                    LOG.log(DEBUG, "Expected fragment number %d; not %d: %s".formatted(expectedFragmentNumber, fragmentNumber, nmeaMessage.getRawMessage()));
+                    log.fine("Expected fragment number %d; not %d: %s".formatted(expectedFragmentNumber, fragmentNumber, nmeaMessage.getRawMessage()));
 					messageFragments.clear();
 				} else {
 					messageFragments.add(nmeaMessage);
-                    LOG.log(DEBUG, "nmeaMessage.getNumberOfFragments(): %d".formatted(nmeaMessage.getNumberOfFragments()));
-                    LOG.log(DEBUG, "messageFragments.size(): %d".formatted(messageFragments.size()));
+                    log.fine("nmeaMessage.getNumberOfFragments(): %d".formatted(nmeaMessage.getNumberOfFragments()));
+                    log.fine("messageFragments.size(): %d".formatted(messageFragments.size()));
 					if (nmeaMessage.getNumberOfFragments() == messageFragments.size()) {
-                        AISMessage aisMessage = AISMessage.create(new Metadata(source), nmeaMessage.getTagBlock(), messageFragments.toArray(new NMEAMessage[messageFragments.size()]));
+                        AISMessage aisMessage = AISMessageFactory.create(Instant.now(), source, nmeaMessage.getTagBlock(), messageFragments.toArray(new NMEAMessage[0]));
                         sendToAisMessageReceivers(aisMessage);
 						messageFragments.clear();
 					} else
-						LOG.log(DEBUG, "Fragmented message not yet complete; missing " + (nmeaMessage.getNumberOfFragments() - messageFragments.size()) + " fragment(s).");
+                        log.fine("Fragmented message not yet complete; missing " + (nmeaMessage.getNumberOfFragments() - messageFragments.size()) + " fragment(s).");
 				}
 			}
 		}
@@ -124,8 +117,8 @@ public class NMEAMessageHandler implements Consumer<NMEAMessage> {
      * @return List of unhandled NMEAMessages.
 	 */
 	@SuppressWarnings("unchecked")
-	public ArrayList<NMEAMessage> flush() {
-		ArrayList<NMEAMessage> unhandled = (ArrayList<NMEAMessage>) messageFragments.clone();
+    public List<NMEAMessage> flush() {
+        List<NMEAMessage> unhandled = List.copyOf(messageFragments);
 		messageFragments.clear();
 		return unhandled;
 	}

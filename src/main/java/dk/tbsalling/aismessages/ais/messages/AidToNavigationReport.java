@@ -18,11 +18,16 @@ package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.AidType;
+import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
-import static dk.tbsalling.aismessages.ais.Decoders.*;
+import java.time.Instant;
+
 import static java.lang.String.format;
 
 /**
@@ -30,15 +35,41 @@ import static java.lang.String.format;
  *
  * @author tbsalling
  */
-@SuppressWarnings("serial")
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class AidToNavigationReport extends AISMessage {
 
-    public AidToNavigationReport(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
-
-    protected AidToNavigationReport(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
+    /**
+     * Constructor accepting pre-parsed values for true immutability.
+     */
+    protected AidToNavigationReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
+                                    AidType aidType, String name, boolean positionAccurate,
+                                    float latitude, float longitude,
+                                    int toBow, int toStern, int toPort, int toStarboard,
+                                    PositionFixingDevice positionFixingDevice, int second,
+                                    boolean offPosition, String regionalUse, boolean raimFlag,
+                                    boolean virtualAid, boolean assignedMode, int spare1,
+                                    String nameExtension, Integer spare2) {
+        super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
+        this.aidType = aidType;
+        this.name = name;
+        this.positionAccurate = positionAccurate;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.toBow = toBow;
+        this.toStern = toStern;
+        this.toPort = toPort;
+        this.toStarboard = toStarboard;
+        this.positionFixingDevice = positionFixingDevice;
+        this.second = second;
+        this.offPosition = offPosition;
+        this.regionalUse = regionalUse;
+        this.raimFlag = raimFlag;
+        this.virtualAid = virtualAid;
+        this.assignedMode = assignedMode;
+        this.spare1 = spare1;
+        this.nameExtension = nameExtension;
+        this.spare2 = spare2;
     }
 
     @Override
@@ -53,7 +84,7 @@ public class AidToNavigationReport extends AISMessage {
 
         if (errorMessage.length() > 0) {
             if (numberOfBits >= 38)
-                errorMessage.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().getMMSI()));
+                errorMessage.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().getMmsi()));
 
             throw new InvalidMessage(errorMessage.toString());
         }
@@ -63,156 +94,23 @@ public class AidToNavigationReport extends AISMessage {
         return AISMessageType.AidToNavigationReport;
     }
 
-    @SuppressWarnings("unused")
-    public AidType getAidType() {
-        return getDecodedValue(() -> aidType, value -> aidType = value, () -> Boolean.TRUE, () -> AidType.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(38, 43))));
-    }
-
-    @SuppressWarnings("unused")
-    public String getName() {
-        return getDecodedValue(() -> name, value -> name = value, () -> Boolean.TRUE, () -> STRING_DECODER.apply(getBits(43, 163)));
-    }
-
-    @SuppressWarnings("unused")
-    public Boolean getPositionAccurate() {
-        return getDecodedValue(() -> positionAccurate, value -> positionAccurate = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(163, 164)));
-    }
-
-    @SuppressWarnings("unused")
-    public Float getLatitude() {
-        return getDecodedValue(() -> latitude, value -> latitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(192, 219))/600000f);
-    }
-
-    @SuppressWarnings("unused")
-    public Float getLongitude() {
-        return getDecodedValue(() -> longitude, value -> longitude = value, () -> Boolean.TRUE, () -> FLOAT_DECODER.apply(getBits(164, 192))/600000f);
-    }
-
-    @SuppressWarnings("unused")
-    public Integer getToBow() {
-        return getDecodedValue(() -> toBow, value -> toBow = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(219, 228)));
-    }
-
-    @SuppressWarnings("unused")
-    public Integer getToStern() {
-        return getDecodedValue(() -> toStern, value -> toStern = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(228, 237)));
-    }
-
-    @SuppressWarnings("unused")
-    public Integer getToStarboard() {
-        return getDecodedValue(() -> toStarboard, value -> toStarboard = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(243, 249)));
-    }
-
-    @SuppressWarnings("unused")
-    public Integer getToPort() {
-        return getDecodedValue(() -> toPort, value -> toPort = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(237, 243)));
-    }
-
-    @SuppressWarnings("unused")
-    public PositionFixingDevice getPositionFixingDevice() {
-        return getDecodedValue(() -> positionFixingDevice, value -> positionFixingDevice = value, () -> Boolean.TRUE, () -> PositionFixingDevice.fromInteger(UNSIGNED_INTEGER_DECODER.apply(getBits(249, 253))));
-    }
-
-    @SuppressWarnings("unused")
-    public Integer getSecond() {
-        return getDecodedValue(() -> second, value -> second = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(253, 259)));
-    }
-
-    @SuppressWarnings("unused")
-    public Boolean getOffPosition() {
-        return getDecodedValue(() -> offPosition, value -> offPosition = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(259, 260)));
-    }
-
-    @SuppressWarnings("unused")
-    public String getAtoNStatus() {
-        return getDecodedValue(() -> regionalUse, value -> regionalUse = value, () -> Boolean.TRUE, () -> BIT_DECODER.apply(getBits(260, 268)));
-    }
-
-    @SuppressWarnings("unused")
-    public Boolean getRaimFlag() {
-        return getDecodedValue(() -> raimFlag, value -> raimFlag = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(268, 269)));
-    }
-
-    @SuppressWarnings("unused")
-    public Boolean getVirtualAid() {
-        return getDecodedValue(() -> virtualAid, value -> virtualAid = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(269, 270)));
-    }
-
-    @SuppressWarnings("unused")
-    public Boolean getAssignedMode() {
-        return getDecodedValue(() -> assignedMode, value -> assignedMode = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(270, 271)));
-    }
-
-    @SuppressWarnings("unused")
-    public Integer getSpare1() {
-        return getDecodedValue(() -> spare1, value -> spare1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(271, 272)));
-    }
-
-    @SuppressWarnings("unused")
-    public String getNameExtension() {
-        getDecodedValue(() -> nameExtension, value -> nameExtension = value, () -> getNumberOfBits() > 272, () -> {
-            int extraBits = getNumberOfBits() - 272;
-            int extraChars = extraBits/6;
-            int extraBitsOfChars = extraChars*6;
-            return STRING_DECODER.apply(getBits(272, 272 + extraBitsOfChars));
-        });
-        return nameExtension;
-    }
-
-    @SuppressWarnings("unused")
-    public Integer getSpare2() {
-        getDecodedValue(() -> spare2, value -> spare2 = value, () -> getNumberOfBits() >= 272, () -> {
-            int extraBits = getNumberOfBits() - 272;
-            int extraChars = extraBits/6;
-            int extraBitsOfChars = extraChars*6;
-            return (extraBits == extraBitsOfChars) ? 0 : UNSIGNED_INTEGER_DECODER.apply(getBits(272 + extraBitsOfChars, getNumberOfBits()));
-        });
-        return spare2;
-    }
-
-    @Override
-    public String toString() {
-        return "AidToNavigationReport{" +
-                "messageType=" + getMessageType() +
-                ", aidType=" + getAidType() +
-                ", name='" + getName() + '\'' +
-                ", positionAccurate=" + getPositionAccurate() +
-                ", latitude=" + getLatitude() +
-                ", longitude=" + getLongitude() +
-                ", toBow=" + getToBow() +
-                ", toStern=" + getToStern() +
-                ", toPort=" + getToPort() +
-                ", toStarboard=" + getToStarboard() +
-                ", positionFixingDevice=" + getPositionFixingDevice() +
-                ", second=" + getSecond() +
-                ", offPosition=" + getOffPosition() +
-                ", regionalUse='" + getAtoNStatus() + '\'' +
-                ", raimFlag=" + getRaimFlag() +
-                ", virtualAid=" + getVirtualAid() +
-                ", assignedMode=" + getAssignedMode() +
-                ", spare1=" + getSpare1() +
-                ", nameExtension='" + getNameExtension() + '\'' +
-                ", spare2=" + getSpare2() +
-                "} " + super.toString();
-    }
-
-    private transient AidType aidType;
-    private transient String name;
-    private transient Boolean positionAccurate;
-    private transient Float latitude;
-    private transient Float longitude;
-    private transient Integer toBow;
-    private transient Integer toStern;
-    private transient Integer toPort;
-    private transient Integer toStarboard;
-    private transient PositionFixingDevice positionFixingDevice;
-    private transient Integer second;
-    private transient Boolean offPosition;
-    private transient String regionalUse;
-    private transient Boolean raimFlag;
-    private transient Boolean virtualAid;
-    private transient Boolean assignedMode;
-    private transient Integer spare1;
-    private transient String nameExtension;
-    private transient Integer spare2;
+    AidType aidType;
+    String name;
+    boolean positionAccurate;
+    float latitude;
+    float longitude;
+    int toBow;
+    int toStern;
+    int toPort;
+    int toStarboard;
+    PositionFixingDevice positionFixingDevice;
+    int second;
+    boolean offPosition;
+    String regionalUse;
+    boolean raimFlag;
+    boolean virtualAid;
+    boolean assignedMode;
+    int spare1;
+    String nameExtension;
+    int spare2;
 }

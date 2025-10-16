@@ -18,18 +18,16 @@ package dk.tbsalling.aismessages.nmea;
 
 
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import lombok.extern.java.Log;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.*;
 import java.util.function.Consumer;
 
-import static java.lang.System.Logger.Level.INFO;
-
 @Deprecated
+@Log
 public class NMEAMessageSocketClient {
-
-	private static final System.Logger LOG = System.getLogger(NMEAMessageSocketClient.class.getName());
 
 	@SuppressWarnings("unused")
 	private NMEAMessageSocketClient() {
@@ -50,15 +48,15 @@ public class NMEAMessageSocketClient {
 	}
 
 	public void run() throws IOException {
-	    LOG.log(INFO, "NMEAMessageSocketClient running.");
+        log.info("NMEAMessageSocketClient running.");
 	    Socket socket = new Socket();
 	    socket.connect(socketAddress);
-		LOG.log(INFO, "Connected to AIS server on " + socketAddress.toString());
+        log.info("Connected to AIS server on " + socketAddress.toString());
 	    InputStream inputStream = socket.getInputStream();
 	    streamReader = new NMEAMessageInputStreamReader(inputStream, nmeaMessageConsumer);
 	    streamReader.run();
 	    // TODO: Close socket
-	    LOG.log(INFO, "NMEAMessageSocketClient stopping.");
+        log.info("NMEAMessageSocketClient stopping.");
 	}
 
 	private NMEAMessageInputStreamReader streamReader;

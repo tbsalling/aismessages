@@ -13,21 +13,21 @@ public class AssignedModeCommandTest {
     @Test
     public void canDecode() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,@6TMCD1GOSmUBKh4,0*29");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,@6TMCD1GOSmUBKh4,0*29");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
         // Assert
         assertEquals(AISMessageType.AssignedModeCommand, aisMessage.getMessageType());
         AssignedModeCommand message = (AssignedModeCommand) aisMessage;
-        assertEquals(Integer.valueOf(0), message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(440882000), message.getSourceMmsi());
-        assertEquals(MMSI.valueOf(366972761), message.getDestinationMmsiA());
-        assertEquals(Integer.valueOf(1318), message.getOffsetA());
-        assertEquals(Integer.valueOf(960), message.getIncrementA());
+        assertEquals(0, message.getRepeatIndicator());
+        assertEquals(new MMSI(440882000), message.getSourceMmsi());
+        assertEquals(new MMSI(366972761), message.getDestinationMmsiA());
+        assertEquals(1318, message.getOffsetA());
+        assertEquals(960, message.getIncrementA());
         assertNull(message.getDestinationMmsiB());
         assertNull(message.getOffsetB());
         assertNull(message.getIncrementB());

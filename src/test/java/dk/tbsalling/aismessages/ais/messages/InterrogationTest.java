@@ -13,25 +13,25 @@ public class InterrogationTest {
     @Test
     public void canDecodeShortVariant() {
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,?h3Ovk1GOPph000,2*53");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,?h3Ovk1GOPph000,2*53");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
         // Assert
         assertEquals(AISMessageType.Interrogation, aisMessage.getMessageType());
         Interrogation message = (Interrogation) aisMessage;
-        assertEquals(Integer.valueOf(3), message.getRepeatIndicator());
-        assertEquals(MMSI.valueOf(3669708), message.getSourceMmsi());
-        assertEquals(MMSI.valueOf(366969740), message.getInterrogatedMmsi1());
-        assertEquals((Integer) 0, message.getType1_1());
-        assertEquals((Integer) 0, message.getOffset1_1());
-        assertNull(message.getType1_2());
-        assertNull(message.getOffset1_2());
+        assertEquals(3, message.getRepeatIndicator());
+        assertEquals(new MMSI(3669708), message.getSourceMmsi());
+        assertEquals(new MMSI(366969740), message.getInterrogatedMmsi1());
+        assertEquals(0, message.getType1_1());
+        assertEquals(0, message.getOffset1_1());
+        assertEquals(-1, message.getType1_2());
+        assertEquals(-1, message.getOffset1_2());
         assertNull(message.getInterrogatedMmsi2());
-        assertNull(message.getType2_1());
-        assertNull(message.getOffset2_1());
+        assertEquals(-1, message.getType2_1());
+        assertEquals(-1, message.getOffset2_1());
     }
 }

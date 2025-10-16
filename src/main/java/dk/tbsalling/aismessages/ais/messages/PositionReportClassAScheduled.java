@@ -19,29 +19,31 @@
  */
 package dk.tbsalling.aismessages.ais.messages;
 
-import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.ais.messages.types.*;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
+import java.time.Instant;
 
 /**
  * @author tbsalling
  *
  */
-@SuppressWarnings("serial")
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class PositionReportClassAScheduled extends PositionReport {
-    public PositionReportClassAScheduled(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
-
-    protected PositionReportClassAScheduled(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
-    }
-
-    @Override
-    public String toString() {
-        return "PositionReportClassAScheduled{" +
-                "messageType=" + getMessageType() +
-                "} " + super.toString();
+    protected PositionReportClassAScheduled(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
+                                            NavigationStatus navigationStatus, int rateOfTurn, float speedOverGround,
+                                            boolean positionAccuracy, float latitude, float longitude,
+                                            float courseOverGround, int trueHeading, int second,
+                                            ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState,
+                                            int rawRateOfTurn, int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround) {
+        super(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
+                navigationStatus, rateOfTurn, speedOverGround, positionAccuracy, latitude, longitude,
+                courseOverGround, trueHeading, second, specialManeuverIndicator, raimFlag, communicationState,
+                rawRateOfTurn, rawSpeedOverGround, rawLatitude, rawLongitude, rawCourseOverGround);
     }
 
     @Override

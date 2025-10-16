@@ -39,31 +39,31 @@ public class PositionReportClassAAssignedScheduleTest {
 		*/
 
         // Arrange
-        NMEAMessage nmeaMessage = NMEAMessage.fromString("!AIVDM,1,1,,A,24RjBV0028o:pnNEBeU<pJF>0PT@,0*3F");
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,24RjBV0028o:pnNEBeU<pJF>0PT@,0*3F");
 
         // Act
-        AISMessage aisMessage = AISMessage.create(nmeaMessage);
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
 
         System.out.println(aisMessage.toString());
 
         // Assert
         assertEquals(AISMessageType.PositionReportClassAAssignedSchedule, aisMessage.getMessageType());
-        assertEquals((Integer) 0, aisMessage.getRepeatIndicator());
+        assertEquals(0, aisMessage.getRepeatIndicator());
         PositionReportClassAAssignedSchedule message = (PositionReportClassAAssignedSchedule) aisMessage;
-        assertEquals(MMSI.valueOf(304911000), message.getSourceMmsi());
+        assertEquals(new MMSI(304911000), message.getSourceMmsi());
         assertEquals(NavigationStatus.UnderwayUsingEngine, message.getNavigationStatus());
-        assertEquals((Integer) 0, message.getRateOfTurn());
-        assertEquals((Float) 13.6f, message.getSpeedOverGround());
-        assertTrue(message.getPositionAccuracy());
-        assertEquals(Float.valueOf(37.21113f), message.getLatitude());
-        assertEquals((Integer) 22326676, message.getRawLatitude());
-        assertEquals(Float.valueOf(-123.45053f), message.getLongitude());
-        assertEquals((Integer) (-74070321), message.getRawLongitude());
-        assertEquals(Float.valueOf(329.7f), message.getCourseOverGround());
-        assertEquals((Integer) 3297, message.getRawCourseOverGround());
-        assertEquals((Integer) 331, message.getTrueHeading());
-        assertEquals((Integer) 7, message.getSecond());
+        assertEquals(0, message.getRateOfTurn());
+        assertEquals(13.6f, message.getSpeedOverGround(), 0.0f);
+        assertTrue(message.isPositionAccuracy());
+        assertEquals(37.21113f, message.getLatitude(), 0.0f);
+        assertEquals(22326676, message.getRawLatitude());
+        assertEquals(-123.45053f, message.getLongitude(), 0.0f);
+        assertEquals(-74070321, message.getRawLongitude());
+        assertEquals(329.7f, message.getCourseOverGround(), 0.0f);
+        assertEquals(3297, message.getRawCourseOverGround());
+        assertEquals(331, message.getTrueHeading());
+        assertEquals(7, message.getSecond());
         assertEquals(ManeuverIndicator.NotAvailable, message.getSpecialManeuverIndicator());
-        assertFalse(message.getRaimFlag());
+        assertFalse(message.isRaimFlag());
     }
 }

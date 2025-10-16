@@ -20,19 +20,30 @@ import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
-import static dk.tbsalling.aismessages.ais.Decoders.*;
+import java.time.Instant;
+
 import static java.lang.String.format;
 
-@SuppressWarnings("serial")
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class AddressedSafetyRelatedMessage extends AISMessage {
 
-    public AddressedSafetyRelatedMessage(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
-
-    protected AddressedSafetyRelatedMessage(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
+    /**
+     * Constructor accepting pre-parsed values for true immutability.
+     */
+    protected AddressedSafetyRelatedMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
+                                            int sequenceNumber, MMSI destinationMmsi,
+                                            boolean retransmit, int spare, String text) {
+        super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
+        this.sequenceNumber = sequenceNumber;
+        this.destinationMmsi = destinationMmsi;
+        this.retransmit = retransmit;
+        this.spare = spare;
+        this.text = text;
     }
 
     @Override
@@ -48,7 +59,7 @@ public class AddressedSafetyRelatedMessage extends AISMessage {
 
         if (errorMessage.length() > 0) {
             if (numberOfBits >= 38)
-                errorMessage.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().getMMSI()));
+                errorMessage.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().getMmsi()));
 
             throw new InvalidMessage(errorMessage.toString());
         }
@@ -58,49 +69,9 @@ public class AddressedSafetyRelatedMessage extends AISMessage {
         return AISMessageType.AddressedSafetyRelatedMessage;
     }
 
-    @SuppressWarnings("unused")
-	public Integer getSequenceNumber() {
-        return getDecodedValue(() -> sequenceNumber, value -> sequenceNumber=value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(38, 40)));
-	}
-
-    @SuppressWarnings("unused")
-	public MMSI getDestinationMmsi() {
-        return getDecodedValue(() -> destinationMmsi, value -> destinationMmsi = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70))));
-	}
-
-    @SuppressWarnings("unused")
-	public Boolean getRetransmit() {
-        return getDecodedValue(() -> retransmit, value -> retransmit = value, () -> Boolean.TRUE, () -> BOOLEAN_DECODER.apply(getBits(70, 71)));
-	}
-
-    @SuppressWarnings("unused")
-	public Integer getSpare() {
-        return getDecodedValue(() -> spare, value -> spare = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(71, 72)));
-	}
-
-    @SuppressWarnings("unused")
-	public String getText() {
-        return getDecodedValue(() -> text, value -> text = value, () -> Boolean.TRUE, () -> {
-            int extraBitsOfChars = ((getNumberOfBits() - 72)/6)*6;
-            return STRING_DECODER.apply(getBits(72, 72 + extraBitsOfChars));
-        });
-	}
-
-    @Override
-    public String toString() {
-        return "AddressedSafetyRelatedMessage{" +
-                "messageType=" + getMessageType() +
-                ", sequenceNumber=" + getSequenceNumber() +
-                ", destinationMmsi=" + getDestinationMmsi() +
-                ", retransmit=" + getRetransmit() +
-                ", spare=" + getSpare() +
-                ", text='" + getText() + '\'' +
-                "} " + super.toString();
-    }
-
-    private transient Integer sequenceNumber;
-    private transient MMSI destinationMmsi;
-    private transient Boolean retransmit;
-    private transient Integer spare;
-    private transient String text;
+    int sequenceNumber;
+    MMSI destinationMmsi;
+    boolean retransmit;
+    int spare;
+    String text;
 }

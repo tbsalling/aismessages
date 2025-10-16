@@ -20,10 +20,13 @@ import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
+import lombok.EqualsAndHashCode;
+import lombok.Value;
 
+import java.time.Instant;
 import java.util.stream.IntStream;
 
-import static dk.tbsalling.aismessages.ais.Decoders.UNSIGNED_INTEGER_DECODER;
 import static java.lang.String.format;
 
 /**
@@ -31,15 +34,25 @@ import static java.lang.String.format;
  * @author tbsalling
  *
  */
-@SuppressWarnings("serial")
+@Value
+@EqualsAndHashCode(callSuper = true)
 public class Interrogation extends AISMessage {
 
-    public Interrogation(NMEAMessage[] nmeaMessages) {
-        super(nmeaMessages);
-    }
-
-    protected Interrogation(NMEAMessage[] nmeaMessages, String bitString) {
-        super(nmeaMessages, bitString);
+    /**
+     * Constructor accepting pre-parsed values for true immutability.
+     */
+    protected Interrogation(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
+                            MMSI interrogatedMmsi1, int type1_1, int offset1_1, int type1_2, int offset1_2,
+                            MMSI interrogatedMmsi2, int type2_1, int offset2_1) {
+        super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
+        this.interrogatedMmsi1 = interrogatedMmsi1;
+        this.type1_1 = type1_1;
+        this.offset1_1 = offset1_1;
+        this.type1_2 = type1_2;
+        this.offset1_2 = offset1_2;
+        this.interrogatedMmsi2 = interrogatedMmsi2;
+        this.type2_1 = type2_1;
+        this.offset2_1 = offset2_1;
     }
 
     @Override
@@ -55,77 +68,22 @@ public class Interrogation extends AISMessage {
 
         if (errorMessage.length() > 0) {
             if (numberOfBits >= 38)
-                errorMessage.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().getMMSI()));
+                errorMessage.append(format(" Assumed sourceMmsi: %d.", getSourceMmsi().getMmsi()));
 
             throw new InvalidMessage(errorMessage.toString());
         }
     }
 
-    public final AISMessageType getMessageType() {
+    public AISMessageType getMessageType() {
         return AISMessageType.Interrogation;
     }
 
-    @SuppressWarnings("unused")
-	public final MMSI getInterrogatedMmsi1() {
-        return getDecodedValue(() -> interrogatedMmsi1, value -> interrogatedMmsi1 = value, () -> Boolean.TRUE, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(40, 70))));
-	}
-
-    @SuppressWarnings("unused")
-	public final Integer getType1_1() {
-        return getDecodedValue(() -> type1_1, value -> type1_1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(70, 76)));
-	}
-
-    @SuppressWarnings("unused")
-	public final Integer getOffset1_1() {
-        return getDecodedValue(() -> offset1_1, value -> offset1_1 = value, () -> Boolean.TRUE, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(76, 88)));
-	}
-
-    @SuppressWarnings("unused")
-	public final Integer getType1_2() {
-        return getDecodedValue(() -> type1_2, value -> type1_2 = value, () -> getNumberOfBits() > 88, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(90, 96)));
-	}
-
-    @SuppressWarnings("unused")
-	public final Integer getOffset1_2() {
-        return getDecodedValue(() -> offset1_2, value -> offset1_2 = value, () -> getNumberOfBits() > 88, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(96, 108)));
-	}
-
-    @SuppressWarnings("unused")
-	public final MMSI getInterrogatedMmsi2() {
-        return getDecodedValue(() -> interrogatedMmsi2, value -> interrogatedMmsi2 = value, () -> getNumberOfBits() >= 110, () -> MMSI.valueOf(UNSIGNED_INTEGER_DECODER.apply(getBits(110, 140))));
-	}
-
-    @SuppressWarnings("unused")
-	public final Integer getType2_1() {
-        return getDecodedValue(() -> type2_1, value -> type2_1 = value, () -> getNumberOfBits() >= 110, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(140, 146)));
-	}
-
-    @SuppressWarnings("unused")
-	public final Integer getOffset2_1() {
-        return getDecodedValue(() -> offset2_1, value -> offset2_1 = value, () -> getNumberOfBits() >= 110, () -> UNSIGNED_INTEGER_DECODER.apply(getBits(146, 158)));
-	}
-
-    @Override
-    public String toString() {
-        return "Interrogation{" +
-                "messageType=" + getMessageType() +
-                ", interrogatedMmsi1=" + getInterrogatedMmsi1() +
-                ", type1_1=" + getType1_1() +
-                ", offset1_1=" + getOffset1_1() +
-                ", type1_2=" + getType1_2() +
-                ", offset1_2=" + getOffset1_2() +
-                ", interrogatedMmsi2=" + getInterrogatedMmsi2() +
-                ", type2_1=" + getType2_1() +
-                ", offset2_1=" + getOffset2_1() +
-                "} " + super.toString();
-    }
-
-    private transient MMSI interrogatedMmsi1;
-	private transient Integer type1_1;
-	private transient Integer offset1_1;
-	private transient Integer type1_2;
-	private transient Integer offset1_2;
-	private transient MMSI interrogatedMmsi2;
-	private transient Integer type2_1;
-	private transient Integer offset2_1;
+    MMSI interrogatedMmsi1;
+    int type1_1;
+    int offset1_1;
+    int type1_2;
+    int offset1_2;
+    MMSI interrogatedMmsi2;
+    int type2_1;
+    int offset2_1;
 }

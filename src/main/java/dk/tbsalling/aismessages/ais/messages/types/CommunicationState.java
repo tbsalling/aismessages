@@ -16,18 +16,17 @@
 
 package dk.tbsalling.aismessages.ais.messages.types;
 
-import java.io.Serializable;
+import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.ToString;
 
-public abstract class CommunicationState implements Serializable {
-
-	protected CommunicationState(SyncState syncState) {
-		this.syncState = syncState;
-	}
-
-	@SuppressWarnings("unused")
-	public SyncState getSyncState() {
-		return syncState;
-	}
+@Getter
+@AllArgsConstructor
+@ToString
+@EqualsAndHashCode
+public sealed abstract class CommunicationState permits ITDMACommunicationState, SOTDMACommunicationState {
 
 	private final SyncState syncState;
+
 }
