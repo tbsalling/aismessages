@@ -40,18 +40,12 @@ public final class BitStringParser {
     
     /**
      * Cached zero-bit-stuffed string. Computed lazily on first access and reused thereafter.
+     * Once set, this contains the bitString padded with zeros to at least the maximum requested length.
      */
     private String cachedZeroBitStuffedString;
-    
-    /**
-     * The length to which cachedZeroBitStuffedString has been padded.
-     */
-    private int cachedPaddedLength;
 
     public BitStringParser(String bitString) {
         this.bitString = bitString;
-        this.cachedZeroBitStuffedString = null;
-        this.cachedPaddedLength = -1;
     }
 
     /**
@@ -170,14 +164,13 @@ public final class BitStringParser {
         }
         
         // Check if we have a cached padded string that's long enough
-        if (cachedZeroBitStuffedString != null && endIndex <= cachedPaddedLength) {
+        if (cachedZeroBitStuffedString != null && endIndex <= cachedZeroBitStuffedString.length()) {
             return cachedZeroBitStuffedString;
         }
         
-        // Need to create a new padded string
+        // Need to create a new padded string (or extend the existing cache)
         int deficit = endIndex - bitString.length();
         cachedZeroBitStuffedString = bitString + "0".repeat(deficit);
-        cachedPaddedLength = endIndex;
         return cachedZeroBitStuffedString;
     }
 
