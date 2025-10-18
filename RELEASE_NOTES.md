@@ -57,6 +57,18 @@ Developer-oriented release notes for AISmessages - a Java-based library for deco
 - Cleaner separation between NMEA message handling and AIS message decoding
 - Enhanced maintainability through better single-responsibility design
 
+**Expanded Application Specific Messages (ASM):**
+- Comprehensive support for 24 IMO SN.1/Circ.289 standardized application-specific messages (DAC=001)
+- New ASM decoders include: Text Description, UTC/Date Inquiry/Response, Tidal Window, VTS Generated Targets, Marine Traffic Signal, Weather Observation, Area Notice, Dangerous Cargo Indication, Environmental, Route Information, Meteorological and Hydrographical Data, and more
+- Support for regional messages including Inland Ship Static and Voyage Related Data (DAC=200, FI=10)
+- All ASM types accessible via `getApplicationSpecificMessage()` on binary message types
+
+**UDP Receiver Support:**
+- New NMEAMessageUDPSocket class for receiving AIS messages via UDP
+- Simple API for binding to UDP host and port for real-time AIS data reception
+- Complete UDPDemoApp example demonstrating UDP receiver usage
+- Enables integration with common AIS data sources and network feeds
+
 **Build & Tooling Updates:**
 - Java compiler target updated to Java 21
 - Added Lombok 1.18.42 as provided dependency for compile-time code generation
