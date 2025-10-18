@@ -4,6 +4,21 @@ Developer-oriented release notes for AISmessages - a Java-based library for deco
 
 ---
 
+## Version 4.1.0-SNAPSHOT
+
+**Development Version**
+
+### New Features & Improvements
+
+**Dependency Management:**
+- Added Dependabot configuration for automated weekly dependency updates
+- Configured to check Maven dependencies, GitHub Actions, and Maven wrapper updates
+- Grouped dependency updates by type for easier review
+
+**Full Changelog:** https://github.com/tbsalling/aismessages/compare/aismessages-4.0.0...HEAD
+
+---
+
 ## Version 4.0.0
 
 **Major Version Update - Java 21 Required**
@@ -144,6 +159,15 @@ Bug fixes and stability improvements. JDK 7 backport available.
 ---
 
 ## Maven Coordinates
+
+### Development Version (4.1.0-SNAPSHOT)
+```xml
+<dependency>
+    <groupId>dk.tbsalling</groupId>
+    <artifactId>aismessages</artifactId>
+    <version>4.1.0-SNAPSHOT</version>
+</dependency>
+```
 
 ### Latest Stable Version (4.0.0)
 ```xml
