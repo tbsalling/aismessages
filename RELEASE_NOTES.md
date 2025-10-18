@@ -10,6 +10,33 @@ Developer-oriented release notes for AISmessages - a Java-based library for deco
 
 ### New Features & Improvements
 
+**Expanded Application Specific Messages (ASM) - IMO SN.1/Circ.289:**
+- Added 12 new ASM decoders for IMO standardized messages (DAC=001)
+- Text Description (FI=0, 1) - `TextDescription`
+- UTC/Date Inquiry (FI=10) - `UtcDateInquiry`
+- UTC/Date Response (FI=11) - `UtcDateResponse`
+- Tidal Window (FI=14) - `TidalWindow`
+- VTS Generated/Synthetic Targets (FI=17) - `VtsGeneratedSyntheticTargets`
+- Marine Traffic Signal (FI=18, 19) - `MarineTrafficSignal`
+- Area Notice (FI=22, 23) - `AreaNotice`
+- Dangerous Cargo Indication (FI=25) - `DangerousCargoIndication`
+- Environmental (FI=26) - `Environmental`
+- Route Information (FI=27, 28) - `RouteInformation`
+- Meteorological and Hydrographical Data (FI=31) - `MeteorologicalAndHydrographicalData`
+- Weather Observation (FI=21) - `WeatherObservation`
+- Brings total ASM support to 18 message types (previously 6)
+
+**UDP Receiver Support:**
+- New `NMEAMessageUDPSocket` class for receiving AIS messages via UDP
+- Enables real-time AIS data reception from UDP sources
+- Simple API: bind to host and port, provide message handler
+- Complete `UDPDemoApp` example demonstrating UDP receiver usage
+- Ideal for integration with AIS data feeds and network sources
+
+**NMEA Message Handling Improvements:**
+- New `NMEAMessageHandlerStrict` class for stricter NMEA message validation
+- Enhanced error handling and message validation options
+
 **Dependency Management:**
 - Added Dependabot configuration for automated weekly dependency updates
 - Configured to check Maven dependencies, GitHub Actions, and Maven wrapper updates
@@ -56,18 +83,6 @@ Developer-oriented release notes for AISmessages - a Java-based library for deco
 - Introduced BitStringParser class to separate parsing concerns from value objects
 - Cleaner separation between NMEA message handling and AIS message decoding
 - Enhanced maintainability through better single-responsibility design
-
-**Expanded Application Specific Messages (ASM):**
-- Comprehensive support for 24 IMO SN.1/Circ.289 standardized application-specific messages (DAC=001)
-- New ASM decoders include: Text Description, UTC/Date Inquiry/Response, Tidal Window, VTS Generated Targets, Marine Traffic Signal, Weather Observation, Area Notice, Dangerous Cargo Indication, Environmental, Route Information, Meteorological and Hydrographical Data, and more
-- Support for regional messages including Inland Ship Static and Voyage Related Data (DAC=200, FI=10)
-- All ASM types accessible via `getApplicationSpecificMessage()` on binary message types
-
-**UDP Receiver Support:**
-- New NMEAMessageUDPSocket class for receiving AIS messages via UDP
-- Simple API for binding to UDP host and port for real-time AIS data reception
-- Complete UDPDemoApp example demonstrating UDP receiver usage
-- Enables integration with common AIS data sources and network feeds
 
 **Build & Tooling Updates:**
 - Java compiler target updated to Java 21
