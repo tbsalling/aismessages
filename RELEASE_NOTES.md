@@ -15,6 +15,22 @@ Developer-oriented release notes for AISmessages - a Java-based library for deco
 - Configured to check Maven dependencies, GitHub Actions, and Maven wrapper updates
 - Grouped dependency updates by type for easier review
 
+**Dependency Updates:**
+
+*GitHub Actions:*
+- actions/checkout: 4 → 5
+- actions/setup-java: 4 → 5
+
+*Maven Plugins:*
+- maven-gpg-plugin: 3.2.6 → 3.2.8
+- maven-javadoc-plugin: 3.10.1 → 3.12.0
+- maven-assembly-plugin: 3.7.0 → 3.7.1
+- maven-surefire-plugin: 3.5.1 → 3.5.4
+- central-publishing-maven-plugin: 0.8.0 → 0.9.0
+
+*Test Dependencies:*
+- jmock-junit5: 2.12.0 → 2.13.1
+
 **Full Changelog:** https://github.com/tbsalling/aismessages/compare/aismessages-4.0.0...HEAD
 
 ---
