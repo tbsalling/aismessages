@@ -4,6 +4,64 @@ Developer-oriented release notes for AISmessages - a Java-based library for deco
 
 ---
 
+## Version 4.1.0-SNAPSHOT
+
+**Development Version**
+
+### New Features & Improvements
+
+**Expanded Application Specific Messages (ASM) - IMO SN.1/Circ.289:**
+- Added 12 new ASM decoders for IMO standardized messages (DAC=001)
+- Text Description (FI=0, 1) - `TextDescription`
+- UTC/Date Inquiry (FI=10) - `UtcDateInquiry`
+- UTC/Date Response (FI=11) - `UtcDateResponse`
+- Tidal Window (FI=14) - `TidalWindow`
+- VTS Generated/Synthetic Targets (FI=17) - `VtsGeneratedSyntheticTargets`
+- Marine Traffic Signal (FI=18, 19) - `MarineTrafficSignal`
+- Area Notice (FI=22, 23) - `AreaNotice`
+- Dangerous Cargo Indication (FI=25) - `DangerousCargoIndication`
+- Environmental (FI=26) - `Environmental`
+- Route Information (FI=27, 28) - `RouteInformation`
+- Meteorological and Hydrographical Data (FI=31) - `MeteorologicalAndHydrographicalData`
+- Weather Observation (FI=21) - `WeatherObservation`
+- Brings total ASM support to 18 message types (previously 6)
+
+**UDP Receiver Support:**
+- New `NMEAMessageUDPSocket` class for receiving AIS messages via UDP
+- Enables real-time AIS data reception from UDP sources
+- Simple API: bind to host and port, provide message handler
+- Complete `UDPDemoApp` example demonstrating UDP receiver usage
+- Ideal for integration with AIS data feeds and network sources
+
+**NMEA Message Handling Improvements:**
+- New `NMEAMessageHandlerStrict` class for stricter NMEA message validation
+- Enhanced error handling and message validation options
+
+**Dependency Management:**
+- Added Dependabot configuration for automated weekly dependency updates
+- Configured to check Maven dependencies, GitHub Actions, and Maven wrapper updates
+- Grouped dependency updates by type for easier review
+
+**Dependency Updates:**
+
+*GitHub Actions:*
+- actions/checkout: 4 → 5
+- actions/setup-java: 4 → 5
+
+*Maven Plugins:*
+- maven-gpg-plugin: 3.2.6 → 3.2.8
+- maven-javadoc-plugin: 3.10.1 → 3.12.0
+- maven-assembly-plugin: 3.7.0 → 3.7.1
+- maven-surefire-plugin: 3.5.1 → 3.5.4
+- central-publishing-maven-plugin: 0.8.0 → 0.9.0
+
+*Test Dependencies:*
+- jmock-junit5: 2.12.0 → 2.13.1
+
+**Full Changelog:** https://github.com/tbsalling/aismessages/compare/aismessages-4.0.0...HEAD
+
+---
+
 ## Version 4.0.0
 
 **Major Version Update - Java 21 Required**
@@ -144,6 +202,15 @@ Bug fixes and stability improvements. JDK 7 backport available.
 ---
 
 ## Maven Coordinates
+
+### Development Version (4.1.0-SNAPSHOT)
+```xml
+<dependency>
+    <groupId>dk.tbsalling</groupId>
+    <artifactId>aismessages</artifactId>
+    <version>4.1.0-SNAPSHOT</version>
+</dependency>
+```
 
 ### Latest Stable Version (4.0.0)
 ```xml
