@@ -127,7 +127,6 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
      * Received on 2018-06-01 and ETA AIS is 06-03 24:00, this will return 2018-06-01 00:00
      * Received on 2018-06-01 and ETA AIS is 06-03 12:60, this will return 2018-06-03 12:00
      */
-    @SuppressWarnings("unused")
 	public Optional<ZonedDateTime> getEtaAfterReceived() {
         Metadata meta = this.getMetadata();
         ZonedDateTime received = (meta == null || meta.received() == null) ? null : meta.received().atZone(ZoneOffset.UTC);
