@@ -1,13 +1,35 @@
-# Copilot Instructions for Java 21
+# Copilot Instructions for aismessages
 
-## Primitive Types Preference
-When developing in Java 21, prefer using primitive types over wrapper classes whenever possible. This not only improves performance but also reduces memory overhead.
+## Project Context
+- Java library for decoding NMEA armoured AIS messages (ITU 1371)
+- Zero-dependency, lightweight, ultra-efficient eager parsing with immutable value objects
+- Java 21+ with Maven build
+- Published to Maven Central as `dk.tbsalling:aismessages`
 
-## Zero-Dependency Design
-Aim for a zero-dependency design in your Java applications. This approach minimizes external libraries usage, leading to better maintainability and simpler builds.
+## Code Style
+- 4-space indentation
+- Prefer immutability and final fields
+- Prefer primitive types (int, long, float, double, boolean) over boxed types to minimize memory churn
+- Meaningful variable names (no single letters except loop counters)
+- No external runtime dependencies
+- Backward compatibility is critical for public APIs
 
-## Eager Parsing
-Utilize eager parsing techniques for processing input data. Eager parsing can improve performance by reducing latency in data handling and processing.
+## Build & Test
+- Build: `./mvnw clean verify`
+- Quick test: `./mvnw -DskipITs test`
+- Single test: `./mvnw -Dtest=ClassName test`
 
-## Immutable Value Objects
-Favor immutable value objects in your design. Immutable objects enhance the reliability and robustness of your code, making it easier to reason about state changes and concurrency issues.
+## PR/Change Guidelines
+- Minimal diffs: one concern per change
+- Preserve whitespace where possible for clean git history
+- Match existing indentation style
+- All tests must pass
+- Update JavaDoc for public API changes
+- Note breaking changes explicitly
+
+## Avoid
+- Adding runtime dependencies
+- Breaking backward compatibility without discussion
+- Reformatting unrelated code
+- Overly verbose or enterprise-y patterns
+- Unnecessary boxing of primitives
