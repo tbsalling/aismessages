@@ -96,10 +96,14 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
    public String getCallsign() { ... }
    public String getShipName() { ... }
    public ShipType getShipType() { ... }
-   public Integer getToBow() { ... }
-   public Integer getToStern() { ... }
-   public Integer getToStarboard() { ... }
-   public Integer getToPort() { ... }
+
+    public int getToBow() { ...}
+
+    public int getToStern() { ...}
+
+    public int getToStarboard() { ...}
+
+    public int getToPort() { ...}
    ...
 }
 ```
