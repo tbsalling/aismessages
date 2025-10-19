@@ -25,7 +25,11 @@ import java.io.InputStream;
 import java.net.*;
 import java.util.function.Consumer;
 
-@Deprecated
+/**
+ * @deprecated This class is deprecated and may be removed in a future version.
+ * Please use alternative socket communication methods instead.
+ */
+@Deprecated(since = "4.0")
 @Log
 public class NMEAMessageSocketClient {
 
