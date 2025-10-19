@@ -15,26 +15,58 @@
  */
 
 /**
- * 
+ * Interface for AIS messages containing dynamic ship data.
+ * Dynamic data includes position, speed, and course information that changes frequently.
  */
 package dk.tbsalling.aismessages.ais.messages;
 
+/**
+ * Interface for AIS messages containing dynamic ship data such as position, speed, and course.
+ * This data typically changes frequently during vessel operation.
+ */
 public interface DynamicDataReport extends DataReport {
+    /**
+     * @return Latitude in decimal degrees
+     */
     float getLatitude();
 
+    /**
+     * @return Raw latitude value before conversion to decimal degrees
+     */
     int getRawLatitude();
 
+    /**
+     * @return Longitude in decimal degrees
+     */
     float getLongitude();
 
+    /**
+     * @return Raw longitude value before conversion to decimal degrees
+     */
     int getRawLongitude();
 
+    /**
+     * @return Speed over ground in knots
+     */
     float getSpeedOverGround();
 
+    /**
+     * @return Raw speed over ground value before conversion to knots
+     */
     int getRawSpeedOverGround();
 
+    /**
+     * @return Course over ground in degrees (0-359)
+     */
     float getCourseOverGround();
 
+    /**
+     * @return Raw course over ground value before conversion to degrees
+     */
     int getRawCourseOverGround();
 
+    /**
+     * @return True if position accuracy is high (DGPS quality), false otherwise
+     */
     boolean isPositionAccuracy();
 }
