@@ -196,7 +196,7 @@ need to do is add these lines to your pom.xml:
 <dependency>
     <groupId>dk.tbsalling</groupId>
     <artifactId>aismessages</artifactId>
-    <version>4.0.0-SNAPSHOT</version>
+    <version>4.1.0</version>
 </dependency>
 ...
 ```
