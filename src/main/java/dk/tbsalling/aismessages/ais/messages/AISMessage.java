@@ -106,7 +106,7 @@ public abstract sealed class AISMessage permits AddressedBinaryMessage, Addresse
         requireNonNull(bitString);
 
         this.numberOfBits = bitString.length();
-        this.metadata = new Metadata(received, nmeaTagBlock, nmeaMessages, Version.VERSION, bitString, source);
+        this.metadata = new Metadata(received, nmeaTagBlock, nmeaMessages, Version.VERSION, new dk.tbsalling.aismessages.ais.BitString(bitString), source);
         this.repeatIndicator = repeatIndicator;
         this.sourceMmsi = sourceMmsi;
 
@@ -136,12 +136,12 @@ public abstract sealed class AISMessage permits AddressedBinaryMessage, Addresse
     protected void checkAISMessage() {
         StringBuilder message = new StringBuilder();
 
-        final String bitString = metadata.bitString();
+        final dk.tbsalling.aismessages.ais.BitString bitString = metadata.bitString();
 
         if (bitString.length() < 6)
             message.append(String.format("Message is too short to determine message type: %d bits.", bitString.length()));
 
-        final int messageType = Integer.parseInt(bitString.substring(0, 6), 2);
+        final int messageType = Integer.parseInt(bitString.substring(0, 6).toString(), 2);
         if (messageType < AISMessageType.MINIMUM_CODE || messageType > AISMessageType.MAXIMUM_CODE)
             message.append(String.format("Unsupported message type: %d.", messageType));
         else if (messageType != getMessageType().getCode())
