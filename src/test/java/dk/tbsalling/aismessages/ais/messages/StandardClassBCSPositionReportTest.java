@@ -115,9 +115,10 @@ public class StandardClassBCSPositionReportTest {
         CommunicationState communicationState = message.getCommunicationState();   // 1100000000000000110b = 3, slot incr = 6
         assertEquals(SyncState.BaseIndirect, communicationState.getSyncState());
         assertTrue(communicationState instanceof ITDMACommunicationState);
-        ITDMACommunicationState itdmaCommunicationState = (ITDMACommunicationState) communicationState;
-        assertEquals(0, itdmaCommunicationState.getSlotIncrement());
-        assertEquals(3, itdmaCommunicationState.getNumberOfSlots());
-        assertFalse(itdmaCommunicationState.getKeepFlag());
+        if (communicationState instanceof ITDMACommunicationState itdmaCommunicationState) {
+            assertEquals(0, itdmaCommunicationState.getSlotIncrement());
+            assertEquals(3, itdmaCommunicationState.getNumberOfSlots());
+            assertFalse(itdmaCommunicationState.getKeepFlag());
+        }
     }
 }

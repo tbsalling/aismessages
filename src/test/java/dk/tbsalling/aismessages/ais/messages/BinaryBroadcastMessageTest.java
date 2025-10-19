@@ -80,27 +80,29 @@ public class BinaryBroadcastMessageTest {
 
         // Assert
         assertTrue(aisMessage instanceof BinaryBroadcastMessage);
-        BinaryBroadcastMessage binaryBroadcastMessage = (BinaryBroadcastMessage) aisMessage;
-        assertEquals(200, binaryBroadcastMessage.getDesignatedAreaCode());
-        assertEquals(10, binaryBroadcastMessage.getFunctionalId());
+        if (aisMessage instanceof BinaryBroadcastMessage binaryBroadcastMessage) {
+            assertEquals(200, binaryBroadcastMessage.getDesignatedAreaCode());
+            assertEquals(10, binaryBroadcastMessage.getFunctionalId());
 
-        ApplicationSpecificMessage asm = binaryBroadcastMessage.getApplicationSpecificMessage();
-        assertEquals(200, asm.getDesignatedAreaCode());
-        assertEquals(10, asm.getFunctionalId());
+            ApplicationSpecificMessage asm = binaryBroadcastMessage.getApplicationSpecificMessage();
+            assertEquals(200, asm.getDesignatedAreaCode());
+            assertEquals(10, asm.getFunctionalId());
 
-        assertTrue(asm instanceof InlandShipStaticAndVoyageRelatedData);
-        InlandShipStaticAndVoyageRelatedData inlandMessage = (InlandShipStaticAndVoyageRelatedData) asm;
+            assertTrue(asm instanceof InlandShipStaticAndVoyageRelatedData);
+            if (asm instanceof InlandShipStaticAndVoyageRelatedData inlandMessage) {
 
-        assertEquals("02325170", inlandMessage.getUniqueEuropeanVesselIdentificationNumber());
-        assertEquals(80.0f, inlandMessage.getLengthOfShip(), 0.0f);
-        assertEquals(8.2f, inlandMessage.getBeamOfShip(), 0.0f);
-        assertEquals(8020, inlandMessage.getShipOrCombinationType());
-        assertEquals(0, inlandMessage.getHazardousCargo());
-        assertEquals(0.0f, inlandMessage.getDraught(), 0.0f);
-        assertEquals(2, inlandMessage.getLoaded());
-        assertEquals(1, inlandMessage.getQualityOfSpeedInformation());
-        assertEquals(1, inlandMessage.getQualityOfCourseInformation());
-        assertEquals(1, inlandMessage.getQualityOfHeadingInformation());
+                assertEquals("02325170", inlandMessage.getUniqueEuropeanVesselIdentificationNumber());
+                assertEquals(80.0f, inlandMessage.getLengthOfShip(), 0.0f);
+                assertEquals(8.2f, inlandMessage.getBeamOfShip(), 0.0f);
+                assertEquals(8020, inlandMessage.getShipOrCombinationType());
+                assertEquals(0, inlandMessage.getHazardousCargo());
+                assertEquals(0.0f, inlandMessage.getDraught(), 0.0f);
+                assertEquals(2, inlandMessage.getLoaded());
+                assertEquals(1, inlandMessage.getQualityOfSpeedInformation());
+                assertEquals(1, inlandMessage.getQualityOfCourseInformation());
+                assertEquals(1, inlandMessage.getQualityOfHeadingInformation());
+            }
+        }
     }
 
     @Test
@@ -115,27 +117,28 @@ public class BinaryBroadcastMessageTest {
 
         // Assert
         assertTrue(aisMessage instanceof BinaryBroadcastMessage);
-        BinaryBroadcastMessage binaryBroadcastMessage = (BinaryBroadcastMessage) aisMessage;
-        assertEquals(200, binaryBroadcastMessage.getDesignatedAreaCode());
-        assertEquals(10, binaryBroadcastMessage.getFunctionalId());
+        if (aisMessage instanceof BinaryBroadcastMessage binaryBroadcastMessage) {
+            assertEquals(200, binaryBroadcastMessage.getDesignatedAreaCode());
+            assertEquals(10, binaryBroadcastMessage.getFunctionalId());
 
-        ApplicationSpecificMessage asm = binaryBroadcastMessage.getApplicationSpecificMessage();
-        assertEquals(200, asm.getDesignatedAreaCode());
-        assertEquals(10, asm.getFunctionalId());
+            ApplicationSpecificMessage asm = binaryBroadcastMessage.getApplicationSpecificMessage();
+            assertEquals(200, asm.getDesignatedAreaCode());
+            assertEquals(10, asm.getFunctionalId());
 
-        assertTrue(asm instanceof InlandShipStaticAndVoyageRelatedData);
-        InlandShipStaticAndVoyageRelatedData inlandMessage = (InlandShipStaticAndVoyageRelatedData) asm;
-
-        assertEquals("", inlandMessage.getUniqueEuropeanVesselIdentificationNumber());
-        assertEquals(110.0f, inlandMessage.getLengthOfShip(), 0.0f);
-        assertEquals(12.0f, inlandMessage.getBeamOfShip(), 0.0f);
-        assertEquals(8030, inlandMessage.getShipOrCombinationType());
-        assertEquals(5, inlandMessage.getHazardousCargo());
-        assertEquals(0.0f, inlandMessage.getDraught(), 0.0f);
-        assertEquals(0, inlandMessage.getLoaded());
-        assertEquals(0, inlandMessage.getQualityOfSpeedInformation());
-        assertEquals(0, inlandMessage.getQualityOfCourseInformation());
-        assertEquals(0, inlandMessage.getQualityOfHeadingInformation());
+            assertTrue(asm instanceof InlandShipStaticAndVoyageRelatedData);
+            if (asm instanceof InlandShipStaticAndVoyageRelatedData inlandMessage) {
+                assertEquals("", inlandMessage.getUniqueEuropeanVesselIdentificationNumber());
+                assertEquals(110.0f, inlandMessage.getLengthOfShip(), 0.0f);
+                assertEquals(12.0f, inlandMessage.getBeamOfShip(), 0.0f);
+                assertEquals(8030, inlandMessage.getShipOrCombinationType());
+                assertEquals(5, inlandMessage.getHazardousCargo());
+                assertEquals(0.0f, inlandMessage.getDraught(), 0.0f);
+                assertEquals(0, inlandMessage.getLoaded());
+                assertEquals(0, inlandMessage.getQualityOfSpeedInformation());
+                assertEquals(0, inlandMessage.getQualityOfCourseInformation());
+                assertEquals(0, inlandMessage.getQualityOfHeadingInformation());
+            }
+        }
     }
 
     @Test
@@ -150,10 +153,11 @@ public class BinaryBroadcastMessageTest {
 
         // Assert
         assertTrue(aisMessage instanceof BinaryBroadcastMessage);
-        BinaryBroadcastMessage binaryBroadcastMessage = (BinaryBroadcastMessage) aisMessage;
-        assertEquals(265, binaryBroadcastMessage.getDesignatedAreaCode());
-        assertEquals(1, binaryBroadcastMessage.getFunctionalId());
-        assertEquals("", binaryBroadcastMessage.getBinaryData());
+        if (aisMessage instanceof BinaryBroadcastMessage binaryBroadcastMessage) {
+            assertEquals(265, binaryBroadcastMessage.getDesignatedAreaCode());
+            assertEquals(1, binaryBroadcastMessage.getFunctionalId());
+            assertEquals("", binaryBroadcastMessage.getBinaryData());
+        }
     }
 
     @Test

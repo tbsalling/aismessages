@@ -142,8 +142,7 @@ Application Specific Messages can be accessed from the parent binary message:
 BinaryBroadcastMessage binaryMessage = (BinaryBroadcastMessage) aisMessage;
 ApplicationSpecificMessage asm = binaryMessage.getApplicationSpecificMessage();
 
-if (asm instanceof WeatherObservation) {
-    WeatherObservation weather = (WeatherObservation) asm;
+if (asm instanceof WeatherObservation weather) {
     System.out.println("Temperature: " + weather.getAirTemperature());
     System.out.println("Wind Speed: " + weather.getAverageWindSpeed());
     // ... access other weather data
