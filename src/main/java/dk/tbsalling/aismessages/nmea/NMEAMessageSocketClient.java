@@ -49,13 +49,13 @@ public class NMEAMessageSocketClient {
 
 	public void run() throws IOException {
         log.info("NMEAMessageSocketClient running.");
-	    Socket socket = new Socket();
-	    socket.connect(socketAddress);
-        log.info("Connected to AIS server on " + socketAddress.toString());
-	    InputStream inputStream = socket.getInputStream();
-	    streamReader = new NMEAMessageInputStreamReader(inputStream, nmeaMessageConsumer);
-	    streamReader.run();
-	    // TODO: Close socket
+	    try (Socket socket = new Socket()) {
+	        socket.connect(socketAddress);
+            log.info("Connected to AIS server on " + socketAddress.toString());
+	        InputStream inputStream = socket.getInputStream();
+	        streamReader = new NMEAMessageInputStreamReader(inputStream, nmeaMessageConsumer);
+	        streamReader.run();
+        }
         log.info("NMEAMessageSocketClient stopping.");
 	}
 
