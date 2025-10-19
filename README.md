@@ -91,20 +91,16 @@ in fragments:
 
 ```java
 public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
-   ...
-   public IMO getImo() { ... }
-   public String getCallsign() { ... }
-   public String getShipName() { ... }
-   public ShipType getShipType() { ... }
-
+    ...
+    public IMO getImo() { ...}
+    public String getCallsign() { ...}
+    public String getShipName() { ...}
+    public ShipType getShipType() { ...}
     public int getToBow() { ...}
-
     public int getToStern() { ...}
-
     public int getToStarboard() { ...}
-
     public int getToPort() { ...}
-   ...
+    ...
 }
 ```
 
