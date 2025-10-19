@@ -8,6 +8,8 @@ navigation and safety messages compliant with ITU 1371 (NMEA armoured AIS messag
 
 Internally AISmessages uses eager parsing and a fail‑fast design combined with immutable value objects. This minimizes runtime surprises and allocation churn, reduces the need for synchronization, and makes message instances safe to share across threads — ideal for high‑throughput, concurrent, or real‑time applications (including non‑blocking/reactive systems). The library’s low‑allocation, zero‑dependency implementation yields predictable performance and low GC impact under heavy load. It fully decodes tens of thousands of NMEA armoured AIS messages per second per CPU core on an Intel i7-based laptop.
 
+**Version 4 Performance:** AISmessages v4 represents a major architectural improvement over earlier versions. By switching from lazy decoding (used in v2.x-3.x) to eager parsing with immutable value objects, v4 dramatically reduces garbage collection pressure and memory churning. The eager approach eliminates the WeakReference overhead and repeated parsing of previous versions, resulting in predictable upfront allocation, zero post-construction allocations, and significantly lower GC overhead — especially beneficial for high-throughput scenarios processing thousands of messages per second.
+
 For more than 15+ years AISmessages has been used in production in many systems and solutions all over the world.
 
 If you are new to AIS you can read a short introduction to it on [my blog](https://tbsalling.dk/blog_000_ais.html).

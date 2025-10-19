@@ -84,6 +84,22 @@ Developer-oriented release notes for AISmessages - a Java-based library for deco
 - Cleaner separation between NMEA message handling and AIS message decoding
 - Enhanced maintainability through better single-responsibility design
 
+**Performance & Memory Improvements:**
+
+Version 4 represents a fundamental shift from the lazy decoding approach used in versions 2.x and 3.x to an eager parsing model with immutable value objects. This architectural change dramatically reduces garbage collection pressure and memory churning:
+
+- **Eager parsing eliminates WeakReference overhead**: Earlier versions used lazy decoding with WeakReference caching for field values. This approach required the garbage collector to manage and potentially reclaim cached field values, creating constant GC pressure. V4 parses all fields upfront into final immutable fields, eliminating WeakReference overhead entirely.
+
+- **Single-pass parsing**: V4 decodes each AIS message in one pass during construction, storing all field values in final fields. In contrast, lazy decoding could trigger repeated parsing if the garbage collector reclaimed cached values, leading to unpredictable CPU spikes and allocation churn.
+
+- **Predictable, upfront allocation**: All memory allocation happens at message construction time in a single, predictable burst. This eliminates the scattered, on-demand allocations of lazy decoding and enables more efficient GC patterns (Eden-only allocations for short-lived messages).
+
+- **Compact memory layout**: Immutable value objects with only final primitive and reference fields have better CPU cache locality and lower per-instance overhead compared to objects with additional caching structures and weak references.
+
+- **Zero allocation after construction**: Once constructed, V4 message objects allocate no additional memory during field access. Lazy approaches could allocate wrapper objects, strings, and cache entries on every field access if cached values were reclaimed.
+
+The result is dramatically lower GC overhead, especially under high message throughput where V2/V3's lazy approach would cause the garbage collector to continuously manage weak references and cached field values. V4's eager approach is particularly beneficial in memory-constrained environments, real-time systems, and high-throughput scenarios processing thousands of messages per second.
+
 **Build & Tooling Updates:**
 - Java compiler target updated to Java 21
 - Added Lombok 1.18.42 as provided dependency for compile-time code generation
