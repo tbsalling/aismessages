@@ -87,23 +87,27 @@ public class ClassBCSStaticDataReportTest {
         // Assert
         System.out.println(aisMessagePartA.toString());
         assertTrue(aisMessagePartA instanceof ClassBCSStaticDataReport);
-        assertEquals(24, aisMessagePartA.getMessageType().getCode());
-        assertEquals(0, ((ClassBCSStaticDataReport) aisMessagePartA).getPartNumber());
-        assertEquals(271041815, aisMessagePartA.getSourceMmsi().getMmsi());
-        assertEquals("PROGUY", ((ClassBCSStaticDataReport) aisMessagePartA).getShipName());
+        if (aisMessagePartA instanceof ClassBCSStaticDataReport reportA) {
+            assertEquals(24, aisMessagePartA.getMessageType().getCode());
+            assertEquals(0, reportA.getPartNumber());
+            assertEquals(271041815, aisMessagePartA.getSourceMmsi().getMmsi());
+            assertEquals("PROGUY", reportA.getShipName());
+        }
 
         System.out.println(aisMessagePartB.toString());
         assertTrue(aisMessagePartB instanceof ClassBCSStaticDataReport);
-        assertEquals(24, aisMessagePartB.getMessageType().getCode());
-        assertEquals(1, ((ClassBCSStaticDataReport) aisMessagePartB).getPartNumber());
-        assertEquals(271041815, aisMessagePartB.getSourceMmsi().getMmsi());
-        assertEquals(60, ((ClassBCSStaticDataReport) aisMessagePartB).getShipType().getCode());
-        assertEquals("1D00014", ((ClassBCSStaticDataReport) aisMessagePartB).getVendorId());
-        assertEquals("TC6163", ((ClassBCSStaticDataReport) aisMessagePartB).getCallsign());
-        assertEquals(0, ((ClassBCSStaticDataReport) aisMessagePartB).getToBow());
-        assertEquals(15, ((ClassBCSStaticDataReport) aisMessagePartB).getToStern());
-        assertEquals(0, ((ClassBCSStaticDataReport) aisMessagePartB).getToPort());
-        assertEquals(5, ((ClassBCSStaticDataReport) aisMessagePartB).getToStarboard());
+        if (aisMessagePartB instanceof ClassBCSStaticDataReport reportB) {
+            assertEquals(24, aisMessagePartB.getMessageType().getCode());
+            assertEquals(1, reportB.getPartNumber());
+            assertEquals(271041815, aisMessagePartB.getSourceMmsi().getMmsi());
+            assertEquals(60, reportB.getShipType().getCode());
+            assertEquals("1D00014", reportB.getVendorId());
+            assertEquals("TC6163", reportB.getCallsign());
+            assertEquals(0, reportB.getToBow());
+            assertEquals(15, reportB.getToStern());
+            assertEquals(0, reportB.getToPort());
+            assertEquals(5, reportB.getToStarboard());
+        }
     }
 
 }
