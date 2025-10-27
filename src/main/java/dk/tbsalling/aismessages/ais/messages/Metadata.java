@@ -1,5 +1,6 @@
 package dk.tbsalling.aismessages.ais.messages;
 
+import dk.tbsalling.aismessages.ais.BitString;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
@@ -10,7 +11,7 @@ public record Metadata(
         NMEATagBlock nmeaTagBlock,
         NMEAMessage[] nmeaMessages,
         String decoderVersion,
-        String bitString,
+        BitString bitString,
         String source
 ) {
 }
