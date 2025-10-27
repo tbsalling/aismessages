@@ -88,7 +88,6 @@ public class BinaryBroadcastMessage extends AISMessage {
         return AISMessageType.BinaryBroadcastMessage;
     }
 
-    @SuppressWarnings("unused")
     public ApplicationSpecificMessage getApplicationSpecificMessage() {
         if (applicationSpecificMessage.getDesignatedAreaCode() != designatedAreaCode)
             throw new IllegalStateException("Implementation error: DAC of AISMessage does not match ASM: " + applicationSpecificMessage.getDesignatedAreaCode() + " " + this.getDesignatedAreaCode());

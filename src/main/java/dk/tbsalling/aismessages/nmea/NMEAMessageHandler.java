@@ -131,7 +131,6 @@ public class NMEAMessageHandler implements Consumer<NMEAMessage> {
 	 * Empty buffer of unhandled messages and return those not handled.
      * @return List of unhandled NMEAMessages.
 	 */
-	@SuppressWarnings("unchecked")
     public List<NMEAMessage> flush() {
         List<NMEAMessage> unhandled = List.copyOf(messageFragments);
 		messageFragments.clear();

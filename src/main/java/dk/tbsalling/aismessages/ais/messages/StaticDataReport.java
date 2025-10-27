@@ -18,18 +18,46 @@ package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.ShipType;
 
+/**
+ * Interface for AIS messages containing static ship data.
+ * Static data includes vessel identification, dimensions, and type information
+ * that typically does not change during a voyage.
+ */
 public interface StaticDataReport extends DataReport {
 
+    /**
+     * @return The vessel's callsign
+     */
 	String getCallsign();
+
+    /**
+     * @return The vessel's name
+     */
 	String getShipName();
+
+    /**
+     * @return The type of ship
+     */
 	ShipType getShipType();
 
+    /**
+     * @return Distance from reference position to bow in meters
+     */
     int getToBow();
 
+    /**
+     * @return Distance from reference position to stern in meters
+     */
     int getToStern();
 
+    /**
+     * @return Distance from reference position to starboard side in meters
+     */
     int getToStarboard();
 
+    /**
+     * @return Distance from reference position to port side in meters
+     */
     int getToPort();
 
 }
