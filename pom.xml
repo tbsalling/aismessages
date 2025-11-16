@@ -30,24 +30,24 @@
 	<build>
 		<plugins>
 			<plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>templating-maven-plugin</artifactId>
-                <version>3.0.0</version>
-                <executions>
-                    <execution>
-                        <id>generate-version-class</id>
-                        <goals>
-                            <goal>filter-sources</goal>
-                        </goals>
-                        <configuration>
-                            <sourceDirectory>${project.basedir}/src/main/java-templates</sourceDirectory>
-                            <outputDirectory>${project.build.directory}/generated-sources/java-templates
-                            </outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
+                	<groupId>org.codehaus.mojo</groupId>
+                	<artifactId>templating-maven-plugin</artifactId>
+                	<version>3.0.0</version>
+                	<executions>
+                    	<execution>
+                        	<id>generate-version-class</id>
+                        	<goals>
+                            	<goal>filter-sources</goal>
+                        	</goals>
+                        	<configuration>
+                            	<sourceDirectory>${project.basedir}/src/main/java-templates</sourceDirectory>
+                            	<outputDirectory>${project.build.directory}/generated-sources/java-templates
+                            	</outputDirectory>
+                        	</configuration>
+                    	</execution>
+                	</executions>
+            	</plugin>
+            	<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-gpg-plugin</artifactId>
 				<version>3.2.8</version>
@@ -60,8 +60,8 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
+				</plugin>
+            	<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-javadoc-plugin</artifactId>
 				<version>3.12.0</version>
@@ -72,16 +72,16 @@
 						<goals><goal>jar</goal></goals>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
+				</plugin>
+            	<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-compiler-plugin</artifactId>
-                <version>3.14.1</version>
+                	<version>3.14.1</version>
 				<configuration>
-                    <release>${maven.compiler.release}</release>
-				</configuration>
-			</plugin>
-			<plugin>
+                    	<release>${maven.compiler.release}</release>
+                	</configuration>
+            	</plugin>
+            	<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
 				<version>3.3.1</version>
@@ -94,8 +94,8 @@
 						</goals>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
+				</plugin>
+            	<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>3.5.4</version>
@@ -107,9 +107,9 @@
 							<value>logging.properties</value>
 						</property>
 					</systemProperties>
-				</configuration>
-			</plugin>
-			<plugin>
+					</configuration>
+            	</plugin>
+            	<plugin>
 				<artifactId>maven-assembly-plugin</artifactId>
 				<version>3.7.1</version>
 				<configuration>
@@ -117,17 +117,17 @@
 						<descriptorRef>jar-with-dependencies</descriptorRef>
 					</descriptorRefs>
 				</configuration>
-				<executions>
-					<execution>
-						<id>make-assembly</id> <!-- this is used for inheritance merges -->
-						<phase>package</phase> <!-- bind to the packaging phase -->
-						<goals>
-							<goal>single</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
+					<executions>
+						<execution>
+							<id>make-assembly</id> <!-- this is used for inheritance merges -->
+							<phase>package</phase> <!-- bind to the packaging phase -->
+							<goals>
+								<goal>single</goal>
+							</goals>
+						</execution>
+					</executions>
+            	</plugin>
+            	<plugin>
 				<groupId>org.sonatype.central</groupId>
 				<artifactId>central-publishing-maven-plugin</artifactId>
 				<version>0.9.0</version>
@@ -136,8 +136,8 @@
 					<publishingServerId>central</publishingServerId>
 					<checksums>all</checksums>
 				</configuration>
-			</plugin>
-		</plugins>
+            	</plugin>
+			</plugins>
 	</build>
 	<developers>
 		<developer>
@@ -163,7 +163,13 @@
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>
 			<artifactId>junit-jupiter-api</artifactId>
-			<version>6.0.1</version>
+			<version>5.11.4</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.junit.platform</groupId>
+			<artifactId>junit-platform-commons</artifactId>
+			<version>1.11.4</version>
 			<scope>test</scope>
 		</dependency>
 		<dependency>
@@ -177,6 +183,6 @@
 		<connection>scm:git:https://tbsalling@github.com/tbsalling/aismessages.git</connection>
 		<url>https://github.com//tbsalling/aismessages/tree/master</url>
 		<developerConnection>scm:git:https://tbsalling@github.com/tbsalling/aismessages.git</developerConnection>
-	    <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	  </scm>
 </project>
