@@ -23,8 +23,6 @@ import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
 import java.time.Instant;
-import java.util.Map;
-import java.util.TreeMap;
 
 /**
  * Factory class that contains parsing logic for all AIS message types using BitStringParser.
@@ -34,73 +32,73 @@ import java.util.TreeMap;
  */
 public class AISMessageFactory {
 
-    private static final Map<String, String> charToSixBit = new TreeMap<>();
+    private static final String[] CHAR_TO_SIX_BIT = new String[128];
 
     static {
-        charToSixBit.put("0", "000000"); // 0
-        charToSixBit.put("1", "000001"); // 1
-        charToSixBit.put("2", "000010"); // 2
-        charToSixBit.put("3", "000011"); // 3
-        charToSixBit.put("4", "000100"); // 4
-        charToSixBit.put("5", "000101"); // 5
-        charToSixBit.put("6", "000110"); // 6
-        charToSixBit.put("7", "000111"); // 7
-        charToSixBit.put("8", "001000"); // 8
-        charToSixBit.put("9", "001001"); // 9
-        charToSixBit.put(":", "001010"); // 10
-        charToSixBit.put(";", "001011"); // 11
-        charToSixBit.put("<", "001100"); // 12
-        charToSixBit.put("=", "001101"); // 13
-        charToSixBit.put(">", "001110"); // 14
-        charToSixBit.put("?", "001111"); // 15
-        charToSixBit.put("@", "010000"); // 16
-        charToSixBit.put("A", "010001"); // 17
-        charToSixBit.put("B", "010010"); // 18
-        charToSixBit.put("C", "010011"); // 19
-        charToSixBit.put("D", "010100"); // 20
-        charToSixBit.put("E", "010101"); // 21
-        charToSixBit.put("F", "010110"); // 22
-        charToSixBit.put("G", "010111"); // 23
-        charToSixBit.put("H", "011000"); // 24
-        charToSixBit.put("I", "011001"); // 25
-        charToSixBit.put("J", "011010"); // 26
-        charToSixBit.put("K", "011011"); // 27
-        charToSixBit.put("L", "011100"); // 28
-        charToSixBit.put("M", "011101"); // 29
-        charToSixBit.put("N", "011110"); // 30
-        charToSixBit.put("O", "011111"); // 31
-        charToSixBit.put("P", "100000"); // 32
-        charToSixBit.put("Q", "100001"); // 33
-        charToSixBit.put("R", "100010"); // 34
-        charToSixBit.put("S", "100011"); // 35
-        charToSixBit.put("T", "100100"); // 36
-        charToSixBit.put("U", "100101"); // 37
-        charToSixBit.put("V", "100110"); // 38
-        charToSixBit.put("W", "100111"); // 39
-        charToSixBit.put("`", "101000"); // 40
-        charToSixBit.put("a", "101001"); // 41
-        charToSixBit.put("b", "101010"); // 42
-        charToSixBit.put("c", "101011"); // 43
-        charToSixBit.put("d", "101100"); // 44
-        charToSixBit.put("e", "101101"); // 45
-        charToSixBit.put("f", "101110"); // 46
-        charToSixBit.put("g", "101111"); // 47
-        charToSixBit.put("h", "110000"); // 48
-        charToSixBit.put("i", "110001"); // 49
-        charToSixBit.put("j", "110010"); // 50
-        charToSixBit.put("k", "110011"); // 51
-        charToSixBit.put("l", "110100"); // 52
-        charToSixBit.put("m", "110101"); // 53
-        charToSixBit.put("n", "110110"); // 54
-        charToSixBit.put("o", "110111"); // 55
-        charToSixBit.put("p", "111000"); // 56
-        charToSixBit.put("q", "111001"); // 57
-        charToSixBit.put("r", "111010"); // 58
-        charToSixBit.put("s", "111011"); // 59
-        charToSixBit.put("t", "111100"); // 60
-        charToSixBit.put("u", "111101"); // 61
-        charToSixBit.put("v", "111110"); // 62
-        charToSixBit.put("w", "111111"); // 63
+        CHAR_TO_SIX_BIT['0'] = "000000"; // 0
+        CHAR_TO_SIX_BIT['1'] = "000001"; // 1
+        CHAR_TO_SIX_BIT['2'] = "000010"; // 2
+        CHAR_TO_SIX_BIT['3'] = "000011"; // 3
+        CHAR_TO_SIX_BIT['4'] = "000100"; // 4
+        CHAR_TO_SIX_BIT['5'] = "000101"; // 5
+        CHAR_TO_SIX_BIT['6'] = "000110"; // 6
+        CHAR_TO_SIX_BIT['7'] = "000111"; // 7
+        CHAR_TO_SIX_BIT['8'] = "001000"; // 8
+        CHAR_TO_SIX_BIT['9'] = "001001"; // 9
+        CHAR_TO_SIX_BIT[':'] = "001010"; // 10
+        CHAR_TO_SIX_BIT[';'] = "001011"; // 11
+        CHAR_TO_SIX_BIT['<'] = "001100"; // 12
+        CHAR_TO_SIX_BIT['='] = "001101"; // 13
+        CHAR_TO_SIX_BIT['>'] = "001110"; // 14
+        CHAR_TO_SIX_BIT['?'] = "001111"; // 15
+        CHAR_TO_SIX_BIT['@'] = "010000"; // 16
+        CHAR_TO_SIX_BIT['A'] = "010001"; // 17
+        CHAR_TO_SIX_BIT['B'] = "010010"; // 18
+        CHAR_TO_SIX_BIT['C'] = "010011"; // 19
+        CHAR_TO_SIX_BIT['D'] = "010100"; // 20
+        CHAR_TO_SIX_BIT['E'] = "010101"; // 21
+        CHAR_TO_SIX_BIT['F'] = "010110"; // 22
+        CHAR_TO_SIX_BIT['G'] = "010111"; // 23
+        CHAR_TO_SIX_BIT['H'] = "011000"; // 24
+        CHAR_TO_SIX_BIT['I'] = "011001"; // 25
+        CHAR_TO_SIX_BIT['J'] = "011010"; // 26
+        CHAR_TO_SIX_BIT['K'] = "011011"; // 27
+        CHAR_TO_SIX_BIT['L'] = "011100"; // 28
+        CHAR_TO_SIX_BIT['M'] = "011101"; // 29
+        CHAR_TO_SIX_BIT['N'] = "011110"; // 30
+        CHAR_TO_SIX_BIT['O'] = "011111"; // 31
+        CHAR_TO_SIX_BIT['P'] = "100000"; // 32
+        CHAR_TO_SIX_BIT['Q'] = "100001"; // 33
+        CHAR_TO_SIX_BIT['R'] = "100010"; // 34
+        CHAR_TO_SIX_BIT['S'] = "100011"; // 35
+        CHAR_TO_SIX_BIT['T'] = "100100"; // 36
+        CHAR_TO_SIX_BIT['U'] = "100101"; // 37
+        CHAR_TO_SIX_BIT['V'] = "100110"; // 38
+        CHAR_TO_SIX_BIT['W'] = "100111"; // 39
+        CHAR_TO_SIX_BIT['`'] = "101000"; // 40
+        CHAR_TO_SIX_BIT['a'] = "101001"; // 41
+        CHAR_TO_SIX_BIT['b'] = "101010"; // 42
+        CHAR_TO_SIX_BIT['c'] = "101011"; // 43
+        CHAR_TO_SIX_BIT['d'] = "101100"; // 44
+        CHAR_TO_SIX_BIT['e'] = "101101"; // 45
+        CHAR_TO_SIX_BIT['f'] = "101110"; // 46
+        CHAR_TO_SIX_BIT['g'] = "101111"; // 47
+        CHAR_TO_SIX_BIT['h'] = "110000"; // 48
+        CHAR_TO_SIX_BIT['i'] = "110001"; // 49
+        CHAR_TO_SIX_BIT['j'] = "110010"; // 50
+        CHAR_TO_SIX_BIT['k'] = "110011"; // 51
+        CHAR_TO_SIX_BIT['l'] = "110100"; // 52
+        CHAR_TO_SIX_BIT['m'] = "110101"; // 53
+        CHAR_TO_SIX_BIT['n'] = "110110"; // 54
+        CHAR_TO_SIX_BIT['o'] = "110111"; // 55
+        CHAR_TO_SIX_BIT['p'] = "111000"; // 56
+        CHAR_TO_SIX_BIT['q'] = "111001"; // 57
+        CHAR_TO_SIX_BIT['r'] = "111010"; // 58
+        CHAR_TO_SIX_BIT['s'] = "111011"; // 59
+        CHAR_TO_SIX_BIT['t'] = "111100"; // 60
+        CHAR_TO_SIX_BIT['u'] = "111101"; // 61
+        CHAR_TO_SIX_BIT['v'] = "111110"; // 62
+        CHAR_TO_SIX_BIT['w'] = "111111"; // 63
     }
 
     // Public methods
@@ -122,12 +120,11 @@ public class AISMessageFactory {
         }
         StringBuilder bitString = new StringBuilder(encodedString.length() * 6);
         for (int i = 0; i < encodedString.length(); i++) {
-            String c = encodedString.substring(i, i + 1);
-            String sixBits = charToSixBit.get(c);
-            if (sixBits == null) {
+            char c = encodedString.charAt(i);
+            if (c >= 128 || CHAR_TO_SIX_BIT[c] == null) {
                 throw new IllegalArgumentException("Invalid six-bit character: '" + c + "'");
             }
-            bitString.append(sixBits);
+            bitString.append(CHAR_TO_SIX_BIT[c]);
         }
         return bitString.substring(0, bitString.length() - paddingBits);
     }
