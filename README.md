@@ -1,5 +1,5 @@
 ![Build status](https://travis-ci.org/tbsalling/aismessages.svg?branch=master)
-[![License](http://img.shields.io/badge/license-CCANS3-green.svg)](https://github.com/tbsalling/aismessages/blob/master/LICENSE)
+[![License](http://img.shields.io/badge/license-CCANS4-green.svg)](https://github.com/tbsalling/aismessages/blob/master/LICENSE)
 
 Introduction
 ---
@@ -7,6 +7,8 @@ AISmessages is a Java-based light-weight, zero-dependency, and ultra-efficient m
 navigation and safety messages compliant with ITU 1371 (NMEA armoured AIS messages).
 
 Internally AISmessages uses eager parsing and a fail‑fast design combined with immutable value objects. This minimizes runtime surprises and allocation churn, reduces the need for synchronization, and makes message instances safe to share across threads — ideal for high‑throughput, concurrent, or real‑time applications (including non‑blocking/reactive systems). The library’s low‑allocation, zero‑dependency implementation yields predictable performance and low GC impact under heavy load. It fully decodes tens of thousands of NMEA armoured AIS messages per second per CPU core on an Intel i7-based laptop.
+
+**Version 4 Performance:** AISmessages v4 represents a major architectural improvement over earlier versions. By switching from lazy decoding (used in v2.x-3.x) to eager parsing with immutable value objects, v4 dramatically reduces garbage collection pressure and memory churning. The eager approach eliminates the WeakReference overhead and repeated parsing of previous versions, resulting in predictable upfront allocation, zero post-construction allocations, and significantly lower GC overhead — especially beneficial for high-throughput scenarios processing thousands of messages per second.
 
 For more than 15+ years AISmessages has been used in production in many systems and solutions all over the world.
 
@@ -91,18 +93,99 @@ in fragments:
 
 ```java
 public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
-   ...
-   public IMO getImo() { ... }
-   public String getCallsign() { ... }
-   public String getShipName() { ... }
-   public ShipType getShipType() { ... }
-   public Integer getToBow() { ... }
-   public Integer getToStern() { ... }
-   public Integer getToStarboard() { ... }
-   public Integer getToPort() { ... }
-   ...
+    ...
+    public IMO getImo() { ...}
+    public String getCallsign() { ...}
+    public String getShipName() { ...}
+    public ShipType getShipType() { ...}
+    public int getToBow() { ...}
+    public int getToStern() { ...}
+    public int getToStarboard() { ...}
+    public int getToPort() { ...}
+    ...
 }
 ```
+
+Application Specific Messages (ASM)
+---
+AISmessages supports decoding of Application Specific Messages (ASM) transmitted via AIS messages type 6 (addressed binary message) and type 8 (binary broadcast message). These messages carry specialized information according to various standards.
+
+### IMO SN.1/Circ.289 - International Application Specific Messages (DAC=001)
+
+The library implements the 24 standardized application-specific messages defined by IMO SN.1/Circ.289 for international use (Designated Area Code = 001):
+
+| FI | Message Type | Class |
+|----|--------------|-------|
+| 0, 1 | Text Description | `TextDescription` |
+| 10 | UTC/Date Inquiry | `UtcDateInquiry` |
+| 11 | UTC/Date Response | `UtcDateResponse` |
+| 14 | Tidal Window | `TidalWindow` |
+| 17 | VTS Generated/Synthetic Targets | `VtsGeneratedSyntheticTargets` |
+| 18, 19 | Marine Traffic Signal | `MarineTrafficSignal` |
+| 20 | Berthing Data | `BerthingData` |
+| 21 | Weather Observation Report from Ship | `WeatherObservation` |
+| 22, 23 | Area Notice (broadcast/addressed) | `AreaNotice` |
+| 24 | Extended Ship Static and Voyage Related Data | `ExtendedShipStaticAndVoyageRelatedData` |
+| 25 | Dangerous Cargo Indication | `DangerousCargoIndication` |
+| 26 | Environmental | `Environmental` |
+| 27, 28 | Route Information (broadcast/addressed) | `RouteInformation` |
+| 31 | Meteorological and Hydrographical Data | `MeteorologicalAndHydrographicalData` |
+| 40 | Number of Persons on Board | `NumberOfPersonsOnBoard` |
+
+### Other Regional Application Specific Messages
+
+- **DAC=200, FI=10**: Inland Ship Static and Voyage Related Data (`InlandShipStaticAndVoyageRelatedData`)
+
+### Using Application Specific Messages
+
+Application Specific Messages can be accessed from the parent binary message:
+
+```java
+BinaryBroadcastMessage binaryMessage = (BinaryBroadcastMessage) aisMessage;
+ApplicationSpecificMessage asm = binaryMessage.getApplicationSpecificMessage();
+
+if (asm instanceof WeatherObservation weather) {
+    System.out.println("Temperature: " + weather.getAirTemperature());
+    System.out.println("Wind Speed: " + weather.getAverageWindSpeed());
+    // ... access other weather data
+}
+```
+
+Unknown or unsupported application specific messages are represented as `UnknownApplicationSpecificMessage`, which provides access to the raw binary data.
+
+Receiving AIS messages via UDP
+---
+AISmessages also supports receiving AIS messages via UDP, which is a common method for receiving AIS data from 
+various sources. Here's how to use it:
+
+```java
+import dk.tbsalling.aismessages.ais.messages.AISMessage;
+import dk.tbsalling.aismessages.nmea.NMEAMessageHandler;
+import dk.tbsalling.aismessages.nmea.NMEAMessageUDPSocket;
+
+public class UDPExample {
+    public static void main(String[] args) {
+        try {
+            NMEAMessageUDPSocket udpSocket = new NMEAMessageUDPSocket(
+                "127.0.0.1",  // Host address to bind to
+                10110,        // UDP port to listen on
+                new NMEAMessageHandler("UDPSRC", aisMessage -> {
+                    // Process each received AIS message
+                    System.out.println("Received: " + aisMessage);
+                })
+            );
+            udpSocket.run();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}
+```
+
+The UDP receiver will bind to the specified host and port and process incoming UDP packets containing 
+NMEA-formatted AIS messages. You can stop the receiver by calling `udpSocket.requestStop()`.
+
+A complete demo application is available in the `dk.tbsalling.aismessages.demo.UDPDemoApp` class.
 
 Obtaining AISmessages
 ---
@@ -114,7 +197,7 @@ need to do is add these lines to your pom.xml:
 <dependency>
     <groupId>dk.tbsalling</groupId>
     <artifactId>aismessages</artifactId>
-    <version>4.0.0-SNAPSHOT</version>
+    <version>4.1.0</version>
 </dependency>
 ...
 ```
@@ -124,7 +207,13 @@ License
 AISmessages is released under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA
 4.0)
 license - which means that it is free for non-commercial use. For full license details see the
-[LICENSE-full](LICENSE.txt) file or read [the summary](LICENSE-summary.md).
+[LICENSE](LICENSE) file.
 
-To obtain a commercial license and/or commercial support contact
+Commercial License
+---
+AISmessages (C) Copyright 2011- by S-Consult ApS, VAT no. DK31327490, Denmark.
+
+AISmessages is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 Unported License.
+
+To obtain an alternative commercial license and/or support contact
 [Thomas Borg Salling](mailto:tbsalling@tbsalling.dk?subject=[GitHub]%20AISmessages%20license) - tbsalling@tbsalling.dk.

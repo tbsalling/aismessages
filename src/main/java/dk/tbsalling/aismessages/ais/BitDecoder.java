@@ -105,8 +105,9 @@ public class BitDecoder {
      *
      * @param bitString a 20-bit string (or longer, only the first 20 bits are used)
      * @return formatted time string in the form "dd-MM HH:mm"
+     * @deprecated Use message-specific time field methods instead
      */
-    @Deprecated
+    @Deprecated(since = "4.0")
     public String decodeTime(String bitString) {
         Integer month = decodeUnsignedInt(bitString.substring(0, 4));
         Integer day = decodeUnsignedInt(bitString.substring(4, 9));

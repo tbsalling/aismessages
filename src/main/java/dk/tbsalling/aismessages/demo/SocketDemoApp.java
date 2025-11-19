@@ -24,7 +24,10 @@ import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.function.Consumer;
 
-@Deprecated
+/**
+ * @deprecated This demo uses deprecated NMEAMessageSocketClient. See UDPDemoApp for a better example.
+ */
+@Deprecated(since = "4.0")
 public class SocketDemoApp implements Consumer<AISMessage> {
 
     @Override

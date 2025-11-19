@@ -4,6 +4,64 @@ Developer-oriented release notes for AISmessages - a Java-based library for deco
 
 ---
 
+## Version 4.1.0-SNAPSHOT
+
+**Development Version**
+
+### New Features & Improvements
+
+**Expanded Application Specific Messages (ASM) - IMO SN.1/Circ.289:**
+- Added 12 new ASM decoders for IMO standardized messages (DAC=001)
+- Text Description (FI=0, 1) - `TextDescription`
+- UTC/Date Inquiry (FI=10) - `UtcDateInquiry`
+- UTC/Date Response (FI=11) - `UtcDateResponse`
+- Tidal Window (FI=14) - `TidalWindow`
+- VTS Generated/Synthetic Targets (FI=17) - `VtsGeneratedSyntheticTargets`
+- Marine Traffic Signal (FI=18, 19) - `MarineTrafficSignal`
+- Area Notice (FI=22, 23) - `AreaNotice`
+- Dangerous Cargo Indication (FI=25) - `DangerousCargoIndication`
+- Environmental (FI=26) - `Environmental`
+- Route Information (FI=27, 28) - `RouteInformation`
+- Meteorological and Hydrographical Data (FI=31) - `MeteorologicalAndHydrographicalData`
+- Weather Observation (FI=21) - `WeatherObservation`
+- Brings total ASM support to 18 message types (previously 6)
+
+**UDP Receiver Support:**
+- New `NMEAMessageUDPSocket` class for receiving AIS messages via UDP
+- Enables real-time AIS data reception from UDP sources
+- Simple API: bind to host and port, provide message handler
+- Complete `UDPDemoApp` example demonstrating UDP receiver usage
+- Ideal for integration with AIS data feeds and network sources
+
+**NMEA Message Handling Improvements:**
+- New `NMEAMessageHandlerStrict` class for stricter NMEA message validation
+- Enhanced error handling and message validation options
+
+**Dependency Management:**
+- Added Dependabot configuration for automated weekly dependency updates
+- Configured to check Maven dependencies, GitHub Actions, and Maven wrapper updates
+- Grouped dependency updates by type for easier review
+
+**Dependency Updates:**
+
+*GitHub Actions:*
+- actions/checkout: 4 → 5
+- actions/setup-java: 4 → 5
+
+*Maven Plugins:*
+- maven-gpg-plugin: 3.2.6 → 3.2.8
+- maven-javadoc-plugin: 3.10.1 → 3.12.0
+- maven-assembly-plugin: 3.7.0 → 3.7.1
+- maven-surefire-plugin: 3.5.1 → 3.5.4
+- central-publishing-maven-plugin: 0.8.0 → 0.9.0
+
+*Test Dependencies:*
+- jmock-junit5: 2.12.0 → 2.13.1
+
+**Full Changelog:** https://github.com/tbsalling/aismessages/compare/aismessages-4.0.0...HEAD
+
+---
+
 ## Version 4.0.0
 
 **Major Version Update - Java 21 Required**
@@ -25,6 +83,22 @@ Developer-oriented release notes for AISmessages - a Java-based library for deco
 - Introduced BitStringParser class to separate parsing concerns from value objects
 - Cleaner separation between NMEA message handling and AIS message decoding
 - Enhanced maintainability through better single-responsibility design
+
+**Performance & Memory Improvements:**
+
+Version 4 represents a fundamental shift from the lazy decoding approach used in versions 2.x and 3.x to an eager parsing model with immutable value objects. This architectural change dramatically reduces garbage collection pressure and memory churning:
+
+- **Eager parsing eliminates WeakReference overhead**: Earlier versions used lazy decoding with WeakReference caching for field values. This approach required the garbage collector to manage and potentially reclaim cached field values, creating constant GC pressure. V4 parses all fields upfront into final immutable fields, eliminating WeakReference overhead entirely.
+
+- **Single-pass parsing**: V4 decodes each AIS message in one pass during construction, storing all field values in final fields. In contrast, lazy decoding could trigger repeated parsing if the garbage collector reclaimed cached values, leading to unpredictable CPU spikes and allocation churn.
+
+- **Predictable, upfront allocation**: All memory allocation happens at message construction time in a single, predictable burst. This eliminates the scattered, on-demand allocations of lazy decoding and enables more efficient GC patterns (Eden-only allocations for short-lived messages).
+
+- **Compact memory layout**: Immutable value objects with only final primitive and reference fields have better CPU cache locality and lower per-instance overhead compared to objects with additional caching structures and weak references.
+
+- **Zero allocation after construction**: Once constructed, V4 message objects allocate no additional memory during field access. Lazy approaches could allocate wrapper objects, strings, and cache entries on every field access if cached values were reclaimed.
+
+The result is dramatically lower GC overhead, especially under high message throughput where V2/V3's lazy approach would cause the garbage collector to continuously manage weak references and cached field values. V4's eager approach is particularly beneficial in memory-constrained environments, real-time systems, and high-throughput scenarios processing thousands of messages per second.
 
 **Build & Tooling Updates:**
 - Java compiler target updated to Java 21
@@ -144,6 +218,15 @@ Bug fixes and stability improvements. JDK 7 backport available.
 ---
 
 ## Maven Coordinates
+
+### Development Version (4.1.0-SNAPSHOT)
+```xml
+<dependency>
+    <groupId>dk.tbsalling</groupId>
+    <artifactId>aismessages</artifactId>
+    <version>4.1.0-SNAPSHOT</version>
+</dependency>
+```
 
 ### Latest Stable Version (4.0.0)
 ```xml
