@@ -10,6 +10,74 @@ Developer-oriented release notes for AISmessages - a Java-based library for deco
 
 ### New Features & Improvements
 
+**Testing Improvements:**
+- Comprehensive NMEA message validation test coverage
+- Added NMEAMessageTest with 9 test cases for checksum validation
+- Added NMEAMessageHandlerTest with 5 test cases for message handling
+- Added NMEAMessageInputStreamReaderTest with 4 test cases for stream processing
+- Improved test infrastructure for NMEA message processing and validation
+
+**Dependency Updates:**
+
+*Test Dependencies:*
+- mockito-junit-jupiter: 5.14.2
+
+**Full Changelog:** https://github.com/tbsalling/aismessages/compare/aismessages-4.1.2...HEAD
+
+---
+
+## Version 4.1.2
+
+**Release Date:** 2025-11-19
+
+Version bump release.
+
+**Full Changelog:** https://github.com/tbsalling/aismessages/compare/aismessages-4.1.1...aismessages-4.1.2
+
+---
+
+## Version 4.1.1
+
+**Release Date:** 2025-11-19
+
+### Performance Improvements
+
+**charToSixBit Optimization:**
+- Replaced TreeMap with array-based lookup for charToSixBit conversion
+- **3.97x performance improvement** for character to six-bit conversion
+- Reduces CPU overhead in AIS message decoding
+
+### New Features & Improvements
+
+**Documentation:**
+- Added comprehensive upgrade guide for migrating from AISmessages 3.3.1 to 4.1.0
+- Step-by-step instructions for handling breaking API changes
+- Examples for updated Java module system usage
+- README.md example code aligned with current API
+
+**Code Quality:**
+- Modernized instanceof checks to use Java pattern matching
+- Enhanced documentation of v4 performance improvements
+- Fixed resource leak issues
+- Added pull request template
+- Added Copilot instructions for project development
+
+**Dependency Updates:**
+
+*Test Dependencies:*
+- junit-jupiter: 5.9.2 → 6.0.1
+- junit-platform-commons updated to match JUnit 6.0.1
+
+**Full Changelog:** https://github.com/tbsalling/aismessages/compare/aismessages-4.1.0...aismessages-4.1.1
+
+---
+
+## Version 4.1.0
+
+**Release Date:** 2025-10-19
+
+### New Features & Improvements
+
 **Expanded Application Specific Messages (ASM) - IMO SN.1/Circ.289:**
 - Added 12 new ASM decoders for IMO standardized messages (DAC=001)
 - Text Description (FI=0, 1) - `TextDescription`
@@ -36,18 +104,16 @@ Developer-oriented release notes for AISmessages - a Java-based library for deco
 **NMEA Message Handling Improvements:**
 - New `NMEAMessageHandlerStrict` class for stricter NMEA message validation
 - Enhanced error handling and message validation options
+- Added comprehensive NMEA checksum validation
 
 **Dependency Management:**
 - Added Dependabot configuration for automated weekly dependency updates
 - Configured to check Maven dependencies, GitHub Actions, and Maven wrapper updates
 - Grouped dependency updates by type for easier review
 
-**Testing Improvements:**
-- Comprehensive NMEA message validation test coverage
-- Added NMEAMessageTest with 9 test cases for checksum validation
-- Added NMEAMessageHandlerTest with 5 test cases for message handling
-- Added NMEAMessageInputStreamReaderTest with 4 test cases for stream processing
-- Improved test infrastructure for NMEA message processing and validation
+**Bug Fixes:**
+- Fixed GitHub license detection by consolidating to single LICENSE file with correct version
+- Fixed validation error message for binary broadcast messages exceeding 1008 bits
 
 **Dependency Updates:**
 
@@ -63,10 +129,9 @@ Developer-oriented release notes for AISmessages - a Java-based library for deco
 - central-publishing-maven-plugin: 0.8.0 → 0.9.0
 
 *Test Dependencies:*
-- junit-jupiter: 5.9.2 → 6.0.1
-- mockito-junit-jupiter: 2.13.1 → 5.14.2
+- jmock-junit5: 2.12.0 → 2.13.1
 
-**Full Changelog:** https://github.com/tbsalling/aismessages/compare/aismessages-4.0.0...HEAD
+**Full Changelog:** https://github.com/tbsalling/aismessages/compare/aismessages-4.0.0...aismessages-4.1.0
 
 ---
 
@@ -236,7 +301,34 @@ Bug fixes and stability improvements. JDK 7 backport available.
 </dependency>
 ```
 
-### Latest Stable Version (4.0.0)
+### Latest Stable Version (4.1.2)
+```xml
+<dependency>
+    <groupId>dk.tbsalling</groupId>
+    <artifactId>aismessages</artifactId>
+    <version>4.1.2</version>
+</dependency>
+```
+
+### Previous Stable Version (4.1.1)
+```xml
+<dependency>
+    <groupId>dk.tbsalling</groupId>
+    <artifactId>aismessages</artifactId>
+    <version>4.1.1</version>
+</dependency>
+```
+
+### Previous Stable Version (4.1.0)
+```xml
+<dependency>
+    <groupId>dk.tbsalling</groupId>
+    <artifactId>aismessages</artifactId>
+    <version>4.1.0</version>
+</dependency>
+```
+
+### Previous Major Version (4.0.0)
 ```xml
 <dependency>
     <groupId>dk.tbsalling</groupId>
