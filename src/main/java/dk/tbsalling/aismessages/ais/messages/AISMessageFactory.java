@@ -35,70 +35,70 @@ public class AISMessageFactory {
     private static final String[] CHAR_TO_SIX_BIT = new String[128];
 
     static {
-        CHAR_TO_SIX_BIT['0'] = "000000"; // 0
-        CHAR_TO_SIX_BIT['1'] = "000001"; // 1
-        CHAR_TO_SIX_BIT['2'] = "000010"; // 2
-        CHAR_TO_SIX_BIT['3'] = "000011"; // 3
-        CHAR_TO_SIX_BIT['4'] = "000100"; // 4
-        CHAR_TO_SIX_BIT['5'] = "000101"; // 5
-        CHAR_TO_SIX_BIT['6'] = "000110"; // 6
-        CHAR_TO_SIX_BIT['7'] = "000111"; // 7
-        CHAR_TO_SIX_BIT['8'] = "001000"; // 8
-        CHAR_TO_SIX_BIT['9'] = "001001"; // 9
-        CHAR_TO_SIX_BIT[':'] = "001010"; // 10
-        CHAR_TO_SIX_BIT[';'] = "001011"; // 11
-        CHAR_TO_SIX_BIT['<'] = "001100"; // 12
-        CHAR_TO_SIX_BIT['='] = "001101"; // 13
-        CHAR_TO_SIX_BIT['>'] = "001110"; // 14
-        CHAR_TO_SIX_BIT['?'] = "001111"; // 15
-        CHAR_TO_SIX_BIT['@'] = "010000"; // 16
-        CHAR_TO_SIX_BIT['A'] = "010001"; // 17
-        CHAR_TO_SIX_BIT['B'] = "010010"; // 18
-        CHAR_TO_SIX_BIT['C'] = "010011"; // 19
-        CHAR_TO_SIX_BIT['D'] = "010100"; // 20
-        CHAR_TO_SIX_BIT['E'] = "010101"; // 21
-        CHAR_TO_SIX_BIT['F'] = "010110"; // 22
-        CHAR_TO_SIX_BIT['G'] = "010111"; // 23
-        CHAR_TO_SIX_BIT['H'] = "011000"; // 24
-        CHAR_TO_SIX_BIT['I'] = "011001"; // 25
-        CHAR_TO_SIX_BIT['J'] = "011010"; // 26
-        CHAR_TO_SIX_BIT['K'] = "011011"; // 27
-        CHAR_TO_SIX_BIT['L'] = "011100"; // 28
-        CHAR_TO_SIX_BIT['M'] = "011101"; // 29
-        CHAR_TO_SIX_BIT['N'] = "011110"; // 30
-        CHAR_TO_SIX_BIT['O'] = "011111"; // 31
-        CHAR_TO_SIX_BIT['P'] = "100000"; // 32
-        CHAR_TO_SIX_BIT['Q'] = "100001"; // 33
-        CHAR_TO_SIX_BIT['R'] = "100010"; // 34
-        CHAR_TO_SIX_BIT['S'] = "100011"; // 35
-        CHAR_TO_SIX_BIT['T'] = "100100"; // 36
-        CHAR_TO_SIX_BIT['U'] = "100101"; // 37
-        CHAR_TO_SIX_BIT['V'] = "100110"; // 38
-        CHAR_TO_SIX_BIT['W'] = "100111"; // 39
-        CHAR_TO_SIX_BIT['`'] = "101000"; // 40
-        CHAR_TO_SIX_BIT['a'] = "101001"; // 41
-        CHAR_TO_SIX_BIT['b'] = "101010"; // 42
-        CHAR_TO_SIX_BIT['c'] = "101011"; // 43
-        CHAR_TO_SIX_BIT['d'] = "101100"; // 44
-        CHAR_TO_SIX_BIT['e'] = "101101"; // 45
-        CHAR_TO_SIX_BIT['f'] = "101110"; // 46
-        CHAR_TO_SIX_BIT['g'] = "101111"; // 47
-        CHAR_TO_SIX_BIT['h'] = "110000"; // 48
-        CHAR_TO_SIX_BIT['i'] = "110001"; // 49
-        CHAR_TO_SIX_BIT['j'] = "110010"; // 50
-        CHAR_TO_SIX_BIT['k'] = "110011"; // 51
-        CHAR_TO_SIX_BIT['l'] = "110100"; // 52
-        CHAR_TO_SIX_BIT['m'] = "110101"; // 53
-        CHAR_TO_SIX_BIT['n'] = "110110"; // 54
-        CHAR_TO_SIX_BIT['o'] = "110111"; // 55
-        CHAR_TO_SIX_BIT['p'] = "111000"; // 56
-        CHAR_TO_SIX_BIT['q'] = "111001"; // 57
-        CHAR_TO_SIX_BIT['r'] = "111010"; // 58
-        CHAR_TO_SIX_BIT['s'] = "111011"; // 59
-        CHAR_TO_SIX_BIT['t'] = "111100"; // 60
-        CHAR_TO_SIX_BIT['u'] = "111101"; // 61
-        CHAR_TO_SIX_BIT['v'] = "111110"; // 62
-        CHAR_TO_SIX_BIT['w'] = "111111"; // 63
+        CHAR_TO_SIX_BIT['0'] = "000000"; // 0 (ASCII 48)
+        CHAR_TO_SIX_BIT['1'] = "000001"; // 1 (ASCII 49)
+        CHAR_TO_SIX_BIT['2'] = "000010"; // 2 (ASCII 50)
+        CHAR_TO_SIX_BIT['3'] = "000011"; // 3 (ASCII 51)
+        CHAR_TO_SIX_BIT['4'] = "000100"; // 4 (ASCII 52)
+        CHAR_TO_SIX_BIT['5'] = "000101"; // 5 (ASCII 53)
+        CHAR_TO_SIX_BIT['6'] = "000110"; // 6 (ASCII 54)
+        CHAR_TO_SIX_BIT['7'] = "000111"; // 7 (ASCII 55)
+        CHAR_TO_SIX_BIT['8'] = "001000"; // 8 (ASCII 56)
+        CHAR_TO_SIX_BIT['9'] = "001001"; // 9 (ASCII 57)
+        CHAR_TO_SIX_BIT[':'] = "001010"; // 10 (ASCII 58)
+        CHAR_TO_SIX_BIT[';'] = "001011"; // 11 (ASCII 59)
+        CHAR_TO_SIX_BIT['<'] = "001100"; // 12 (ASCII 60)
+        CHAR_TO_SIX_BIT['='] = "001101"; // 13 (ASCII 61)
+        CHAR_TO_SIX_BIT['>'] = "001110"; // 14 (ASCII 62)
+        CHAR_TO_SIX_BIT['?'] = "001111"; // 15 (ASCII 63)
+        CHAR_TO_SIX_BIT['@'] = "010000"; // 16 (ASCII 64)
+        CHAR_TO_SIX_BIT['A'] = "010001"; // 17 (ASCII 65)
+        CHAR_TO_SIX_BIT['B'] = "010010"; // 18 (ASCII 66)
+        CHAR_TO_SIX_BIT['C'] = "010011"; // 19 (ASCII 67)
+        CHAR_TO_SIX_BIT['D'] = "010100"; // 20 (ASCII 68)
+        CHAR_TO_SIX_BIT['E'] = "010101"; // 21 (ASCII 69)
+        CHAR_TO_SIX_BIT['F'] = "010110"; // 22 (ASCII 70)
+        CHAR_TO_SIX_BIT['G'] = "010111"; // 23 (ASCII 71)
+        CHAR_TO_SIX_BIT['H'] = "011000"; // 24 (ASCII 72)
+        CHAR_TO_SIX_BIT['I'] = "011001"; // 25 (ASCII 73)
+        CHAR_TO_SIX_BIT['J'] = "011010"; // 26 (ASCII 74)
+        CHAR_TO_SIX_BIT['K'] = "011011"; // 27 (ASCII 75)
+        CHAR_TO_SIX_BIT['L'] = "011100"; // 28 (ASCII 76)
+        CHAR_TO_SIX_BIT['M'] = "011101"; // 29 (ASCII 77)
+        CHAR_TO_SIX_BIT['N'] = "011110"; // 30 (ASCII 78)
+        CHAR_TO_SIX_BIT['O'] = "011111"; // 31 (ASCII 79)
+        CHAR_TO_SIX_BIT['P'] = "100000"; // 32 (ASCII 80)
+        CHAR_TO_SIX_BIT['Q'] = "100001"; // 33 (ASCII 81)
+        CHAR_TO_SIX_BIT['R'] = "100010"; // 34 (ASCII 82)
+        CHAR_TO_SIX_BIT['S'] = "100011"; // 35 (ASCII 83)
+        CHAR_TO_SIX_BIT['T'] = "100100"; // 36 (ASCII 84)
+        CHAR_TO_SIX_BIT['U'] = "100101"; // 37 (ASCII 85)
+        CHAR_TO_SIX_BIT['V'] = "100110"; // 38 (ASCII 86)
+        CHAR_TO_SIX_BIT['W'] = "100111"; // 39 (ASCII 87)
+        CHAR_TO_SIX_BIT['`'] = "101000"; // 40 (ASCII 96)
+        CHAR_TO_SIX_BIT['a'] = "101001"; // 41 (ASCII 97)
+        CHAR_TO_SIX_BIT['b'] = "101010"; // 42 (ASCII 98)
+        CHAR_TO_SIX_BIT['c'] = "101011"; // 43 (ASCII 99)
+        CHAR_TO_SIX_BIT['d'] = "101100"; // 44 (ASCII 100)
+        CHAR_TO_SIX_BIT['e'] = "101101"; // 45 (ASCII 101)
+        CHAR_TO_SIX_BIT['f'] = "101110"; // 46 (ASCII 102)
+        CHAR_TO_SIX_BIT['g'] = "101111"; // 47 (ASCII 103)
+        CHAR_TO_SIX_BIT['h'] = "110000"; // 48 (ASCII 104)
+        CHAR_TO_SIX_BIT['i'] = "110001"; // 49 (ASCII 105)
+        CHAR_TO_SIX_BIT['j'] = "110010"; // 50 (ASCII 106)
+        CHAR_TO_SIX_BIT['k'] = "110011"; // 51 (ASCII 107)
+        CHAR_TO_SIX_BIT['l'] = "110100"; // 52 (ASCII 108)
+        CHAR_TO_SIX_BIT['m'] = "110101"; // 53 (ASCII 109)
+        CHAR_TO_SIX_BIT['n'] = "110110"; // 54 (ASCII 110)
+        CHAR_TO_SIX_BIT['o'] = "110111"; // 55 (ASCII 111)
+        CHAR_TO_SIX_BIT['p'] = "111000"; // 56 (ASCII 112)
+        CHAR_TO_SIX_BIT['q'] = "111001"; // 57 (ASCII 113)
+        CHAR_TO_SIX_BIT['r'] = "111010"; // 58 (ASCII 114)
+        CHAR_TO_SIX_BIT['s'] = "111011"; // 59 (ASCII 115)
+        CHAR_TO_SIX_BIT['t'] = "111100"; // 60 (ASCII 116)
+        CHAR_TO_SIX_BIT['u'] = "111101"; // 61 (ASCII 117)
+        CHAR_TO_SIX_BIT['v'] = "111110"; // 62 (ASCII 118)
+        CHAR_TO_SIX_BIT['w'] = "111111"; // 63 (ASCII 119)
     }
 
     // Public methods
@@ -121,9 +121,10 @@ public class AISMessageFactory {
         StringBuilder bitString = new StringBuilder(encodedString.length() * 6);
         for (int i = 0; i < encodedString.length(); i++) {
             char c = encodedString.charAt(i);
-            if (c >= 128 || CHAR_TO_SIX_BIT[c] == null) {
+
+            if (c >= 128 || CHAR_TO_SIX_BIT[c] == null)
                 throw new IllegalArgumentException("Invalid six-bit character: '" + c + "'");
-            }
+
             bitString.append(CHAR_TO_SIX_BIT[c]);
         }
         return bitString.substring(0, bitString.length() - paddingBits);
