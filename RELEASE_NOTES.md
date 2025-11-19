@@ -4,7 +4,7 @@ Developer-oriented release notes for AISmessages - a Java-based library for deco
 
 ---
 
-## Version 4.1.0-SNAPSHOT
+## Version 4.1.3-SNAPSHOT
 
 **Development Version**
 
@@ -42,6 +42,13 @@ Developer-oriented release notes for AISmessages - a Java-based library for deco
 - Configured to check Maven dependencies, GitHub Actions, and Maven wrapper updates
 - Grouped dependency updates by type for easier review
 
+**Testing Improvements:**
+- Comprehensive NMEA message validation test coverage
+- Added NMEAMessageTest with 9 test cases for checksum validation
+- Added NMEAMessageHandlerTest with 5 test cases for message handling
+- Added NMEAMessageInputStreamReaderTest with 4 test cases for stream processing
+- Improved test infrastructure for NMEA message processing and validation
+
 **Dependency Updates:**
 
 *GitHub Actions:*
@@ -56,7 +63,8 @@ Developer-oriented release notes for AISmessages - a Java-based library for deco
 - central-publishing-maven-plugin: 0.8.0 → 0.9.0
 
 *Test Dependencies:*
-- jmock-junit5: 2.12.0 → 2.13.1
+- junit-jupiter: 5.9.2 → 6.0.1
+- mockito-junit-jupiter: 2.13.1 → 5.14.2
 
 **Full Changelog:** https://github.com/tbsalling/aismessages/compare/aismessages-4.0.0...HEAD
 
@@ -219,12 +227,12 @@ Bug fixes and stability improvements. JDK 7 backport available.
 
 ## Maven Coordinates
 
-### Development Version (4.1.0-SNAPSHOT)
+### Development Version (4.1.3-SNAPSHOT)
 ```xml
 <dependency>
     <groupId>dk.tbsalling</groupId>
     <artifactId>aismessages</artifactId>
-    <version>4.1.0-SNAPSHOT</version>
+    <version>4.1.3-SNAPSHOT</version>
 </dependency>
 ```
 
