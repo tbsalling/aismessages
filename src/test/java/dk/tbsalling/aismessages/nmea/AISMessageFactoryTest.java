@@ -14,7 +14,7 @@ public class AISMessageFactoryTest {
         int padding = 0;
 
         // Act
-        String result = AISMessageFactory.toBitString(input, padding);
+        String result = AISMessageFactory.toBitString(input, padding).toString();
 
         // Assert
         assertEquals("000000000001010001", result);
@@ -30,7 +30,7 @@ public class AISMessageFactoryTest {
         String expected = expectedFull.substring(0, expectedFull.length() - padding);
 
         // Act
-        String padded = AISMessageFactory.toBitString(input, padding);
+        String padded = AISMessageFactory.toBitString(input, padding).toString();
 
         // Assert
         assertEquals(expected, padded); // Padding 5 should remove last 5 bits
@@ -44,7 +44,7 @@ public class AISMessageFactoryTest {
 
         // Act + Assert: valid bounds 0..5
         for (int p = 0; p <= 5; p++) {
-            String r = AISMessageFactory.toBitString(input, p);
+            String r = AISMessageFactory.toBitString(input, p).toString();
             // Assert
             assertEquals(6 - p, r.length());
         }
@@ -103,11 +103,11 @@ public class AISMessageFactoryTest {
         String lowerW = "w";
 
         // Act
-        String colonBits = AISMessageFactory.toBitString(colon, 0);
-        String semicolonBits = AISMessageFactory.toBitString(semicolon, 0);
-        String upperOBits = AISMessageFactory.toBitString(upperO, 0);
-        String upperPBits = AISMessageFactory.toBitString(upperP, 0);
-        String lowerWBits = AISMessageFactory.toBitString(lowerW, 0);
+        String colonBits = AISMessageFactory.toBitString(colon, 0).toString();
+        String semicolonBits = AISMessageFactory.toBitString(semicolon, 0).toString();
+        String upperOBits = AISMessageFactory.toBitString(upperO, 0).toString();
+        String upperPBits = AISMessageFactory.toBitString(upperP, 0).toString();
+        String lowerWBits = AISMessageFactory.toBitString(lowerW, 0).toString();
 
         // Assert
         assertEquals("001010", colonBits);
