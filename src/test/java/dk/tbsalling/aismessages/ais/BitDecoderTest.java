@@ -130,6 +130,6 @@ public class BitDecoderTest {
         assertEquals(1.0f, parser.getUnsignedFloat(22, 26));
         assertEquals("1111", parser.getBitPattern(0, 4));
         assertEquals(bits.length(), parser.getLength());
-        assertEquals(bits, parser.getBitString());
+        assertEquals(bits, parser.getBitString().toString());
     }
 }
