@@ -136,7 +136,7 @@ public class BitStringParserTest {
         BitStringParser parser = new BitStringParser(originalBitString);
 
         // Act
-        String returnedBitString = parser.getBitString();
+        String returnedBitString = parser.getBitString().toString();
 
         // Assert
         assertEquals(originalBitString, returnedBitString);
