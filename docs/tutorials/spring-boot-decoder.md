@@ -1,8 +1,7 @@
 # Creating a Spring Boot based AIS message decoder
 
 **Published:** 2018-09-13
-
-> **Historical note:** This tutorial uses the separate `aisdecoder` demo service and AISmessages 2.2.x. The concepts still explain how to receive NMEA sentences over HTTP and decode them into AIS message objects.
+**Updated:** 2026-04-26
 
 This tutorial shows how to build a small Spring Boot service that accepts a JSON array of NMEA strings and responds with decoded AIS messages in JSON format.
 
@@ -48,33 +47,52 @@ Response shape:
 
 ## Initialize the Spring Boot project
 
-Generate a starter project from `https://start.spring.io` and verify that the unmodified application builds and runs.
+Generate a Spring Boot 3 project from `https://start.spring.io` using Java 21 and the `web` starter, then verify that the unmodified application builds and runs.
 
 ![Spring Initializr setup](../assets/images/blog_spring_initializr.png)
 
 ## Add AISmessages as a dependency
 
-The original tutorial used:
+Add AISmessages to your build. If a newer release is available in Maven Central, prefer that over the version shown here.
+
+```xml
+<dependency>
+    <groupId>dk.tbsalling</groupId>
+    <artifactId>aismessages</artifactId>
+    <version>4.1.0</version>
+</dependency>
+```
+
+For Gradle:
 
 ```groovy
 dependencies {
-  compile group: 'dk.tbsalling', name: 'aismessages', version: '2.2.3'
+  implementation group: 'dk.tbsalling', name: 'aismessages', version: '4.1.0'
 }
 ```
-
-If you are recreating the example today, use the current AISmessages release instead of the historical version.
 
 ## Add the controller
 
 ```java
-@RestController
-public class AisdecoderController {
-    @Autowired
-    private AisdecoderService aisdecoderService;
+import dk.tbsalling.aismessages.ais.messages.AISMessage;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-    @RequestMapping(
-        value = "/decode",
-        method = RequestMethod.POST,
+import java.util.List;
+
+@RestController
+@RequestMapping("/decode")
+public class AisdecoderController {
+    private final AisdecoderService aisdecoderService;
+
+    public AisdecoderController(AisdecoderService aisdecoderService) {
+        this.aisdecoderService = aisdecoderService;
+    }
+
+    @PostMapping(
         consumes = MediaType.APPLICATION_JSON_VALUE,
         produces = MediaType.APPLICATION_JSON_VALUE
     )
@@ -89,35 +107,32 @@ public class AisdecoderController {
 The core idea is to feed each input NMEA sentence into `NMEAMessageHandler`, which reconstructs complete AIS messages and emits them via a callback.
 
 ```java
-@Service
-@RequestScope
-public class AisdecoderService implements Consumer<AISMessage> {
+import dk.tbsalling.aismessages.ais.messages.AISMessage;
+import dk.tbsalling.aismessages.nmea.NMEAMessageHandler;
+import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import org.springframework.stereotype.Service;
 
-    private final List<AISMessage> aisMessages = new LinkedList<>();
+import java.util.ArrayList;
+import java.util.List;
+
+@Service
+public class AisdecoderService {
 
     public List<AISMessage> decode(List<String> nmeaMessagesAsStrings) {
-        NMEAMessageHandler nmeaMessageHandler = new NMEAMessageHandler("SRC1", this);
+        List<AISMessage> aisMessages = new ArrayList<>();
+        NMEAMessageHandler nmeaMessageHandler = new NMEAMessageHandler("HTTP", aisMessages::add);
 
         nmeaMessagesAsStrings.forEach(nmeaMessageAsString -> {
-            try {
-                NMEAMessage nmeaMessage = NMEAMessage.fromString(nmeaMessageAsString);
-                nmeaMessageHandler.accept(nmeaMessage);
-            } catch (NMEAParseException e) {
-                System.err.printf(e.getMessage());
-            }
+            NMEAMessage nmeaMessage = new NMEAMessage(nmeaMessageAsString);
+            nmeaMessageHandler.accept(nmeaMessage);
         });
 
-        List unparsedMessages = nmeaMessageHandler.flush();
-        unparsedMessages.forEach(unparsedMessage ->
-            System.err.println("NMEA message not used: " + unparsedMessage)
-        );
+        List<NMEAMessage> unparsedMessages = nmeaMessageHandler.flush();
+        if (!unparsedMessages.isEmpty()) {
+            throw new IllegalArgumentException("Incomplete AIS message fragments in request.");
+        }
 
         return aisMessages;
-    }
-
-    @Override
-    public void accept(AISMessage aisMessage) {
-        aisMessages.add(aisMessage);
     }
 }
 ```
@@ -126,16 +141,14 @@ public class AisdecoderService implements Consumer<AISMessage> {
 
 AIS-to-NMEA is not always a 1:1 mapping. Some AIS payloads require multiple NMEA fragments. `NMEAMessageHandler` keeps track of those fragments and only emits a decoded AIS message when all required fragments have been received.
 
+For continuous streams, prefer `AISInputStreamReader`. For HTTP batch decoding, `NMEAMessageHandler` gives you precise control over fragment boundaries and leftover partial messages.
+
 ## Run the service
 
-The original demo instructions were:
+Run the Spring Boot application with Maven or Gradle. For Maven:
 
 ```text
-$ git clone https://github.com/tbsalling/aisdecoder.git
-$ cd aisdecoder/
-$ git checkout 7c02cbcef2ff273ab157e41fa71b193ae3304a93
-$ ./gradlew build
-$ ./gradlew bootRun
+$ ./mvnw spring-boot:run
 ```
 
 Then call the service:

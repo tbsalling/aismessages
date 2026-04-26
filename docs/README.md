@@ -17,6 +17,4 @@ This directory contains long-form AISmessages documentation.
 - [Running AISdecoder in a Kubernetes cluster on AWS](tutorials/kubernetes-on-aws.md)
 - [Introducing Java modules in AISmessages](tutorials/java-modules.md)
 
-## Notes on historical tutorials
-
-Some tutorials use the separate `aisdecoder` demo service and older AISmessages releases. Those steps are still useful reference material, but they are marked as historical where the surrounding tooling or versions are no longer current.
+Each migrated page keeps its original publication date and also records the latest documentation refresh date.

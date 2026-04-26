@@ -1,6 +1,7 @@
 # AIS Application-Specific Messages
 
 **Published:** 2025-01-20
+**Updated:** 2026-04-26
 
 Most AIS users know the standard position reports and static vessel data messages. AIS also supports **Application-Specific Messages (ASM)**, which carry specialized structured data for weather, port operations, safety, inland waterways, and other domain-specific use cases.
 
@@ -64,7 +65,7 @@ These messages support hazard warnings, traffic control, cargo awareness, and pa
 
 ## Decoding ASMs with AISmessages
 
-AISmessages supports ASM decoding directly from the parent binary AIS message.
+AISmessages supports ASM decoding directly from the parent binary AIS message. Decode NMEA sentences using `NMEAMessageHandler` or `AISInputStreamReader`, then cast the resulting `AISMessage` to access the embedded ASM.
 
 ### Example: meteorological and hydrographical data
 
@@ -73,23 +74,32 @@ import dk.tbsalling.aismessages.ais.messages.AISMessage;
 import dk.tbsalling.aismessages.ais.messages.BinaryBroadcastMessage;
 import dk.tbsalling.aismessages.ais.messages.asm.ApplicationSpecificMessage;
 import dk.tbsalling.aismessages.ais.messages.asm.MeteorologicalAndHydrographicalData;
+import dk.tbsalling.aismessages.nmea.NMEAMessageHandler;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class WeatherDataExample {
     public static void main(String[] args) {
         String nmea = "!AIVDM,1,1,,A,85MwpKiKf:MPiQa:ofV@v2mQTfB26oEtbEVqh4j1QDQPHjhpkNJ3,0*11";
 
-        NMEAMessage nmeaMessage = new NMEAMessage(nmea);
-        AISMessage aisMessage = AISMessageFactory.create(nmeaMessage);
+        List<AISMessage> decoded = new ArrayList<>();
+        NMEAMessageHandler handler = new NMEAMessageHandler("EXAMPLE", decoded::add);
+        handler.accept(new NMEAMessage(nmea));
+        handler.flush();
 
-        if (aisMessage instanceof BinaryBroadcastMessage binaryMessage) {
-            ApplicationSpecificMessage asm = binaryMessage.getApplicationSpecificMessage();
+        for (AISMessage aisMessage : decoded) {
+            if (aisMessage instanceof BinaryBroadcastMessage binaryMessage) {
+                ApplicationSpecificMessage asm = binaryMessage.getApplicationSpecificMessage();
 
-            if (asm instanceof MeteorologicalAndHydrographicalData weather) {
-                System.out.println("Weather Report from MMSI: " + binaryMessage.getSourceMmsi());
-                System.out.println("Position: " + weather.getLatitude() + ", " + weather.getLongitude());
-                System.out.println("Wind Speed: " + weather.getWindSpeed() + " knots");
-                System.out.println("Air Temperature: " + weather.getAirTemperature() + " C");
+                if (asm instanceof MeteorologicalAndHydrographicalData weather) {
+                    System.out.println("Weather Report from MMSI: " + binaryMessage.getSourceMmsi());
+                    System.out.println("Position: " + weather.getLatitude() + ", " + weather.getLongitude());
+                    System.out.println("Wind Speed: " + weather.getWindSpeed() + " knots");
+                    System.out.println("Air Temperature: " + weather.getAirTemperature() + " °C");
+                    System.out.println("Wave Height: " + weather.getWaveHeight() + " m");
+                }
             }
         }
     }
@@ -99,12 +109,15 @@ public class WeatherDataExample {
 ### Example: inland waterway data
 
 ```java
+import dk.tbsalling.aismessages.ais.messages.asm.InlandShipStaticAndVoyageRelatedData;
+
 if (asm instanceof InlandShipStaticAndVoyageRelatedData inland) {
     System.out.println("European Vessel ID: "
         + inland.getUniqueEuropeanVesselIdentificationNumber());
     System.out.println("Length: " + inland.getLengthOfShip() + " m");
     System.out.println("Beam: " + inland.getBeamOfShip() + " m");
     System.out.println("Ship Type Code: " + inland.getShipOrCombinationType());
+    System.out.println("Draught: " + inland.getDraught() + " m");
 }
 ```
 
@@ -113,8 +126,9 @@ if (asm instanceof InlandShipStaticAndVoyageRelatedData inland) {
 ```java
 if (asm instanceof AreaNotice notice) {
     System.out.println("Notice Type: " + notice.getNoticeType());
-    System.out.println("Start Time: " + notice.getStartTime());
-    System.out.println("Duration: " + notice.getDuration() + " minutes");
+    System.out.println("Start: " + notice.getMonth() + "/" + notice.getDay()
+        + " " + notice.getHour() + ":" + notice.getMinute());
+    System.out.println("Duration: " + notice.getDurationMinutes() + " minutes");
 }
 ```
 
@@ -122,30 +136,34 @@ if (asm instanceof AreaNotice notice) {
 
 ```java
 if (asm instanceof UnknownApplicationSpecificMessage unknown) {
-    System.out.println("DAC: " + binaryMessage.getDesignatedAreaCode());
-    System.out.println("FI: " + binaryMessage.getFunctionalId());
-    System.out.println("Binary Data: " + binaryMessage.getBinaryData());
+    System.out.println("DAC: " + unknown.getDesignatedAreaCode());
+    System.out.println("FI: " + unknown.getFunctionalId());
+    System.out.println("Binary Data: " + unknown.getBinaryData());
 }
 ```
 
-### Example: mixed stream processing
+### Example: processing a mixed stream
 
 ```java
+import dk.tbsalling.aismessages.AISInputStreamReader;
+import dk.tbsalling.aismessages.ais.messages.BinaryBroadcastMessage;
+import dk.tbsalling.aismessages.ais.messages.asm.ApplicationSpecificMessage;
+import dk.tbsalling.aismessages.ais.messages.asm.MeteorologicalAndHydrographicalData;
+import java.io.InputStream;
+
 AISInputStreamReader reader = new AISInputStreamReader(
     inputStream,
     aisMessage -> {
-        switch (aisMessage.getMessageType()) {
-            case PositionReportClassAScheduled:
-                break;
-            case BinaryBroadcastMessage:
-            case AddressedBinaryMessage:
-                processApplicationSpecificMessage(aisMessage);
-                break;
-            default:
-                break;
+        if (aisMessage instanceof BinaryBroadcastMessage binaryMessage) {
+            ApplicationSpecificMessage asm = binaryMessage.getApplicationSpecificMessage();
+            if (asm instanceof MeteorologicalAndHydrographicalData weather) {
+                System.out.println("Wind: " + weather.getWindSpeed() + " kt at " + weather.getWindDirection() + "°");
+            }
         }
     }
 );
+
+reader.run();
 ```
 
 ## Supported messages in AISmessages

@@ -1,6 +1,7 @@
 # What is AIS?
 
 **Published:** 2019-08-01
+**Updated:** 2026-04-26
 
 Automatic Identification System (AIS) is a radio-based system used by ships to exchange short maritime safety and navigation messages over VHF. Ships larger than 300 BRT and passenger vessels are generally required to transmit AIS data periodically.
 
@@ -56,6 +57,12 @@ The detailed specification is defined in ITU-R M.1371.
 
 AISmessages decodes NMEA-armoured AIS payloads into Java objects so callers do not need to handle the bit-level parsing themselves.
 
+For current integrations, the main entry points are:
+
+- `AISInputStreamReader` for decoding AIS data from streams or in-memory lists of NMEA sentences
+- `NMEAMessageHandler` for request/response or batch-oriented workflows
+- `NMEAMessageUDPSocket` for receiving AIS traffic over UDP
+
 For example, the message above can be decoded into structured data like:
 
 ```json
@@ -93,6 +100,7 @@ For example, the message above can be decoded into structured data like:
 
 - [Creating a Spring Boot based AIS message decoder](../tutorials/spring-boot-decoder.md)
 - [AIS Application-Specific Messages](application-specific-messages.md)
+- [README.md](../../README.md)
 
 ## Important resources
 

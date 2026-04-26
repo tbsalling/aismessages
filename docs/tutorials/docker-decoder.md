@@ -1,40 +1,30 @@
 # Creating, sharing, and running a Docker image to decode AIS messages
 
 **Published:** 2018-09-24
+**Updated:** 2026-04-26
 
-> **Historical note:** This tutorial builds on the `aisdecoder` demo application and remains useful reference material for packaging an AIS decoder service into a container image.
-
-This tutorial shows how to package the AIS decoder service into a Docker image, run it locally, and publish it to Docker Hub.
+This tutorial shows how to package a Spring Boot based AIS decoder service into a Docker image, run it locally, and publish it to a registry.
 
 ## Prerequisites
 
 - Docker installed locally
-- the `aisdecoder` source repository cloned
-- the application built so the runnable artifact exists
+- a Spring Boot service that uses AISmessages
+- the application built so the runnable JAR exists in `target/`
 
-The original walkthrough used:
-
-```text
-$ git clone https://github.com/tbsalling/aisdecoder.git
-$ git checkout 7c02cbcef2ff273ab157e41fa71b193ae3304a93
-$ ./gradlew build
-```
-
-The resulting artifact was:
+With Maven, the build step is typically:
 
 ```text
-$ ls -lh build/libs/
--rw-r--r--  1 tbsalling  staff    16M 24 Sep 11:30 aisdecoder-0.0.1-SNAPSHOT.jar
+$ ./mvnw package
 ```
 
 ## Add a Dockerfile
 
 ```Dockerfile
-FROM openjdk:11-jre-slim
-MAINTAINER Thomas Borg Salling "tbsalling@tbsalling.dk"
-COPY build/libs/aisdecoder-0.0.1-SNAPSHOT.jar /app/aisdecoder.war
-ENTRYPOINT ["java", "-jar", "/app/aisdecoder.war"]
+FROM eclipse-temurin:21-jre
+WORKDIR /app
+COPY target/*.jar /app/app.jar
 EXPOSE 8080/tcp
+ENTRYPOINT ["java", "-jar", "/app/app.jar"]
 ```
 
 Key points:
@@ -47,15 +37,13 @@ Key points:
 ## Build the image
 
 ```text
-$ docker build .
+$ docker build -t aisdecoder:local .
 ```
-
-Docker will produce an image ID such as `9f37cd551132`.
 
 ## Run the image
 
 ```text
-$ docker run -p 8080:8080 9f37cd551132
+$ docker run --rm -p 8080:8080 aisdecoder:local
 ```
 
 With the container running, call the decoder:
@@ -68,30 +56,30 @@ $ curl -X POST http://localhost:8080/decode \
 
 ## Build with a tag
 
-Using tags is much easier than remembering image hashes:
+To publish the image, tag it with a registry-qualified name. For example:
 
 ```text
-$ docker build -t tbsalling/aisdecoder:latest .
+$ docker tag aisdecoder:local ghcr.io/<owner>/aisdecoder:latest
 ```
 
 Run by tag:
 
 ```text
-$ docker run -p 8080:8080 tbsalling/aisdecoder:latest
+$ docker run --rm -p 8080:8080 ghcr.io/<owner>/aisdecoder:latest
 ```
 
-## Publish to Docker Hub
+## Publish to a registry
 
 ```text
-$ docker login --username=tbsalling
-$ docker push tbsalling/aisdecoder:latest
+$ docker login ghcr.io
+$ docker push ghcr.io/<owner>/aisdecoder:latest
 ```
 
 After that, anyone with Docker can fetch and run it:
 
 ```text
-$ docker pull tbsalling/aisdecoder:latest
-$ docker run tbsalling/aisdecoder:latest
+$ docker pull ghcr.io/<owner>/aisdecoder:latest
+$ docker run --rm -p 8080:8080 ghcr.io/<owner>/aisdecoder:latest
 ```
 
 ## Why this matters
