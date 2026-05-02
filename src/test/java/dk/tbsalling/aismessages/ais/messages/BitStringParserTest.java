@@ -251,4 +251,46 @@ public class BitStringParserTest {
         assertEquals(combo.length(), parser.getLength());
     }
 
+    @Test
+    public void caching_multiplePaddedCallsReuseCache() {
+        // Test that multiple calls requesting padding reuse the cached result
+        String bitString = "101";
+        BitStringParser parser = new BitStringParser(bitString);
+        
+        // First call with padding to length 10
+        String result1 = parser.getBits(0, 10);
+        assertEquals("1010000000", result1);
+        
+        // Second call with smaller padding requirement (should reuse cache)
+        String result2 = parser.getBits(0, 8);
+        assertEquals("10100000", result2);
+        
+        // Third call with same padding requirement (should reuse cache)
+        String result3 = parser.getBits(0, 10);
+        assertEquals("1010000000", result3);
+        
+        // Fourth call with larger padding requirement (needs new cache)
+        String result4 = parser.getBits(0, 15);
+        assertEquals("101000000000000", result4);
+        
+        // Fifth call with previous smaller requirement (should reuse new cache)
+        String result5 = parser.getBits(0, 10);
+        assertEquals("1010000000", result5);
+    }
+
+    @Test
+    public void caching_noPaddingNeededReturnsOriginal() {
+        // Test that when no padding is needed, original string is used
+        String bitString = "1010101010";
+        BitStringParser parser = new BitStringParser(bitString);
+        
+        // Request range within original length
+        String result = parser.getBits(0, 8);
+        assertEquals("10101010", result);
+        
+        // Request full length (no padding)
+        String fullResult = parser.getBits(0, 10);
+        assertEquals("1010101010", fullResult);
+    }
+
 }
