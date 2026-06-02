@@ -9,6 +9,7 @@ This directory contains long-form AISmessages documentation.
 - [What is AIS?](articles/what-is-ais.md)
 - [Immutable value objects in AISmessages v4](articles/immutable-value-objects-v4.md)
 - [AIS Application-Specific Messages](articles/application-specific-messages.md)
+- [Performance analysis — String → BitString refactor](articles/performance-analysis.md)
 
 ### Tutorials
 

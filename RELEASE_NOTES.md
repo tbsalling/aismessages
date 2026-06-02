@@ -37,7 +37,7 @@ Developer-oriented release notes for AISmessages - a Java-based library for deco
 The `BitString` migration delivers a ~11× end-to-end speedup on
 `AISMessageFactory.create` and a ~3–6× retained-heap reduction per
 decoded message (curve widens with payload size). See
-[`PERFORMANCE_ANALYSIS.md`](PERFORMANCE_ANALYSIS.md) for benchmarks,
+[`docs/articles/performance-analysis.md`](docs/articles/performance-analysis.md) for benchmarks,
 methodology, and raw JMH/JOL output.
 
 ### Testing Improvements

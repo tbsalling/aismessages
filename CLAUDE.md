@@ -35,7 +35,8 @@ The decoding pipeline is layered. Understanding the seam between NMEA and AIS is
 4. **AIS decoding** — `ais/messages/AISMessageFactory` decodes the 6-bit armoured payload into a `ais/BitString` and
    constructs the correct `AISMessage` subclass. `BitString` is a packed `long[]`-backed immutable bit vector (
    MSB-first) providing typed extraction (unsigned/signed ints, longs, floats, six-bit ASCII text, slices) via
-   shift+mask in 1–2 long loads per field — see `PERFORMANCE_ANALYSIS.md`. `AISMessage` is a sealed abstract class; each
+   shift+mask in 1–2 long loads per field — see `docs/articles/performance-analysis.md`. `AISMessage` is a sealed
+   abstract class; each
    AIS message type is one immutable permitted subclass under `ais/messages/`.
 5. **Application Specific Messages (ASM)** — Binary AIS messages (types 6 and 8) carry ASM payloads decoded into `ais/messages/asm/ApplicationSpecificMessage` subclasses (IMO SN.1/Circ.289 DAC=001, plus regional DAC=200). `BinaryBroadcastMessage#getApplicationSpecificMessage()` is the access point. Unknown DAC/FI combinations resolve to `UnknownApplicationSpecificMessage`.
 

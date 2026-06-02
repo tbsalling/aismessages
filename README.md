@@ -14,7 +14,8 @@ Internally AISmessages uses eager parsing and a fail‑fast design combined with
 `'1'`-characters to a packed `long[]`-backed `BitString`. Field extraction now goes through shift+mask on at most two
 `long` loads instead of `String.substring` + `Integer.parseUnsignedInt`. End-to-end `AISMessageFactory.create` is
 roughly **11× faster** and the retained heap per decoded message shrinks by **~3×** at typical (168-bit) payloads and *
-*~6×** at large (1100-bit) payloads. See [PERFORMANCE_ANALYSIS.md](PERFORMANCE_ANALYSIS.md) for benchmarks and
+*~6×** at large (1100-bit) payloads. See [docs/articles/performance-analysis.md](docs/articles/performance-analysis.md)
+for benchmarks and
 methodology.
 
 For more than 15+ years AISmessages has been used in production in many systems and solutions all over the world.
