@@ -1,235 +1,198 @@
-![Build status](https://travis-ci.org/tbsalling/aismessages.svg?branch=master)
-[![License](http://img.shields.io/badge/license-CCANS4-green.svg)](https://github.com/tbsalling/aismessages/blob/master/LICENSE)
+# AISmessages
 
-Introduction
----
-AISmessages is a Java-based light-weight, zero-dependency, and ultra-efficient message decoder for maritime
-navigation and safety messages compliant with ITU 1371 (NMEA armoured AIS messages).
+AISmessages is a lightweight, zero-dependency Java library for decoding NMEA-armoured AIS messages used in maritime
+navigation and safety systems.
 
-Internally AISmessages uses eager parsing and a fail‑fast design combined with immutable value objects. This minimizes
-runtime surprises and allocation churn, reduces the need for synchronization, and makes message instances safe to share
-across threads — ideal for high‑throughput, concurrent, or real‑time applications (including non‑blocking/reactive
-systems). The library’s low‑allocation, zero‑dependency implementation yields predictable performance and low GC impact
-under heavy load. It fully decodes tens of thousands of NMEA armoured AIS messages per second per CPU core on an Intel
-i7-based laptop. Recent releases have further improved both memory footprint and end‑to‑end decoding performance (see
-the performance notes below).
+It is built for production workloads: fast decoding, immutable message objects, predictable behavior under load, and a
+small footprint that fits comfortably into high-throughput or real-time systems.
 
-**Version 4 Performance:** AISmessages v4 represents a major architectural improvement over earlier versions. By switching from lazy decoding (used in v2.x-3.x) to eager parsing with immutable value objects, v4 dramatically reduces garbage collection pressure and memory churning. The eager approach eliminates the WeakReference overhead and repeated parsing of previous versions, resulting in predictable upfront allocation, zero post-construction allocations, and significantly lower GC overhead — especially beneficial for high-throughput scenarios processing thousands of messages per second.
+## Why teams choose AISmessages
 
-**Packed bit-string representation (v4.1.3+):** the internal payload representation switched from a `String`-of-`'0'`/
-`'1'`-characters to a packed `long[]`-backed `BitString`. Field extraction now goes through shift+mask on at most two
-`long` loads instead of `String.substring` + `Integer.parseUnsignedInt`. End-to-end `AISMessageFactory.create` is
-roughly **11× faster** and the retained heap per decoded message shrinks by **~3×** at typical (168-bit) payloads and *
-*~6×** at large (1100-bit) payloads. See [docs/articles/performance-analysis.md](docs/articles/performance-analysis.md)
-for benchmarks and
-methodology.
+- **Zero runtime dependencies** for simple deployment and fewer surprises
+- **High performance** with eager parsing and packed bit-level decoding
+- **Low memory footprint per message** to keep GC pressure down
+- **Immutable value objects** that are safe to share across threads
+- **Broad protocol coverage** for standard AIS messages and supported application-specific messages
+- **Simple integration** from `InputStream`, UDP, sockets, or your own NMEA pipeline
+- **Proven in production** for more than 15 years
 
-For more than 15+ years AISmessages has been used in production in many systems and solutions all over the world.
+If you are new to AIS, start with [What is AIS?](docs/articles/what-is-ais.md).
 
-If you are new to AIS you can read a short introduction in [docs/articles/what-is-ais.md](docs/articles/what-is-ais.md).
+## Quick start
 
-The [`docs/`](docs/) directory contains project documentation, migrated articles, and legacy tutorials. Start with [docs/README.md](docs/README.md).
+Add AISmessages from Maven Central:
 
-Other AIS projects
----
-In addition to AISmessages, its sister project [AISutils](https://github.com/tbsalling/aisutils) offers higher level functionality such as Tracking and Filtering using AISmessages as a foundation.
+```xml
 
-There is also [AIScli](https://github.com/tbsalling/aiscli) which allows conversion, filtering, etc. of AIS messages from the command line. AIScli 
-is built on top of both AISmessages and AISutils.
-
-Applications, demos, and talks
----
-There are several demos, intros, and public appearances of AISmessages; like for instance:
-
-1. How AISmessages is utilized by OpenRemote, Inc. for the Safe Waterways project in the Beatrix Canal, NL, as explained in this [Youtube video](https://youtu.be/_pcH0KB5J2Q):<br>
-[![IMAGE ALT TEXT HERE](http://img.youtube.com/vi/_pcH0KB5J2Q/0.jpg)](https://youtu.be/_pcH0KB5J2Q)
-
-1. How AISmessages is used in Dakosy's PRISE system to optimise sequencing and arrival of mega-ships on the river Elbe and at the Port of Hamburg ([read reference page](https://www.dakosy.de/en/solutions/port-community-system/prise/))
-
-1. How AISmessages can be used to "decode the air around you" as Bert Jan Schrijver ([@bjschrijver](https://twitter.com/bjschrijver)) of JPoint talks about 
-	1. at DEVOXX BE 2015 ([watch conference video](https://www.youtube.com/watch?v=fOlz0OcZPjc))
-	1. at DEVOXX UK 2015 ([watch conference video](https://www.parleys.com/tutorial/decoding-air-around-you-java-7-hardware)) 
-
-1. A live demo of AISmessages is available on http://ais.tbsalling.dk. 
-
-1. See a simple demo applications in the source code in the `dk.tbsalling.aismessages.demo` package (view via 
-[Github](https://github.com/tbsalling/aismessages/tree/master/src/main/java/dk/tbsalling/aismessages/demo)). 
-
-1. AISMessages is used by Pronto, which enables the Port of Rotterdam to optimize port calls and vessel operations.
-
-1. AISMessages is used by Shiptracker, which enables Port of Rotterdam to show its customers the current position and ETA of ships scheduled to arrive in the port.
-
-
-Programmatic usage
----
-Programmatically the starting point is `AISInputStreamReader`. It takes an InputStream (feeding
-NMEA data), and a consumer of AISMessages which as called back every time an AIS message is decoded. So,
-if you have an InputStream serving data like this:
-
-```
-    !AIVDM,1,1,,A,15Mv5v?P00IS0J`A86KTROvN0<5k,0*12
-    !AIVDM,1,1,,A,15Mwd<PP00ISfGpA7jBr??vP0<3:,0*04
-    !AIVDM,2,1,4,B,55MwW7P00001L@?;GS0<51B08Thj0TdpE800000P0hD556IE07RlSm6P0000,0*0B
-    !AIVDM,2,2,4,B,00000000000,2*23
-    !AIVDM,1,1,,A,15N7th0P00ISsi4A5I?:fgvP2<40,0*06
-    !AIVDM,1,1,,A,15NIEcP000ISrjPA8tEIBq<P089=,0*63
-    !AIVDM,1,1,,B,15MuS0PP00IS00HA8gEtSgvN0<3U,0*61
-    \c:1609841515,s:r3669961*78\!AIVDM,1,1,,A,13ukmN7@0<0pRcHPTkn4P33f0000,0*58
-    \c:1609841515,s:r3669961,g:1-2-1234*0E\!AIVDM,1,1,,A,13ukmN7@0<0pRcHPTkn4P33f0000,0*58
+<dependency>
+    <groupId>dk.tbsalling</groupId>
+    <artifactId>aismessages</artifactId>
+    <version>VERSION</version>
+</dependency>
 ```
 
-then you can decode it into Java POJO's of type AISMessage like this:
+Replace `VERSION` with the latest stable release from Maven Central.
 
-``` java
-
-    public class DemoApp {
-
-        public static void main(String[] args) throws IOException {
-
-           InputStream inputStream = ...
-
-           AISInputStreamReader streamReader
-                = new AISInputStreamReader(
-                    inputStream,
-                    aisMessage -> System.out.println(aisMessage))
-           );
-
-           streamReader.run();
-	    }
-
-    }
-```
-
-The second argument to the `AISInputStreamReader` constructor (`aisMessage -> System.out.println(aisMessage)`) is a 
-`Consumer<? super AISMessage>` which consumes decoded AIS messages in the form of `AISMessage` objects.
-
-`AISMessage` has several subclasses - one for each type of AIS message, which can be decoded. For instance an AIS
-message of type 5 "Static and voyage related data" are represented by objects of class `ShipAndVoyageData` as shown here
-in fragments:
+Then decode AIS messages directly from an `InputStream`:
 
 ```java
-public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
-    ...
-    public IMO getImo() { ...}
-    public String getCallsign() { ...}
-    public String getShipName() { ...}
-    public ShipType getShipType() { ...}
-    public int getToBow() { ...}
-    public int getToStern() { ...}
-    public int getToStarboard() { ...}
-    public int getToPort() { ...}
-    ...
+import dk.tbsalling.aismessages.AISInputStreamReader;
+
+import java.io.InputStream;
+
+public class DemoApp {
+    public static void main(String[] args) {
+        InputStream inputStream = ...;
+
+        AISInputStreamReader reader = new AISInputStreamReader(
+                inputStream,
+                aisMessage -> System.out.println(aisMessage)
+        );
+
+        reader.run();
+    }
 }
 ```
 
-Application Specific Messages (ASM)
----
-AISmessages supports decoding of Application Specific Messages (ASM) transmitted via AIS messages type 6 (addressed binary message) and type 8 (binary broadcast message). These messages carry specialized information according to various standards.
+`AISInputStreamReader` is the easiest entry point for most applications. Feed it NMEA sentences and it calls your
+consumer with decoded `AISMessage` instances.
 
-### IMO SN.1/Circ.289 - International Application Specific Messages (DAC=001)
+## What you get
 
-The library implements the 24 standardized application-specific messages defined by IMO SN.1/Circ.289 for international use (Designated Area Code = 001):
+AISmessages handles the full decoding path from NMEA framing to strongly typed AIS message objects:
 
-| FI | Message Type | Class |
-|----|--------------|-------|
-| 0, 1 | Text Description | `TextDescription` |
-| 10 | UTC/Date Inquiry | `UtcDateInquiry` |
-| 11 | UTC/Date Response | `UtcDateResponse` |
-| 14 | Tidal Window | `TidalWindow` |
-| 17 | VTS Generated/Synthetic Targets | `VtsGeneratedSyntheticTargets` |
-| 18, 19 | Marine Traffic Signal | `MarineTrafficSignal` |
-| 20 | Berthing Data | `BerthingData` |
-| 21 | Weather Observation Report from Ship | `WeatherObservation` |
-| 22, 23 | Area Notice (broadcast/addressed) | `AreaNotice` |
-| 24 | Extended Ship Static and Voyage Related Data | `ExtendedShipStaticAndVoyageRelatedData` |
-| 25 | Dangerous Cargo Indication | `DangerousCargoIndication` |
-| 26 | Environmental | `Environmental` |
-| 27, 28 | Route Information (broadcast/addressed) | `RouteInformation` |
-| 31 | Meteorological and Hydrographical Data | `MeteorologicalAndHydrographicalData` |
-| 40 | Number of Persons on Board | `NumberOfPersonsOnBoard` |
+1. Reads NMEA AIS sentences from streams or other sources
+2. Validates and reassembles fragmented messages
+3. Decodes 6-bit armoured AIS payloads
+4. Produces immutable Java objects for the concrete AIS message types
 
-### Other Regional Application Specific Messages
+Each AIS message type is represented by its own class, making the decoded data easy to consume in application code.
 
-- **DAC=200, FI=10**: Inland Ship Static and Voyage Related Data (`InlandShipStaticAndVoyageRelatedData`)
+For example, a type 5 message is represented as `ShipAndVoyageData`, exposing fields such as IMO number, callsign, ship
+name, ship type, and vessel dimensions.
 
-### Using Application Specific Messages
+## Performance
 
-Application Specific Messages can be accessed from the parent binary message:
+AISmessages is designed to stay fast and predictable when message rates climb.
+
+- The current architecture uses **eager parsing** and **immutable value objects**, reducing repeated work and garbage
+  collection pressure.
+- The internal packed `BitString` representation avoids expensive string-based bit handling and improves both speed and
+  memory efficiency.
+- The packed representation also lowers retained heap per decoded message by roughly **3x** for typical payload sizes
+  and up to **6x** for large payloads.
+- A recent JMH benchmark measured `AISMessageFactoryBenchmark.decodeOne` at **108.136 ns/op**, or about **9.25 million
+  messages/second** on an Apple M2 Max in a single-threaded, in-memory benchmark.
+
+Run the benchmark locally with:
+
+```sh
+./mvnw -Pbench test
+```
+
+Results are written to `target/jmh-result.txt`.
+
+For more detail, see:
+
+- [Immutable value objects in AISmessages v4](docs/articles/immutable-value-objects-v4.md)
+- [Performance analysis — String to BitString refactor](docs/articles/performance-analysis.md)
+
+## Application-Specific Messages (ASM)
+
+AISmessages supports decoding of application-specific messages carried in AIS message types 6 and 8.
+
+Supported coverage includes:
+
+- The 24 IMO SN.1/Circ.289 international application-specific message definitions for **DAC=001**
+- Regional support for **DAC=200, FI=10** (`InlandShipStaticAndVoyageRelatedData`)
+- A safe fallback to `UnknownApplicationSpecificMessage` for unsupported combinations
+
+Example:
 
 ```java
+import dk.tbsalling.aismessages.ais.messages.BinaryBroadcastMessage;
+import dk.tbsalling.aismessages.ais.messages.asm.ApplicationSpecificMessage;
+import dk.tbsalling.aismessages.ais.messages.asm.WeatherObservation;
+
 BinaryBroadcastMessage binaryMessage = (BinaryBroadcastMessage) aisMessage;
 ApplicationSpecificMessage asm = binaryMessage.getApplicationSpecificMessage();
 
 if (asm instanceof WeatherObservation weather) {
     System.out.println("Temperature: " + weather.getAirTemperature());
-    System.out.println("Wind Speed: " + weather.getAverageWindSpeed());
-    // ... access other weather data
+        System.out.
+
+println("Wind speed: "+weather.getAverageWindSpeed());
 }
 ```
 
-Unknown or unsupported application specific messages are represented as `UnknownApplicationSpecificMessage`, which provides access to the raw binary data.
+For the full overview, see [AIS Application-Specific Messages](docs/articles/application-specific-messages.md).
 
-Receiving AIS messages via UDP
----
-AISmessages also supports receiving AIS messages via UDP, which is a common method for receiving AIS data from 
-various sources. Here's how to use it:
+## Receiving AIS over UDP
+
+AISmessages can also listen for AIS data over UDP:
 
 ```java
-import dk.tbsalling.aismessages.ais.messages.AISMessage;
 import dk.tbsalling.aismessages.nmea.NMEAMessageHandler;
 import dk.tbsalling.aismessages.nmea.NMEAMessageUDPSocket;
 
 public class UDPExample {
-    public static void main(String[] args) {
-        try {
-            NMEAMessageUDPSocket udpSocket = new NMEAMessageUDPSocket(
-                "127.0.0.1",  // Host address to bind to
-                10110,        // UDP port to listen on
-                new NMEAMessageHandler("UDPSRC", aisMessage -> {
-                    // Process each received AIS message
-                    System.out.println("Received: " + aisMessage);
-                })
-            );
-            udpSocket.run();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    public static void main(String[] args) throws Exception {
+        NMEAMessageUDPSocket udpSocket = new NMEAMessageUDPSocket(
+                "127.0.0.1",
+                10110,
+                new NMEAMessageHandler("UDPSRC", aisMessage ->
+                        System.out.println("Received: " + aisMessage))
+        );
+
+        udpSocket.run();
     }
 }
 ```
 
-The UDP receiver will bind to the specified host and port and process incoming UDP packets containing 
-NMEA-formatted AIS messages. You can stop the receiver by calling `udpSocket.requestStop()`.
+See `dk.tbsalling.aismessages.demo.UDPDemoApp` for a complete example.
 
-A complete demo application is available in the `dk.tbsalling.aismessages.demo.UDPDemoApp` class.
+## Demos and related projects
 
-Obtaining AISmessages
----
-You do not need to compile AISmessages yourself. It is available in Maven Central. So if you are using Maven, all you
-need to do is add these lines to your pom.xml (or replace the version with a newer release from Maven Central if available):
+The repository includes ready-to-run demo applications:
 
-``` xml
-...
-<dependency>
-    <groupId>dk.tbsalling</groupId>
-    <artifactId>aismessages</artifactId>
-    <version>4.1.0</version>
-</dependency>
-...
-```
+- `dk.tbsalling.aismessages.demo.SimpleDemoApp`
+- `dk.tbsalling.aismessages.demo.SocketDemoApp`
+- `dk.tbsalling.aismessages.demo.UDPDemoApp`
 
-License
----
-AISmessages is released under the Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International (CC BY-NC-SA
-4.0)
-license - which means that it is free for non-commercial use. For full license details see the
-[LICENSE](LICENSE) file.
+You may also want:
 
-Commercial License
----
-AISmessages (C) Copyright 2011- by S-Consult ApS, VAT no. DK31327490, Denmark.
+- [AISutils](https://github.com/tbsalling/aisutils) for higher-level AIS functionality such as tracking and filtering
+- [AIScli](https://github.com/tbsalling/aiscli) for command-line conversion, filtering, and processing
 
-AISmessages is licensed under a Creative Commons Attribution-NonCommercial-ShareAlike 4.0 Unported License.
+## Documentation
 
-To obtain an alternative commercial license and/or support contact
-[Thomas Borg Salling](mailto:tbsalling@tbsalling.dk?subject=[GitHub]%20AISmessages%20license) - tbsalling@tbsalling.dk.
+The [`docs/`](docs/) directory contains articles and tutorials, including:
+
+- [What is AIS?](docs/articles/what-is-ais.md)
+- [Creating a Spring Boot based AIS message decoder](docs/tutorials/spring-boot-decoder.md)
+- [Creating, sharing, and running a Docker image to decode AIS messages](docs/tutorials/docker-decoder.md)
+- [Running AISdecoder in a Kubernetes cluster on AWS](docs/tutorials/kubernetes-on-aws.md)
+- [Introducing Java modules in AISmessages](docs/tutorials/java-modules.md)
+
+Start here: [docs/README.md](docs/README.md)
+
+## Real-world use
+
+AISmessages has been used in production in a wide range of maritime solutions, including traffic monitoring, port
+operations, tracking, and decision support systems.
+
+Public references and talks include:
+
+- OpenRemote's Safe Waterways project in the Beatrix Canal, NL ([video](https://youtu.be/_pcH0KB5J2Q))
+- Dakosy's PRISE system for mega-ship sequencing on the Elbe and in the Port of
+  Hamburg ([reference](https://www.dakosy.de/en/solutions/port-community-system/prise/))
+- Bert Jan Schrijver's "Decode the air around you" talks at DEVOXX BE and DEVOXX
+  UK ([YouTube](https://www.youtube.com/watch?v=fOlz0OcZPjc), [Parleys](https://www.parleys.com/tutorial/decoding-air-around-you-java-7-hardware))
+
+## License
+
+AISmessages is released under
+the [Creative Commons Attribution-NonCommercial-ShareAlike 4.0 International license](LICENSE).
+
+That means it is free for non-commercial use. If you need a commercial license or support,
+contact [Thomas Borg Salling](mailto:tbsalling@tbsalling.dk?subject=[GitHub]%20AISmessages%20license).
