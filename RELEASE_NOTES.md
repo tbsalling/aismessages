@@ -1,6 +1,7 @@
 # AISmessages Release Notes
 
-Developer-oriented release notes for AISmessages - a Java-based library for decoding AIS messages from digital VHF radio traffic.
+Application-facing release notes for AISmessages - a Java library for decoding AIS messages from digital VHF radio
+traffic.
 
 ---
 
@@ -12,47 +13,38 @@ Developer-oriented release notes for AISmessages - a Java-based library for deco
 
 **Packed `BitString` replaces `String`-of-`'0'`/`'1'` payload representation:**
 
-- Introduced `dk.tbsalling.aismessages.ais.BitString` — a packed, immutable
-  `long[]`-backed bit vector with typed accessors (`getUnsignedInt`,
-  `getSignedInt`, `getUnsignedLong`, `getBoolean`, `getSignedFloat`,
-  `getUnsignedFloat`, `getSixBitAsciiString`, `getBits`, `slice`,
-  `withLengthPaddedTo`).
-- Removed `dk.tbsalling.aismessages.ais.BitStringParser` and
-  `dk.tbsalling.aismessages.ais.BitDecoder`.
-- `Metadata.bitString()` now returns `BitString` instead of `String`. Call
-  `.toString()` on the result to get the legacy `'0'`/`'1'` form.
-- Constructor parameter types changed from `String bitString` to
-  `BitString bitString` on `AISMessage` and all 36 permitted subclasses.
-- `ApplicationSpecificMessage.binaryData` is now `BitString` (was `String`);
-  `ApplicationSpecificMessage.create(int, int, BitString)` signature updated
-  for all 17 ASM subclasses.
-- `SOTDMACommunicationState.fromBitString(BitString)` and
-  `ITDMACommunicationState.fromBitString(BitString)` now take `BitString`
-  (was `String`); the redundant regex validation was removed.
-- `AISMessageFactory.toBitString(String, int)` static helper removed in
-  favour of `BitString.fromNmeaPayload(String, int)`.
+- Introduced `dk.tbsalling.aismessages.ais.BitString`, a packed immutable bit vector with typed accessors such as
+  `getUnsignedInt`, `getSignedInt`, `getUnsignedLong`, `getBoolean`, `getSignedFloat`, `getUnsignedFloat`, `slice`, and
+  `withLengthPaddedTo`.
+- Removed `dk.tbsalling.aismessages.ais.BitStringParser` and `dk.tbsalling.aismessages.ais.BitDecoder`.
+- `Metadata.bitString()` now returns `BitString` instead of `String`. Call `.toString()` on the result to get the legacy
+  `'0'`/`'1'` representation.
+- Constructor parameter types changed from `String bitString` to `BitString bitString` on `AISMessage` and all permitted
+  subclasses.
+- `ApplicationSpecificMessage.binaryData` is now `BitString` instead of `String`, and
+  `ApplicationSpecificMessage.create(int, int, BitString)` was updated accordingly.
+- `SOTDMACommunicationState.fromBitString(...)` and `ITDMACommunicationState.fromBitString(...)` now take `BitString`.
+- `AISMessageFactory.toBitString(String, int)` was removed in favor of `BitString.fromNmeaPayload(String, int)`.
+
+### New Public APIs
+
+- Added `dk.tbsalling.aismessages.ais.SixBitAsciiCodec` for working with custom six-bit ASCII alphabets on top of
+  `BitString`.
+- Added `dk.tbsalling.aismessages.ais.AISText` for AIS text decoding with AIS filler handling (`'@'` becomes space and
+  surrounding whitespace is trimmed).
+- Added `dk.tbsalling.aismessages.nmea.NMEAArmouring` for explicit NMEA armouring encode/decode operations.
 
 ### Performance
 
-The `BitString` migration delivers a ~11× end-to-end speedup on
-`AISMessageFactory.create` and a ~3–6× retained-heap reduction per
-decoded message (curve widens with payload size). See
-[`docs/articles/performance-analysis.md`](docs/articles/performance-analysis.md) for benchmarks,
-methodology, and raw JMH/JOL output.
+- `AISMessageFactory.create(...)` is now about **11x faster** end-to-end.
+- Retained heap per decoded message is reduced by roughly **3x to 6x**, depending on payload size.
 
-### Testing Improvements
-- Comprehensive NMEA message validation test coverage
-- Added NMEAMessageTest with 9 test cases for checksum validation
-- Added NMEAMessageHandlerTest with 5 test cases for message handling
-- Added NMEAMessageInputStreamReaderTest with 4 test cases for stream processing
-- Improved test infrastructure for NMEA message processing and validation
-- Added `BitStringTest` covering the new packed bit-vector accessors,
-  cross-word reads, sign extension, six-bit ASCII edge cases, and slicing.
+### Upgrade Notes
 
-### Dependency Updates
-
-*Test Dependencies:*
-- mockito-junit-jupiter: 5.14.2
+- The README now reflects the `BitString`-based API.
+- NMEA terminology was standardized from "fill bits" to "padding bits" in documentation and related APIs.
+- See [`docs/articles/performance-analysis.md`](docs/articles/performance-analysis.md) for benchmarks and migration
+  context.
 
 **Full Changelog:** https://github.com/tbsalling/aismessages/compare/aismessages-4.1.2...HEAD
 
@@ -62,7 +54,7 @@ methodology, and raw JMH/JOL output.
 
 **Release Date:** 2025-11-19
 
-Version bump release.
+No application-facing changes.
 
 **Full Changelog:** https://github.com/tbsalling/aismessages/compare/aismessages-4.1.1...aismessages-4.1.2
 
@@ -74,31 +66,17 @@ Version bump release.
 
 ### Performance Improvements
 
-**charToSixBit Optimization:**
-- Replaced TreeMap with array-based lookup for charToSixBit conversion
-- **3.97x performance improvement** for character to six-bit conversion
-- Reduces CPU overhead in AIS message decoding
+- Replaced the character-to-six-bit lookup with an array-based implementation.
+- Delivers about **3.97x faster** character-to-six-bit conversion during AIS decoding.
 
-### New Features & Improvements
+### Upgrade Notes
 
-**Documentation:**
-- Added comprehensive upgrade guide for migrating from AISmessages 3.3.1 to 4.1.0
-- Step-by-step instructions for handling breaking API changes
-- Examples for updated Java module system usage
-- README.md example code aligned with current API
+- Added upgrade guidance for moving from AISmessages 3.3.1 to 4.1.0.
+- Added Java modules examples and refreshed README usage examples to match the current API.
 
-**Code Quality:**
-- Modernized instanceof checks to use Java pattern matching
-- Enhanced documentation of v4 performance improvements
-- Fixed resource leak issues
-- Added pull request template
-- Added Copilot instructions for project development
+### Fixes
 
-**Dependency Updates:**
-
-*Test Dependencies:*
-- junit-jupiter: 5.9.2 → 6.0.1
-- junit-platform-commons updated to match JUnit 6.0.1
+- Fixed resource leak issues.
 
 **Full Changelog:** https://github.com/tbsalling/aismessages/compare/aismessages-4.1.0...aismessages-4.1.1
 
@@ -110,58 +88,35 @@ Version bump release.
 
 ### New Features & Improvements
 
-**Expanded Application Specific Messages (ASM) - IMO SN.1/Circ.289:**
-- Added 12 new ASM decoders for IMO standardized messages (DAC=001)
-- Text Description (FI=0, 1) - `TextDescription`
-- UTC/Date Inquiry (FI=10) - `UtcDateInquiry`
-- UTC/Date Response (FI=11) - `UtcDateResponse`
-- Tidal Window (FI=14) - `TidalWindow`
-- VTS Generated/Synthetic Targets (FI=17) - `VtsGeneratedSyntheticTargets`
-- Marine Traffic Signal (FI=18, 19) - `MarineTrafficSignal`
-- Area Notice (FI=22, 23) - `AreaNotice`
-- Dangerous Cargo Indication (FI=25) - `DangerousCargoIndication`
-- Environmental (FI=26) - `Environmental`
-- Route Information (FI=27, 28) - `RouteInformation`
-- Meteorological and Hydrographical Data (FI=31) - `MeteorologicalAndHydrographicalData`
-- Weather Observation (FI=21) - `WeatherObservation`
-- Brings total ASM support to 18 message types (previously 6)
+**Expanded Application Specific Messages (ASM) support - IMO SN.1/Circ.289:**
 
-**UDP Receiver Support:**
-- New `NMEAMessageUDPSocket` class for receiving AIS messages via UDP
-- Enables real-time AIS data reception from UDP sources
-- Simple API: bind to host and port, provide message handler
-- Complete `UDPDemoApp` example demonstrating UDP receiver usage
-- Ideal for integration with AIS data feeds and network sources
+- Added 12 new ASM decoders for IMO standardized messages (DAC=001):
+  - `TextDescription` (FI=0, 1)
+  - `UtcDateInquiry` (FI=10)
+  - `UtcDateResponse` (FI=11)
+  - `TidalWindow` (FI=14)
+  - `VtsGeneratedSyntheticTargets` (FI=17)
+  - `MarineTrafficSignal` (FI=18, 19)
+  - `WeatherObservation` (FI=21)
+  - `AreaNotice` (FI=22, 23)
+  - `DangerousCargoIndication` (FI=25)
+  - `Environmental` (FI=26)
+  - `RouteInformation` (FI=27, 28)
+  - `MeteorologicalAndHydrographicalData` (FI=31)
+- Total ASM support increased from 6 to 18 message types.
 
-**NMEA Message Handling Improvements:**
-- New `NMEAMessageHandlerStrict` class for stricter NMEA message validation
-- Enhanced error handling and message validation options
-- Added comprehensive NMEA checksum validation
+**UDP receiver support:**
 
-**Dependency Management:**
-- Added Dependabot configuration for automated weekly dependency updates
-- Configured to check Maven dependencies, GitHub Actions, and Maven wrapper updates
-- Grouped dependency updates by type for easier review
+- Added `NMEAMessageUDPSocket` for receiving AIS messages via UDP.
+- Supports binding to a host/port and processing incoming messages through a handler callback.
 
-**Bug Fixes:**
-- Fixed GitHub license detection by consolidating to single LICENSE file with correct version
-- Fixed validation error message for binary broadcast messages exceeding 1008 bits
+**NMEA handling improvements:**
 
-**Dependency Updates:**
+- Added `NMEAMessageHandlerStrict` for strict checksum validation and stricter NMEA message handling.
 
-*GitHub Actions:*
-- actions/checkout: 4 → 5
-- actions/setup-java: 4 → 5
+### Fixes
 
-*Maven Plugins:*
-- maven-gpg-plugin: 3.2.6 → 3.2.8
-- maven-javadoc-plugin: 3.10.1 → 3.12.0
-- maven-assembly-plugin: 3.7.0 → 3.7.1
-- maven-surefire-plugin: 3.5.1 → 3.5.4
-- central-publishing-maven-plugin: 0.8.0 → 0.9.0
-
-*Test Dependencies:*
-- jmock-junit5: 2.12.0 → 2.13.1
+- Fixed the validation error message for binary broadcast messages exceeding 1008 bits.
 
 **Full Changelog:** https://github.com/tbsalling/aismessages/compare/aismessages-4.0.0...aismessages-4.1.0
 
@@ -172,153 +127,140 @@ Version bump release.
 **Major Version Update - Java 21 Required**
 
 ### Breaking Changes
-- **Minimum Java version increased from 11 to 21**
-- AIS message classes are now immutable value objects using Lombok @Value
-- Architectural refactoring: parsing logic separated from data models
+
+- **Minimum Java version increased from 11 to 21.**
+- AIS message classes are now immutable value objects.
+- Message decoding is now eager rather than lazy, so fields are parsed at construction time.
 
 ### New Features & Improvements
 
-**Immutable Message Objects:**
-- All AIS message classes now use Lombok @Value annotation for true immutability
-- Message objects are now pure data carriers with no parsing responsibilities
-- Improved thread-safety and reduced mutation-related bugs
-- Added EqualsAndHashCode support for all message types
+**Immutable message objects:**
 
-**Architecture Improvements:**
-- Introduced BitStringParser class to separate parsing concerns from value objects
-- Cleaner separation between NMEA message handling and AIS message decoding
-- Enhanced maintainability through better single-responsibility design
+- Message objects are pure data carriers with no parsing responsibilities.
+- Improved thread safety and fewer mutation-related bugs.
+- Added stable `equals()` / `hashCode()` behavior across message types.
 
-**Performance & Memory Improvements:**
+**Performance and memory improvements:**
 
-Version 4 represents a fundamental shift from the lazy decoding approach used in versions 2.x and 3.x to an eager parsing model with immutable value objects. This architectural change dramatically reduces garbage collection pressure and memory churning:
+- Eliminates the old `WeakReference`-based lazy-decoding overhead.
+- Decodes messages in a single pass during construction.
+- Moves allocation cost to construction time and avoids follow-up allocations during field access.
+- Reduces GC pressure in high-throughput and memory-constrained workloads.
 
-- **Eager parsing eliminates WeakReference overhead**: Earlier versions used lazy decoding with WeakReference caching for field values. This approach required the garbage collector to manage and potentially reclaim cached field values, creating constant GC pressure. V4 parses all fields upfront into final immutable fields, eliminating WeakReference overhead entirely.
-
-- **Single-pass parsing**: V4 decodes each AIS message in one pass during construction, storing all field values in final fields. In contrast, lazy decoding could trigger repeated parsing if the garbage collector reclaimed cached values, leading to unpredictable CPU spikes and allocation churn.
-
-- **Predictable, upfront allocation**: All memory allocation happens at message construction time in a single, predictable burst. This eliminates the scattered, on-demand allocations of lazy decoding and enables more efficient GC patterns (Eden-only allocations for short-lived messages).
-
-- **Compact memory layout**: Immutable value objects with only final primitive and reference fields have better CPU cache locality and lower per-instance overhead compared to objects with additional caching structures and weak references.
-
-- **Zero allocation after construction**: Once constructed, V4 message objects allocate no additional memory during field access. Lazy approaches could allocate wrapper objects, strings, and cache entries on every field access if cached values were reclaimed.
-
-The result is dramatically lower GC overhead, especially under high message throughput where V2/V3's lazy approach would cause the garbage collector to continuously manage weak references and cached field values. V4's eager approach is particularly beneficial in memory-constrained environments, real-time systems, and high-throughput scenarios processing thousands of messages per second.
-
-**Build & Tooling Updates:**
-- Java compiler target updated to Java 21
-- Added Lombok 1.18.42 as provided dependency for compile-time code generation
-- Maven compiler plugin updated to 3.14.1
-- Lombok configuration with @Generated annotations for better tool integration
-
-**Infrastructure:**
-- GitHub Actions workflow updated for Java 21
-- Added AGENTS.md with AI coding agent guidelines
-- Enhanced documentation structure
-
-**Full Changelog:** https://github.com/tbsalling/aismessages/compare/aismessages-3.5.1...HEAD
+**Full Changelog:** https://github.com/tbsalling/aismessages/compare/aismessages-3.5.1...aismessages-4.0.0
 
 ---
 
-## Version 3.5.1 (2025-07-22)
+## Version 3.5.1
 
-**Build & Tooling Updates:**
-- Upgraded Maven wrapper from 3.5.0 to 3.9.11
-- Updated Maven plugins:
-  - maven-compiler-plugin: 3.10.1 → 3.13.0
-  - maven-javadoc-plugin: 3.2.0 → 3.10.1
-  - maven-source-plugin: 3.2.1 → 3.3.1
-  - maven-surefire-plugin: 3.0.0-M6 → 3.5.1
-  - maven-assembly-plugin: 3.3.0 → 3.7.0
-  - maven-gpg-plugin: 1.6 → 3.2.6
-  - JUnit Jupiter: 5.7.0 → 5.9.2
+**Release Date:** 2025-07-22
 
-**Publishing Changes:**
-- Removed Sonatype OSS parent POM dependency
-- Added central-publishing-maven-plugin (0.8.0) for Maven Central deployment
-- Simplified release profile configuration
-- Moved GPG signing configuration from profile to main build
+No significant application-facing API changes.
 
 **Full Changelog:** https://github.com/tbsalling/aismessages/compare/aismessages-3.5.0...aismessages-3.5.1
 
 ---
 
-## Version 3.5.0 (2025-07-xx)
+## Version 3.5.0
+
+**Release Date:** 2025-07-xx
 
 No specific release notes available. See version 3.4.2 for previous changes.
 
 ---
 
-## Version 3.4.2 (2024-01-20)
+## Version 3.4.2
 
-Maintenance release with dependency and build updates.
+**Release Date:** 2024-01-20
+
+Maintenance release with no significant application-facing changes.
 
 ---
 
-## Version 3.2.3 (2022-01-11)
+## Version 3.2.3
+
+**Release Date:** 2022-01-11
 
 **Major Version Update - Java 11 Required**
 
 ### Breaking Changes
-- **Minimum Java version increased from 8 to 11**
-- Removed deprecated TIME_DECODER - use individual ETA field getters instead
-- API changes in message validation and error handling
+
+- **Minimum Java version increased from 8 to 11.**
+- Removed deprecated `TIME_DECODER`; use the individual ETA field getters instead.
+- Updated message validation and error handling APIs.
 
 ### New Features
 
-**NMEA Tag Block Support:**
-- Full support for NMEA 0183 Tag Blocks with parameters c, d, g, n, r, s, t
-- New classes: NMEATagBlock, NMEATagBlockParameterCode, TAGBlockParameterCodeType
-- Tag blocks accessible via AISMessage.getNmeaTagBlock()
+**NMEA Tag Block support:**
+
+- Added support for NMEA 0183 Tag Blocks with parameters `c`, `d`, `g`, `n`, `r`, `s`, and `t`.
+- Added `NMEATagBlock`, `NMEATagBlockParameterCode`, and `TAGBlockParameterCodeType`.
+- Tag blocks are accessible through `AISMessage.getNmeaTagBlock()`.
 
 **Application Specific Messages (ASM):**
-- New framework for decoding binary application-specific messages
-- Implemented ASM decoders: DAC 1 FI 20 (Berthing Data), DAC 1 FI 24 (Extended Ship Static), DAC 1 FI 40 (Persons on Board), DAC 200 FI 10 (Inland Ship Data)
-- Access via getApplicationSpecificMessage()
 
-**Enhanced ETA Handling:**
-- New getEtaAfterReceived() method returns Optional<ZonedDateTime>
-- Individual ETA component getters: getEtaMonth(), getEtaDay(), getEtaHour(), getEtaMinute()
+- Added a framework for decoding binary application-specific messages.
+- Implemented ASM decoders for:
+  - DAC 1 FI 20 (`BerthingData`)
+  - DAC 1 FI 24 (`ExtendedShipStaticAndVoyageRelatedData`)
+  - DAC 1 FI 40 (`NumberOfPersonsOnBoard`)
+  - DAC 200 FI 10 (`InlandShipStaticAndVoyageRelatedData`)
+- ASM payloads are accessible through `getApplicationSpecificMessage()`.
 
-**Raw Data Access:**
-- New getRaw*() methods for encoded values: getRawLatitude(), getRawLongitude(), getRawSpeedOverGround(), getRawCourseOverGround(), getRawDraught()
+**Enhanced ETA handling:**
 
-### Infrastructure Changes
-- Added module-info.java for Java Platform Module System (JPMS)
-- Migrated from java.util.logging.Logger to System.Logger
-- Added GitHub Actions workflow for build and test
-- Zero runtime dependencies maintained
+- Added `getEtaAfterReceived()` returning `Optional<ZonedDateTime>`.
+- Added individual ETA component getters: `getEtaMonth()`, `getEtaDay()`, `getEtaHour()`, `getEtaMinute()`.
+
+**Raw data access:**
+
+- Added raw-value accessors such as `getRawLatitude()`, `getRawLongitude()`, `getRawSpeedOverGround()`,
+  `getRawCourseOverGround()`, and `getRawDraught()`.
+
+### Platform Support
+
+- Added `module-info.java` for Java Platform Module System (JPMS) support.
 
 ---
 
-## Version 2.2.3 (2018-06-15)
+## Version 2.2.3
+
+**Release Date:** 2018-06-15
 
 Maintenance release for Java 8.
 
 ---
 
-## Version 2.2.1 (2016-02-25)
+## Version 2.2.1
+
+**Release Date:** 2016-02-25
 
 Bug fixes and stability improvements. JDK 7 backport available.
 
 ---
 
-## Version 2.1.0 (2015-02-03)
+## Version 2.1.0
 
-**Major Feature: AISInputStreamReader**
-- Introduced AISInputStreamReader for simplified stream processing
-- Functional interface support with Consumer<AISMessage>
-- Communication State decoding for Class A position reports
+**Release Date:** 2015-02-03
+
+### Major Feature: `AISInputStreamReader`
+
+- Introduced `AISInputStreamReader` for simplified stream processing.
+- Added functional interface support with `Consumer<AISMessage>`.
+- Added communication-state decoding for Class A position reports.
 
 ---
 
-## Version 2.0.2 (2015-01-26)
+## Version 2.0.2
 
-**First Production-Ready v2 Release**
-- Java 8 required (zero-dependency maintained)
-- Lazy decoding instead of eager decoding
-- Memory-efficient with WeakReference usage
-- Better ITU 1371-5 compliance
+**Release Date:** 2015-01-26
+
+### First production-ready v2 release
+
+- Java 8 required.
+- Zero runtime dependencies maintained.
+- Introduced lazy decoding.
+- Improved ITU 1371-5 compliance.
 
 ---
 
