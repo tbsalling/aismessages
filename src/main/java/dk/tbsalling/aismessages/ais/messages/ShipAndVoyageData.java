@@ -135,10 +135,10 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
         if(received == null) {
             return Optional.empty();
         }
-        int month = this.getEtaMonth();
-        int day = this.getEtaDay();
-        int hour = this.getEtaHour() == 24 ? 0 : this.getEtaHour();
-        int minute = this.getEtaMinute() == 60 ? 0 : this.getEtaMinute();
+        int month = etaMonth;
+        int day = etaDay;
+        int hour = etaHour == 24 ? 0 : etaHour;
+        int minute = etaMinute == 60 ? 0 : etaMinute;
         if(month <= 0 || month > 12 || day <= 0 || day > 31 || hour < 0 || hour >= 24 || minute < 0 || minute >= 60) {
             return Optional.empty();
         } else {

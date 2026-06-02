@@ -92,10 +92,10 @@ public class BinaryBroadcastMessage extends AISMessage {
 
     public ApplicationSpecificMessage getApplicationSpecificMessage() {
         if (applicationSpecificMessage.getDesignatedAreaCode() != designatedAreaCode)
-            throw new IllegalStateException("Implementation error: DAC of AISMessage does not match ASM: " + applicationSpecificMessage.getDesignatedAreaCode() + " " + this.getDesignatedAreaCode());
+            throw new IllegalStateException("Implementation error: DAC of AISMessage does not match ASM: " + applicationSpecificMessage.getDesignatedAreaCode() + " " + designatedAreaCode);
 
         if (applicationSpecificMessage.getFunctionalId() != functionalId)
-            throw new IllegalStateException("Implementation error: FI of AISMessage does not match ASM: " + applicationSpecificMessage.getFunctionalId() + " " + this.getFunctionalId());
+            throw new IllegalStateException("Implementation error: FI of AISMessage does not match ASM: " + applicationSpecificMessage.getFunctionalId() + " " + functionalId);
 
         return applicationSpecificMessage;
     }
