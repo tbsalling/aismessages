@@ -8,16 +8,48 @@ Developer-oriented release notes for AISmessages - a Java-based library for deco
 
 **Development Version**
 
-### New Features & Improvements
+### Breaking API Changes
 
-**Testing Improvements:**
+**Packed `BitString` replaces `String`-of-`'0'`/`'1'` payload representation:**
+
+- Introduced `dk.tbsalling.aismessages.ais.BitString` — a packed, immutable
+  `long[]`-backed bit vector with typed accessors (`getUnsignedInt`,
+  `getSignedInt`, `getUnsignedLong`, `getBoolean`, `getSignedFloat`,
+  `getUnsignedFloat`, `getSixBitAsciiString`, `getBits`, `slice`,
+  `withLengthPaddedTo`).
+- Removed `dk.tbsalling.aismessages.ais.BitStringParser` and
+  `dk.tbsalling.aismessages.ais.BitDecoder`.
+- `Metadata.bitString()` now returns `BitString` instead of `String`. Call
+  `.toString()` on the result to get the legacy `'0'`/`'1'` form.
+- Constructor parameter types changed from `String bitString` to
+  `BitString bitString` on `AISMessage` and all 36 permitted subclasses.
+- `ApplicationSpecificMessage.binaryData` is now `BitString` (was `String`);
+  `ApplicationSpecificMessage.create(int, int, BitString)` signature updated
+  for all 17 ASM subclasses.
+- `SOTDMACommunicationState.fromBitString(BitString)` and
+  `ITDMACommunicationState.fromBitString(BitString)` now take `BitString`
+  (was `String`); the redundant regex validation was removed.
+- `AISMessageFactory.toBitString(String, int)` static helper removed in
+  favour of `BitString.fromNmeaPayload(String, int)`.
+
+### Performance
+
+The `BitString` migration delivers a ~11× end-to-end speedup on
+`AISMessageFactory.create` and a ~3–6× retained-heap reduction per
+decoded message (curve widens with payload size). See
+[`PERFORMANCE_ANALYSIS.md`](PERFORMANCE_ANALYSIS.md) for benchmarks,
+methodology, and raw JMH/JOL output.
+
+### Testing Improvements
 - Comprehensive NMEA message validation test coverage
 - Added NMEAMessageTest with 9 test cases for checksum validation
 - Added NMEAMessageHandlerTest with 5 test cases for message handling
 - Added NMEAMessageInputStreamReaderTest with 4 test cases for stream processing
 - Improved test infrastructure for NMEA message processing and validation
+- Added `BitStringTest` covering the new packed bit-vector accessors,
+  cross-word reads, sign extension, six-bit ASCII edge cases, and slicing.
 
-**Dependency Updates:**
+### Dependency Updates
 
 *Test Dependencies:*
 - mockito-junit-jupiter: 5.14.2

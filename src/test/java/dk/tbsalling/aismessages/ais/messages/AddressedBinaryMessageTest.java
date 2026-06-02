@@ -30,7 +30,7 @@ public class AddressedBinaryMessageTest {
         assertEquals(0, message.getDesignatedAreaCode());
         assertEquals(29, message.getFunctionalId());
         // TODO : check the binary value
-        assertEquals("0010001111001100000000100111111100000101100101110101101100111100000000000000000100000000000000100000000000001110000011100000000000001110111100100011100000000000000000000111100010010010100101100101101100000000", message.getBinaryData());
+        assertEquals("0010001111001100000000100111111100000101100101110101101100111100000000000000000100000000000000100000000000001110000011100000000000001110111100100011100000000000000000000111100010010010100101100101101100000000", message.getBinaryData().toString());
     }
 
     @Test
@@ -55,7 +55,7 @@ public class AddressedBinaryMessageTest {
 
         assertInstanceOf(NumberOfPersonsOnBoard.class, asm);
         NumberOfPersonsOnBoard numberOfPersonsOnBoard = (NumberOfPersonsOnBoard) asm;
-        assertEquals("0000000000011000", numberOfPersonsOnBoard.getBinaryData());
+        assertEquals("0000000000011000", numberOfPersonsOnBoard.getBinaryData().toString());
         assertEquals(3, numberOfPersonsOnBoard.getNumberOfPersons());
    }
 

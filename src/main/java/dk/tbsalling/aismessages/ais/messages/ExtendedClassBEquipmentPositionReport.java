@@ -16,6 +16,8 @@
 
 package dk.tbsalling.aismessages.ais.messages;
 
+import dk.tbsalling.aismessages.ais.BitString;
+
 import dk.tbsalling.aismessages.ais.messages.types.*;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
@@ -36,7 +38,7 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
     /**
      * Constructor accepting pre-parsed values for true immutability.
      */
-    protected ExtendedClassBEquipmentPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
+    protected ExtendedClassBEquipmentPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                                     String regionalReserved1, float speedOverGround, boolean positionAccuracy,
                                                     float latitude, float longitude, float courseOverGround, int trueHeading,
                                                     int second, String regionalReserved2, String shipName, ShipType shipType,

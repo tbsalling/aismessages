@@ -16,6 +16,8 @@
 
 package dk.tbsalling.aismessages.ais.messages;
 
+import dk.tbsalling.aismessages.ais.BitString;
+
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
@@ -38,7 +40,7 @@ public class UTCAndDateResponse extends AISMessage {
     /**
      * Constructor accepting pre-parsed values for true immutability.
      */
-    protected UTCAndDateResponse(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
+    protected UTCAndDateResponse(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                  int year, int month, int day, int hour, int minute, int second,
                                  boolean positionAccurate, float latitude, float longitude,
                                  PositionFixingDevice positionFixingDevice, boolean raimFlag) {

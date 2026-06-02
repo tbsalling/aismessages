@@ -1,5 +1,6 @@
 package dk.tbsalling.aismessages.ais.messages.asm;
 
+import dk.tbsalling.aismessages.ais.BitString;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Value;
@@ -9,7 +10,7 @@ import lombok.Value;
 @ToString(callSuper = true)
 public class UnknownApplicationSpecificMessage extends ApplicationSpecificMessage {
 
-    UnknownApplicationSpecificMessage(int designatedAreaCode, int functionalId, String binaryData) {
+    UnknownApplicationSpecificMessage(int designatedAreaCode, int functionalId, BitString binaryData) {
         super(designatedAreaCode, functionalId, binaryData);
     }
 

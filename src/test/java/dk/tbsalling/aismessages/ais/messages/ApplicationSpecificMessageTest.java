@@ -1,11 +1,11 @@
 package dk.tbsalling.aismessages.ais.messages;
 
+import dk.tbsalling.aismessages.ais.BitString;
 import dk.tbsalling.aismessages.ais.messages.asm.*;
-import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
-import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class ApplicationSpecificMessageTest {
 
@@ -51,8 +51,8 @@ public class ApplicationSpecificMessageTest {
         String binaryData = encodeText(testText, 20); // 20 characters = 120 bits
 
         // Act
-        ApplicationSpecificMessage asm0 = ApplicationSpecificMessage.create(1, 0, binaryData);
-        ApplicationSpecificMessage asm1 = ApplicationSpecificMessage.create(1, 1, binaryData);
+        ApplicationSpecificMessage asm0 = ApplicationSpecificMessage.create(1, 0, BitString.ofBitString(binaryData));
+        ApplicationSpecificMessage asm1 = ApplicationSpecificMessage.create(1, 1, BitString.ofBitString(binaryData));
 
         // Assert
         assertTrue(asm0 instanceof TextDescription);
@@ -76,7 +76,7 @@ public class ApplicationSpecificMessageTest {
         String binaryData = "";
 
         // Act
-        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 10, binaryData);
+        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 10, BitString.ofBitString(binaryData));
 
         // Assert
         assertTrue(asm instanceof UtcDateInquiry);
@@ -98,7 +98,7 @@ public class ApplicationSpecificMessageTest {
                 + toBinaryString(45, 6);               // second: 45
 
         // Act
-        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 11, binaryData);
+        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 11, BitString.ofBitString(binaryData));
 
         // Assert
         assertTrue(asm instanceof UtcDateResponse);
@@ -128,7 +128,7 @@ public class ApplicationSpecificMessageTest {
                 + toBinaryString(90, 9);               // currentDirection: 90 degrees
 
         // Act
-        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 14, binaryData);
+        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 14, BitString.ofBitString(binaryData));
 
         // Assert
         assertTrue(asm instanceof TidalWindow);
@@ -165,7 +165,7 @@ public class ApplicationSpecificMessageTest {
                 + toBinaryString(450, 9);                              // cog: 450 (45.0 degrees * 10)
 
         // Act
-        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 17, binaryData);
+        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 17, BitString.ofBitString(binaryData));
 
         // Assert
         assertTrue(asm instanceof VtsGeneratedSyntheticTargets);
@@ -203,8 +203,8 @@ public class ApplicationSpecificMessageTest {
                 + toBinaryString(10, 5);                               // nextSignal: 10
 
         // Act
-        ApplicationSpecificMessage asm18 = ApplicationSpecificMessage.create(1, 18, binaryData);
-        ApplicationSpecificMessage asm19 = ApplicationSpecificMessage.create(1, 19, binaryData);
+        ApplicationSpecificMessage asm18 = ApplicationSpecificMessage.create(1, 18, BitString.ofBitString(binaryData));
+        ApplicationSpecificMessage asm19 = ApplicationSpecificMessage.create(1, 19, BitString.ofBitString(binaryData));
 
         // Assert
         assertTrue(asm18 instanceof MarineTrafficSignal);
@@ -277,7 +277,7 @@ public class ApplicationSpecificMessageTest {
                 + toBinaryString(0, 2);                                // ice: 0 (NO)
 
         // Act
-        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 21, binaryData);
+        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 21, BitString.ofBitString(binaryData));
 
         // Assert
         assertTrue(asm instanceof WeatherObservation);
@@ -320,8 +320,8 @@ public class ApplicationSpecificMessageTest {
                 + toBinaryString(180, 18);             // durationMinutes: 180
 
         // Act
-        ApplicationSpecificMessage asm22 = ApplicationSpecificMessage.create(1, 22, binaryData);
-        ApplicationSpecificMessage asm23 = ApplicationSpecificMessage.create(1, 23, binaryData);
+        ApplicationSpecificMessage asm22 = ApplicationSpecificMessage.create(1, 22, BitString.ofBitString(binaryData));
+        ApplicationSpecificMessage asm23 = ApplicationSpecificMessage.create(1, 23, BitString.ofBitString(binaryData));
 
         // Assert
         assertTrue(asm22 instanceof AreaNotice);
@@ -360,7 +360,7 @@ public class ApplicationSpecificMessageTest {
                 + toBinaryString(1, 4);                // category: 1
 
         // Act
-        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 25, binaryData);
+        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 25, BitString.ofBitString(binaryData));
 
         // Assert
         assertTrue(asm instanceof DangerousCargoIndication);
@@ -415,7 +415,7 @@ public class ApplicationSpecificMessageTest {
                 + toBinaryString(250, 9);                              // salinity: 250 (25.0 PSU * 10)
 
         // Act
-        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 26, binaryData);
+        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 26, BitString.ofBitString(binaryData));
 
         // Assert
         assertTrue(asm instanceof Environmental);
@@ -456,8 +456,8 @@ public class ApplicationSpecificMessageTest {
                 + toBinaryString(360, 18);             // duration: 360 minutes (6 hours)
 
         // Act
-        ApplicationSpecificMessage asm27 = ApplicationSpecificMessage.create(1, 27, binaryData);
-        ApplicationSpecificMessage asm28 = ApplicationSpecificMessage.create(1, 28, binaryData);
+        ApplicationSpecificMessage asm27 = ApplicationSpecificMessage.create(1, 27, BitString.ofBitString(binaryData));
+        ApplicationSpecificMessage asm28 = ApplicationSpecificMessage.create(1, 28, BitString.ofBitString(binaryData));
 
         // Assert
         assertTrue(asm27 instanceof RouteInformation);
@@ -530,7 +530,7 @@ public class ApplicationSpecificMessageTest {
                 + toBinaryString(0, 2);                                // ice: 0 (NO)
 
         // Act
-        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 31, binaryData);
+        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 31, BitString.ofBitString(binaryData));
 
         // Assert
         assertTrue(asm instanceof MeteorologicalAndHydrographicalData);
@@ -570,9 +570,9 @@ public class ApplicationSpecificMessageTest {
         String binaryDataFi40 = "0000000000000";
 
         // Act
-        ApplicationSpecificMessage asm20 = ApplicationSpecificMessage.create(1, 20, binaryDataFi20);
-        ApplicationSpecificMessage asm24 = ApplicationSpecificMessage.create(1, 24, binaryDataFi24);
-        ApplicationSpecificMessage asm40 = ApplicationSpecificMessage.create(1, 40, binaryDataFi40);
+        ApplicationSpecificMessage asm20 = ApplicationSpecificMessage.create(1, 20, BitString.ofBitString(binaryDataFi20));
+        ApplicationSpecificMessage asm24 = ApplicationSpecificMessage.create(1, 24, BitString.ofBitString(binaryDataFi24));
+        ApplicationSpecificMessage asm40 = ApplicationSpecificMessage.create(1, 40, BitString.ofBitString(binaryDataFi40));
 
         // Assert
         assertTrue(asm20 instanceof BerthingData);
@@ -600,7 +600,7 @@ public class ApplicationSpecificMessageTest {
         String binaryData = "0000000000";
 
         // Act
-        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 99, binaryData);
+        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 99, BitString.ofBitString(binaryData));
 
         // Assert
         assertTrue(asm instanceof UnknownApplicationSpecificMessage);

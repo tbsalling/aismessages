@@ -16,7 +16,9 @@ Use the Maven wrapper, never a system `mvn`:
 - Tests only: `./mvnw test`
 - Quick test skipping integration tests: `./mvnw -DskipITs test`
 - Single test class: `./mvnw -Dtest=ClassName test`
-- Several classes: `./mvnw -Dtest=BitStringParserTest,BitVectorTest,BitDecoderTest test`
+- Several classes: `./mvnw -Dtest=BitStringTest,AISMessageFactoryTest test`
+- Run JMH benchmarks + JOL retained-size report (separate Maven profile): `./mvnw -Pbench test` (writes
+  `target/jmh-result.txt`).
 
 Notes:
 - `verify` invokes `maven-gpg-plugin` and will fail without a GPG key. Use `./mvnw test` or `./mvnw package -Dgpg.skip=true` when you only need a local build.
@@ -30,7 +32,11 @@ The decoding pipeline is layered. Understanding the seam between NMEA and AIS is
 1. **Transport** — `dk.tbsalling.aismessages.AISInputStreamReader` is the public entry point. It wraps `NMEAMessageInputStreamReader` (line-oriented stream / `List<String>` queue) and exposes a `Consumer<? super AISMessage>` callback. Sibling transports under `nmea/` are `NMEAMessageSocketClient` (TCP) and `NMEAMessageUDPSocket` (UDP).
 2. **NMEA framing** — `nmea/messages/NMEAMessage` eagerly parses one NMEA sentence (`!AIVDM`/`!AIVDO`), validates its checksum, and exposes fragment metadata. Optional NMEA tag blocks (prefixed `\...\`) are parsed by `nmea/tagblock/NMEATagBlock`.
 3. **Fragment reassembly** — `nmea/NMEAMessageHandler` (lenient; logs invalid checksums) and `NMEAMessageHandlerStrict` (rejects them) buffer multi-fragment messages and call `AISMessageFactory.create(...)` once all fragments arrive.
-4. **AIS decoding** — `ais/messages/AISMessageFactory` decodes the 6-bit armoured payload into a bit string and constructs the correct `AISMessage` subclass. `ais/BitStringParser` + `ais/BitDecoder` provide typed extraction (unsigned/signed ints, strings, latitude/longitude, etc.) from bit ranges. `AISMessage` is a sealed abstract class; each AIS message type is one immutable permitted subclass under `ais/messages/`.
+4. **AIS decoding** — `ais/messages/AISMessageFactory` decodes the 6-bit armoured payload into a `ais/BitString` and
+   constructs the correct `AISMessage` subclass. `BitString` is a packed `long[]`-backed immutable bit vector (
+   MSB-first) providing typed extraction (unsigned/signed ints, longs, floats, six-bit ASCII text, slices) via
+   shift+mask in 1–2 long loads per field — see `PERFORMANCE_ANALYSIS.md`. `AISMessage` is a sealed abstract class; each
+   AIS message type is one immutable permitted subclass under `ais/messages/`.
 5. **Application Specific Messages (ASM)** — Binary AIS messages (types 6 and 8) carry ASM payloads decoded into `ais/messages/asm/ApplicationSpecificMessage` subclasses (IMO SN.1/Circ.289 DAC=001, plus regional DAC=200). `BinaryBroadcastMessage#getApplicationSpecificMessage()` is the access point. Unknown DAC/FI combinations resolve to `UnknownApplicationSpecificMessage`.
 
 ### Design invariants

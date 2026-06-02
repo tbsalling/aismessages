@@ -1,5 +1,6 @@
 package dk.tbsalling.aismessages.ais.messages;
 
+import dk.tbsalling.aismessages.ais.BitString;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
 
@@ -13,7 +14,7 @@ import java.time.Instant;
  * @param nmeaTagBlock Optional NMEA tag block with additional metadata
  * @param nmeaMessages Array of NMEA messages that were assembled to form this AIS message
  * @param decoderVersion Version of the decoder that processed this message
- * @param bitString Binary representation of the AIS message payload
+ * @param bitString Packed binary representation of the AIS message payload
  * @param source Identifier of the message source
  */
 public record Metadata(
@@ -21,7 +22,7 @@ public record Metadata(
         NMEATagBlock nmeaTagBlock,
         NMEAMessage[] nmeaMessages,
         String decoderVersion,
-        String bitString,
+        BitString bitString,
         String source
 ) {
 }

@@ -10,6 +10,13 @@ Internally AISmessages uses eager parsing and a fail‑fast design combined with
 
 **Version 4 Performance:** AISmessages v4 represents a major architectural improvement over earlier versions. By switching from lazy decoding (used in v2.x-3.x) to eager parsing with immutable value objects, v4 dramatically reduces garbage collection pressure and memory churning. The eager approach eliminates the WeakReference overhead and repeated parsing of previous versions, resulting in predictable upfront allocation, zero post-construction allocations, and significantly lower GC overhead — especially beneficial for high-throughput scenarios processing thousands of messages per second.
 
+**Packed bit-string representation (v4.1.3+):** the internal payload representation switched from a `String`-of-`'0'`/
+`'1'`-characters to a packed `long[]`-backed `BitString`. Field extraction now goes through shift+mask on at most two
+`long` loads instead of `String.substring` + `Integer.parseUnsignedInt`. End-to-end `AISMessageFactory.create` is
+roughly **11× faster** and the retained heap per decoded message shrinks by **~3×** at typical (168-bit) payloads and *
+*~6×** at large (1100-bit) payloads. See [PERFORMANCE_ANALYSIS.md](PERFORMANCE_ANALYSIS.md) for benchmarks and
+methodology.
+
 For more than 15+ years AISmessages has been used in production in many systems and solutions all over the world.
 
 If you are new to AIS you can read a short introduction in [docs/articles/what-is-ais.md](docs/articles/what-is-ais.md).

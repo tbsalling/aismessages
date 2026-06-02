@@ -1,6 +1,6 @@
 package dk.tbsalling.aismessages.ais.messages.asm;
 
-import dk.tbsalling.aismessages.ais.BitDecoder;
+import dk.tbsalling.aismessages.ais.BitString;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Value;
@@ -16,22 +16,22 @@ import static java.util.Arrays.stream;
 @ToString(callSuper = true)
 public class AreaNotice extends ApplicationSpecificMessage {
 
-    protected AreaNotice(int designatedAreaCode, int functionalId, String binaryData) {
+    protected AreaNotice(int designatedAreaCode, int functionalId, BitString binaryData) {
         super(designatedAreaCode, functionalId, binaryData);
 
         // Eagerly decode all fields
-        this.linkageId = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(0, 10));
-        this.noticeType = NoticeType.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(10, 17)));
-        this.month = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(17, 21));
-        this.day = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(21, 26));
-        this.hour = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(26, 31));
-        this.minute = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(31, 37));
-        this.durationMinutes = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(37, 55));
+        this.linkageId = getBinaryData().getUnsignedInt(0, 10);
+        this.noticeType = NoticeType.valueOf(getBinaryData().getUnsignedInt(10, 17));
+        this.month = getBinaryData().getUnsignedInt(17, 21);
+        this.day = getBinaryData().getUnsignedInt(21, 26);
+        this.hour = getBinaryData().getUnsignedInt(26, 31);
+        this.minute = getBinaryData().getUnsignedInt(31, 37);
+        this.durationMinutes = getBinaryData().getUnsignedInt(37, 55);
         
         // Sub-areas are variable length - we'll just store the remaining data
         // Actual parsing would require iterating through sub-areas
         if (getBinaryData().length() > 55) {
-            this.subAreasData = getBinaryData().substring(55);
+            this.subAreasData = getBinaryData().getBits(55, getBinaryData().length());
         } else {
             this.subAreasData = "";
         }

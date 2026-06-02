@@ -1,6 +1,6 @@
 package dk.tbsalling.aismessages.ais.messages.asm;
 
-import dk.tbsalling.aismessages.ais.BitDecoder;
+import dk.tbsalling.aismessages.ais.BitString;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Value;
@@ -10,11 +10,11 @@ import lombok.Value;
 @ToString(callSuper = true)
 public class NumberOfPersonsOnBoard extends ApplicationSpecificMessage {
 
-    protected NumberOfPersonsOnBoard(int designatedAreaCode, int functionalId, String binaryData) {
+    protected NumberOfPersonsOnBoard(int designatedAreaCode, int functionalId, BitString binaryData) {
         super(designatedAreaCode, functionalId, binaryData);
 
         // Eagerly decode all fields
-        this.numberOfPersons = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(0, 13));
+        this.numberOfPersons = getBinaryData().getUnsignedInt(0, 13);
     }
 
     int numberOfPersons;

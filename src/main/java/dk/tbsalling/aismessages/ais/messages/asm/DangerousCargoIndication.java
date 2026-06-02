@@ -1,6 +1,6 @@
 package dk.tbsalling.aismessages.ais.messages.asm;
 
-import dk.tbsalling.aismessages.ais.BitDecoder;
+import dk.tbsalling.aismessages.ais.BitString;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Value;
@@ -16,18 +16,18 @@ import static java.util.Arrays.stream;
 @ToString(callSuper = true)
 public class DangerousCargoIndication extends ApplicationSpecificMessage {
 
-    protected DangerousCargoIndication(int designatedAreaCode, int functionalId, String binaryData) {
+    protected DangerousCargoIndication(int designatedAreaCode, int functionalId, BitString binaryData) {
         super(designatedAreaCode, functionalId, binaryData);
 
         // Eagerly decode all fields
-        this.unit = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(0, 2));
-        this.amount = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(2, 12));
-        this.cargoCode = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(12, 19));
-        this.imoClass = ImoClass.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(19, 23)));
-        this.unNumber = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(23, 36));
-        this.bc = BitDecoder.INSTANCE.decodeBoolean(getBinaryData().substring(36, 37));
-        this.marpol = BitDecoder.INSTANCE.decodeBoolean(getBinaryData().substring(37, 38));
-        this.category = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(38, 42));
+        this.unit = getBinaryData().getUnsignedInt(0, 2);
+        this.amount = getBinaryData().getUnsignedInt(2, 12);
+        this.cargoCode = getBinaryData().getUnsignedInt(12, 19);
+        this.imoClass = ImoClass.valueOf(getBinaryData().getUnsignedInt(19, 23));
+        this.unNumber = getBinaryData().getUnsignedInt(23, 36);
+        this.bc = getBinaryData().getBoolean(36, 37);
+        this.marpol = getBinaryData().getBoolean(37, 38);
+        this.category = getBinaryData().getUnsignedInt(38, 42);
     }
 
     int unit;

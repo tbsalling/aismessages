@@ -16,6 +16,8 @@
 
 package dk.tbsalling.aismessages.ais.messages;
 
+import dk.tbsalling.aismessages.ais.BitString;
+
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
@@ -44,11 +46,11 @@ public class GNSSBinaryBroadcastMessage extends AISMessage {
     /**
      * Constructor accepting pre-parsed values for true immutability.
      */
-    protected GNSSBinaryBroadcastMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
+    protected GNSSBinaryBroadcastMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                          int spare1, float latitude, float longitude, int spare2,
                                          Integer mType, Integer stationId, Integer zCount,
                                          Integer sequenceNumber, Integer numOfWords, Integer health,
-                                         String binaryData) {
+                                         BitString binaryData) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.spare1 = spare1;
         this.latitude = latitude;
@@ -95,5 +97,5 @@ public class GNSSBinaryBroadcastMessage extends AISMessage {
     Integer sequenceNumber;
     Integer numOfWords;
     Integer health;
-    String binaryData;
+    BitString binaryData;
 }

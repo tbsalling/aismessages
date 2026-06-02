@@ -1,6 +1,7 @@
 package dk.tbsalling.aismessages.ais.messages.asm;
 
-import dk.tbsalling.aismessages.ais.BitDecoder;
+import dk.tbsalling.aismessages.ais.AISText;
+import dk.tbsalling.aismessages.ais.BitString;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Value;
@@ -12,45 +13,45 @@ import static java.util.Arrays.stream;
 @ToString(callSuper = true)
 public class BerthingData extends ApplicationSpecificMessage {
 
-    BerthingData(int designatedAreaCode, int functionalId, String binaryData) {
+    BerthingData(int designatedAreaCode, int functionalId, BitString binaryData) {
         super(designatedAreaCode, functionalId, binaryData);
 
         // Eagerly decode all fields
-        this.messageLinkageId = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(0, 10));
-        this.berthLength = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(10, 19));
-        this.waterDepthAtBerth = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(19, 27)) / 10f;
-        this.mooringPosition = MooringPosition.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(27, 30)));
-        this.berthUtcMonth = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(30, 34));
-        this.berthUtcDay = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(34, 39));
-        this.berthUtcHour = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(39, 44));
-        this.berthUtcMinute = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(44, 50));
-        this.serviceStatusAgent = ServiceStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(50, 52)));
-        this.serviceStatusFuel = ServiceStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(52, 54)));
-        this.serviceStatusChandler = ServiceStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(54, 56)));
-        this.serviceStatusStevedore = ServiceStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(56, 58)));
-        this.serviceStatusElectrical = ServiceStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(58, 60)));
-        this.serviceStatusPotableWater = ServiceStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(60, 62)));
-        this.serviceStatusCustomsHouse = ServiceStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(62, 64)));
-        this.serviceStatusCartage = ServiceStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(64, 66)));
-        this.serviceStatusCrane = ServiceStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(66, 68)));
-        this.serviceStatusLift = ServiceStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(68, 70)));
-        this.serviceStatusMedical = ServiceStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(70, 72)));
-        this.serviceStatusNavigationRepair = ServiceStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(72, 74)));
-        this.serviceStatusProvisions = ServiceStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(74, 76)));
-        this.serviceStatusShipRepair = ServiceStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(76, 78)));
-        this.serviceStatusSurveyor = ServiceStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(78, 80)));
-        this.serviceStatusSteam = ServiceStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(80, 82)));
-        this.serviceStatusTugs = ServiceStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(82, 84)));
-        this.serviceStatusSolidWasteDisposal = ServiceStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(84, 86)));
-        this.serviceStatusLiquidWasteDisposal = ServiceStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(86, 88)));
-        this.serviceStatusHazardousWasteDisposal = ServiceStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(88, 90)));
-        this.serviceStatusReservedBallastExchange = ServiceStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(90, 92)));
-        this.serviceStatusAdditionalServices = ServiceStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(92, 94)));
-        this.serviceStatusFutureRegionalUse = ServiceStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(94, 96)));
-        this.serviceStatusFutureUse = ServiceStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(96, 98)));
-        this.nameOfBerth = BitDecoder.INSTANCE.decodeString(getBinaryData().substring(98, 218));
-        this.berthLongitude = BitDecoder.INSTANCE.decodeFloat(getBinaryData().substring(218, 243)) / 60000f;
-        this.berthLatitude = BitDecoder.INSTANCE.decodeFloat(getBinaryData().substring(243, 267)) / 60000f;
+        this.messageLinkageId = getBinaryData().getUnsignedInt(0, 10);
+        this.berthLength = getBinaryData().getUnsignedInt(10, 19);
+        this.waterDepthAtBerth = getBinaryData().getUnsignedInt(19, 27) / 10f;
+        this.mooringPosition = MooringPosition.valueOf(getBinaryData().getUnsignedInt(27, 30));
+        this.berthUtcMonth = getBinaryData().getUnsignedInt(30, 34);
+        this.berthUtcDay = getBinaryData().getUnsignedInt(34, 39);
+        this.berthUtcHour = getBinaryData().getUnsignedInt(39, 44);
+        this.berthUtcMinute = getBinaryData().getUnsignedInt(44, 50);
+        this.serviceStatusAgent = ServiceStatus.valueOf(getBinaryData().getUnsignedInt(50, 52));
+        this.serviceStatusFuel = ServiceStatus.valueOf(getBinaryData().getUnsignedInt(52, 54));
+        this.serviceStatusChandler = ServiceStatus.valueOf(getBinaryData().getUnsignedInt(54, 56));
+        this.serviceStatusStevedore = ServiceStatus.valueOf(getBinaryData().getUnsignedInt(56, 58));
+        this.serviceStatusElectrical = ServiceStatus.valueOf(getBinaryData().getUnsignedInt(58, 60));
+        this.serviceStatusPotableWater = ServiceStatus.valueOf(getBinaryData().getUnsignedInt(60, 62));
+        this.serviceStatusCustomsHouse = ServiceStatus.valueOf(getBinaryData().getUnsignedInt(62, 64));
+        this.serviceStatusCartage = ServiceStatus.valueOf(getBinaryData().getUnsignedInt(64, 66));
+        this.serviceStatusCrane = ServiceStatus.valueOf(getBinaryData().getUnsignedInt(66, 68));
+        this.serviceStatusLift = ServiceStatus.valueOf(getBinaryData().getUnsignedInt(68, 70));
+        this.serviceStatusMedical = ServiceStatus.valueOf(getBinaryData().getUnsignedInt(70, 72));
+        this.serviceStatusNavigationRepair = ServiceStatus.valueOf(getBinaryData().getUnsignedInt(72, 74));
+        this.serviceStatusProvisions = ServiceStatus.valueOf(getBinaryData().getUnsignedInt(74, 76));
+        this.serviceStatusShipRepair = ServiceStatus.valueOf(getBinaryData().getUnsignedInt(76, 78));
+        this.serviceStatusSurveyor = ServiceStatus.valueOf(getBinaryData().getUnsignedInt(78, 80));
+        this.serviceStatusSteam = ServiceStatus.valueOf(getBinaryData().getUnsignedInt(80, 82));
+        this.serviceStatusTugs = ServiceStatus.valueOf(getBinaryData().getUnsignedInt(82, 84));
+        this.serviceStatusSolidWasteDisposal = ServiceStatus.valueOf(getBinaryData().getUnsignedInt(84, 86));
+        this.serviceStatusLiquidWasteDisposal = ServiceStatus.valueOf(getBinaryData().getUnsignedInt(86, 88));
+        this.serviceStatusHazardousWasteDisposal = ServiceStatus.valueOf(getBinaryData().getUnsignedInt(88, 90));
+        this.serviceStatusReservedBallastExchange = ServiceStatus.valueOf(getBinaryData().getUnsignedInt(90, 92));
+        this.serviceStatusAdditionalServices = ServiceStatus.valueOf(getBinaryData().getUnsignedInt(92, 94));
+        this.serviceStatusFutureRegionalUse = ServiceStatus.valueOf(getBinaryData().getUnsignedInt(94, 96));
+        this.serviceStatusFutureUse = ServiceStatus.valueOf(getBinaryData().getUnsignedInt(96, 98));
+        this.nameOfBerth = AISText.decode(getBinaryData(), 98, 218);
+        this.berthLongitude = getBinaryData().getSignedFloat(218, 243) / 60000f;
+        this.berthLatitude = getBinaryData().getSignedFloat(243, 267) / 60000f;
     }
 
     int messageLinkageId;

@@ -16,6 +16,8 @@
 
 package dk.tbsalling.aismessages.ais.messages;
 
+import dk.tbsalling.aismessages.ais.BitString;
+
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
@@ -46,7 +48,7 @@ public class DataLinkManagement extends AISMessage {
     /**
      * Constructor accepting pre-parsed values for true immutability.
      */
-    protected DataLinkManagement(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
+    protected DataLinkManagement(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                  int offsetNumber1, int reservedSlots1, int timeout1, int increment1,
                                  Integer offsetNumber2, Integer reservedSlots2, Integer timeout2, Integer increment2,
                                  Integer offsetNumber3, Integer reservedSlots3, Integer timeout3, Integer increment3,

@@ -1,6 +1,7 @@
 package dk.tbsalling.aismessages.ais.messages.asm;
 
-import dk.tbsalling.aismessages.ais.BitDecoder;
+import dk.tbsalling.aismessages.ais.AISText;
+import dk.tbsalling.aismessages.ais.BitString;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Value;
@@ -11,52 +12,52 @@ import static java.util.Arrays.stream;
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
 public class ExtendedShipStaticAndVoyageRelatedData extends ApplicationSpecificMessage {
-    public ExtendedShipStaticAndVoyageRelatedData(int designatedAreaCode, int functionalId, String binaryData) {
+    public ExtendedShipStaticAndVoyageRelatedData(int designatedAreaCode, int functionalId, BitString binaryData) {
         super(designatedAreaCode, functionalId, binaryData);
 
         // Eagerly decode all fields
-        this.messageLinkageId = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(0, 10));
-        this.airDraught = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(10, 23)) / 10f;
-        this.lastPortOfCall = BitDecoder.INSTANCE.decodeString(getBinaryData().substring(23, 53));
-        this.nextPortOfCall = BitDecoder.INSTANCE.decodeString(getBinaryData().substring(53, 83));
-        this.secondPortOfCall = BitDecoder.INSTANCE.decodeString(getBinaryData().substring(83, 113));
-        this.solasEquipmentStatusAISClassA = SolasEquipmentStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(113, 115)));
-        this.solasEquipmentStatusAutomaticTrackingAid = SolasEquipmentStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(115, 117)));
-        this.solasEquipmentStatusBridgeNavigationalWatchAlarmSystem = SolasEquipmentStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(117, 119)));
-        this.solasEquipmentStatusECDISBackup = SolasEquipmentStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(119, 121)));
-        this.solasEquipmentStatusECDISPaperNauticalChart = SolasEquipmentStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(121, 123)));
-        this.solasEquipmentStatusEchoSounder = SolasEquipmentStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(123, 125)));
-        this.solasEquipmentStatusElectronicPlottingAid = SolasEquipmentStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(125, 127)));
-        this.solasEquipmentStatusEmergencySteeringGear = SolasEquipmentStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(127, 129)));
-        this.solasEquipmentStatusNavigationSystem = SolasEquipmentStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(129, 131)));
-        this.solasEquipmentStatusGyroCompass = SolasEquipmentStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(131, 133)));
-        this.solasEquipmentStatusLRIT = SolasEquipmentStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(133, 135)));
-        this.solasEquipmentStatusMagneticCompass = SolasEquipmentStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(135, 137)));
-        this.solasEquipmentStatusNAVTEX = SolasEquipmentStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(137, 139)));
-        this.solasEquipmentStatusRadarARPA = SolasEquipmentStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(139, 141)));
-        this.solasEquipmentStatusRadarSBand = SolasEquipmentStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(141, 143)));
-        this.solasEquipmentStatusRadarXBand = SolasEquipmentStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(143, 145)));
-        this.solasEquipmentStatusRadioHF = SolasEquipmentStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(145, 147)));
-        this.solasEquipmentStatusRadioINMARSAT = SolasEquipmentStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(147, 149)));
-        this.solasEquipmentStatusRadioMF = SolasEquipmentStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(149, 151)));
-        this.solasEquipmentStatusRadioVHF = SolasEquipmentStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(151, 153)));
-        this.solasEquipmentStatusSpeedLogOverGround = SolasEquipmentStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(153, 155)));
-        this.solasEquipmentStatusSpeedLogThroughWater = SolasEquipmentStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(155, 157)));
-        this.solasEquipmentStatusTransmittingHeadingDevice = SolasEquipmentStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(157, 159)));
-        this.solasEquipmentStatusTrackControlSystem = SolasEquipmentStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(159, 161)));
-        this.solasEquipmentStatusVDR = SolasEquipmentStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(161, 163)));
-        this.solasEquipmentStatusFuture = SolasEquipmentStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(163, 165)));
-        this.iceClass = IceClass.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(165, 169)));
-        this.shaftHorsePower = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(169, 187));
-        this.vhfWorkingChannel = BitDecoder.INSTANCE.decodeString(getBinaryData().substring(187, 199));
-        this.lloydsShipType = BitDecoder.INSTANCE.decodeString(getBinaryData().substring(199, 241));
-        this.grossTonnage = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(241, 259));
-        this.ladenOrBallast = BallastStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(259, 261)));
-        this.heavyFuelOil = BunkerOilStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(261, 263)));
-        this.lightFuelOil = BunkerOilStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(263, 265)));
-        this.diesel = BunkerOilStatus.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(265, 267)));
-        this.totalAmountOfBunkerOil = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(267, 281));
-        this.numberOfPersons = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(281, 294));
+        this.messageLinkageId = getBinaryData().getUnsignedInt(0, 10);
+        this.airDraught = getBinaryData().getUnsignedInt(10, 23) / 10f;
+        this.lastPortOfCall = AISText.decode(getBinaryData(), 23, 53);
+        this.nextPortOfCall = AISText.decode(getBinaryData(), 53, 83);
+        this.secondPortOfCall = AISText.decode(getBinaryData(), 83, 113);
+        this.solasEquipmentStatusAISClassA = SolasEquipmentStatus.valueOf(getBinaryData().getUnsignedInt(113, 115));
+        this.solasEquipmentStatusAutomaticTrackingAid = SolasEquipmentStatus.valueOf(getBinaryData().getUnsignedInt(115, 117));
+        this.solasEquipmentStatusBridgeNavigationalWatchAlarmSystem = SolasEquipmentStatus.valueOf(getBinaryData().getUnsignedInt(117, 119));
+        this.solasEquipmentStatusECDISBackup = SolasEquipmentStatus.valueOf(getBinaryData().getUnsignedInt(119, 121));
+        this.solasEquipmentStatusECDISPaperNauticalChart = SolasEquipmentStatus.valueOf(getBinaryData().getUnsignedInt(121, 123));
+        this.solasEquipmentStatusEchoSounder = SolasEquipmentStatus.valueOf(getBinaryData().getUnsignedInt(123, 125));
+        this.solasEquipmentStatusElectronicPlottingAid = SolasEquipmentStatus.valueOf(getBinaryData().getUnsignedInt(125, 127));
+        this.solasEquipmentStatusEmergencySteeringGear = SolasEquipmentStatus.valueOf(getBinaryData().getUnsignedInt(127, 129));
+        this.solasEquipmentStatusNavigationSystem = SolasEquipmentStatus.valueOf(getBinaryData().getUnsignedInt(129, 131));
+        this.solasEquipmentStatusGyroCompass = SolasEquipmentStatus.valueOf(getBinaryData().getUnsignedInt(131, 133));
+        this.solasEquipmentStatusLRIT = SolasEquipmentStatus.valueOf(getBinaryData().getUnsignedInt(133, 135));
+        this.solasEquipmentStatusMagneticCompass = SolasEquipmentStatus.valueOf(getBinaryData().getUnsignedInt(135, 137));
+        this.solasEquipmentStatusNAVTEX = SolasEquipmentStatus.valueOf(getBinaryData().getUnsignedInt(137, 139));
+        this.solasEquipmentStatusRadarARPA = SolasEquipmentStatus.valueOf(getBinaryData().getUnsignedInt(139, 141));
+        this.solasEquipmentStatusRadarSBand = SolasEquipmentStatus.valueOf(getBinaryData().getUnsignedInt(141, 143));
+        this.solasEquipmentStatusRadarXBand = SolasEquipmentStatus.valueOf(getBinaryData().getUnsignedInt(143, 145));
+        this.solasEquipmentStatusRadioHF = SolasEquipmentStatus.valueOf(getBinaryData().getUnsignedInt(145, 147));
+        this.solasEquipmentStatusRadioINMARSAT = SolasEquipmentStatus.valueOf(getBinaryData().getUnsignedInt(147, 149));
+        this.solasEquipmentStatusRadioMF = SolasEquipmentStatus.valueOf(getBinaryData().getUnsignedInt(149, 151));
+        this.solasEquipmentStatusRadioVHF = SolasEquipmentStatus.valueOf(getBinaryData().getUnsignedInt(151, 153));
+        this.solasEquipmentStatusSpeedLogOverGround = SolasEquipmentStatus.valueOf(getBinaryData().getUnsignedInt(153, 155));
+        this.solasEquipmentStatusSpeedLogThroughWater = SolasEquipmentStatus.valueOf(getBinaryData().getUnsignedInt(155, 157));
+        this.solasEquipmentStatusTransmittingHeadingDevice = SolasEquipmentStatus.valueOf(getBinaryData().getUnsignedInt(157, 159));
+        this.solasEquipmentStatusTrackControlSystem = SolasEquipmentStatus.valueOf(getBinaryData().getUnsignedInt(159, 161));
+        this.solasEquipmentStatusVDR = SolasEquipmentStatus.valueOf(getBinaryData().getUnsignedInt(161, 163));
+        this.solasEquipmentStatusFuture = SolasEquipmentStatus.valueOf(getBinaryData().getUnsignedInt(163, 165));
+        this.iceClass = IceClass.valueOf(getBinaryData().getUnsignedInt(165, 169));
+        this.shaftHorsePower = getBinaryData().getUnsignedInt(169, 187);
+        this.vhfWorkingChannel = AISText.decode(getBinaryData(), 187, 199);
+        this.lloydsShipType = AISText.decode(getBinaryData(), 199, 241);
+        this.grossTonnage = getBinaryData().getUnsignedInt(241, 259);
+        this.ladenOrBallast = BallastStatus.valueOf(getBinaryData().getUnsignedInt(259, 261));
+        this.heavyFuelOil = BunkerOilStatus.valueOf(getBinaryData().getUnsignedInt(261, 263));
+        this.lightFuelOil = BunkerOilStatus.valueOf(getBinaryData().getUnsignedInt(263, 265));
+        this.diesel = BunkerOilStatus.valueOf(getBinaryData().getUnsignedInt(265, 267));
+        this.totalAmountOfBunkerOil = getBinaryData().getUnsignedInt(267, 281);
+        this.numberOfPersons = getBinaryData().getUnsignedInt(281, 294);
     }
 
     Integer messageLinkageId;

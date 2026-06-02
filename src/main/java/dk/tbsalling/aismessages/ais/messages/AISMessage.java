@@ -16,6 +16,7 @@
 
 package dk.tbsalling.aismessages.ais.messages;
 
+import dk.tbsalling.aismessages.ais.BitString;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
@@ -96,12 +97,12 @@ public abstract sealed class AISMessage permits AddressedBinaryMessage, Addresse
      * @param received        the metadata received timestamp (can be null)
      * @param nmeaTagBlock    the NMEA tag block
      * @param nmeaMessages    the NMEA messages
-     * @param bitString       the binary string representation
+     * @param bitString       the packed bit-string representation of the AIS payload
      * @param source          the metadata source (can be null)
      * @param sourceMmsi      the pre-parsed source MMSI
      * @param repeatIndicator the pre-parsed repeat indicator
      */
-    protected AISMessage(Instant received, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, MMSI sourceMmsi, int repeatIndicator) {
+    protected AISMessage(Instant received, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, MMSI sourceMmsi, int repeatIndicator) {
         requireNonNull(nmeaMessages);
         requireNonNull(bitString);
 
@@ -136,12 +137,12 @@ public abstract sealed class AISMessage permits AddressedBinaryMessage, Addresse
     protected void checkAISMessage() {
         StringBuilder message = new StringBuilder();
 
-        final String bitString = metadata.bitString();
+        final BitString bitString = metadata.bitString();
 
         if (bitString.length() < 6)
             message.append(String.format("Message is too short to determine message type: %d bits.", bitString.length()));
 
-        final int messageType = Integer.parseInt(bitString.substring(0, 6), 2);
+        final int messageType = bitString.getUnsignedInt(0, 6);
         if (messageType < AISMessageType.MINIMUM_CODE || messageType > AISMessageType.MAXIMUM_CODE)
             message.append(String.format("Unsupported message type: %d.", messageType));
         else if (messageType != getMessageType().getCode())

@@ -17,7 +17,7 @@
 package dk.tbsalling.aismessages.ais.messages.types;
 
 
-import dk.tbsalling.aismessages.ais.BitDecoder;
+import dk.tbsalling.aismessages.ais.BitString;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 
@@ -34,18 +34,17 @@ public class ITDMACommunicationState extends CommunicationState {
 		this.keepFlag = keepFlag;
 	}
 
-	public static ITDMACommunicationState fromBitString(String bitString) {
+    public static ITDMACommunicationState fromBitString(BitString bitString) {
 		requireNonNull(bitString);
-		bitString = bitString.trim();
 
-		if (bitString.length() != 19 || !bitString.matches("(0|1)*"))
+        if (bitString.length() != 19)
 			return null;
 
 		return new ITDMACommunicationState(
-                SyncState.fromInteger(BitDecoder.INSTANCE.decodeUnsignedInt(bitString.substring(0, 2))),
-                BitDecoder.INSTANCE.decodeUnsignedInt(bitString.substring(2, 15)),
-                BitDecoder.INSTANCE.decodeUnsignedInt(bitString.substring(15, 18)),
-                BitDecoder.INSTANCE.decodeBoolean(bitString.substring(18, 19))
+                SyncState.fromInteger(bitString.getUnsignedInt(0, 2)),
+                bitString.getUnsignedInt(2, 15),
+                bitString.getUnsignedInt(15, 18),
+                bitString.getBoolean(18, 19)
 		);
 	}
 

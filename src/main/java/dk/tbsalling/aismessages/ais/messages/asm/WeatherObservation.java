@@ -1,6 +1,6 @@
 package dk.tbsalling.aismessages.ais.messages.asm;
 
-import dk.tbsalling.aismessages.ais.BitDecoder;
+import dk.tbsalling.aismessages.ais.BitString;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Value;
@@ -16,46 +16,46 @@ import static java.util.Arrays.stream;
 @ToString(callSuper = true)
 public class WeatherObservation extends ApplicationSpecificMessage {
 
-    protected WeatherObservation(int designatedAreaCode, int functionalId, String binaryData) {
+    protected WeatherObservation(int designatedAreaCode, int functionalId, BitString binaryData) {
         super(designatedAreaCode, functionalId, binaryData);
 
         // Eagerly decode all fields according to ITU-R M.1371-5
-        this.longitude = BitDecoder.INSTANCE.decodeFloat(getBinaryData().substring(0, 25)) / 60000f;
-        this.latitude = BitDecoder.INSTANCE.decodeFloat(getBinaryData().substring(25, 49)) / 60000f;
-        this.day = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(49, 54));
-        this.hour = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(54, 59));
-        this.minute = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(59, 65));
-        this.averageWindSpeed = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(65, 72));
-        this.windGust = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(72, 79));
-        this.windDirection = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(79, 88));
-        this.windGustDirection = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(88, 97));
-        this.airTemperature = BitDecoder.INSTANCE.decodeFloat(getBinaryData().substring(97, 108)) / 10f;
-        this.relativeHumidity = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(108, 115));
-        this.dewPoint = BitDecoder.INSTANCE.decodeFloat(getBinaryData().substring(115, 125)) / 10f;
-        this.airPressure = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(125, 134));
-        this.airPressureTendency = AirPressureTendency.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(134, 136)));
-        this.horizontalVisibility = BitDecoder.INSTANCE.decodeFloat(getBinaryData().substring(136, 144)) / 10f;
-        this.waterLevel = BitDecoder.INSTANCE.decodeFloat(getBinaryData().substring(144, 153)) / 10f;
-        this.waterLevelTrend = WaterLevelTrend.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(153, 155)));
-        this.surfaceCurrentSpeed = BitDecoder.INSTANCE.decodeFloat(getBinaryData().substring(155, 163)) / 10f;
-        this.surfaceCurrentDirection = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(163, 172));
-        this.currentSpeed2 = BitDecoder.INSTANCE.decodeFloat(getBinaryData().substring(172, 180)) / 10f;
-        this.currentDirection2 = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(180, 189));
-        this.currentDepth2 = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(189, 194));
-        this.currentSpeed3 = BitDecoder.INSTANCE.decodeFloat(getBinaryData().substring(194, 202)) / 10f;
-        this.currentDirection3 = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(202, 211));
-        this.currentDepth3 = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(211, 216));
-        this.waveHeight = BitDecoder.INSTANCE.decodeFloat(getBinaryData().substring(216, 224)) / 10f;
-        this.wavePeriod = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(224, 230));
-        this.waveDirection = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(230, 239));
-        this.swellHeight = BitDecoder.INSTANCE.decodeFloat(getBinaryData().substring(239, 247)) / 10f;
-        this.swellPeriod = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(247, 253));
-        this.swellDirection = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(253, 262));
-        this.seaState = SeaState.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(262, 266)));
-        this.waterTemperature = BitDecoder.INSTANCE.decodeFloat(getBinaryData().substring(266, 276)) / 10f;
-        this.precipitation = Precipitation.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(276, 279)));
-        this.salinity = BitDecoder.INSTANCE.decodeFloat(getBinaryData().substring(279, 288)) / 10f;
-        this.ice = Ice.valueOf(BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(288, 290)));
+        this.longitude = getBinaryData().getSignedFloat(0, 25) / 60000f;
+        this.latitude = getBinaryData().getSignedFloat(25, 49) / 60000f;
+        this.day = getBinaryData().getUnsignedInt(49, 54);
+        this.hour = getBinaryData().getUnsignedInt(54, 59);
+        this.minute = getBinaryData().getUnsignedInt(59, 65);
+        this.averageWindSpeed = getBinaryData().getUnsignedInt(65, 72);
+        this.windGust = getBinaryData().getUnsignedInt(72, 79);
+        this.windDirection = getBinaryData().getUnsignedInt(79, 88);
+        this.windGustDirection = getBinaryData().getUnsignedInt(88, 97);
+        this.airTemperature = getBinaryData().getSignedFloat(97, 108) / 10f;
+        this.relativeHumidity = getBinaryData().getUnsignedInt(108, 115);
+        this.dewPoint = getBinaryData().getSignedFloat(115, 125) / 10f;
+        this.airPressure = getBinaryData().getUnsignedInt(125, 134);
+        this.airPressureTendency = AirPressureTendency.valueOf(getBinaryData().getUnsignedInt(134, 136));
+        this.horizontalVisibility = getBinaryData().getSignedFloat(136, 144) / 10f;
+        this.waterLevel = getBinaryData().getSignedFloat(144, 153) / 10f;
+        this.waterLevelTrend = WaterLevelTrend.valueOf(getBinaryData().getUnsignedInt(153, 155));
+        this.surfaceCurrentSpeed = getBinaryData().getSignedFloat(155, 163) / 10f;
+        this.surfaceCurrentDirection = getBinaryData().getUnsignedInt(163, 172);
+        this.currentSpeed2 = getBinaryData().getSignedFloat(172, 180) / 10f;
+        this.currentDirection2 = getBinaryData().getUnsignedInt(180, 189);
+        this.currentDepth2 = getBinaryData().getUnsignedInt(189, 194);
+        this.currentSpeed3 = getBinaryData().getSignedFloat(194, 202) / 10f;
+        this.currentDirection3 = getBinaryData().getUnsignedInt(202, 211);
+        this.currentDepth3 = getBinaryData().getUnsignedInt(211, 216);
+        this.waveHeight = getBinaryData().getSignedFloat(216, 224) / 10f;
+        this.wavePeriod = getBinaryData().getUnsignedInt(224, 230);
+        this.waveDirection = getBinaryData().getUnsignedInt(230, 239);
+        this.swellHeight = getBinaryData().getSignedFloat(239, 247) / 10f;
+        this.swellPeriod = getBinaryData().getUnsignedInt(247, 253);
+        this.swellDirection = getBinaryData().getUnsignedInt(253, 262);
+        this.seaState = SeaState.valueOf(getBinaryData().getUnsignedInt(262, 266));
+        this.waterTemperature = getBinaryData().getSignedFloat(266, 276) / 10f;
+        this.precipitation = Precipitation.valueOf(getBinaryData().getUnsignedInt(276, 279));
+        this.salinity = getBinaryData().getSignedFloat(279, 288) / 10f;
+        this.ice = Ice.valueOf(getBinaryData().getUnsignedInt(288, 290));
     }
 
     float longitude;

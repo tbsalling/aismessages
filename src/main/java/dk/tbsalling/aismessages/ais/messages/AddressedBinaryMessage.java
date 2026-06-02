@@ -16,6 +16,7 @@
 
 package dk.tbsalling.aismessages.ais.messages;
 
+import dk.tbsalling.aismessages.ais.BitString;
 import dk.tbsalling.aismessages.ais.messages.asm.ApplicationSpecificMessage;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
@@ -47,9 +48,9 @@ public class AddressedBinaryMessage extends AISMessage {
     /**
      * Constructor accepting pre-parsed values for true immutability.
      */
-    protected AddressedBinaryMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
+    protected AddressedBinaryMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                      int sequenceNumber, MMSI destinationMmsi, boolean retransmit, int spare,
-                                     int designatedAreaCode, int functionalId, String binaryData,
+                                     int designatedAreaCode, int functionalId, BitString binaryData,
                                      ApplicationSpecificMessage applicationSpecificMessage) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.sequenceNumber = sequenceNumber;
@@ -73,8 +74,8 @@ public class AddressedBinaryMessage extends AISMessage {
             message.append(format("Message of type %s should be at least 72 bits long; not %d.", getMessageType(), numberOfBits));
 
             if (numberOfBits >= 40) {
-                final String bs = getMetadata().bitString();
-                message.append(format(" Unparseable binary payload: \"%s\".", bs.substring(40, Math.min(numberOfBits, bs.length()))));
+                final BitString bs = getMetadata().bitString();
+                message.append(format(" Unparseable binary payload: \"%s\".", bs.getBits(40, Math.min(numberOfBits, bs.length()))));
             }
         }
 
@@ -99,6 +100,6 @@ public class AddressedBinaryMessage extends AISMessage {
     int spare;
     int designatedAreaCode;
     int functionalId;
-    String binaryData;
+    BitString binaryData;
     ApplicationSpecificMessage applicationSpecificMessage;
 }

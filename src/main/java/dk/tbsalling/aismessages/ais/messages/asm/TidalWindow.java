@@ -1,11 +1,9 @@
 package dk.tbsalling.aismessages.ais.messages.asm;
 
-import dk.tbsalling.aismessages.ais.BitDecoder;
+import dk.tbsalling.aismessages.ais.BitString;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Value;
-
-import static java.util.Arrays.stream;
 
 /**
  * IMO SN.1/Circ.289 - Tidal Window (DAC=1, FI=14)
@@ -16,18 +14,18 @@ import static java.util.Arrays.stream;
 @ToString(callSuper = true)
 public class TidalWindow extends ApplicationSpecificMessage {
 
-    protected TidalWindow(int designatedAreaCode, int functionalId, String binaryData) {
+    protected TidalWindow(int designatedAreaCode, int functionalId, BitString binaryData) {
         super(designatedAreaCode, functionalId, binaryData);
 
         // Eagerly decode all fields
-        this.month = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(0, 4));
-        this.day = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(4, 9));
-        this.hour = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(9, 14));
-        this.minute = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(14, 20));
-        this.tideTo = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(20, 25));
-        this.tideFrom = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(25, 30));
-        this.currentSpeed = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(30, 37)) / 10f;
-        this.currentDirection = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(37, 46));
+        this.month = getBinaryData().getUnsignedInt(0, 4);
+        this.day = getBinaryData().getUnsignedInt(4, 9);
+        this.hour = getBinaryData().getUnsignedInt(9, 14);
+        this.minute = getBinaryData().getUnsignedInt(14, 20);
+        this.tideTo = getBinaryData().getUnsignedInt(20, 25);
+        this.tideFrom = getBinaryData().getUnsignedInt(25, 30);
+        this.currentSpeed = getBinaryData().getUnsignedInt(30, 37) / 10f;
+        this.currentDirection = getBinaryData().getUnsignedInt(37, 46);
     }
 
     int month;

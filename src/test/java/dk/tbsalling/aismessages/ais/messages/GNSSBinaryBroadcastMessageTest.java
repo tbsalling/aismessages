@@ -35,7 +35,7 @@ public class GNSSBinaryBroadcastMessageTest {
         assertEquals(0, message.getSequenceNumber());
         assertEquals(14, message.getNumOfWords());
         assertEquals(0, message.getHealth());
-        assertEquals("0111110000000101010101101100000001110000", message.getBinaryData());
+        assertEquals("0111110000000101010101101100000001110000", message.getBinaryData().toString());
     }
 
     @Test

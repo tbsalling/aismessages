@@ -20,7 +20,7 @@ See also the [v4.0.0 release notes](../../RELEASE_NOTES.md#version-400).
   - easier debugging and testing
 - **Clear separation of concerns**
   - message classes are pure data carriers
-  - parsing is handled by dedicated utilities such as `BitStringParser`
+  - parsing is handled by `AISMessageFactory` driving the `BitString` accessor primitives
 
 ## What changed in v4
 

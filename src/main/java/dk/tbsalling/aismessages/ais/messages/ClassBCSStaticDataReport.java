@@ -16,6 +16,8 @@
 
 package dk.tbsalling.aismessages.ais.messages;
 
+import dk.tbsalling.aismessages.ais.BitString;
+
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.ShipType;
@@ -40,7 +42,7 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
     /**
      * Constructor accepting pre-parsed values for true immutability.
      */
-    protected ClassBCSStaticDataReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, String bitString, String source, Instant received,
+    protected ClassBCSStaticDataReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                        int partNumber, String shipName, ShipType shipType,
                                        String vendorId, String callsign,
                                        int toBow, int toStern, int toStarboard, int toPort,

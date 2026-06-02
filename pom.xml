@@ -79,6 +79,9 @@
                 	<version>3.15.0</version>
 				<configuration>
                     	<release>${maven.compiler.release}</release>
+					<testExcludes>
+						<testExclude>dk/tbsalling/aismessages/bench/**</testExclude>
+					</testExcludes>
                 	</configuration>
             	</plugin>
             	<plugin>
@@ -167,6 +170,59 @@
 			<scope>test</scope>
 		</dependency>
 	</dependencies>
+	<profiles>
+		<profile>
+			<id>bench</id>
+			<dependencies>
+				<dependency>
+					<groupId>org.openjdk.jmh</groupId>
+					<artifactId>jmh-core</artifactId>
+					<version>1.37</version>
+					<scope>test</scope>
+				</dependency>
+				<dependency>
+					<groupId>org.openjdk.jmh</groupId>
+					<artifactId>jmh-generator-annprocess</artifactId>
+					<version>1.37</version>
+					<scope>test</scope>
+				</dependency>
+				<dependency>
+					<groupId>org.openjdk.jol</groupId>
+					<artifactId>jol-core</artifactId>
+					<version>0.17</version>
+					<scope>test</scope>
+				</dependency>
+			</dependencies>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-compiler-plugin</artifactId>
+						<configuration>
+							<release>${maven.compiler.release}</release>
+							<testExcludes combine.self="override"/>
+						</configuration>
+					</plugin>
+					<plugin>
+						<groupId>org.apache.maven.plugins</groupId>
+						<artifactId>maven-surefire-plugin</artifactId>
+						<configuration>
+							<useModulePath>false</useModulePath>
+							<includes>
+								<include>**/bench/BenchmarkRunner.java</include>
+							</includes>
+							<systemProperties>
+								<property>
+									<name>java.util.logging.config.file</name>
+									<value>logging.properties</value>
+								</property>
+							</systemProperties>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 	<scm>
 		<connection>scm:git:https://tbsalling@github.com/tbsalling/aismessages.git</connection>
 		<url>https://github.com//tbsalling/aismessages/tree/master</url>

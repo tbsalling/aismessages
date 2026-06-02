@@ -1,6 +1,7 @@
 package dk.tbsalling.aismessages.ais.messages.asm;
 
-import dk.tbsalling.aismessages.ais.BitDecoder;
+import dk.tbsalling.aismessages.ais.AISText;
+import dk.tbsalling.aismessages.ais.BitString;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Value;
@@ -14,12 +15,12 @@ import lombok.Value;
 @ToString(callSuper = true)
 public class TextDescription extends ApplicationSpecificMessage {
 
-    protected TextDescription(int designatedAreaCode, int functionalId, String binaryData) {
+    protected TextDescription(int designatedAreaCode, int functionalId, BitString binaryData) {
         super(designatedAreaCode, functionalId, binaryData);
 
         // Eagerly decode all fields
         if (binaryData.length() >= 6) {
-            this.text = BitDecoder.INSTANCE.decodeString(getBinaryData().substring(0, Math.min(getBinaryData().length(), 936)));
+            this.text = AISText.decode(getBinaryData(), 0, Math.min(getBinaryData().length(), 936));
         } else {
             this.text = "";
         }

@@ -1,6 +1,6 @@
 package dk.tbsalling.aismessages.ais.messages.asm;
 
-import dk.tbsalling.aismessages.ais.BitDecoder;
+import dk.tbsalling.aismessages.ais.BitString;
 import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Value;
@@ -14,16 +14,16 @@ import lombok.Value;
 @ToString(callSuper = true)
 public class UtcDateResponse extends ApplicationSpecificMessage {
 
-    protected UtcDateResponse(int designatedAreaCode, int functionalId, String binaryData) {
+    protected UtcDateResponse(int designatedAreaCode, int functionalId, BitString binaryData) {
         super(designatedAreaCode, functionalId, binaryData);
 
         // Eagerly decode all fields
-        this.year = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(0, 14));
-        this.month = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(14, 18));
-        this.day = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(18, 23));
-        this.hour = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(23, 28));
-        this.minute = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(28, 34));
-        this.second = BitDecoder.INSTANCE.decodeUnsignedInt(getBinaryData().substring(34, 40));
+        this.year = getBinaryData().getUnsignedInt(0, 14);
+        this.month = getBinaryData().getUnsignedInt(14, 18);
+        this.day = getBinaryData().getUnsignedInt(18, 23);
+        this.hour = getBinaryData().getUnsignedInt(23, 28);
+        this.minute = getBinaryData().getUnsignedInt(28, 34);
+        this.second = getBinaryData().getUnsignedInt(34, 40);
     }
 
     int year;

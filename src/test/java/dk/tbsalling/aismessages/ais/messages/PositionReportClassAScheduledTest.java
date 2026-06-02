@@ -1,5 +1,6 @@
 package dk.tbsalling.aismessages.ais.messages;
 
+import dk.tbsalling.aismessages.ais.BitString;
 import dk.tbsalling.aismessages.ais.messages.types.*;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,7 @@ public class PositionReportClassAScheduledTest {
         MMSI mmsi = new MMSI(123456789);
         int repeatIndicator = 0;
         NMEAMessage[] nmeaMessages = new NMEAMessage[0];
-        String bitString = "000001" + "0".repeat(162); // type 1 + padding to 168 bits
+        BitString bitString = BitString.ofBitString("000001" + "0".repeat(162)); // type 1 + padding to 168 bits
         String source = "TEST";
         Instant received = Instant.EPOCH;
 
@@ -31,7 +32,7 @@ public class PositionReportClassAScheduledTest {
         int second = 30;
         ManeuverIndicator specialManeuverIndicator = ManeuverIndicator.NotAvailable;
         boolean raimFlag = true;
-        CommunicationState communicationState = SOTDMACommunicationState.fromBitString("0000000000000000000");
+        CommunicationState communicationState = SOTDMACommunicationState.fromBitString(BitString.ofBitString("0000000000000000000"));
         int rawRateOfTurn = 0;
         int rawSpeedOverGround = 123;
         int rawLatitude = 100000;

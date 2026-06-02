@@ -1,5 +1,6 @@
 package dk.tbsalling.aismessages.ais.messages.asm;
 
+import dk.tbsalling.aismessages.ais.BitString;
 import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -11,16 +12,16 @@ import static java.util.Objects.requireNonNull;
 @Getter
 @ToString
 @EqualsAndHashCode
-public abstract sealed class ApplicationSpecificMessage permits 
+public abstract sealed class ApplicationSpecificMessage permits
     AreaNotice,
-    BerthingData, 
+        BerthingData,
     DangerousCargoIndication,
     Environmental,
-    ExtendedShipStaticAndVoyageRelatedData, 
-    InlandShipStaticAndVoyageRelatedData, 
+        ExtendedShipStaticAndVoyageRelatedData,
+        InlandShipStaticAndVoyageRelatedData,
     MarineTrafficSignal,
     MeteorologicalAndHydrographicalData,
-    NumberOfPersonsOnBoard, 
+        NumberOfPersonsOnBoard,
     RouteInformation,
     TextDescription,
     TidalWindow,
@@ -38,7 +39,7 @@ public abstract sealed class ApplicationSpecificMessage permits
      * @param binaryData Binary data
      * @return Application Specific Message
      */
-    public static ApplicationSpecificMessage create(int designatedAreaCode, int functionalId, String binaryData) {
+    public static ApplicationSpecificMessage create(int designatedAreaCode, int functionalId, BitString binaryData) {
         requireNonNull(binaryData);
 
         ApplicationSpecificMessage asm = switch (designatedAreaCode) {
@@ -79,6 +80,6 @@ public abstract sealed class ApplicationSpecificMessage permits
 
     private final int designatedAreaCode;
     private final int functionalId;
-    private final String binaryData;
+    private final BitString binaryData;
 
 }
