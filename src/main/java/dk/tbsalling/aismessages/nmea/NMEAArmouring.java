@@ -29,7 +29,7 @@ import dk.tbsalling.aismessages.ais.SixBitAsciiCodec;
  * two operations the NMEA pipeline needs.
  *
  * <p>The last character of an armoured payload may carry padding bits; the count is
- * transmitted in the NMEA sentence's fill-bits field and supplied to {@link #decode}.
+ * transmitted in the NMEA sentence's padding-bits field and supplied to {@link #decode}.
  */
 public final class NMEAArmouring {
 

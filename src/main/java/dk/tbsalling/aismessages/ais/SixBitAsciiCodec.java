@@ -136,14 +136,14 @@ public final class SixBitAsciiCodec {
             bitPos += 6;
         }
 
-        // Mask off stray bits past `length` in the last data word (paddingBits trimmed off the
+        // Clear stray padding bits past `length` in the last data word (paddingBits trimmed off the
         // last 6-bit chunk leaves up to 5 set bits past the logical end). The slack guard word
         // is naturally zero by Java's array-init contract.
         int validBitsInLastWord = length & 63;
         int lastWordIdx = length >>> 6;
         if (validBitsInLastWord > 0) {
-            long mask = ~((1L << (64 - validBitsInLastWord)) - 1);
-            words[lastWordIdx] &= mask;
+            long paddingMask = ~((1L << (64 - validBitsInLastWord)) - 1);
+            words[lastWordIdx] &= paddingMask;
         }
 
         return BitString.of(words, length);
