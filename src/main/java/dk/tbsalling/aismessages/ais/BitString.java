@@ -59,7 +59,7 @@ public final class BitString {
      * <p>{@code words.length} must be at least {@code ((length + 63) >>> 6) + 1} — one slack
      * guard word past the last data word. Bits beyond {@code length} (within the last data word
      * and within the slack guard) must already be zero; callers building a packed buffer should
-     * mask the tail before invoking this factory.
+     * clear trailing padding bits before invoking this factory.
      *
      * @param words  packed bits, MSB-first within each long
      * @param length logical length in bits
@@ -243,7 +243,7 @@ public final class BitString {
             long lo = (shift == 0) ? 0L : (words[wordIdx + i + 1] >>> (64 - shift));
             newWords[i] = hi | lo;
         }
-        maskTail(newWords, newLength);
+        clearTrailingPaddingBits(newWords, newLength);
         return new BitString(newWords, newLength);
     }
 
@@ -271,12 +271,12 @@ public final class BitString {
      * Zero out any bits in {@code words} past the logical length.
      * Assumes {@code words.length >= ((length + 63) >>> 6) + 1} (slack guard present).
      */
-    private static void maskTail(long[] words, int length) {
+    private static void clearTrailingPaddingBits(long[] words, int length) {
         int validBitsInLastWord = length & 63;
         int lastWordIdx = length >>> 6;
         if (validBitsInLastWord > 0) {
-            long mask = ~((1L << (64 - validBitsInLastWord)) - 1);
-            words[lastWordIdx] &= mask;
+            long paddingMask = ~((1L << (64 - validBitsInLastWord)) - 1);
+            words[lastWordIdx] &= paddingMask;
         }
         // Slack guard word and any words past lastWordIdx are zero by allocation.
     }
