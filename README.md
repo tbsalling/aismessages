@@ -12,7 +12,9 @@ Internally AISmessages uses eager parsing and a fail‑fast design combined with
 
 For more than 15+ years AISmessages has been used in production in many systems and solutions all over the world.
 
-If you are new to AIS you can read a short introduction to it on [my blog](https://tbsalling.dk/blog_000_ais.html).
+If you are new to AIS you can read a short introduction in [docs/articles/what-is-ais.md](docs/articles/what-is-ais.md).
+
+The [`docs/`](docs/) directory contains project documentation, migrated articles, and legacy tutorials. Start with [docs/README.md](docs/README.md).
 
 Other AIS projects
 ---
@@ -46,7 +48,7 @@ There are several demos, intros, and public appearances of AISmessages; like for
 
 Programmatic usage
 ---
-Programmatically the starting point is the AISStreamReader. It takes an InputStream (feeding
+Programmatically the starting point is `AISInputStreamReader`. It takes an InputStream (feeding
 NMEA data), and a consumer of AISMessages which as called back every time an AIS message is decoded. So,
 if you have an InputStream serving data like this:
 
@@ -190,7 +192,7 @@ A complete demo application is available in the `dk.tbsalling.aismessages.demo.U
 Obtaining AISmessages
 ---
 You do not need to compile AISmessages yourself. It is available in Maven Central. So if you are using Maven, all you
-need to do is add these lines to your pom.xml:
+need to do is add these lines to your pom.xml (or replace the version with a newer release from Maven Central if available):
 
 ``` xml
 ...
