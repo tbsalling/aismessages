@@ -27,13 +27,14 @@ import java.util.regex.Pattern;
 @Value
 public class NMEAMessage {
 
+    private static final Pattern TAG_BLOCK_PATTERN = Pattern.compile("^\\\\.*\\*[0-9A-Fa-f]{2}\\\\");
+    private static final Pattern NMEA_MESSAGE_PATTERN = Pattern.compile("^!.*\\*[0-9A-Fa-f]{2}$");
+
     public NMEAMessage(String input) {
         // Parse tag block first and strip it from the working string
-        final String nmeaTagBlockRegEx = "^\\\\.*\\*[0-9A-Fa-f]{2}\\\\";
         String working = input;
         NMEATagBlock parsedTagBlock = null;
-        Pattern tbPattern = Pattern.compile(nmeaTagBlockRegEx);
-        Matcher tbMatcher = tbPattern.matcher(working);
+        Matcher tbMatcher = TAG_BLOCK_PATTERN.matcher(working);
         if (tbMatcher.lookingAt()) {
             String nmeaTagBlockString = working.substring(tbMatcher.start(), tbMatcher.end());
             parsedTagBlock = NMEATagBlock.fromString(nmeaTagBlockString);
@@ -45,9 +46,8 @@ public class NMEAMessage {
         this.rawMessage = working;
 
         // Basic structural validations before parsing fields
-        final String nmeaMessageRegExp = "^!.*\\*[0-9A-Fa-f]{2}$";
-        if (!rawMessage.matches(nmeaMessageRegExp))
-            throw new NMEAParseException(rawMessage, "Message does not comply with regexp \"" + nmeaMessageRegExp + "\"");
+        if (!NMEA_MESSAGE_PATTERN.matcher(rawMessage).matches())
+            throw new NMEAParseException(rawMessage, "Message does not comply with regexp \"" + NMEA_MESSAGE_PATTERN.pattern() + "\"");
 
         String[] fields = rawMessage.split(",", -1); // keep empty strings
         if (fields.length != 7)
@@ -95,10 +95,9 @@ public class NMEAMessage {
         }
         
         // Calculate checksum by XORing all characters between '!' and '*' (exclusive)
-        String checksumString = rawMessage.substring(startIndex + 1, endIndex);
         int calculatedChecksum = 0;
-        for (int i = 0; i < checksumString.length(); i++) {
-            calculatedChecksum ^= (byte) checksumString.charAt(i);
+        for (int i = startIndex + 1; i < endIndex; i++) {
+            calculatedChecksum ^= (byte) rawMessage.charAt(i);
         }
         
         return calculatedChecksum == this.checksum;

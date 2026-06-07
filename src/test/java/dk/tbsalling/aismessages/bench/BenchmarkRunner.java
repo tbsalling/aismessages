@@ -19,6 +19,7 @@ public class BenchmarkRunner {
         new Runner(new OptionsBuilder()
                 .include(BitStringMicroBenchmark.class.getName())
                 .include(AISMessageFactoryBenchmark.class.getName())
+                .include(NMEAMessageParseBenchmark.class.getName())
                 .resultFormat(ResultFormatType.TEXT)
                 .result("target/jmh-result.txt")
                 .build())
