@@ -62,15 +62,16 @@ public enum AISMessageType {
 	    return toString();
 	}
 
-	public static AISMessageType fromInteger(Integer integer) {
-		if (integer != null) {
-			for (AISMessageType b : AISMessageType.values()) {
-				if (integer.intValue() == b.code) {
-					return b;
-				}
-			}
+	public static AISMessageType fromInteger(int code) {
+		for (AISMessageType b : AISMessageType.values()) {
+			if (code == b.code) return b;
 		}
 		return null;
+	}
+
+	public static AISMessageType fromInteger(Integer integer) {
+		if (integer == null) return null;
+		return fromInteger(integer.intValue());
 	}
 
 	private final int code;

@@ -48,14 +48,15 @@ public enum ReportingInterval {
 
 	private final int code;
 
-	public static ReportingInterval fromInteger(Integer integer) {
-		if (integer != null) {
-			for (ReportingInterval b : ReportingInterval.values()) {
-				if (integer.intValue() == b.code) {
-					return b;
-				}
-			}
+	public static ReportingInterval fromInteger(int code) {
+		for (ReportingInterval b : ReportingInterval.values()) {
+			if (code == b.code) return b;
 		}
 		return null;
+	}
+
+	public static ReportingInterval fromInteger(Integer integer) {
+		if (integer == null) return null;
+		return fromInteger(integer.intValue());
 	}
 }

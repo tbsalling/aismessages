@@ -36,14 +36,15 @@ public enum SyncState {
 
 	private final int code;
 
-	public static SyncState fromInteger(Integer integer) {
-		if (integer != null) {
-			for (SyncState b : SyncState.values()) {
-				if (integer.intValue() == b.code) {
-					return b;
-				}
-			}
+	public static SyncState fromInteger(int code) {
+		for (SyncState b : SyncState.values()) {
+			if (code == b.code) return b;
 		}
 		return null;
+	}
+
+	public static SyncState fromInteger(Integer integer) {
+		if (integer == null) return null;
+		return fromInteger(integer.intValue());
 	}
 }

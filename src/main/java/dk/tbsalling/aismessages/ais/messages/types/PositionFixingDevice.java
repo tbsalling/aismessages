@@ -41,14 +41,15 @@ public enum PositionFixingDevice {
 
 	private final int code;
 
-	public static PositionFixingDevice fromInteger(Integer integer) {
-		if (integer != null) {
-			for (PositionFixingDevice b : PositionFixingDevice.values()) {
-				if (integer.intValue() == b.code) {
-					return b;
-				}
-			}
+	public static PositionFixingDevice fromInteger(int code) {
+		for (PositionFixingDevice b : PositionFixingDevice.values()) {
+			if (code == b.code) return b;
 		}
 		return null;
+	}
+
+	public static PositionFixingDevice fromInteger(Integer integer) {
+		if (integer == null) return null;
+		return fromInteger(integer.intValue());
 	}
 }

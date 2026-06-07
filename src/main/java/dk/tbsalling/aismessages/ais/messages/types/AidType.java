@@ -64,14 +64,15 @@ public enum AidType {
 
 	private final int code;
 
-	public static AidType fromInteger(Integer integer) {
-		if (integer != null) {
-			for (AidType b : AidType.values()) {
-				if (integer.intValue() == b.code) {
-					return b;
-				}
-			}
+	public static AidType fromInteger(int code) {
+		for (AidType b : AidType.values()) {
+			if (code == b.code) return b;
 		}
 		return null;
+	}
+
+	public static AidType fromInteger(Integer integer) {
+		if (integer == null) return null;
+		return fromInteger(integer.intValue());
 	}
 }

@@ -101,14 +101,15 @@ public enum ShipType {
 
 	private final int code;
 
-	public static ShipType fromInteger(Integer integer) {
-		if (integer != null) {
-			for (ShipType b : ShipType.values()) {
-				if (integer.intValue() == b.code) {
-					return b;
-				}
-			}
+	public static ShipType fromInteger(int code) {
+		for (ShipType b : ShipType.values()) {
+			if (code == b.code) return b;
 		}
 		return null;
+	}
+
+	public static ShipType fromInteger(Integer integer) {
+		if (integer == null) return null;
+		return fromInteger(integer.intValue());
 	}
 }
