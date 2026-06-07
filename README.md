@@ -6,6 +6,18 @@ navigation and safety systems.
 It is built for production workloads: fast decoding, immutable message objects, predictable behavior under load, and a
 small footprint that fits comfortably into high-throughput or real-time systems.
 
+> **Performance highlights** (Apple M2 Max, single thread, JMH AverageTime)
+>
+> | Stage | ns/op | Throughput |
+> |---|---|---|
+> | NMEA sentence parse (`new NMEAMessage`) | ~351 ns | ~2.9 M sentences/sec |
+> | AIS payload decode (`AISMessageFactory.create`) | ~112 ns | ~8.9 M decodes/sec |
+> | Bit-field read (e.g. MMSI, lat/lon) | ~0.9 ns | >1 billion reads/sec |
+>
+> Decoded messages are **fully immutable** — safe to share across threads with zero synchronisation overhead.
+> The internal binary representation keeps retained heap per decoded message **3–6× lower** than String-based
+> approaches, keeping GC pauses short even at high message rates.
+
 ## Why teams choose AISmessages
 
 - **Zero runtime dependencies** for simple deployment and fewer surprises
@@ -75,14 +87,26 @@ name, ship type, and vessel dimensions.
 
 AISmessages is designed to stay fast and predictable when message rates climb.
 
-- The current architecture uses **eager parsing** and **immutable value objects**, reducing repeated work and garbage
-  collection pressure.
-- The internal packed `BitString` representation avoids expensive string-based bit handling and improves both speed and
-  memory efficiency.
-- The packed representation also lowers retained heap per decoded message by roughly **3x** for typical payload sizes
-  and up to **6x** for large payloads.
-- A recent JMH benchmark measured `AISMessageFactoryBenchmark.decodeOne` at **108.136 ns/op**, or about **9.25 million
-  messages/second** on an Apple M2 Max in a single-threaded, in-memory benchmark.
+- The architecture uses **eager parsing** and **immutable value objects**, so each decoded message is fully populated
+  once and safe to pass to any thread without defensive copying.
+- Structural validation reuses pre-compiled patterns and lookup tables — no unnecessary allocations on the hot path.
+- The internal binary representation avoids String-based bit handling and keeps memory usage low.
+- Retained heap per decoded message is roughly **3× lower for typical payload sizes and up to 6× lower for large
+  payloads** compared to String-based approaches.
+
+JMH benchmarks (Apple M2 Max, Java 21, single thread, `AverageTime` mode — lower is better):
+
+| Benchmark | ns/op | ~msg/sec |
+|---|---|---|
+| `NMEAMessageParseBenchmark.parseOne` | 350.9 | ~2.9 M |
+| `AISMessageFactoryBenchmark.decodeOne` | 111.8 | ~8.9 M |
+| `BitStringMicroBenchmark.getUnsignedInt` (30-bit MMSI) | 0.86 | >1 B |
+| `BitStringMicroBenchmark.getSignedInt` (28-bit longitude) | 0.86 | >1 B |
+| `BitStringMicroBenchmark.getSixBitAsciiString` (120-bit name) | 44.98 | ~22 M |
+
+`NMEAMessageParseBenchmark` measures the full cost of constructing a `NMEAMessage` from a raw sentence string
+(tag-block detection, field splitting, checksum parsing). `AISMessageFactoryBenchmark` measures the subsequent AIS
+payload decode from a pre-parsed `NMEAMessage` into a typed, immutable `AISMessage` value object.
 
 Run the benchmark locally with:
 
