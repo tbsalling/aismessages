@@ -29,7 +29,7 @@ Notes:
 
 The decoding pipeline is layered. Understanding the seam between NMEA and AIS is the key to navigating the code:
 
-1. **Transport** — `dk.tbsalling.aismessages.AISInputStreamReader` is the public entry point. It wraps `NMEAMessageInputStreamReader` (line-oriented stream / `List<String>` queue) and exposes a `Consumer<? super AISMessage>` callback. Sibling transports under `nmea/` are `NMEAMessageSocketClient` (TCP) and `NMEAMessageUDPSocket` (UDP).
+1. **Transport** — `dk.tbsalling.aismessages.AISInputStreamReader` is the public entry point. It wraps `NMEAMessageInputStreamReader` (line-oriented stream / `List<String>` queue) and exposes a `Consumer<? super AISMessage>` callback. Sibling transports under `nmea/` are `NMEAMessageSocketClient` (TCP) and `NMEAMessageUDPSocket` (UDP). `AISMessageDecoder` is the synchronous, non-stream facade over the same pipeline: `decode(...)` throws on undecodable input, `tryDecode(...)` never throws and returns `Optional` (empty always means "nothing decoded", whatever the cause).
 2. **NMEA framing** — `nmea/messages/NMEAMessage` eagerly parses one NMEA sentence (`!AIVDM`/`!AIVDO`), validates its checksum, and exposes fragment metadata. Optional NMEA tag blocks (prefixed `\...\`) are parsed by `nmea/tagblock/NMEATagBlock`.
 3. **Fragment reassembly** — `nmea/NMEAMessageHandler` (lenient; logs invalid checksums) and `NMEAMessageHandlerStrict` (rejects them) buffer multi-fragment messages and call `AISMessageFactory.create(...)` once all fragments arrive.
 4. **AIS decoding** — `ais/messages/AISMessageFactory` decodes the 6-bit armoured payload into a `ais/BitString` and

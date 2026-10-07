@@ -30,8 +30,10 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.logging.Level;
 
 /**
@@ -95,6 +97,74 @@ public final class AISMessageDecoder {
         }
 
         return decodeLenient(lines);
+    }
+
+    /**
+     * Attempt to decode a single NMEA sentence into a single AIS message, without throwing.
+     * <p>
+     * This is the non-throwing counterpart of {@link #decode(String)}. The result is empty
+     * whenever no AIS message could be decoded, for whatever reason: a malformed or unsupported
+     * sentence, a {@code null} argument, or a lone fragment of a multi-fragment message. It
+     * deliberately does not report <em>why</em> nothing was decoded; use {@link #decode(String)}
+     * and catch if the reason matters.
+     * <p>
+     * Note that a bare {@code null} literal is ambiguous across the {@code tryDecode} overloads
+     * and will not compile; cast it at the call site, as {@code tryDecode((String) null)}.
+     * <p>
+     * This method is thread-safe.
+     *
+     * @param nmeaSentence a single NMEA sentence, such as {@code !AIVDM,...}; may be {@code null}
+     * @return the decoded AIS message, or empty if none could be decoded
+     */
+    public static Optional<AISMessage> tryDecode(String nmeaSentence) {
+        if (nmeaSentence == null) {
+            return Optional.empty();
+        }
+        List<AISMessage> messages = decodeLenient(List.of(nmeaSentence));
+        return messages.isEmpty() ? Optional.empty() : Optional.of(messages.getFirst());
+    }
+
+    /**
+     * Attempt to decode a variable number of NMEA sentences, without throwing.
+     * Undecodable sentences and {@code null} elements are skipped. The result is empty if no AIS
+     * message could be decoded at all; a present result always holds a non-empty, immutable list.
+     */
+    public static Optional<List<AISMessage>> tryDecode(String... nmeaSentences) {
+        // Arrays.asList rather than List.of: List.of rejects null elements.
+        return nmeaSentences == null ? Optional.empty() : tryDecode(Arrays.asList(nmeaSentences));
+    }
+
+    /**
+     * Attempt to decode a list of NMEA sentences, without throwing.
+     * Undecodable sentences and {@code null} elements are skipped. The result is empty if no AIS
+     * message could be decoded at all; a present result always holds a non-empty, immutable list.
+     * <p>
+     * All fragments of a multi-fragment AIS message must be supplied to the same call, since
+     * reassembly state does not survive across calls.
+     */
+    public static Optional<List<AISMessage>> tryDecode(List<String> nmeaSentences) {
+        if (nmeaSentences == null) {
+            return Optional.empty();
+        }
+        List<AISMessage> messages = decodeLenient(nmeaSentences);
+        return messages.isEmpty() ? Optional.empty() : Optional.of(messages);
+    }
+
+    /**
+     * Attempt to decode all NMEA sentences from an input stream, without throwing.
+     * The result is empty both when the stream cannot be read and when it holds no decodable AIS
+     * message; use {@link #decode(InputStream)} if those two cases must be told apart.
+     */
+    public static Optional<List<AISMessage>> tryDecode(InputStream inputStream) {
+        if (inputStream == null) {
+            return Optional.empty();
+        }
+        try {
+            return tryDecode(readLines(inputStream));
+        } catch (IOException | RuntimeException e) {
+            log.log(Level.FINE, "Could not read AIS NMEA stream.", e);
+            return Optional.empty();
+        }
     }
 
     /**

@@ -60,8 +60,13 @@ AISmessages decodes NMEA-armoured AIS payloads into Java objects so callers do n
 For current integrations, the main entry points are:
 
 - `AISInputStreamReader` for decoding AIS data from streams or in-memory lists of NMEA sentences
+- `AISMessageDecoder` for direct, one-shot decoding of a sentence, a batch or an `InputStream`
 - `NMEAMessageHandler` for request/response or batch-oriented workflows
 - `NMEAMessageUDPSocket` for receiving AIS traffic over UDP
+
+`AISMessageDecoder` comes in two flavours: `decode(...)` throws when input cannot be decoded, while
+`tryDecode(...)` never throws and returns an empty `Optional` instead. The latter suits untrusted or
+lossy feeds, where undecodable sentences are expected rather than exceptional.
 
 For example, the message above can be decoded into structured data like:
 

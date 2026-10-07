@@ -86,6 +86,28 @@ List<AISMessage> messages = AISMessageDecoder.decode(
 );
 ```
 
+Every `decode` method throws if the input cannot be decoded. For untrusted or lossy feeds, each one
+has a `tryDecode` counterpart that never throws and returns an `Optional` instead:
+
+```java
+import dk.tbsalling.aismessages.AISMessageDecoder;
+import dk.tbsalling.aismessages.ais.messages.AISMessage;
+
+Optional<AISMessage> message = AISMessageDecoder.tryDecode("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A");
+
+message.ifPresent(m -> System.out.println("MMSI " + m.getSourceMmsi().getMmsi()));
+
+// null, malformed and unsupported input all yield an empty Optional rather than an exception
+Optional<List<AISMessage>> messages = AISMessageDecoder.tryDecode(
+        "!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A",
+        "not an ais sentence"
+);
+```
+
+An empty `Optional` always means "no AIS message could be decoded", whatever the cause - bad input,
+nothing supplied, or an unreadable stream. `tryDecode` deliberately does not report *why*; use
+`decode` and catch when the reason matters.
+
 Use `AISInputStreamReader` for streaming/continuous ingestion and `AISMessageDecoder` when you want a direct,
 one-shot decode of NMEA input.
 

@@ -143,6 +143,12 @@ AIS-to-NMEA is not always a 1:1 mapping. Some AIS payloads require multiple NMEA
 
 For continuous streams, prefer `AISInputStreamReader`. For HTTP batch decoding, `NMEAMessageHandler` gives you precise control over fragment boundaries and leftover partial messages.
 
+If you do not need that control, `AISMessageDecoder` wraps the same pipeline in one call:
+`AISMessageDecoder.decode(nmeaMessagesAsStrings)` returns every message it could decode and skips the
+rest, and `AISMessageDecoder.tryDecode(nmeaMessagesAsStrings)` does the same without ever throwing,
+returning an empty `Optional` when nothing could be decoded. Use the explicit `NMEAMessageHandler`
+above when you need to detect incomplete fragments, as that service does.
+
 ## Run the service
 
 Run the Spring Boot application with Maven or Gradle. For Maven:

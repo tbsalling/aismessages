@@ -39,6 +39,12 @@ public class SimpleDemoApp {
 
         // For single-shot decoding of a sentence or short batch, use AISMessageDecoder.
         System.out.println("Decoded directly: " + AISMessageDecoder.decode("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A"));
+
+        // tryDecode never throws: undecodable input yields an empty Optional.
+        AISMessageDecoder.tryDecode("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A")
+                .ifPresent(aisMessage -> System.out.println("Decoded leniently: " + aisMessage));
+
+        System.out.println("Undecodable input yields: " + AISMessageDecoder.tryDecode("not an ais sentence"));
 	}
 
     public static void main(String[] args) {

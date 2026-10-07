@@ -42,6 +42,15 @@ traffic.
 - Added `dk.tbsalling.aismessages.ais.AISText` for AIS text decoding with AIS filler handling (`'@'` becomes space and
   surrounding whitespace is trimmed).
 - Added `dk.tbsalling.aismessages.nmea.NMEAArmouring` for explicit NMEA armouring encode/decode operations.
+- Added non-throwing `tryDecode` counterparts to every `dk.tbsalling.aismessages.AISMessageDecoder.decode`
+  overload: `tryDecode(String)` returns `Optional<AISMessage>`, and `tryDecode(String...)`,
+  `tryDecode(List<String>)` and `tryDecode(InputStream)` return `Optional<List<AISMessage>>`. They never
+  throw - malformed, unsupported and `null` input (argument or element) all yield an empty `Optional`
+  rather than an exception, so `tryDecode` suits untrusted or lossy feeds.
+- An empty `Optional` from `tryDecode` uniformly means "no AIS message could be decoded", whatever the
+  cause: bad input, nothing supplied, or an unreadable stream. A present result always holds a non-empty,
+  immutable list. `tryDecode` does not report *why* nothing was decoded; use `decode` and catch when the
+  reason matters.
 
 ### Performance
 
