@@ -5,11 +5,14 @@ traffic.
 
 ---
 
-## Version 4.1.3-SNAPSHOT
+## Version 5.0.0-SNAPSHOT
 
-**Development Version**
+**Development Version - Major Version Update - Java 25 Required**
 
 ### Breaking API Changes
+
+- **Minimum Java version increased from 21 to 25.** The library is compiled with
+  `--release 25`, so consuming applications must run on a Java 25 or later JVM.
 
 **Packed `BitString` replaces `String`-of-`'0'`/`'1'` payload representation:**
 
@@ -41,6 +44,7 @@ traffic.
 
 ### Upgrade Notes
 
+- Set `<release>25</release>` (or the equivalent `--release 25`) in your own build, and run on a Java 25 JVM.
 - The README now reflects the `BitString`-based API.
 - NMEA terminology was standardized from "fill bits" to "padding bits" in documentation and related APIs.
 - See [`docs/articles/performance-analysis.md`](docs/articles/performance-analysis.md) for benchmarks and migration
@@ -266,12 +270,12 @@ Bug fixes and stability improvements. JDK 7 backport available.
 
 ## Maven Coordinates
 
-### Development Version (4.1.3-SNAPSHOT)
+### Development Version (5.0.0-SNAPSHOT)
 ```xml
 <dependency>
     <groupId>dk.tbsalling</groupId>
     <artifactId>aismessages</artifactId>
-    <version>4.1.3-SNAPSHOT</version>
+    <version>5.0.0-SNAPSHOT</version>
 </dependency>
 ```
 

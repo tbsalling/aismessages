@@ -3,7 +3,7 @@
 **Published:** 2026-06-02
 **Updated:** 2026-06-02
 
-AISmessages historically represented decoded AIS payload bits as a `String` of `'0'`/`'1'` characters. In v4.1.3 this
+AISmessages historically represented decoded AIS payload bits as a `String` of `'0'`/`'1'` characters. In v5.0.0 this
 was replaced by a packed, immutable `long[]`-backed `BitString` with typed accessors.
 
 This article documents the measured impact of that internal change: **significantly faster field extraction**, **faster
@@ -26,7 +26,7 @@ The end-to-end speedup is larger than initially projected (2–3×) because the 
 
 ## What changed
 
-### Old representation (pre v4.1.3)
+### Old representation (pre v5.0.0)
 
 - Payload bits represented as a `String` of `'0'`/`'1'`.
 - Field extraction typically looked like:
@@ -34,7 +34,7 @@ The end-to-end speedup is larger than initially projected (2–3×) because the 
     - `Integer.parseUnsignedInt(substring, 2)` / `Long.parseLong(...)`
 - Six-bit ASCII decoding used relatively allocation-heavy helpers (map lookups, string building and post-processing).
 
-### New representation (v4.1.3+)
+### New representation (v5.0.0+)
 
 - Payload bits represented as an immutable `BitString`:
     - storage: packed `long[]` (64 bits per `long`)

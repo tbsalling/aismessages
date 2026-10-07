@@ -20,7 +20,7 @@ $ ./mvnw package
 ## Add a Dockerfile
 
 ```Dockerfile
-FROM eclipse-temurin:21-jre
+FROM eclipse-temurin:25-jre
 WORKDIR /app
 COPY target/*.jar /app/app.jar
 EXPOSE 8080/tcp

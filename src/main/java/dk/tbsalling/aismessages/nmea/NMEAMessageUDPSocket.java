@@ -84,11 +84,11 @@ public class NMEAMessageUDPSocket {
                             NMEAMessage nmea = new NMEAMessage(line);
                             nmeaMessageConsumer.accept(nmea);
                             log.fine("Received: %s".formatted(nmea.toString()));
-                        } catch (InvalidMessage invalidMessageException) {
+                        } catch (InvalidMessage _) {
                             log.warning("Received invalid AIS message: \"%s\"".formatted(line));
-                        } catch (UnsupportedMessageType unsupportedMessageTypeException) {
+                        } catch (UnsupportedMessageType _) {
                             log.warning("Received unsupported NMEA message: \"%s\"".formatted(line));
-                        } catch (NMEAParseException parseException) {
+                        } catch (NMEAParseException _) {
                             log.warning("Received non-compliant NMEA message: \"%s\"".formatted(line));
                         }
                     }

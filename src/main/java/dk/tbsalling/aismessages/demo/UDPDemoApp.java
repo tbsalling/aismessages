@@ -68,7 +68,7 @@ public class UDPDemoApp implements Consumer<AISMessage> {
         if (args.length >= 2) {
             try {
                 port = Integer.parseInt(args[1]);
-            } catch (NumberFormatException e) {
+            } catch (NumberFormatException _) {
                 System.err.println("Invalid port number: " + args[1]);
                 System.err.println("Usage: java UDPDemoApp [host] [port]");
                 System.exit(1);

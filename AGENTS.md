@@ -4,7 +4,7 @@ This repository is a Java project built with Maven. When collaborating with any 
 
 ## Project Overview
 
-- **Language & build tool:** Java 8+ with Maven (`mvnw`, `pom.xml`)
+- **Language & build tool:** Java 25+ with Maven (`mvnw`, `pom.xml`)
 - **Source code:** `src/main/java`
 - **Tests:** `src/test/java`
 - **Key packages:** AIS message decoder in `dk.tbsalling.aismessages`; demos in `dk.tbsalling.aismessages.demo`

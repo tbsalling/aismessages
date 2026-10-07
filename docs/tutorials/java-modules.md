@@ -7,7 +7,7 @@ This tutorial explains the Java module work around AISmessages and how it relate
 
 ## Current status
 
-AISmessages currently targets Java 21, but the repository does **not** currently ship a `module-info.java` descriptor. The build also disables the module path in test execution:
+AISmessages currently targets Java 25, but the repository does **not** currently ship a `module-info.java` descriptor. The build also disables the module path in test execution:
 
 ```xml
 <useModulePath>false</useModulePath>

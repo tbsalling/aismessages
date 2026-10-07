@@ -96,11 +96,11 @@ public class NMEAMessageInputStreamReader {
                 NMEAMessage nmea = new NMEAMessage(string);
 				nmeaMessageHandler.accept(nmea);
                 log.fine("Received: %s".formatted(nmea.toString()));
-			} catch (InvalidMessage invalidMessageException) {
+			} catch (InvalidMessage _) {
                 log.warning("Received invalid AIS message: \"%s\"".formatted(string));
-			} catch (UnsupportedMessageType unsupportedMessageTypeException) {
+			} catch (UnsupportedMessageType _) {
                 log.warning("Received unsupported NMEA message: \"%s\"".formatted(string));
-			} catch (NMEAParseException parseException) {
+			} catch (NMEAParseException _) {
                 log.warning("Received non-compliant NMEA message: \"%s\"".formatted(string));
 			}
 		}
