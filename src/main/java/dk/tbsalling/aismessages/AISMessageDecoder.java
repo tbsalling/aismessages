@@ -22,6 +22,7 @@ import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.exceptions.NMEAParseException;
 import dk.tbsalling.aismessages.nmea.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import lombok.extern.java.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -31,6 +32,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Level;
 
 /**
  * Convenience API for decoding NMEA AIS sentences into typed AIS message objects.
@@ -38,6 +40,7 @@ import java.util.Objects;
  * This keeps the low-level reassembly and parsing pipeline intact while providing a more
  * consumer-friendly entry point for applications that simply want decoded AIS messages.
  */
+@Log
 public final class AISMessageDecoder {
 
     private AISMessageDecoder() {
@@ -74,7 +77,31 @@ public final class AISMessageDecoder {
      */
     public static List<AISMessage> decode(List<String> nmeaSentences) {
         Objects.requireNonNull(nmeaSentences, "nmeaSentences cannot be null.");
+        return decodeLenient(nmeaSentences);
+    }
 
+    /**
+     * Decode all NMEA sentences from an input stream into the successfully decoded AIS messages.
+     * Invalid or unsupported lines are ignored.
+     */
+    public static List<AISMessage> decode(InputStream inputStream) {
+        Objects.requireNonNull(inputStream, "inputStream cannot be null.");
+
+        List<String> lines;
+        try {
+            lines = readLines(inputStream);
+        } catch (IOException e) {
+            throw new IllegalStateException("Failed to read AIS NMEA stream.", e);
+        }
+
+        return decodeLenient(lines);
+    }
+
+    /**
+     * Decode leniently: null, blank, malformed and unsupported sentences are skipped.
+     * Never throws.
+     */
+    private static List<AISMessage> decodeLenient(List<String> nmeaSentences) {
         List<AISMessage> messages = new ArrayList<>();
         NMEAMessageHandler handler = new NMEAMessageHandler("DECODER", messages::add);
 
@@ -85,31 +112,30 @@ public final class AISMessageDecoder {
 
             try {
                 handler.accept(new NMEAMessage(nmeaSentence));
-            } catch (InvalidMessage | UnsupportedMessageType | NMEAParseException _) {
-                // Consumer-oriented decoder ignores malformed or unsupported NMEA input
+            } catch (NMEAParseException | InvalidMessage | UnsupportedMessageType e) {
+                // Expected: malformed or unsupported input. This is the advertised behaviour
+                // of a lenient decoder, so it is not a warning.
+                log.fine("Ignoring undecodable NMEA sentence: %s".formatted(nmeaSentence));
+            } catch (RuntimeException e) {
+                // Unexpected: NumberFormatException, InvalidTagBlock, IllegalArgumentException,
+                // ArrayIndexOutOfBoundsException, ... Swallowed to honour the documented
+                // contract, but logged with a stack trace: this usually means a truncated
+                // payload or a decoder bug, and must not vanish silently.
+                log.log(Level.WARNING, "Ignoring NMEA sentence that failed to decode unexpectedly: %s".formatted(nmeaSentence), e);
             }
         }
 
         return List.copyOf(messages);
     }
 
-    /**
-     * Decode all NMEA sentences from an input stream into the successfully decoded AIS messages.
-     * Invalid or unsupported lines are ignored.
-     */
-    public static List<AISMessage> decode(InputStream inputStream) {
-        Objects.requireNonNull(inputStream, "inputStream cannot be null.");
-
+    private static List<String> readLines(InputStream inputStream) throws IOException {
         List<String> lines = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
                 lines.add(line);
             }
-        } catch (IOException e) {
-            throw new IllegalStateException("Failed to read AIS NMEA stream.", e);
         }
-
-        return decode(lines);
+        return lines;
     }
 }

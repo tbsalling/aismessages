@@ -14,6 +14,12 @@ traffic.
 - **Minimum Java version increased from 21 to 25.** The library is compiled with
   `--release 25`, so consuming applications must run on a Java 25 or later JVM.
 
+- **`AISMessageDecoder.decode(String)` now reports all undecodable input as
+  `IllegalArgumentException`.** It previously let `NumberFormatException`, `InvalidTagBlock`,
+  `IllegalArgumentException` and other unchecked exceptions escape from deeper in the decoding
+  pipeline. It now consistently throws `IllegalArgumentException`, as its JavaDoc always
+  specified.
+
 **Packed `BitString` replaces `String`-of-`'0'`/`'1'` payload representation:**
 
 - Introduced `dk.tbsalling.aismessages.ais.BitString`, a packed immutable bit vector with typed accessors such as
@@ -41,6 +47,15 @@ traffic.
 
 - `AISMessageFactory.create(...)` is now about **11x faster** end-to-end.
 - Retained heap per decoded message is reduced by roughly **3x to 6x**, depending on payload size.
+
+### Fixes
+
+- **`AISMessageDecoder.decode(String...)` and `decode(List<String>)` now really do ignore every
+  malformed or unsupported sentence.** They previously caught only three NMEA-layer exception
+  types, so a single bad sentence could still abort the whole batch with `NumberFormatException`,
+  `InvalidTagBlock`, `IllegalArgumentException`, `ArrayIndexOutOfBoundsException` or
+  `ais.exceptions.UnsupportedMessageType`. Undecodable sentences are now skipped and logged:
+  expected parse failures at `FINE`, unexpected ones at `WARNING` with a stack trace.
 
 ### Upgrade Notes
 

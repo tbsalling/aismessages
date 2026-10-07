@@ -61,6 +61,19 @@ public class AISMessageDecoderTest {
     }
 
     @Test
+    public void decodeIgnoresSentenceWhoseFieldsAreNotNumeric() {
+        // "x" as fragment count passes NMEAMessage's regex and field-count checks,
+        // but makes Integer.parseInt throw deeper in the pipeline.
+        List<AISMessage> decoded = AISMessageDecoder.decode(List.of(
+                "!AIVDM,x,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A",
+                "!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A"
+        ));
+
+        assertEquals(1, decoded.size());
+        assertEquals(AISMessageType.PositionReportClassAScheduled, decoded.getFirst().getMessageType());
+    }
+
+    @Test
     public void decodeSingleSentenceRejectsUnparseableInput() {
         IllegalArgumentException exception = assertThrows(IllegalArgumentException.class,
                 () -> AISMessageDecoder.decode("INVALID"));
