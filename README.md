@@ -69,6 +69,24 @@ public class DemoApp {
 `AISInputStreamReader` is the easiest entry point for most applications. Feed it NMEA sentences and it calls your
 consumer with decoded `AISMessage` instances.
 
+For simpler, synchronous use cases, the `AISMessageDecoder` convenience API can decode a single sentence, a list,
+a varargs batch, or an `InputStream` directly:
+
+```java
+import dk.tbsalling.aismessages.AISMessageDecoder;
+import dk.tbsalling.aismessages.ais.messages.AISMessage;
+
+AISMessage message = AISMessageDecoder.decode("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A");
+
+List<AISMessage> messages = AISMessageDecoder.decode(
+        "!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A",
+        "!AIVDM,1,1,,A,13ukmN7@0<0pRcHPTkn4P33f0000,0*58"
+);
+```
+
+Use `AISInputStreamReader` for streaming/continuous ingestion and `AISMessageDecoder` when you want a direct,
+one-shot decode of NMEA input.
+
 ## What you get
 
 AISmessages handles the full decoding path from NMEA framing to strongly typed AIS message objects:

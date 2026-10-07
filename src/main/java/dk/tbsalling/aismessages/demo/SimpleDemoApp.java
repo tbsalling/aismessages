@@ -17,6 +17,7 @@
 package dk.tbsalling.aismessages.demo;
 
 import dk.tbsalling.aismessages.AISInputStreamReader;
+import dk.tbsalling.aismessages.AISMessageDecoder;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -30,11 +31,14 @@ public class SimpleDemoApp {
         System.out.println("AISMessages Demo App");
         System.out.println("--------------------");
 
+        // For continuous stream processing, use AISInputStreamReader.
         AISInputStreamReader streamReader = new AISInputStreamReader(inputStream, aisMessage ->
                 System.out.println("Received AIS message from MMSI " + aisMessage.getSourceMmsi().getMmsi() + ": " + aisMessage)
         );
-
         streamReader.run();
+
+        // For single-shot decoding of a sentence or short batch, use AISMessageDecoder.
+        System.out.println("Decoded directly: " + AISMessageDecoder.decode("!AIVDM,1,1,,B,15MqdBP000G@qoLEi69PVGaN0D0=,0*3A"));
 	}
 
     public static void main(String[] args) {
