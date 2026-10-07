@@ -32,6 +32,8 @@ If you are new to AIS, start with [What is AIS?](docs/articles/what-is-ais.md).
 
 ## Quick start
 
+AISmessages 5.0.0 and later require **Java 25 or later**. (4.x requires Java 21, 3.x requires Java 11.)
+
 Add AISmessages from Maven Central:
 
 ```xml

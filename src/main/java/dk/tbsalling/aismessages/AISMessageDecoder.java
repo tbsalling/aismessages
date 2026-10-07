@@ -85,7 +85,7 @@ public final class AISMessageDecoder {
 
             try {
                 handler.accept(new NMEAMessage(nmeaSentence));
-            } catch (InvalidMessage | UnsupportedMessageType | NMEAParseException ignored) {
+            } catch (InvalidMessage | UnsupportedMessageType | NMEAParseException _) {
                 // Consumer-oriented decoder ignores malformed or unsupported NMEA input
             }
         }

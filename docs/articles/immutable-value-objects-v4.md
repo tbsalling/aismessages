@@ -40,7 +40,7 @@ See also the [v4.0.0 release notes](../../RELEASE_NOTES.md#version-400).
 
 This architectural shift reduced garbage-collection pressure and allocation churn, especially in high-throughput systems that process thousands of AIS messages per second. It also aligns the data model better with concurrent and reactive usage patterns.
 
-The current codebase continues to build on this architecture. The project targets Java 21, keeps Lombok as a provided dependency, and uses the immutable message model consistently across the decoding pipeline.
+The current codebase continues to build on this architecture. The project targets Java 25, keeps Lombok as a provided dependency, and uses the immutable message model consistently across the decoding pipeline.
 
 ## Related documentation
 

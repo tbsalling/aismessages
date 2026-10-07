@@ -47,7 +47,7 @@ Response shape:
 
 ## Initialize the Spring Boot project
 
-Generate a Spring Boot 3 project from `https://start.spring.io` using Java 21 and the `web` starter, then verify that the unmodified application builds and runs.
+Generate a Spring Boot 3 project from `https://start.spring.io` using Java 25 and the `web` starter, then verify that the unmodified application builds and runs.
 
 ![Spring Initializr setup](../assets/images/blog_spring_initializr.png)
 

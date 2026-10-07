@@ -3,7 +3,7 @@
 ## Project Context
 - Java library for decoding NMEA armoured AIS messages (ITU 1371)
 - Zero-dependency, lightweight, ultra-efficient eager parsing with immutable value objects
-- Java 21+ with Maven build
+- Java 25+ with Maven build
 - Published to Maven Central as `dk.tbsalling:aismessages`
 
 ## Code Style
