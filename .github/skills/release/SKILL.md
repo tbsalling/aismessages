@@ -160,10 +160,12 @@ git push origin aismessages-X.Y.Z
 
 ## Step 11 — Deploy to Maven Central
 
-Run:
+Run these three commands in sequence, stopping if any fails:
 
 ```
-./mvnw deploy
+mvn clean
+mvn package
+mvn deploy
 ```
 
 This compiles, signs (GPG), and uploads the artifacts to the Maven Central portal staging area.
@@ -172,7 +174,7 @@ This compiles, signs (GPG), and uploads the artifacts to the Maven Central porta
 > ```
 > killall gpg-agent && gpg-agent --daemon --pinentry-program /opt/homebrew/bin/pinentry
 > ```
-> Then retry `./mvnw deploy`.
+> Then retry `mvn package` and `mvn deploy`.
 
 Wait for the command to finish successfully before continuing.
 

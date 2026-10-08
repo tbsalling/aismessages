@@ -57,4 +57,6 @@ These are load-bearing — preserve them when changing code:
 
 ## Release
 
-Release procedure is in `HOWTO Release.txt`. Releases are signed (GPG) and published to Maven Central via the `central-publishing-maven-plugin`; tag format is `aismessages-x.y.z`. Update `RELEASE_NOTES.md` and drop the `-SNAPSHOT` suffix in `pom.xml` before tagging.
+Release procedure is in `.github/skills/release/SKILL.md`. Releases are signed (GPG) and published to Maven Central via
+the `central-publishing-maven-plugin`; tag format is `aismessages-x.y.z`. Update `RELEASE_NOTES.md` and drop the
+`-SNAPSHOT` suffix in `pom.xml` before tagging.
