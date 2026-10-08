@@ -617,20 +617,21 @@ public class AISMessageFactory {
         int toPort = -1;
         MMSI mothershipMmsi = null;
 
-        if (partNumber == 0) {
-            shipName = AISText.decode(bitString, 40, 160);
-        } else if (partNumber == 1) {
-            shipType = ShipType.fromInteger(bitString.getUnsignedInt(40, 48));
-            vendorId = AISText.decode(bitString, 48, 90);
-            callsign = AISText.decode(bitString, 90, 132);
-            toBow = bitString.getUnsignedInt(132, 141);
-            toStern = bitString.getUnsignedInt(141, 150);
-            toPort = bitString.getUnsignedInt(150, 156);
-            toStarboard = bitString.getUnsignedInt(156, 162);
+        switch (partNumber) {
+            case 0 -> shipName = AISText.decode(bitString, 40, 160);
+            case 1 -> {
+                shipType = ShipType.fromInteger(bitString.getUnsignedInt(40, 48));
+                vendorId = AISText.decode(bitString, 48, 90);
+                callsign = AISText.decode(bitString, 90, 132);
+                toBow = bitString.getUnsignedInt(132, 141);
+                toStern = bitString.getUnsignedInt(141, 150);
+                toPort = bitString.getUnsignedInt(150, 156);
+                toStarboard = bitString.getUnsignedInt(156, 162);
 
-            int mmsiValue = bitString.getUnsignedInt(132, 162);
-            if (mmsiValue != 0) {
-                mothershipMmsi = new MMSI(mmsiValue);
+                int mmsiValue = bitString.getUnsignedInt(132, 162);
+                if (mmsiValue != 0) {
+                    mothershipMmsi = new MMSI(mmsiValue);
+                }
             }
         }
 

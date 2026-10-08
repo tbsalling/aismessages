@@ -48,23 +48,26 @@ public class SOTDMACommunicationState extends CommunicationState {
         final int slotTimeout = bitString.getUnsignedInt(2, 5);
 		Integer numberOfReceivedStations=null, slotNumber=null, utcHour=null, utcMinute=null, slotOffset=null;
 
-		if (slotTimeout == 3 || slotTimeout == 5 || slotTimeout == 7) {
-            numberOfReceivedStations = bitString.getUnsignedInt(5, 19);
-			if (numberOfReceivedStations > 16383)
-                log.warning("numberOfReceivedStations: " + numberOfReceivedStations + ": Out of range.");
-		} else if (slotTimeout == 2 || slotTimeout == 4 || slotTimeout == 6) {
-            slotNumber = bitString.getUnsignedInt(5, 19);
-			if (slotNumber > 2249)
-                log.warning("slotNumber: " + slotNumber + ": Out of range.");
-		}  else if (slotTimeout == 1) {
-            utcHour = bitString.getUnsignedInt(5, 10);
-			if (utcHour > 23)
-                log.warning("utcHour: " + utcHour + ": Out of range.");
-            utcMinute = bitString.getUnsignedInt(10, 17);
-			if (utcMinute > 59)
-                log.warning("utcMinute: " + utcMinute + ": Out of range.");
-		}  else if (slotTimeout == 0) {
-            slotOffset = bitString.getUnsignedInt(5, 19);
+		switch (slotTimeout) {
+			case 3, 5, 7 -> {
+				numberOfReceivedStations = bitString.getUnsignedInt(5, 19);
+				if (numberOfReceivedStations > 16383)
+					log.warning("numberOfReceivedStations: " + numberOfReceivedStations + ": Out of range.");
+			}
+			case 2, 4, 6 -> {
+				slotNumber = bitString.getUnsignedInt(5, 19);
+				if (slotNumber > 2249)
+					log.warning("slotNumber: " + slotNumber + ": Out of range.");
+			}
+			case 1 -> {
+				utcHour = bitString.getUnsignedInt(5, 10);
+				if (utcHour > 23)
+					log.warning("utcHour: " + utcHour + ": Out of range.");
+				utcMinute = bitString.getUnsignedInt(10, 17);
+				if (utcMinute > 59)
+					log.warning("utcMinute: " + utcMinute + ": Out of range.");
+			}
+			case 0 -> slotOffset = bitString.getUnsignedInt(5, 19);
 		}
 
 		return new SOTDMACommunicationState(syncState, slotTimeout, numberOfReceivedStations, slotNumber, utcHour, utcMinute, slotOffset);

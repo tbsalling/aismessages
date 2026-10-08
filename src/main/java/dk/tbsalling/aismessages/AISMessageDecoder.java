@@ -182,7 +182,7 @@ public final class AISMessageDecoder {
 
             try {
                 handler.accept(new NMEAMessage(nmeaSentence));
-            } catch (NMEAParseException | InvalidMessage | UnsupportedMessageType e) {
+            } catch (NMEAParseException | InvalidMessage | UnsupportedMessageType _) {
                 // Expected: malformed or unsupported input. This is the advertised behaviour
                 // of a lenient decoder, so it is not a warning.
                 log.fine("Ignoring undecodable NMEA sentence: %s".formatted(nmeaSentence));
