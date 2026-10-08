@@ -51,6 +51,11 @@ traffic.
   cause: bad input, nothing supplied, or an unreadable stream. A present result always holds a non-empty,
   immutable list. `tryDecode` does not report *why* nothing was decoded; use `decode` and catch when the
   reason matters.
+- Added `dk.tbsalling.aismessages.AISMessageRouter`, a `Consumer<AISMessage>` built with a fluent builder
+  (`on(Class, Consumer)`, `otherwise(...)`, `onError(...)`) that routes each message to the handler for its
+  type. Handlers may target concrete classes, abstract classes or interfaces; the most specific match wins,
+  and ambiguous or unmatchable registrations are rejected by `build()`. `onError` receives exceptions thrown
+  by handlers (by default they propagate); decode failures never reach the router.
 
 ### Performance
 

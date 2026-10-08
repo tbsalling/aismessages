@@ -111,6 +111,30 @@ nothing supplied, or an unreadable stream. `tryDecode` deliberately does not rep
 Use `AISInputStreamReader` for streaming/continuous ingestion and `AISMessageDecoder` when you want a direct,
 one-shot decode of NMEA input.
 
+### Routing by message type
+
+`AISMessageRouter` is a ready-made `Consumer<AISMessage>` that sends each message to a handler registered for its
+type. Handlers can target concrete classes, abstract classes such as `PositionReport`, or interfaces such as
+`DynamicDataReport`; when several match, the most specific one wins.
+
+```java
+import dk.tbsalling.aismessages.AISInputStreamReader;
+import dk.tbsalling.aismessages.AISMessageRouter;
+
+AISMessageRouter router = AISMessageRouter.builder()
+        .on(PositionReport.class, pr -> System.out.println("Position: " + pr.getSourceMmsi()))
+        .on(ShipAndVoyageData.class, svd -> System.out.println("Ship: " + svd.getShipName()))
+        .on(DynamicDataReport.class, ddr -> System.out.println("Other dynamic report: " + ddr))
+        .otherwise(msg -> { })                                   // optional; unmatched messages are ignored by default
+        .onError(ex -> log.log(Level.WARNING, "Handler failed", ex)) // optional; handler exceptions are rethrown by default
+        .build();
+
+new AISInputStreamReader(inputStream, router).run();
+```
+
+`onError` receives exceptions thrown by your handlers. Sentences that fail to decode never reach the router; they are
+dropped and logged earlier in the pipeline.
+
 ## What you get
 
 AISmessages handles the full decoding path from NMEA framing to strongly typed AIS message objects:
@@ -222,6 +246,7 @@ See `dk.tbsalling.aismessages.demo.UDPDemoApp` for a complete example.
 The repository includes ready-to-run demo applications:
 
 - `dk.tbsalling.aismessages.demo.SimpleDemoApp`
+- `dk.tbsalling.aismessages.demo.RouterDemoApp`
 - `dk.tbsalling.aismessages.demo.SocketDemoApp`
 - `dk.tbsalling.aismessages.demo.UDPDemoApp`
 
