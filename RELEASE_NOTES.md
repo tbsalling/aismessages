@@ -5,9 +5,11 @@ traffic.
 
 ---
 
-## Version 5.0.0-SNAPSHOT
+## Version 5.0.0
 
-**Development Version - Major Version Update - Java 25 Required**
+**Release Date:** 2026-10-08
+
+**Major Version Update - Java 25 Required**
 
 ### Breaking API Changes
 
@@ -79,7 +81,7 @@ traffic.
 - See [`docs/articles/performance-analysis.md`](docs/articles/performance-analysis.md) for benchmarks and migration
   context.
 
-**Full Changelog:** https://github.com/tbsalling/aismessages/compare/aismessages-4.1.2...HEAD
+**Full Changelog:** https://github.com/tbsalling/aismessages/compare/aismessages-4.1.2...aismessages-5.0.0
 
 ---
 
