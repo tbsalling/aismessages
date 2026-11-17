@@ -49,6 +49,7 @@ These are load-bearing — preserve them when changing code:
 - **Eager parsing, immutable value objects.** Since v4, decoded `AISMessage` instances are immutable and fully parsed up front (see `docs/articles/immutable-value-objects-v4.md`). Do not reintroduce lazy decoding, `WeakReference`s, or post-construction mutation. Instances must be safe to share across threads.
 - **Zero runtime dependencies.** Lombok is compile-time only. Do not add runtime dependencies to `pom.xml`.
 - **Prefer primitives over boxed types** in hot paths to keep allocation churn low.
+- **Primitive vs boxed message fields.** A field that every instance of the message carries is a primitive, even when the spec defines a not-available value for it (e.g. latitude 91, heading 511); that value is passed through and documented. A field is a nullable boxed type only when its part of the message can be absent (optional trailing parts, the other Message 24 part, addressed/broadcast variants); `null` means "not transmitted" — never use -1 sentinels. Box via autoboxing/`Integer.valueOf` (the JDK cache), no custom caches. Coded fields are enums, `null` for undefined codes or absent parts. Hot-path messages (1-3, 18, 19, 27) stay primitive: express special codes with a companion enum (as `RateOfTurnIndicator` does) rather than a nullable value.
 - **Public API is backward compatible.** Breaking changes to anything under `dk.tbsalling.aismessages` need an explicit, deliberate call-out — this is a library consumed in production by external systems.
 
 ## Conventions
