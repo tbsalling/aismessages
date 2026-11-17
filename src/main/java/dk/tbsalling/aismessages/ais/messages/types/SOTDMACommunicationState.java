@@ -55,9 +55,7 @@ public class SOTDMACommunicationState extends CommunicationState {
 
 		switch (slotTimeout) {
 			case 3, 5, 7 -> {
-				numberOfReceivedStations = bitString.getUnsignedInt(5, 19);
-				if (numberOfReceivedStations > 16383)
-					log.warning("numberOfReceivedStations: " + numberOfReceivedStations + ": Out of range.");
+				numberOfReceivedStations = bitString.getUnsignedInt(5, 19); // 14 bits: always within the valid range 0-16383
 			}
 			case 2, 4, 6 -> {
 				slotNumber = bitString.getUnsignedInt(5, 19);

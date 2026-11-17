@@ -3,8 +3,10 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.messages.types.*;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import org.junit.jupiter.api.Test;
+import dk.tbsalling.aismessages.testsupport.NmeaSentences.Bits;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static dk.tbsalling.aismessages.testsupport.NmeaSentences.*;
 
 public class StandardClassBCSPositionReportTest {
 
@@ -123,5 +125,31 @@ public class StandardClassBCSPositionReportTest {
             assertEquals(3, itdmaCommunicationState.getNumberOfSlots());
             assertFalse(itdmaCommunicationState.getKeepFlag());
         }
+    }
+
+    /**
+     * Class B "SO" unit: Class B unit flag 0 and a SOTDMA communication state (selector 0, slot time-out 3, 12 received
+     * stations); transmit power low. ITU-R M.1371-6 Table 68. Synthetic sentence built from the spec layout.
+     */
+    @Test
+    public void canDecodeClassBSoWithSotdmaCommunicationState() {
+        Bits b = bits().u(18, 6).u(0, 2).u(219000301, 30).u(0, 8).u(123, 10).b(true).s(6450000, 28).s(33300000, 27).u(901, 12).u(90, 9).u(15, 6)
+                .b(true).b(false).b(false).b(true).b(false).b(true).b(true).b(false).b(true).b(false)
+                .u(0, 2).u(3, 3).u(12, 14);
+        assertEquals(168, b.length());
+
+        StandardClassBCSPositionReport message = (StandardClassBCSPositionReport) AISMessageFactory.create(null, null, null, nmea(b.toBitString()));
+
+        assertFalse(message.isCsUnit());
+        assertTrue(message.isTransmitPowerLow());
+        assertEquals(12.3f, message.getSpeedOverGround(), 0.0001f);
+        assertEquals(90.1f, message.getCourseOverGround(), 0.0001f);
+        assertEquals(90, message.getTrueHeading());
+        assertTrue(message.isRaimFlag());
+        assertFalse(message.isCommStateSelectorFlag());
+        SOTDMACommunicationState communicationState = (SOTDMACommunicationState) message.getCommunicationState();
+        assertEquals(SyncState.UTCDirect, communicationState.getSyncState());
+        assertEquals(3, communicationState.getSlotTimeout());
+        assertEquals(12, communicationState.getNumberOfReceivedStations());
     }
 }

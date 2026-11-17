@@ -6,13 +6,13 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import org.junit.jupiter.api.Test;
+import dk.tbsalling.aismessages.testsupport.NmeaSentences.Bits;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static dk.tbsalling.aismessages.testsupport.NmeaSentences.*;
 import static org.junit.jupiter.api.Assertions.*;
-import dk.tbsalling.aismessages.testsupport.NmeaSentences.Bits;
 
 public class AidToNavigationReportTest {
 
