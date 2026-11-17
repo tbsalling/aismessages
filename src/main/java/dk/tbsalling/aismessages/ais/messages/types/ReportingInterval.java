@@ -16,6 +16,11 @@
 
 package dk.tbsalling.aismessages.ais.messages.types;
 
+/**
+ * Reporting interval settings for use with Message 23 (ITU-R M.1371-6 Table 75).
+ * <p>
+ * Where two constants share a code, {@link #fromInteger(int)} returns the one declared first.
+ */
 public enum ReportingInterval {
 	Autonomous (0),
 	TenMinutes(1),
@@ -28,6 +33,10 @@ public enum ReportingInterval {
 	FiveSeconds(8),
 	NextShortReportingInterval(9),
 	NextLongerReportingInterval(10),
+	/** 2 s; not applicable to Class B "CS" and Class B "SO". */
+	TwoSeconds(11),
+	/** @deprecated since 5.1.0; code 11 is defined as {@link #TwoSeconds} in ITU-R M.1371-6. */
+	@Deprecated(since = "5.1.0")
 	FutureUse1(11),
 	FutureUse2(12),
 	FutureUse3(13),
@@ -37,7 +46,7 @@ public enum ReportingInterval {
 	ReportingInterval(int code) {
 		this.code = code;
 	}
-	
+
 	public int getCode() {
 		return code;
 	}

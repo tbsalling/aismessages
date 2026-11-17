@@ -38,6 +38,27 @@ Alignment with Recommendation ITU-R M.1371-6 (02/2026).
   zero-padded to 1005 bits. Messages shorter than 64 bits or longer than 1064 bits are rejected as
   `InvalidMessage`.
 
+### Completed enumerations (ITU-R M.1371-6 Tables 46, 49, 51, 72, 75, 85)
+
+- `PositionFixingDevice`: added `BeiDou` (9), `ReservedForFutureUse10`, `ReservedForFutureUse11`,
+  `IntegratedPNT` (12), `InertialNavigationSystem` (13), `TerrestrialRadioNavigation` (14) and
+  `InternalGNSS` (15). Code 15 is what Class B "CS" stations transmit; `fromInteger(15)` previously
+  returned `null`.
+- `ManeuverIndicator`: added `ReservedForRegionalUse` (3).
+- `ReportingInterval`: added `TwoSeconds` (11); `FutureUse1` is deprecated and `fromInteger(11)` now
+  returns `TwoSeconds`.
+- `AidType`: added `EmergencyWreckMarkingBuoy` (4; `FutureUse1` deprecated) and the Table 85 mobile
+  aid-to-navigation types 32-50 used by Message 28.
+- `ShipType`: added the special purpose and support vessel codes 1-19, the reserved codes 25-28, 47 and
+  48, `WingInGroundNoAdditionalInfo` (29), `Trawler` (38), `PatrolVessel` (39),
+  `HighSpeedCraftPassenger` (45), `HighSpeedCraftRoRo` (46), `HighSpeedCraftNoAdditionalInfo` (49),
+  `PassengerCruiseShip` (65), `PassengerFerry` (66), `PassengerExcursionShip` (67), `CargoBulkCarrier`
+  (75), `CargoContainerShip` (76), `CargoRollOnRollOffCarrier` (77), `CargoLandingCraft` (78),
+  `TankerNonHazardous` (85) and `IntegratedTugAndTankBarge` (86). The former `PassengerFuture1-3`,
+  `CargoFuture1-4`, `TankerFuture1` and `TankerFuture2` constants are deprecated; `fromInteger` now
+  returns the new constants for those codes, so comparisons against the deprecated constants no longer
+  match decoded values.
+
 ### New public APIs
 
 - `BinaryMessageSingleSlot`: `getDesignatedAreaCode()`, `getFunctionalId()`, `getData()`,
