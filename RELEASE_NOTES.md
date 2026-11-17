@@ -74,7 +74,11 @@ for source changes.
   and `SocketDemoApp`, deprecated since 4.0.
 - **Corrected decodings change values.** Messages 15, 17, 20, 22, 23, 25 and 26 and the IFM 0 text telegram now
   decode per M.1371-6; see "Corrected decodings".
-- **Stricter validation.** Messages 12, 14 and 25 shorter than their header, and Messages 26 shorter than 64 or
+- **Message 21 off-position and ITDMA slots.** `AidToNavigationReport.isOffPosition()` is now `getOffPosition()`,
+  a `Boolean` that is `null` when the time stamp is not 0-59. `ITDMACommunicationState.getNumberOfSlots()` returns
+  the slot count (1-5) instead of the transmitted code, and `getSlotIncrement()` includes the 8 192 extension.
+- **Stricter validation.** Messages 25 and 26 too short for the destination ID and application identifier their
+  flags announce are rejected (see "Corrected decodings"). Messages 12, 14 and 25 shorter than their header, and Messages 26 shorter than 64 or
   longer than 1064 bits, are now rejected with `InvalidMessage`.
 - **Constructors.** The `protected` constructors of several message classes changed. They are not part of the
   supported API; construct messages through `AISMessageFactory`.
@@ -163,6 +167,19 @@ for source changes.
   reader. `NMEAMessage` and `NMEATagBlock` now throw `NMEAParseException`, which the readers log and skip.
 - **Tag blocks with a wrong checksum stopped stream readers:** `InvalidTagBlock` was not among the
   exceptions `NMEAMessageInputStreamReader` and `NMEAMessageUDPSocket` catch. They now log and skip it.
+- **Message 21 off-position indicator (Table 71):** the flag was reported regardless of the time stamp, though
+  Table 71 says it should only be considered when the time stamp is 59 or below. It is now `null` otherwise.
+- **ITDMA number of slots (Table 20):** the transmitted code was exposed, so code 0 read as "0 slots" and codes 5-7
+  silently required adding 8 192 to the slot increment. The communication state now gives the slot count and the
+  effective slot increment.
+- **Messages 25 and 26 shorter than their flags announce (Tables 79 and 81):** an addressed or structured message
+  without room for its destination ID or application identifier was accepted, with zeros decoded as the destination
+  MMSI. Such messages are now rejected with `InvalidMessage`.
+- **Interleaved multi-sentence messages were discarded:** fragments were buffered in a single list, so a
+  multi-sentence message interleaved with another one, or with any single-sentence message, was lost.
+  `NMEAMessageHandler` now reassembles per sequential message identifier and radio channel.
+- **A tag-block line count beyond the int range stopped stream readers:** `n:2147483648` threw an uncaught
+  `ArithmeticException`. It is now an `NMEAParseException`, which the readers log and skip.
 - **A failed decode lost the next multi-fragment message:** when a sentence or a complete set of
   fragments failed to decode, `NMEAMessageHandler` kept the fragments buffered, so the first fragment of
   the next multi-fragment message was discarded as out of sequence. The buffer is now cleared before
