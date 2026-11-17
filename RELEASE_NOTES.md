@@ -56,6 +56,15 @@ Alignment with Recommendation ITU-R M.1371-6 (02/2026).
   `getData()` now holds exactly the application data between header and trailer and is no longer
   zero-padded to 1005 bits. Messages shorter than 64 bits or longer than 1064 bits are rejected as
   `InvalidMessage`.
+- **Message 22 (Channel management), addressed variant:** decoding threw a `NullPointerException` because
+  the four area coordinate fields were primitive `float` while the factory passes `null` for addressed
+  messages (whose area fields hold two station IDs instead). The getters `getNorthEastLongitude()`,
+  `getNorthEastLatitude()`, `getSouthWestLongitude()` and `getSouthWestLatitude()` now return `Float` and
+  are `null` when `isAddressed()` is true.
+- **Truncated or malformed payloads:** a payload shorter than its message type requires (for example a
+  163-bit position report) or an NMEA sentence with more than 5 fill bits made `AISMessageFactory.create`
+  leak an `IllegalArgumentException`, which `AISInputStreamReader` does not catch. Both cases now raise
+  `InvalidMessage` like every other undecodable input, so stream readers log and continue.
 - **IFM 0 text telegram (`TextDescription`, DAC 1 FI 0):** the text was decoded from bit 0 of the
   application data, ignoring the 1-bit "acknowledge required" flag and 11-bit text sequence number that
   Tables 25 to 28 place in front of it, so every text came out two characters out of phase. The text now

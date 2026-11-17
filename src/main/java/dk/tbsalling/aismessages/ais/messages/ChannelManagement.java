@@ -90,10 +90,10 @@ public class ChannelManagement extends AISMessage {
     int channelB;
     TxRxMode transmitReceiveMode;
     boolean power;
-    float northEastLongitude;
-    float northEastLatitude;
-    float southWestLongitude;
-    float southWestLatitude;
+    Float northEastLongitude;
+    Float northEastLatitude;
+    Float southWestLongitude;
+    Float southWestLatitude;
     MMSI destinationMmsi1;
     MMSI destinationMmsi2;
     boolean addressed;

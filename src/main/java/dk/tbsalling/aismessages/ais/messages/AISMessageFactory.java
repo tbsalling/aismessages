@@ -38,21 +38,35 @@ public class AISMessageFactory {
      * Create proper type of AISMessage from 1..n NMEA messages, and attach metadata.
      */
     public static AISMessage create(Instant received, String source, NMEATagBlock nmeaTagBlock, NMEAMessage... nmeaMessages) {
-        BitString bitString = decodePayloadToBitString(nmeaMessages);
+        BitString bitString;
+        try {
+            bitString = decodePayloadToBitString(nmeaMessages);
+        } catch (IllegalArgumentException e) {
+            throw new dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage("Cannot decode payload of NMEA message: %s: %s".formatted(concatenate(nmeaMessages), e.getMessage()));
+        }
 
         AISMessageType messageType = AISMessageType.fromInteger(bitString.getUnsignedInt(0, 6));
         if (messageType == null) {
-            StringBuilder sb = new StringBuilder();
-            for (NMEAMessage nmeaMessage : nmeaMessages) {
-                sb.append(nmeaMessage);
-            }
-            throw new dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage("Cannot extract message type from NMEA message: %s".formatted(sb.toString()));
+            throw new dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage("Cannot extract message type from NMEA message: %s".formatted(concatenate(nmeaMessages)));
         }
 
         int repeatIndicator = bitString.getUnsignedInt(6, 8);
         MMSI sourceMmsi = new MMSI(bitString.getUnsignedInt(8, 38));
 
-        return createByType(messageType, sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received);
+        try {
+            return createByType(messageType, sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received);
+        } catch (IllegalArgumentException e) {
+            // A payload too short for its message type makes a field slice fail before the message's own length check can run.
+            throw new dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage("Message of type %s has an invalid payload of %d bits: %s. Assumed sourceMmsi: %d.".formatted(messageType, bitString.length(), e.getMessage(), sourceMmsi.getMmsi()));
+        }
+    }
+
+    private static String concatenate(NMEAMessage[] nmeaMessages) {
+        StringBuilder sb = new StringBuilder();
+        for (NMEAMessage nmeaMessage : nmeaMessages) {
+            sb.append(nmeaMessage);
+        }
+        return sb.toString();
     }
 
     private static ShipAndVoyageData createShipAndVoyageData(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
