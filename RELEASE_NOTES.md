@@ -5,6 +5,32 @@ traffic.
 
 ---
 
+## Version 5.1.0
+
+**Release Date:** unreleased
+
+Alignment with Recommendation ITU-R M.1371-6 (02/2026).
+
+### Corrected decodings (behaviour changes)
+
+- **Message 15 (Interrogation):** the second interrogated station was read from the wrong bit offsets
+  (MMSI at 120-150, message id at 150-156 and a 6-bit slot offset at 156-162). It is now decoded per
+  Table 64: MMSI at bits 110-140, message id at 140-146, 12-bit slot offset at 146-158.
+- **Message 20 (Data link management):** reservation blocks 2 to 4 were read from the wrong offsets and
+  their increments as 7 bits. All four blocks are now 12 + 4 + 3 + 11 bits starting at bits 40, 70, 100
+  and 130 (Table 70); blocks 2 to 4 are present when the message is at least 100, 130 and 160 bits long.
+- **Message 23 (Group assignment command):** Tx/Rx mode, reporting interval and quiet time were read from
+  bits 166-176, beyond the end of the 160-bit message, and therefore always decoded as 0. They are now
+  read from bits 144-146, 146-150 and 150-154 (Table 74).
+
+### Deprecations
+
+- `GroupAssignmentCommand.getSpare1()` and `getSpare2()` (both `String`) are deprecated. The spare
+  fields are not six-bit text; use the new `int getSpare1Value()` and `int getSpare2Value()`. The
+  deprecated getters now return the numeric value as a decimal string.
+
+---
+
 ## Version 5.0.0
 
 **Release Date:** 2026-10-08

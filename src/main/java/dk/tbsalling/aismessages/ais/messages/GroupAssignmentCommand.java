@@ -46,19 +46,19 @@ public class GroupAssignmentCommand extends AISMessage {
      * Constructor accepting pre-parsed values for true immutability.
      */
     protected GroupAssignmentCommand(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
-                                     String spare1, float northEastLongitude, float northEastLatitude,
+                                     int spare1, float northEastLongitude, float northEastLatitude,
                                      float southWestLongitude, float southWestLatitude,
-                                     StationType stationType, ShipType shipType, String spare2,
+                                     StationType stationType, ShipType shipType, int spare2,
                                      TxRxMode transmitReceiveMode, ReportingInterval reportingInterval, int quietTime) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
-        this.spare1 = spare1;
+        this.spare1Value = spare1;
         this.northEastLongitude = northEastLongitude;
         this.northEastLatitude = northEastLatitude;
         this.southWestLongitude = southWestLongitude;
         this.southWestLatitude = southWestLatitude;
         this.stationType = stationType;
         this.shipType = shipType;
-        this.spare2 = spare2;
+        this.spare2Value = spare2;
         this.transmitReceiveMode = transmitReceiveMode;
         this.reportingInterval = reportingInterval;
         this.quietTime = quietTime;
@@ -87,7 +87,26 @@ public class GroupAssignmentCommand extends AISMessage {
         return AISMessageType.GroupAssignmentCommand;
     }
 
-    String spare1;
+    /**
+     * @return the 2 spare bits at bit offset 38 (ITU-R M.1371-6 Table 74), rendered as a decimal string.
+     * @deprecated since 5.1.0; the spare bits are not text. Use {@link #getSpare1Value()} instead.
+     */
+    @Deprecated(since = "5.1.0")
+    public String getSpare1() {
+        return Integer.toString(spare1Value);
+    }
+
+    /**
+     * @return the 22 spare bits at bit offset 122 (ITU-R M.1371-6 Table 74), rendered as a decimal string.
+     * @deprecated since 5.1.0; the spare bits are not text. Use {@link #getSpare2Value()} instead.
+     */
+    @Deprecated(since = "5.1.0")
+    public String getSpare2() {
+        return Integer.toString(spare2Value);
+    }
+
+    /** The 2 spare bits at bit offset 38; should be zero (ITU-R M.1371-6 Table 74). */
+    int spare1Value;
     float northEastLatitude;
     float northEastLongitude;
     float southWestLatitude;
@@ -97,5 +116,6 @@ public class GroupAssignmentCommand extends AISMessage {
     TxRxMode transmitReceiveMode;
     ReportingInterval reportingInterval;
     int quietTime;
-    String spare2;
+    /** The 22 spare bits at bit offset 122; should be zero (ITU-R M.1371-6 Table 74). */
+    int spare2Value;
 }

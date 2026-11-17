@@ -67,4 +67,40 @@ public class DataLinkManagementTest {
         assertNull(message.getTimeout3());
         assertNull(message.getIncrement3());
     }
+
+    /**
+     * Three reservation blocks (ITU-R M.1371-6 Table 70: each block is 12 + 4 + 3 + 11 bits, starting at bit 40, 70, 100).
+     * Increments of 1125 do not fit in 7 bits, so this also guards the 11-bit increment width. Synthetic sentence built
+     * from the spec layout (130 bits plus 6 spare bits); independently verified with the pyais decoder.
+     */
+    @Test
+    public void canDecodeThreeReservationBlocks() {
+        // Arrange
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,D025boh6@fGMMhK6DpAO6D0,2*08");
+
+        // Act
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
+
+        // Assert
+        assertEquals(AISMessageType.DataLinkManagement, aisMessage.getMessageType());
+        DataLinkManagement message = (DataLinkManagement) aisMessage;
+        assertEquals(0, message.getRepeatIndicator());
+        assertEquals(new MMSI(2190047), message.getSourceMmsi());
+        assertEquals(100, message.getOffsetNumber1());
+        assertEquals(2, message.getReservedSlots1());
+        assertEquals(7, message.getTimeout1());
+        assertEquals(375, message.getIncrement1());
+        assertEquals(1500, message.getOffsetNumber2());
+        assertEquals(1, message.getReservedSlots2());
+        assertEquals(5, message.getTimeout2());
+        assertEquals(1125, message.getIncrement2());
+        assertEquals(900, message.getOffsetNumber3());
+        assertEquals(5, message.getReservedSlots3());
+        assertEquals(7, message.getTimeout3());
+        assertEquals(1125, message.getIncrement3());
+        assertNull(message.getOffsetNumber4());
+        assertNull(message.getReservedSlots4());
+        assertNull(message.getTimeout4());
+        assertNull(message.getIncrement4());
+    }
 }

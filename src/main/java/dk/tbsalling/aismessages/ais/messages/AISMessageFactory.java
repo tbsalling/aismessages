@@ -338,9 +338,9 @@ public class AISMessageFactory {
         }
 
         if (bitString.length() >= 160) {
-            interrogatedMmsi2 = new MMSI(bitString.getUnsignedInt(120, 150));
-            type2_1 = bitString.getUnsignedInt(150, 156);
-            offset2_1 = bitString.getUnsignedInt(156, 162);
+            interrogatedMmsi2 = new MMSI(bitString.getUnsignedInt(110, 140));
+            type2_1 = bitString.getUnsignedInt(140, 146);
+            offset2_1 = bitString.getUnsignedInt(146, 158);
         }
 
         return new Interrogation(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
@@ -483,25 +483,25 @@ public class AISMessageFactory {
         Integer timeout4 = null;
         Integer increment4 = null;
 
-        if (bitString.length() >= 98) {
-            offsetNumber2 = bitString.getUnsignedInt(72, 84);
-            reservedSlots2 = bitString.getUnsignedInt(84, 88);
-            timeout2 = bitString.getUnsignedInt(88, 91);
-            increment2 = bitString.getUnsignedInt(91, 98);
+        if (bitString.length() >= 100) {
+            offsetNumber2 = bitString.getUnsignedInt(70, 82);
+            reservedSlots2 = bitString.getUnsignedInt(82, 86);
+            timeout2 = bitString.getUnsignedInt(86, 89);
+            increment2 = bitString.getUnsignedInt(89, 100);
         }
 
-        if (bitString.length() >= 126) {
+        if (bitString.length() >= 130) {
             offsetNumber3 = bitString.getUnsignedInt(100, 112);
             reservedSlots3 = bitString.getUnsignedInt(112, 116);
             timeout3 = bitString.getUnsignedInt(116, 119);
-            increment3 = bitString.getUnsignedInt(119, 126);
+            increment3 = bitString.getUnsignedInt(119, 130);
         }
 
-        if (bitString.length() >= 154) {
-            offsetNumber4 = bitString.getUnsignedInt(128, 140);
-            reservedSlots4 = bitString.getUnsignedInt(140, 144);
-            timeout4 = bitString.getUnsignedInt(144, 147);
-            increment4 = bitString.getUnsignedInt(147, 154);
+        if (bitString.length() >= 160) {
+            offsetNumber4 = bitString.getUnsignedInt(130, 142);
+            reservedSlots4 = bitString.getUnsignedInt(142, 146);
+            timeout4 = bitString.getUnsignedInt(146, 149);
+            increment4 = bitString.getUnsignedInt(149, 160);
         }
 
         return new DataLinkManagement(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
@@ -586,17 +586,17 @@ public class AISMessageFactory {
     }
 
     private static GroupAssignmentCommand createGroupAssignmentCommand(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
-        String spare1 = AISText.decode(bitString, 38, 40);
+        int spare1 = bitString.getUnsignedInt(38, 40);
         float northEastLongitude = bitString.getSignedFloat(40, 58) / 10f;
         float northEastLatitude = bitString.getSignedFloat(58, 75) / 10f;
         float southWestLongitude = bitString.getSignedFloat(75, 93) / 10f;
         float southWestLatitude = bitString.getSignedFloat(93, 110) / 10f;
         StationType stationType = StationType.fromInteger(bitString.getUnsignedInt(110, 114));
         ShipType shipType = ShipType.fromInteger(bitString.getUnsignedInt(114, 122));
-        String spare2 = AISText.decode(bitString, 122, 160);
-        TxRxMode transmitReceiveMode = TxRxMode.fromInteger(bitString.getUnsignedInt(166, 168));
-        ReportingInterval reportingInterval = ReportingInterval.fromInteger(bitString.getUnsignedInt(168, 172));
-        int quietTime = bitString.getUnsignedInt(172, 176);
+        int spare2 = bitString.getUnsignedInt(122, 144);
+        TxRxMode transmitReceiveMode = TxRxMode.fromInteger(bitString.getUnsignedInt(144, 146));
+        ReportingInterval reportingInterval = ReportingInterval.fromInteger(bitString.getUnsignedInt(146, 150));
+        int quietTime = bitString.getUnsignedInt(150, 154);
 
         return new GroupAssignmentCommand(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 spare1, northEastLongitude, northEastLatitude, southWestLongitude, southWestLatitude,
