@@ -30,14 +30,23 @@ public class VtsGeneratedSyntheticTargets extends ApplicationSpecificMessage {
         this.cog = getBinaryData().getUnsignedInt(211, 220) / 10f;
     }
 
+    /** Bits 0-10 of the application data (IMO SN.1/Circ.289, DAC=1 FI=17): linkage ID. */
     int linkageId;
+    /** Bits 10-130 of the application data (IMO SN.1/Circ.289, DAC=1 FI=17): name, up to 20 six-bit ASCII characters (ITU-R M.1371-6 Table 45); padding removed. */
     String name;
+    /** Bit 130 of the application data (IMO SN.1/Circ.289, DAC=1 FI=17): accuracy flag. */
     boolean accuracy;
+    /** Bits 131-159 of the application data (IMO SN.1/Circ.289, DAC=1 FI=17): longitude in decimal degrees (1/10 000 min ÷ 600 000), signed. */
     float longitude;
+    /** Bits 159-186 of the application data (IMO SN.1/Circ.289, DAC=1 FI=17): latitude in decimal degrees (1/10 000 min ÷ 600 000), signed. */
     float latitude;
+    /** Bits 186-196 of the application data (IMO SN.1/Circ.289, DAC=1 FI=17): speed over ground (transmitted value ÷ 10). */
     float speedOverGround;
+    /** Bits 196-205 of the application data (IMO SN.1/Circ.289, DAC=1 FI=17): course over ground (transmitted value ÷ 10). */
     float courseOverGround;
+    /** Bits 205-211 of the application data (IMO SN.1/Circ.289, DAC=1 FI=17): second. */
     int second;
+    /** Bits 211-220 of the application data (IMO SN.1/Circ.289, DAC=1 FI=17): COG (transmitted value ÷ 10). */
     float cog;
 
 }

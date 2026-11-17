@@ -8,6 +8,13 @@ import lombok.ToString;
 
 import static java.util.Objects.requireNonNull;
 
+/**
+ * Application specific message: the decoded data content of a binary AIS message (Messages 6, 8, 25 and 26), selected
+ * by its 16-bit application identifier, a 10-bit designated area code plus a 6-bit function identifier (ITU-R
+ * M.1371-6 Annex 4 § A4-1 and § A4-2.1, Table 23). International messages under DAC=1 are defined by Annex 4 Table 24
+ * and IMO SN.1/Circ.289; regional ones by the authority for the DAC. Pairs this library does not decode resolve to
+ * {@link UnknownApplicationSpecificMessage}.
+ */
 @AllArgsConstructor
 @Getter
 @ToString
@@ -86,8 +93,11 @@ public abstract sealed class ApplicationSpecificMessage permits
         return asm;
     }
 
+    /** Bits 15-6 of the application identifier (ITU-R M.1371-6 Table 23): designated area code, 0 = test, 1-9 = international, 10-999 = regional, 1000-1023 = reserved. */
     private final int designatedAreaCode;
+    /** Bits 5-0 of the application identifier (Table 23): function identifier, 0-63, defined by the authority for the DAC. */
     private final int functionalId;
+    /** The application data following the 16-bit application identifier; field positions in subclasses are relative to its first bit. */
     private final BitString binaryData;
 
 }

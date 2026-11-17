@@ -5,6 +5,10 @@ import lombok.EqualsAndHashCode;
 import lombok.ToString;
 import lombok.Value;
 
+/**
+ * IMO SN.1/Circ.289 - Number of Persons on Board (DAC=1, FI=40)
+ * Reports the current number of persons on board.
+ */
 @Value
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
@@ -17,6 +21,7 @@ public class NumberOfPersonsOnBoard extends ApplicationSpecificMessage {
         this.numberOfPersons = getBinaryData().getUnsignedInt(0, 13);
     }
 
+    /** Bits 0-13 of the application data (IMO SN.1/Circ.289, DAC=1 FI=40): number of persons. */
     int numberOfPersons;
 
 }

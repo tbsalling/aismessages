@@ -32,22 +32,37 @@ public class MarineTrafficSignal extends ApplicationSpecificMessage {
         this.nextSignal = getBinaryData().getUnsignedInt(203, 208);
     }
 
+    /** Bits 0-10 of the application data (IMO SN.1/Circ.289, DAC=1 FI=18 or FI=19): linkage ID. */
     int linkageId;
+    /** Bits 10-130 of the application data (IMO SN.1/Circ.289, DAC=1 FI=18 or FI=19): name, up to 20 six-bit ASCII characters (ITU-R M.1371-6 Table 45); padding removed. */
     String name;
+    /** Bits 130-158 of the application data (IMO SN.1/Circ.289, DAC=1 FI=18 or FI=19): longitude in decimal degrees (1/10 000 min ÷ 600 000), signed. */
     float longitude;
+    /** Bits 158-185 of the application data (IMO SN.1/Circ.289, DAC=1 FI=18 or FI=19): latitude in decimal degrees (1/10 000 min ÷ 600 000), signed. */
     float latitude;
+    /** Bits 185-187 of the application data (IMO SN.1/Circ.289, DAC=1 FI=18 or FI=19): status code, decoded as {@link SignalStatus}. */
     SignalStatus status;
+    /** Bits 187-192 of the application data (IMO SN.1/Circ.289, DAC=1 FI=18 or FI=19): signal. */
     int signal;
+    /** Bits 192-197 of the application data (IMO SN.1/Circ.289, DAC=1 FI=18 or FI=19): hour. */
     int hour;
+    /** Bits 197-203 of the application data (IMO SN.1/Circ.289, DAC=1 FI=18 or FI=19): minute. */
     int minute;
+    /** Bits 203-208 of the application data (IMO SN.1/Circ.289, DAC=1 FI=18 or FI=19): next signal. */
     int nextSignal;
 
+    /** Codes of the status field, bits 185-187 of the application data (IMO SN.1/Circ.289, DAC=1 FI=18 or FI=19). */
     public enum SignalStatus {
+        /** 0 = not specified. */
         NOT_SPECIFIED(0),
+        /** 1 = in operation. */
         IN_OPERATION(1),
+        /** 2 = out of order. */
         OUT_OF_ORDER(2),
+        /** 3 = not available. */
         NOT_AVAILABLE(3);
 
+        /** The code as transmitted. */
         int value;
 
         SignalStatus(int value) {

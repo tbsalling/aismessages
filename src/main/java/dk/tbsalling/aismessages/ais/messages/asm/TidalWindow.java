@@ -28,13 +28,21 @@ public class TidalWindow extends ApplicationSpecificMessage {
         this.currentDirection = getBinaryData().getUnsignedInt(37, 46);
     }
 
+    /** Bits 0-4 of the application data (IMO SN.1/Circ.289, DAC=1 FI=14): month. */
     int month;
+    /** Bits 4-9 of the application data (IMO SN.1/Circ.289, DAC=1 FI=14): day. */
     int day;
+    /** Bits 9-14 of the application data (IMO SN.1/Circ.289, DAC=1 FI=14): hour. */
     int hour;
+    /** Bits 14-20 of the application data (IMO SN.1/Circ.289, DAC=1 FI=14): minute. */
     int minute;
+    /** Bits 20-25 of the application data (IMO SN.1/Circ.289, DAC=1 FI=14): tide to. */
     int tideTo;
+    /** Bits 25-30 of the application data (IMO SN.1/Circ.289, DAC=1 FI=14): tide from. */
     int tideFrom;
+    /** Bits 30-37 of the application data (IMO SN.1/Circ.289, DAC=1 FI=14): current speed (transmitted value ÷ 10). */
     float currentSpeed;
+    /** Bits 37-46 of the application data (IMO SN.1/Circ.289, DAC=1 FI=14): current direction. */
     int currentDirection;
 
 }
