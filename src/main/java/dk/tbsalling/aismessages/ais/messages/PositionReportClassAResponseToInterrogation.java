@@ -39,7 +39,7 @@ import java.time.Instant;
 public class PositionReportClassAResponseToInterrogation extends PositionReport {
     protected PositionReportClassAResponseToInterrogation(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                                           NavigationStatus navigationStatus, int rateOfTurn, float speedOverGround,
-                                                          boolean positionAccuracy, float latitude, float longitude,
+                                                          boolean positionAccuracy, double latitude, double longitude,
                                                           float courseOverGround, int trueHeading, int second,
                                                           ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState,
                                                           int rawRateOfTurn, int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround, boolean transmitPowerLow) {

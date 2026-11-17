@@ -122,9 +122,9 @@ public class AISMessageFactory {
         float speedOverGround = rawSpeedOverGround / 10f;
         boolean positionAccuracy = bitString.getBoolean(60, 61);
         int rawLongitude = bitString.getSignedInt(61, 89);
-        float longitude = rawLongitude / 600000f;
+        double longitude = rawLongitude / 600000.0;
         int rawLatitude = bitString.getSignedInt(89, 116);
-        float latitude = rawLatitude / 600000f;
+        double latitude = rawLatitude / 600000.0;
         int rawCourseOverGround = bitString.getUnsignedInt(116, 128);
         float courseOverGround = rawCourseOverGround / 10f;
         int trueHeading = bitString.getUnsignedInt(128, 137);
@@ -157,8 +157,8 @@ public class AISMessageFactory {
         int minute = bitString.getUnsignedInt(66, 72);
         int second = bitString.getUnsignedInt(72, 78);
         boolean positionAccurate = bitString.getBoolean(78, 79);
-        float longitude = bitString.getSignedFloat(79, 107) / 600000f;
-        float latitude = bitString.getSignedFloat(107, 134) / 600000f;
+        double longitude = bitString.getSignedInt(79, 107) / 600000.0;
+        double latitude = bitString.getSignedInt(107, 134) / 600000.0;
         PositionFixingDevice positionFixingDevice = PositionFixingDevice.fromInteger(bitString.getUnsignedInt(134, 138));
         boolean satelliteBroadcastTransmissionControl = bitString.getBoolean(138, 139);
         boolean raimFlag = bitString.getBoolean(148, 149);
@@ -238,9 +238,9 @@ public class AISMessageFactory {
         int speed = rawSpeedOverGround;
         boolean positionAccuracy = bitString.getBoolean(60, 61);
         int rawLongitude = bitString.getSignedInt(61, 89);
-        float longitude = rawLongitude / 600000f;
+        double longitude = rawLongitude / 600000.0;
         int rawLatitude = bitString.getSignedInt(89, 116);
-        float latitude = rawLatitude / 600000f;
+        double latitude = rawLatitude / 600000.0;
         int rawCourseOverGround = bitString.getUnsignedInt(116, 128);
         float courseOverGround = rawCourseOverGround / 10f;
         int second = bitString.getUnsignedInt(128, 134);
@@ -277,8 +277,8 @@ public class AISMessageFactory {
         int minute = bitString.getUnsignedInt(66, 72);
         int second = bitString.getUnsignedInt(72, 78);
         boolean positionAccurate = bitString.getBoolean(78, 79);
-        float longitude = bitString.getSignedFloat(79, 107) / 600000f;
-        float latitude = bitString.getSignedFloat(107, 134) / 600000f;
+        double longitude = bitString.getSignedInt(79, 107) / 600000.0;
+        double latitude = bitString.getSignedInt(107, 134) / 600000.0;
         PositionFixingDevice positionFixingDevice = PositionFixingDevice.fromInteger(bitString.getUnsignedInt(134, 138));
         boolean satelliteBroadcastTransmissionControl = bitString.getBoolean(138, 139);
         boolean raimFlag = bitString.getBoolean(148, 149);
@@ -395,8 +395,8 @@ public class AISMessageFactory {
 
     private static GNSSBinaryBroadcastMessage createGNSSBinaryBroadcastMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
         int spare1 = bitString.getUnsignedInt(38, 40);
-        float longitude = bitString.getSignedFloat(40, 58) / 10f;
-        float latitude = bitString.getSignedFloat(58, 75) / 10f;
+        double longitude = bitString.getSignedInt(40, 58) / 600.0;
+        double latitude = bitString.getSignedInt(58, 75) / 600.0;
         int spare2 = bitString.getUnsignedInt(75, 80);
 
         Integer mType = null;
@@ -427,9 +427,9 @@ public class AISMessageFactory {
         float speedOverGround = rawSpeedOverGround / 10f;
         boolean positionAccuracy = bitString.getBoolean(56, 57);
         int rawLongitude = bitString.getSignedInt(57, 85);
-        float longitude = rawLongitude / 600000f;
+        double longitude = rawLongitude / 600000.0;
         int rawLatitude = bitString.getSignedInt(85, 112);
-        float latitude = rawLatitude / 600000f;
+        double latitude = rawLatitude / 600000.0;
         int rawCourseOverGround = bitString.getUnsignedInt(112, 124);
         float courseOverGround = rawCourseOverGround / 10f;
         int trueHeading = bitString.getUnsignedInt(124, 133);
@@ -462,9 +462,9 @@ public class AISMessageFactory {
         float speedOverGround = rawSpeedOverGround / 10f;
         boolean positionAccuracy = bitString.getBoolean(56, 57);
         int rawLongitude = bitString.getSignedInt(57, 85);
-        float longitude = rawLongitude / 600000f;
+        double longitude = rawLongitude / 600000.0;
         int rawLatitude = bitString.getSignedInt(85, 112);
-        float latitude = rawLatitude / 600000f;
+        double latitude = rawLatitude / 600000.0;
         int rawCourseOverGround = bitString.getUnsignedInt(112, 124);
         float courseOverGround = rawCourseOverGround / 10f;
         int trueHeading = bitString.getUnsignedInt(124, 133);
@@ -541,8 +541,8 @@ public class AISMessageFactory {
         AidType aidType = AidType.fromInteger(bitString.getUnsignedInt(38, 43));
         String name = AISText.decode(bitString, 43, 163);
         boolean positionAccurate = bitString.getBoolean(163, 164);
-        float longitude = bitString.getSignedFloat(164, 192) / 600000f;
-        float latitude = bitString.getSignedFloat(192, 219) / 600000f;
+        double longitude = bitString.getSignedInt(164, 192) / 600000.0;
+        double latitude = bitString.getSignedInt(192, 219) / 600000.0;
         int toBow = bitString.getUnsignedInt(219, 228);
         int toStern = bitString.getUnsignedInt(228, 237);
         int toPort = bitString.getUnsignedInt(237, 243);
@@ -591,18 +591,18 @@ public class AISMessageFactory {
 
         boolean addressed = bitString.getBoolean(139, 140);
 
-        Float northEastLongitude = null;
-        Float northEastLatitude = null;
-        Float southWestLongitude = null;
-        Float southWestLatitude = null;
+        Double northEastLongitude = null;
+        Double northEastLatitude = null;
+        Double southWestLongitude = null;
+        Double southWestLatitude = null;
         MMSI destinationMmsi1 = null;
         MMSI destinationMmsi2 = null;
 
         if (!addressed) {
-            northEastLongitude = bitString.getSignedFloat(69, 87) / 10f;
-            northEastLatitude = bitString.getSignedFloat(87, 104) / 10f;
-            southWestLongitude = bitString.getSignedFloat(104, 122) / 10f;
-            southWestLatitude = bitString.getSignedFloat(122, 139) / 10f;
+            northEastLongitude = bitString.getSignedInt(69, 87) / 600.0;
+            northEastLatitude = bitString.getSignedInt(87, 104) / 600.0;
+            southWestLongitude = bitString.getSignedInt(104, 122) / 600.0;
+            southWestLatitude = bitString.getSignedInt(122, 139) / 600.0;
         } else {
             destinationMmsi1 = new MMSI(bitString.getUnsignedInt(69, 99));
             destinationMmsi2 = new MMSI(bitString.getUnsignedInt(104, 134));
@@ -620,10 +620,10 @@ public class AISMessageFactory {
 
     private static GroupAssignmentCommand createGroupAssignmentCommand(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
         int spare1 = bitString.getUnsignedInt(38, 40);
-        float northEastLongitude = bitString.getSignedFloat(40, 58) / 10f;
-        float northEastLatitude = bitString.getSignedFloat(58, 75) / 10f;
-        float southWestLongitude = bitString.getSignedFloat(75, 93) / 10f;
-        float southWestLatitude = bitString.getSignedFloat(93, 110) / 10f;
+        double northEastLongitude = bitString.getSignedInt(40, 58) / 600.0;
+        double northEastLatitude = bitString.getSignedInt(58, 75) / 600.0;
+        double southWestLongitude = bitString.getSignedInt(75, 93) / 600.0;
+        double southWestLatitude = bitString.getSignedInt(93, 110) / 600.0;
         StationType stationType = StationType.fromInteger(bitString.getUnsignedInt(110, 114));
         ShipType shipType = ShipType.fromInteger(bitString.getUnsignedInt(114, 122));
         int spare2 = bitString.getUnsignedInt(122, 144);
@@ -747,9 +747,9 @@ public class AISMessageFactory {
         boolean raim = bitString.getBoolean(39, 40);
         NavigationStatus status = NavigationStatus.fromInteger(bitString.getUnsignedInt(40, 44));
         int rawLongitude = bitString.getSignedInt(44, 62);
-        float longitude = rawLongitude / 600f;
+        double longitude = rawLongitude / 600.0;
         int rawLatitude = bitString.getSignedInt(62, 79);
-        float latitude = rawLatitude / 600f;
+        double latitude = rawLatitude / 600.0;
         int rawSpeedOverGround = bitString.getUnsignedInt(79, 85);
         int speed = rawSpeedOverGround;
         int rawCourseOverGround = bitString.getUnsignedInt(85, 94);
@@ -766,9 +766,9 @@ public class AISMessageFactory {
         // ITU-R M.1371-6 Table 84
         int second = bitString.getUnsignedInt(38, 44);
         int rawLongitude = bitString.getSignedInt(44, 72);
-        float longitude = rawLongitude / 600000f;
+        double longitude = rawLongitude / 600000.0;
         int rawLatitude = bitString.getSignedInt(72, 99);
-        float latitude = rawLatitude / 600000f;
+        double latitude = rawLatitude / 600000.0;
         RestrictedUseIndicator restrictedUse = RestrictedUseIndicator.fromInteger(bitString.getUnsignedInt(99, 101));
         AtoNStationType stationType = AtoNStationType.fromInteger(bitString.getUnsignedInt(101, 104));
         AidType aidType = AidType.fromInteger(bitString.getUnsignedInt(104, 111));
@@ -888,7 +888,7 @@ public class AISMessageFactory {
     private interface PositionReportConstructor {
         PositionReport create(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                               NavigationStatus navigationStatus, int rateOfTurn, float speedOverGround,
-                              boolean positionAccuracy, float latitude, float longitude,
+                              boolean positionAccuracy, double latitude, double longitude,
                               float courseOverGround, int trueHeading, int second,
                               ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState,
                               int rawRateOfTurn, int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround, boolean transmitPowerLow);

@@ -22,8 +22,8 @@ public class VtsGeneratedSyntheticTargets extends ApplicationSpecificMessage {
         this.linkageId = getBinaryData().getUnsignedInt(0, 10);
         this.name = AISText.decode(getBinaryData(), 10, 130);
         this.accuracy = getBinaryData().getBoolean(130, 131);
-        this.longitude = getBinaryData().getSignedFloat(131, 159) / 600000f;
-        this.latitude = getBinaryData().getSignedFloat(159, 186) / 600000f;
+        this.longitude = getBinaryData().getSignedInt(131, 159) / 600000.0;
+        this.latitude = getBinaryData().getSignedInt(159, 186) / 600000.0;
         this.speedOverGround = getBinaryData().getUnsignedInt(186, 196) / 10f;
         this.courseOverGround = getBinaryData().getUnsignedInt(196, 205) / 10f;
         this.second = getBinaryData().getUnsignedInt(205, 211);
@@ -37,9 +37,9 @@ public class VtsGeneratedSyntheticTargets extends ApplicationSpecificMessage {
     /** Bit 130 of the application data (IMO SN.1/Circ.289, DAC=1 FI=17): accuracy flag. */
     boolean accuracy;
     /** Bits 131-159 of the application data (IMO SN.1/Circ.289, DAC=1 FI=17): longitude in decimal degrees (1/10 000 min ÷ 600 000), signed. */
-    float longitude;
+    double longitude;
     /** Bits 159-186 of the application data (IMO SN.1/Circ.289, DAC=1 FI=17): latitude in decimal degrees (1/10 000 min ÷ 600 000), signed. */
-    float latitude;
+    double latitude;
     /** Bits 186-196 of the application data (IMO SN.1/Circ.289, DAC=1 FI=17): speed over ground (transmitted value ÷ 10). */
     float speedOverGround;
     /** Bits 196-205 of the application data (IMO SN.1/Circ.289, DAC=1 FI=17): course over ground (transmitted value ÷ 10). */

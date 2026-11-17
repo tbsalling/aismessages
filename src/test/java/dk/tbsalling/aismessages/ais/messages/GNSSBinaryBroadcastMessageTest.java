@@ -29,8 +29,8 @@ public class GNSSBinaryBroadcastMessageTest {
         assertEquals(0, message.getRepeatIndicator());
         assertEquals(new MMSI(2734450), message.getSourceMmsi());
         assertEquals(0, message.getSpare1());
-        assertEquals(1747.8f, message.getLongitude(), 0.0f);
-        assertEquals(3599.2f, message.getLatitude(), 0.0f);
+        assertEquals(1747.8 / 60, message.getLongitude(), 1e-9);
+        assertEquals(3599.2 / 60, message.getLatitude(), 1e-9);
         assertEquals(0, message.getSpare2());
         assertEquals(31, message.getMType());
         assertEquals(5, message.getStationId());
@@ -57,8 +57,8 @@ public class GNSSBinaryBroadcastMessageTest {
         assertEquals(0, message.getRepeatIndicator());
         assertEquals(new MMSI(2734450), message.getSourceMmsi());
         assertEquals(0, message.getSpare1());
-        assertEquals(1747.8f, message.getLongitude(), 0.0f);
-        assertEquals(3599.2f, message.getLatitude(), 0.0f);
+        assertEquals(1747.8 / 60, message.getLongitude(), 1e-9);
+        assertEquals(3599.2 / 60, message.getLatitude(), 1e-9);
         assertEquals(0, message.getSpare2());
         assertEquals(31, message.getMType());
         assertEquals(5, message.getStationId());
@@ -76,8 +76,8 @@ public class GNSSBinaryBroadcastMessageTest {
 
         GNSSBinaryBroadcastMessage message = (GNSSBinaryBroadcastMessage) AISMessageFactory.create(null, null, null, nmea(b.toBitString()));
 
-        assertEquals(1200f, message.getLongitude(), 0.0f);
-        assertEquals(-330f, message.getLatitude(), 0.0f);
+        assertEquals(1200.0 / 60, message.getLongitude(), 1e-9);
+        assertEquals(-330.0 / 60, message.getLatitude(), 1e-9);
         assertNull(message.getMType());
         assertNull(message.getStationId());
         assertNull(message.getZCount());

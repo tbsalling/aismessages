@@ -30,8 +30,8 @@ public class BaseStationReportTest {
         assertEquals(25, message.getMinute());
         assertEquals(9, message.getSecond());
         assertTrue(message.isPositionAccurate());
-        assertEquals(37.923283f, message.getLatitude(), 0.0f);
-        assertEquals(-122.59837f, message.getLongitude(), 0.0f);
+        assertEquals(22753970 / 600000.0, message.getLatitude(), 0.0f);
+        assertEquals(-73559028 / 600000.0, message.getLongitude(), 0.0f);
         assertEquals(PositionFixingDevice.Surveyed, message.getPositionFixingDevice());
         assertFalse(message.isRaimFlag());
         assertFalse(message.isSatelliteBroadcastTransmissionControl());
@@ -59,8 +59,8 @@ public class BaseStationReportTest {
         assertEquals(38, message.getMinute());
         assertEquals(20, message.getSecond());
         assertTrue(message.isPositionAccurate());
-        assertEquals(-29.870832f, message.getLatitude(), 0.0f);
-        assertEquals(31.033514f, message.getLongitude(), 0.0f);
+        assertEquals(-17922501 / 600000.0, message.getLatitude(), 0.0f);
+        assertEquals(18620108 / 600000.0, message.getLongitude(), 0.0f);
         assertEquals(PositionFixingDevice.Gps, message.getPositionFixingDevice());
         assertFalse(message.isRaimFlag());
         assertFalse(message.isSatelliteBroadcastTransmissionControl());

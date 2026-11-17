@@ -55,8 +55,8 @@ public class BerthingData extends ApplicationSpecificMessage {
         this.serviceStatusFutureRegionalUse = ServiceStatus.valueOf(getBinaryData().getUnsignedInt(94, 96));
         this.serviceStatusFutureUse = ServiceStatus.valueOf(getBinaryData().getUnsignedInt(96, 98));
         this.nameOfBerth = AISText.decode(getBinaryData(), 98, 218);
-        this.berthLongitude = getBinaryData().getSignedFloat(218, 243) / 60000f;
-        this.berthLatitude = getBinaryData().getSignedFloat(243, 267) / 60000f;
+        this.berthLongitude = getBinaryData().getSignedInt(218, 243) / 60000.0;
+        this.berthLatitude = getBinaryData().getSignedInt(243, 267) / 60000.0;
     }
 
     /** Bits 0-10 of the application data (IMO SN.1/Circ.289, DAC=1 FI=20): message linkage ID. */
@@ -126,9 +126,9 @@ public class BerthingData extends ApplicationSpecificMessage {
     /** Bits 98-218 of the application data (IMO SN.1/Circ.289, DAC=1 FI=20): name of berth, up to 20 six-bit ASCII characters (ITU-R M.1371-6 Table 45); padding removed. */
     String nameOfBerth;
     /** Bits 218-243 of the application data (IMO SN.1/Circ.289, DAC=1 FI=20): berth longitude in decimal degrees (1/1 000 min ÷ 60 000), signed. */
-    float berthLongitude;
+    double berthLongitude;
     /** Bits 243-267 of the application data (IMO SN.1/Circ.289, DAC=1 FI=20): berth latitude in decimal degrees (1/1 000 min ÷ 60 000), signed. */
-    float berthLatitude;
+    double berthLatitude;
 
     /** Codes of the mooring position field, bits 27-30 of the application data (IMO SN.1/Circ.289, DAC=1 FI=20). */
     public enum MooringPosition {

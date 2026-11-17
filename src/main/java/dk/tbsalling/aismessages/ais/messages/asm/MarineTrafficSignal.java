@@ -23,8 +23,8 @@ public class MarineTrafficSignal extends ApplicationSpecificMessage {
         // Eagerly decode all fields
         this.linkageId = getBinaryData().getUnsignedInt(0, 10);
         this.name = AISText.decode(getBinaryData(), 10, 130);
-        this.longitude = getBinaryData().getSignedFloat(130, 158) / 600000f;
-        this.latitude = getBinaryData().getSignedFloat(158, 185) / 600000f;
+        this.longitude = getBinaryData().getSignedInt(130, 158) / 600000.0;
+        this.latitude = getBinaryData().getSignedInt(158, 185) / 600000.0;
         this.status = SignalStatus.valueOf(getBinaryData().getUnsignedInt(185, 187));
         this.signal = getBinaryData().getUnsignedInt(187, 192);
         this.hour = getBinaryData().getUnsignedInt(192, 197);
@@ -37,9 +37,9 @@ public class MarineTrafficSignal extends ApplicationSpecificMessage {
     /** Bits 10-130 of the application data (IMO SN.1/Circ.289, DAC=1 FI=18 or FI=19): name, up to 20 six-bit ASCII characters (ITU-R M.1371-6 Table 45); padding removed. */
     String name;
     /** Bits 130-158 of the application data (IMO SN.1/Circ.289, DAC=1 FI=18 or FI=19): longitude in decimal degrees (1/10 000 min ÷ 600 000), signed. */
-    float longitude;
+    double longitude;
     /** Bits 158-185 of the application data (IMO SN.1/Circ.289, DAC=1 FI=18 or FI=19): latitude in decimal degrees (1/10 000 min ÷ 600 000), signed. */
-    float latitude;
+    double latitude;
     /** Bits 185-187 of the application data (IMO SN.1/Circ.289, DAC=1 FI=18 or FI=19): status code, decoded as {@link SignalStatus}. */
     SignalStatus status;
     /** Bits 187-192 of the application data (IMO SN.1/Circ.289, DAC=1 FI=18 or FI=19): signal. */

@@ -78,7 +78,7 @@ public abstract sealed class PositionReport extends AISMessage implements Extend
      */
     protected PositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                              NavigationStatus navigationStatus, int rateOfTurn, float speedOverGround,
-                             boolean positionAccuracy, float latitude, float longitude,
+                             boolean positionAccuracy, double latitude, double longitude,
                              float courseOverGround, int trueHeading, int second,
                              ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState,
                              int rawRateOfTurn, int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround, boolean transmitPowerLow) {
@@ -140,9 +140,9 @@ public abstract sealed class PositionReport extends AISMessage implements Extend
     /** Bit 60 (Table 46): position accuracy flag, true = high (≤ 10 m), false = low (&gt; 10 m, default); see Table 48. */
     boolean positionAccuracy;
     /** Latitude in decimal degrees, {@code rawLatitude} / 600 000 (Table 46); north positive; 91 = not available. */
-    float latitude;
+    double latitude;
     /** Longitude in decimal degrees, {@code rawLongitude} / 600 000 (Table 46); east positive; 181 = not available. */
-    float longitude;
+    double longitude;
     /** Course over ground in degrees, {@code rawCourseOverGround} / 10 (Table 46); 360 = not available. */
     float courseOverGround;
     /** Bits 128-137 (Table 46): true heading in degrees, 0-359; 511 = not available. */

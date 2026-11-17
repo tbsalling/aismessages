@@ -49,7 +49,7 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
      */
     protected StandardSARAircraftPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                                 int altitude, float speedOverGround, boolean positionAccuracy,
-                                                float latitude, float longitude, float courseOverGround,
+                                                double latitude, double longitude, float courseOverGround,
                                                 int second, int regionalReserved, boolean dataTerminalReady,
                                                 boolean assigned, boolean raimFlag, int radioStatus,
                                                 int rawSpeedOverGround, int rawLongitude, int rawLatitude, int rawCourseOverGround,
@@ -111,9 +111,9 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
     /** Bit 60 (Table 57): position accuracy flag, true = high (≤ 10 m), false = low (&gt; 10 m, default); see Table 48. */
     boolean positionAccuracy;
     /** Latitude in decimal degrees, {@code rawLatitude} / 600 000 (Table 57); north positive; 91 = not available. */
-    float latitude;
+    double latitude;
     /** Longitude in decimal degrees, {@code rawLongitude} / 600 000 (Table 57); east positive; 181 = not available. */
-    float longitude;
+    double longitude;
     /** Course over ground in degrees, {@code rawCourseOverGround} / 10 (Table 57); 360 = not available. */
     float courseOverGround;
     /** Bits 128-134 (Table 57): UTC second when the report was generated, 0-59; 60 = not available (default), 61 = manual input, 62 = dead reckoning, 63 = EPFS inoperative. */

@@ -47,8 +47,8 @@ public class GroupAssignmentCommand extends AISMessage {
      * Constructor accepting pre-parsed values for true immutability.
      */
     protected GroupAssignmentCommand(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
-                                     int spare1, float northEastLongitude, float northEastLatitude,
-                                     float southWestLongitude, float southWestLatitude,
+                                     int spare1, double northEastLongitude, double northEastLatitude,
+                                     double southWestLongitude, double southWestLatitude,
                                      StationType stationType, ShipType shipType, int spare2,
                                      TxRxMode transmitReceiveMode, ReportingInterval reportingInterval, int quietTime) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
@@ -90,14 +90,14 @@ public class GroupAssignmentCommand extends AISMessage {
 
     /** Bits 38-40 (Table 74): spare, should be zero. */
     int spare1;
-    /** Bits 58-75 (Table 74): latitude of the north-east corner of the area in decimal degrees (1/10 min / 10); north positive. */
-    float northEastLatitude;
-    /** Bits 40-58 (Table 74): longitude of the north-east corner of the area in decimal degrees (1/10 min / 10); east positive. */
-    float northEastLongitude;
-    /** Bits 93-110 (Table 74): latitude of the south-west corner of the area in decimal degrees. */
-    float southWestLatitude;
-    /** Bits 75-93 (Table 74): longitude of the south-west corner of the area in decimal degrees. */
-    float southWestLongitude;
+    /** Bits 58-75 (Table 74): latitude of the north-east corner of the area in decimal degrees (raw value in 1/10 min divided by 600); north positive. */
+    double northEastLatitude;
+    /** Bits 40-58 (Table 74): longitude of the north-east corner of the area in decimal degrees (raw value in 1/10 min divided by 600); east positive. */
+    double northEastLongitude;
+    /** Bits 93-110 (Table 74): latitude of the south-west corner of the area in decimal degrees (raw value in 1/10 min divided by 600). */
+    double southWestLatitude;
+    /** Bits 75-93 (Table 74): longitude of the south-west corner of the area in decimal degrees (raw value in 1/10 min divided by 600). */
+    double southWestLongitude;
     /** Bits 110-114 (Table 74): station type selector; 0 = all types of mobiles (default), 10 = base station coverage area. */
     StationType stationType;
     /** Bits 114-122 (Table 74, Table 51): type of ship and cargo type selector; 0 = all types (default). */

@@ -51,7 +51,7 @@ public class AidToNavigationReport extends AISMessage {
      */
     protected AidToNavigationReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                     AidType aidType, String name, boolean positionAccurate,
-                                    float latitude, float longitude,
+                                    double latitude, double longitude,
                                     int toBow, int toStern, int toPort, int toStarboard,
                                     PositionFixingDevice positionFixingDevice, int second,
                                     boolean offPosition, int regionalUse, boolean raimFlag,
@@ -109,9 +109,9 @@ public class AidToNavigationReport extends AISMessage {
     /** Bit 163 (Table 71): position accuracy flag, true = high (≤ 10 m), false = low (&gt; 10 m, default); see Table 48. */
     boolean positionAccurate;
     /** Bits 192-219 (Table 71): latitude in decimal degrees (1/10 000 min / 600 000); north positive; 91 = not available. */
-    float latitude;
+    double latitude;
     /** Bits 164-192 (Table 71): longitude in decimal degrees (1/10 000 min / 600 000); east positive; 181 = not available. */
-    float longitude;
+    double longitude;
     /** Bits 219-228 (Table 71, Fig. 39, § A7-3.19.1): dimension A in metres, 0-511; points to true north for fixed aids; A = B = C = D for floating aids; 1 for objects ≤ 2 m × 2 m; 0 for virtual aids. */
     int toBow;
     /** Bits 228-237 (Table 71, Fig. 39): dimension B in metres, 0-511. */

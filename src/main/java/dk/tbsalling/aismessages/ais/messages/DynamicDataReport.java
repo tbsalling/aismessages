@@ -26,7 +26,7 @@ public interface DynamicDataReport extends DataReport {
     /**
      * @return Latitude in decimal degrees
      */
-    float getLatitude();
+    double getLatitude();
 
     /**
      * @return Raw latitude value before conversion to decimal degrees
@@ -36,7 +36,7 @@ public interface DynamicDataReport extends DataReport {
     /**
      * @return Longitude in decimal degrees
      */
-    float getLongitude();
+    double getLongitude();
 
     /**
      * @return Raw longitude value before conversion to decimal degrees

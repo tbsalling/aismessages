@@ -51,7 +51,7 @@ public class BaseStationReport extends AISMessage {
      */
     protected BaseStationReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                 int year, int month, int day, int hour, int minute, int second,
-                                boolean positionAccurate, float latitude, float longitude,
+                                boolean positionAccurate, double latitude, double longitude,
                                 PositionFixingDevice positionFixingDevice, boolean raimFlag,
                                 SOTDMACommunicationState communicationState, boolean satelliteBroadcastTransmissionControl) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
@@ -108,9 +108,9 @@ public class BaseStationReport extends AISMessage {
     /** Bit 78 (Table 49): position accuracy flag, true = high (≤ 10 m), false = low (&gt; 10 m, default); see Table 48. */
     boolean positionAccurate;
     /** Bits 107-134 (Table 49): latitude in decimal degrees (1/10 000 min / 600 000); north positive; 91 = not available. */
-    float latitude;
+    double latitude;
     /** Bits 79-107 (Table 49): longitude in decimal degrees (1/10 000 min / 600 000); east positive; 181 = not available. */
-    float longitude;
+    double longitude;
     /** Bits 134-138 (Table 49): type of electronic position fixing device. */
     PositionFixingDevice positionFixingDevice;
     /** Bit 148 (Table 49): RAIM flag of the electronic position fixing device, true = RAIM in use; see Table 48. */

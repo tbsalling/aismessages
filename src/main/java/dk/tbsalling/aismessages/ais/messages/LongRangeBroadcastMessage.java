@@ -36,7 +36,7 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
      */
     protected LongRangeBroadcastMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                         boolean positionAccuracy, boolean raim, NavigationStatus navigationStatus,
-                                        float latitude, float longitude, float speedOverGround, float courseOverGround,
+                                        double latitude, double longitude, float speedOverGround, float courseOverGround,
                                         PositionLatency positionLatency, int spare,
                                         int rawLongitude, int rawLatitude, int rawSpeedOverGround, int rawCourseOverGround) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
@@ -90,9 +90,9 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
     /** Bits 40-44 (Table 83): navigational status as in Message 1. */
     NavigationStatus navigationStatus;
     /** Longitude in decimal degrees, {@code rawLongitude} / 600 (Table 83); east positive; 181 = position older than 6 hours or not available. */
-    float longitude;
+    double longitude;
     /** Latitude in decimal degrees, {@code rawLatitude} / 600 (Table 83); north positive; 91 = position older than 6 hours or not available. */
-    float latitude;
+    double latitude;
     /** Speed over ground in knots, equal to {@code rawSpeedOverGround} since Message 27 uses 1-knot steps (Table 83); 62 = 62 knots or faster, 63 = not available. */
     float speedOverGround;
     /** Course over ground in degrees, equal to {@code rawCourseOverGround} since Message 27 uses 1-degree steps (Table 83); 511 = not available. */

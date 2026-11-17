@@ -29,9 +29,9 @@ public class StandardClassBCSPositionReportTest {
         assertEquals(0.0f, message.getSpeedOverGround(), 0.0f);
         assertEquals(0, message.getRawSpeedOverGround());
         assertFalse(message.isPositionAccuracy());
-        assertEquals(37.785034f, message.getLatitude(), 0.0f);
+        assertEquals(22671021 / 600000.0, message.getLatitude(), 0.0f);
         assertEquals(22671021, message.getRawLatitude());
-        assertEquals(-122.26732f, message.getLongitude(), 0.0f);
+        assertEquals(-73360392 / 600000.0, message.getLongitude(), 0.0f);
         assertEquals(-73360392, message.getRawLongitude());
         assertEquals(0.0f, message.getCourseOverGround(), 0.0f);
         assertEquals(0, message.getRawCourseOverGround());
@@ -67,8 +67,8 @@ public class StandardClassBCSPositionReportTest {
         assertEquals(0b00000000, message.getRegionalReserved1());
         assertEquals(0.3f, message.getSpeedOverGround(), 0.0f);
         assertTrue(message.isPositionAccuracy());
-        assertEquals(42.020855f, message.getLatitude(), 0.0f);
-        assertEquals(-87.70006f, message.getLongitude(), 0.0f);
+        assertEquals(25212511 / 600000.0, message.getLatitude(), 0.0f);
+        assertEquals(-52620037 / 600000.0, message.getLongitude(), 0.0f);
         assertEquals(186.2f, message.getCourseOverGround(), 0.0f);
         assertEquals(511, message.getTrueHeading());
         assertEquals(60, message.getSecond());
@@ -101,8 +101,8 @@ public class StandardClassBCSPositionReportTest {
         assertEquals(0b00001111, message.getRegionalReserved1());
         assertEquals(1.4f, message.getSpeedOverGround(), 0.0f);
         assertTrue(message.isPositionAccuracy());
-        assertEquals(40.005283f, message.getLatitude(), 0.0f);
-        assertEquals(53.010998f, message.getLongitude(), 0.0f);
+        assertEquals(24003170 / 600000.0, message.getLatitude(), 0.0f);
+        assertEquals(31806598 / 600000.0, message.getLongitude(), 0.0f);
         assertEquals(177f, message.getCourseOverGround(), 0.0f);
         assertEquals(177, message.getTrueHeading());
         assertEquals(34, message.getSecond());

@@ -30,10 +30,10 @@ public class ChannelManagementTest {
         assertEquals(2088, message.getChannelB());
         assertFalse(message.isPower());
         // Jurisdiction area
-        assertEquals(-7710.0f, message.getNorthEastLongitude(), 0.0f);
-        assertEquals(3300.0f, message.getNorthEastLatitude(), 0.0f);
-        assertEquals(-8020.0f, message.getSouthWestLongitude(), 0.0f);
-        assertEquals(3210.0f, message.getSouthWestLatitude(), 0.0f);
+        assertEquals(-7710.0 / 60, message.getNorthEastLongitude(), 1e-9);
+        assertEquals(3300.0 / 60, message.getNorthEastLatitude(), 1e-9);
+        assertEquals(-8020.0 / 60, message.getSouthWestLongitude(), 1e-9);
+        assertEquals(3210.0 / 60, message.getSouthWestLatitude(), 1e-9);
         // Bands
         assertFalse(message.isBandA());
         assertFalse(message.isBandB());

@@ -30,8 +30,8 @@ public class ExtendedClassBEquipmentPositionReportTest {
         assertEquals(0b00000000, message.getRegionalReserved1());
         assertEquals(7.1, message.getSpeedOverGround(), 1e-6);
         assertEquals(Boolean.TRUE, message.isPositionAccuracy());
-        assertEquals(118.994422, message.getLongitude(), 1e-6);
-        assertEquals(24.695787, message.getLatitude(), 1e-6);
+        assertEquals(71396656 / 600000.0, message.getLongitude(), 1e-6);
+        assertEquals(14817473 / 600000.0, message.getLatitude(), 1e-6);
         assertEquals(49.7, message.getCourseOverGround(), 1e-1);
         assertEquals(511, message.getTrueHeading());
         assertEquals(15, message.getSecond());

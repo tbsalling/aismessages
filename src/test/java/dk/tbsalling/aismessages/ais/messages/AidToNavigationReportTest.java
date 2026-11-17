@@ -43,8 +43,8 @@ public class AidToNavigationReportTest {
         assertEquals(0, message.getToStarboard());
         assertEquals(true, message.isVirtualAid());
         assertEquals(false, message.isPositionAccurate());
-        assertEquals(-23.936693f, message.getLatitude(), 0.0f); // lat = 111001001001101101001100000b = -23,9366933333
-        assertEquals(151.44344f, message.getLongitude(), 0.0f);
+        assertEquals(-14362016 / 600000.0, message.getLatitude(), 0.0f); // lat = 111001001001101101001100000b = -23,9366933333
+        assertEquals(90866068 / 600000.0, message.getLongitude(), 0.0f);
         assertEquals(PositionFixingDevice.Surveyed, message.getPositionFixingDevice());
         assertFalse(message.isRaimFlag());
     }
@@ -76,8 +76,8 @@ public class AidToNavigationReportTest {
         assertEquals(0, message.getToStarboard());
         assertEquals(true, message.isVirtualAid());
         assertEquals(false, message.isPositionAccurate());
-        assertEquals(-23.917385f, message.getLatitude(), 0.0f);
-        assertEquals(151.49791f, message.getLongitude(), 0.0f);
+        assertEquals(-14350431 / 600000.0, message.getLatitude(), 0.0f);
+        assertEquals(90898742 / 600000.0, message.getLongitude(), 0.0f);
         assertEquals(PositionFixingDevice.Surveyed, message.getPositionFixingDevice());
         assertFalse(message.isRaimFlag());
         assertFalse(message.isNameExtensionLabel());

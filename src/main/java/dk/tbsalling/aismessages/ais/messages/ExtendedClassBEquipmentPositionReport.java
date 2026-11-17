@@ -46,7 +46,7 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
      */
     protected ExtendedClassBEquipmentPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                                     int regionalReserved1, float speedOverGround, boolean positionAccuracy,
-                                                    float latitude, float longitude, float courseOverGround, int trueHeading,
+                                                    double latitude, double longitude, float courseOverGround, int trueHeading,
                                                     int second, int regionalReserved2, String shipName, ShipType shipType,
                                                     int toBow, int toStern, int toPort, int toStarboard,
                                                     PositionFixingDevice positionFixingDevice, boolean raimFlag,
@@ -114,9 +114,9 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
     /** Bit 56 (Table 69): position accuracy flag, true = high (≤ 10 m), false = low (&gt; 10 m, default); see Table 48. */
     boolean positionAccuracy;
     /** Latitude in decimal degrees, {@code rawLatitude} / 600 000 (Table 69); north positive; 91 = not available. */
-    float latitude;
+    double latitude;
     /** Longitude in decimal degrees, {@code rawLongitude} / 600 000 (Table 69); east positive; 181 = not available. */
-    float longitude;
+    double longitude;
     /** Course over ground in degrees, {@code rawCourseOverGround} / 10 (Table 69); 360 = not available. */
     float courseOverGround;
     /** Bits 124-133 (Table 69): true heading in degrees, 0-359; 511 = not available. */
