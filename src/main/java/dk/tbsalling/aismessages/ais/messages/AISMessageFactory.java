@@ -73,8 +73,8 @@ public class AISMessageFactory {
         AisVersionIndicator aisVersionIndicator = AisVersionIndicator.fromInteger(bitString.getUnsignedInt(38, 40));
         int rawImo = bitString.getUnsignedInt(40, 70);
         IMO imo = rawImo == 0 ? null : new IMO(rawImo);
-        String callsign = AISText.decode(bitString, 70, 112);
-        String shipName = AISText.decode(bitString, 112, 232);
+        String callsign = FieldDecoder.text(AISText.decode(bitString, 70, 112));
+        String shipName = FieldDecoder.text(AISText.decode(bitString, 112, 232));
         ShipType shipType = ShipType.fromInteger(bitString.getUnsignedInt(232, 240));
         int toBow = bitString.getUnsignedInt(240, 249);
         int toStern = bitString.getUnsignedInt(249, 258);
@@ -88,7 +88,7 @@ public class AISMessageFactory {
         int rawDraught = bitString.getUnsignedInt(294, 302);
         float draught = FieldDecoder.draught(rawDraught);
         DraughtIndicator draughtIndicator = FieldDecoder.draughtIndicator(rawDraught);
-        String destination = AISText.decode(bitString, 302, 422);
+        String destination = FieldDecoder.text(AISText.decode(bitString, 302, 422));
         boolean dataTerminalReady = bitString.getBoolean(422, 423);
 
         return new ShipAndVoyageData(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
@@ -484,7 +484,7 @@ public class AISMessageFactory {
         Integer second = FieldDecoder.timeStampSecond(rawSecond);
         TimeStampIndicator timeStampIndicator = FieldDecoder.timeStampIndicator(rawSecond);
         int regionalReserved2 = bitString.getUnsignedInt(139, 143);
-        String shipName = AISText.decode(bitString, 143, 263);
+        String shipName = FieldDecoder.text(AISText.decode(bitString, 143, 263));
         ShipType shipType = ShipType.fromInteger(bitString.getUnsignedInt(263, 271));
         int toBow = bitString.getUnsignedInt(271, 280);
         int toStern = bitString.getUnsignedInt(280, 289);
@@ -552,7 +552,7 @@ public class AISMessageFactory {
 
     private static AidToNavigationReport createAidToNavigationReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
         AidType aidType = AidType.fromInteger(bitString.getUnsignedInt(38, 43));
-        String name = AISText.decode(bitString, 43, 163);
+        String name = FieldDecoder.text(AISText.decode(bitString, 43, 163));
         boolean positionAccurate = bitString.getBoolean(163, 164);
         double longitude = FieldDecoder.longitude(bitString.getSignedInt(164, 192), FieldDecoder.TEN_THOUSANDTHS_OF_MINUTE);
         double latitude = FieldDecoder.latitude(bitString.getSignedInt(192, 219), FieldDecoder.TEN_THOUSANDTHS_OF_MINUTE);
@@ -586,7 +586,7 @@ public class AISMessageFactory {
                     nameExtensionLabel = true;
                     textStart = 290;
                 }
-                nameExtension = AISText.decode(bitString, textStart, 272 + extraBitsOfChars);
+                nameExtension = FieldDecoder.text(AISText.decode(bitString, textStart, 272 + extraBitsOfChars));
                 spare2 = (extraBits == extraBitsOfChars) ? 0 : bitString.getUnsignedInt(272 + extraBitsOfChars, bitString.length());
             }
         }
@@ -670,15 +670,15 @@ public class AISMessageFactory {
         VdesCapabilities vdesCapabilities = null;
 
         switch (partNumber) {
-            case 0 -> shipName = AISText.decode(bitString, 40, 160);
+            case 0 -> shipName = FieldDecoder.text(AISText.decode(bitString, 40, 160));
             case 1 -> {
                 shipType = ShipType.fromInteger(bitString.getUnsignedInt(40, 48));
-                vendorId = AISText.decode(bitString, 48, 90);
+                vendorId = FieldDecoder.text(AISText.decode(bitString, 48, 90));
                 // ITU-R M.1371-6 Table 78: the 42-bit manufacturer ID is a 3-character mnemonic, a 4-bit model code and a 20-bit serial number.
-                manufacturerMnemonic = AISText.decode(bitString, 48, 66);
+                manufacturerMnemonic = FieldDecoder.text(AISText.decode(bitString, 48, 66));
                 unitModelCode = bitString.getUnsignedInt(66, 70);
                 unitSerialNumber = bitString.getUnsignedInt(70, 90);
-                callsign = AISText.decode(bitString, 90, 132);
+                callsign = FieldDecoder.text(AISText.decode(bitString, 90, 132));
                 toBow = bitString.getUnsignedInt(132, 141);
                 toStern = bitString.getUnsignedInt(141, 150);
                 toPort = bitString.getUnsignedInt(150, 156);

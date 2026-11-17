@@ -89,7 +89,7 @@ public class ShipAndVoyageDataTest {
         assertEquals(20, message.getEtaHour());
         assertEquals(10, message.getEtaMinute());
         assertEquals(Optional.of(ZonedDateTime.of(2011, 5, 14, 20, 10, 0, 0, ZoneOffset.UTC)), message.getEtaAfterReceived());
-        assertEquals("", message.getDestination());
+        assertNull(message.getDestination());
         assertEquals(AisVersionIndicator.ITU_R_M1371_3, message.getAisVersionIndicator());
         assertFalse(message.isDataTerminalReady());
     }

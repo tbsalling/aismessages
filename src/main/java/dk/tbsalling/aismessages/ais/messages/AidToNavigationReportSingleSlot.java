@@ -139,7 +139,7 @@ public class AidToNavigationReportSingleSlot extends AISMessage {
     AidType aidType;
     /** National identification number of the AtoN's IALA Marine Resource Name (urn:mrn:iala:aton:&lt;country&gt;:&lt;number&gt;); 0 = not available. */
     int ialaMrn;
-    /** Governs the meaning and units of {@link #getDimensionA()} and {@link #getDimensionB()}. */
+    /** Which decoded dimension getters apply (Table 84): radius and height, swing circle, mobile AtoN course and speed, polygon, circle, or boundary line and sector. */
     AtoNDimensionsType dimensionsType;
     /** Dimension type 0 (Table 84, see Message 21 and § A7-3.19.1): dimension A in metres; null for other dimension types. */
     Integer dimensionAMetres;

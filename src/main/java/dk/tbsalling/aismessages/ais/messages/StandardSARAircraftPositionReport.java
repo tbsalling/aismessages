@@ -139,7 +139,7 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
     boolean barometricAltitude;
     /** Communication state selector flag, bit 148: false = SOTDMA communication state follows, true = ITDMA. */
     boolean commStateSelectorFlag;
-    /** The communication state in bits 149-168, typed according to {@link #isCommStateSelectorFlag()}. */
+    /** The communication state in bits 149-168, typed according to {@code isCommStateSelectorFlag()}. */
     CommunicationState communicationState;
 
 }

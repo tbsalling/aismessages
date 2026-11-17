@@ -126,7 +126,7 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
     TimeStampIndicator timeStampIndicator;
     /** Bits 139-143 (Table 69) as an unsigned integer, first bit most significant: 4 spare bits, should be zero. */
     int regionalReserved2;
-    /** Bits 143-263 (Table 69): name, up to 20 six-bit ASCII characters (Table 45); all "@" = not available. */
+    /** Bits 143-263 (Table 69): name, up to 20 six-bit ASCII characters (Table 45); null when not available. */
     String shipName;
     /** Bits 263-271 (Table 69, Table 51): type of ship and cargo type; null for the regional (100-199) and future-use (200-255) codes. */
     ShipType shipType;

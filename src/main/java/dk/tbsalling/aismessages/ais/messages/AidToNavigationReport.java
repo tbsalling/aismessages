@@ -106,7 +106,7 @@ public class AidToNavigationReport extends AISMessage {
 
     /** Bits 38-43 (Table 71, Table 72): type of aid to navigation, 0 = not available (default). */
     AidType aidType;
-    /** Bits 43-163 (Table 71): name of the aid to navigation, up to 20 six-bit ASCII characters (Table 45); all "@" = not available. Extended by {@code nameExtension}. */
+    /** Bits 43-163 (Table 71): name of the aid to navigation, up to 20 six-bit ASCII characters (Table 45); null when not available. Extended by {@code nameExtension}. */
     String name;
     /** Bit 163 (Table 71): position accuracy flag, true = high (≤ 10 m), false = low (&gt; 10 m, default); see Table 48. */
     boolean positionAccurate;
@@ -141,15 +141,15 @@ public class AidToNavigationReport extends AISMessage {
     /** Bit 271 (Table 71): spare, should be zero. */
     int spare1;
     /**
-     * Bits 272 to end (Table 71): up to 14 additional six-bit characters extending {@link #getName()}, or, when {@link #isNameExtensionIsLabel()}
-     * is true, the AtoN's label (e.g. "LB1" for Lighted Buoy 1) with the leading "@@@" marker removed. Null when absent.
+     * Bits 272 to end (Table 71): up to 14 additional six-bit characters extending {@code getName()}, or, when {@code isNameExtensionLabel()}
+     * is true, the AtoN's label (e.g. "LB1" for Lighted Buoy 1). Null when absent.
      */
     String nameExtension;
     /** Bits after the name extension (Table 71): 0, 2, 4 or 6 spare bits inserted to reach a byte boundary; 0 when no extension is present. */
     int spare2;
     /**
-     * True when the name extension was preceded by "@@@", which per ITU-R M.1371-6 Table 71 means the text is to be
-     * portrayed as the AtoN's label rather than as part of its name.
+     * True when the name extension is marked as the AtoN's label, to be portrayed as a label rather than as part of its
+     * name (ITU-R M.1371-6 Table 71).
      */
     boolean nameExtensionLabel;
 }

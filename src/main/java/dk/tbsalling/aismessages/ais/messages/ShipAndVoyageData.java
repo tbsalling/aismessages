@@ -159,9 +159,9 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
 
     /** Bits 40-70 (Table 50): IMO number per IMO Resolution A.1117(30), 1 000 000-9 999 999, or an official flag state number from 10 000 000; null when not available. */
     IMO imo;
-    /** Bits 70-112 (Table 50): call sign, 7 six-bit ASCII characters (Table 45); "@@@@@@@" = not available. Craft associated with a parent vessel use "A" plus the last 6 digits of the parent's MMSI. */
+    /** Bits 70-112 (Table 50): call sign, 7 six-bit ASCII characters (Table 45); null when not available. Craft associated with a parent vessel use "A" plus the last 6 digits of the parent's MMSI. */
     String callsign;
-    /** Bits 112-232 (Table 50): name as on the station radio licence, up to 20 six-bit ASCII characters; all "@" = not available. */
+    /** Bits 112-232 (Table 50): name as on the station radio licence, up to 20 six-bit ASCII characters; null when not available. */
     String shipName;
     /** Bits 232-240 (Table 50, Table 51): type of ship and cargo type; null for the regional (100-199) and future-use (200-255) codes. */
     ShipType shipType;
@@ -187,7 +187,7 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
     float draught;
     /** Meaning of {@code draught}: measured, 25.5 m or greater, or not available (see {@link DraughtIndicator}). */
     DraughtIndicator draughtIndicator;
-    /** Bits 302-422 (Table 50): destination, up to 20 six-bit ASCII characters; all "@" = not available. */
+    /** Bits 302-422 (Table 50): destination, up to 20 six-bit ASCII characters; null when not available. */
     String destination;
     /** Bit 422 (Table 50, § A7-3.3.1): data terminal equipment ready, true = available (bit 0), false = not available (bit 1, default). */
     boolean dataTerminalReady;

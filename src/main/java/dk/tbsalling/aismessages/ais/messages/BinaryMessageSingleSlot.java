@@ -85,7 +85,7 @@ public class BinaryMessageSingleSlot extends AISMessage {
         return AISMessageType.BinaryMessageSingleSlot;
     }
 
-    /** True when the message is addressed to {@link #getDestinationMMSI()}; false for a broadcast. */
+    /** True when the message is addressed to {@code getDestinationMMSI()}; false for a broadcast. */
     boolean destinationIndicator;
     /** True when the data is structured, i.e. preceded by a 16-bit application identifier (DAC + FI). */
     boolean binaryDataFlag;

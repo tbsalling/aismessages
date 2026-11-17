@@ -168,4 +168,12 @@ final class FieldDecoder {
     static AltitudeIndicator altitudeIndicator(int raw) {
         return raw == 4095 ? AltitudeIndicator.NotAvailable : raw == 4094 ? AltitudeIndicator.AtLeast4094Metres : AltitudeIndicator.Measured;
     }
+
+    /**
+     * @param decoded six-bit text as decoded by {@code AISText.decode}, with "@" padding removed.
+     * @return the text, or null when the field held only "@" (not available, Table 45).
+     */
+    static String text(String decoded) {
+        return decoded == null || decoded.isEmpty() ? null : decoded;
+    }
 }

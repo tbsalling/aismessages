@@ -89,7 +89,7 @@ public class BinaryMessageMultipleSlot extends AISMessage {
         return AISMessageType.BinaryMessageMultipleSlot;
     }
 
-    /** True when the message is addressed to {@link #getDestinationMmsi()}; false for a broadcast. */
+    /** True when the message is addressed to {@code getDestinationMmsi()}; false for a broadcast. */
     boolean addressed;
     /** True when the data is structured, i.e. preceded by a 16-bit application identifier (DAC + FI). */
     boolean structured;
@@ -105,7 +105,7 @@ public class BinaryMessageMultipleSlot extends AISMessage {
     BitString data;
     /** Decoded application specific message of a structured message; null when unstructured. */
     ApplicationSpecificMessage applicationSpecificMessage;
-    /** False when {@link #getCommunicationState()} is SOTDMA, true when it is ITDMA. */
+    /** False when {@code getCommunicationState()} is SOTDMA, true when it is ITDMA. */
     boolean commStateSelectorFlag;
     /** The communication state carried in the last 19 bits of the message. */
     CommunicationState communicationState;

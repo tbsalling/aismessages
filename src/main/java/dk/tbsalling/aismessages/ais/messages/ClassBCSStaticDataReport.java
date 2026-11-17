@@ -106,13 +106,13 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
 
     /** Bits 38-40 (Tables 76 and 77): which part this report holds. Fields of the other part are null, or 0 for the dimensions. */
     Message24Part part;
-    /** Part A, bits 40-160 (Table 76): name of the MMSI-registered vessel, up to 20 six-bit ASCII characters (Table 45); all "@" = not available; "SAR AIRCRAFT NNNNNNN" for SAR aircraft. Null for Part B. */
+    /** Part A, bits 40-160 (Table 76): name of the MMSI-registered vessel, up to 20 six-bit ASCII characters (Table 45); null when not available; "SAR AIRCRAFT NNNNNNN" for SAR aircraft. Null for Part B. */
     String shipName;
     /** Part B, bits 40-48 (Table 77, Table 51): type of ship and cargo type; 0 = not available; not applicable to SAR aircraft. Null for Part A. */
     ShipType shipType;
     /** Part B, bits 48-90 (Table 77): the 42-bit manufacturer ID rendered as 7 six-bit ASCII characters, as older decoders did; see {@code manufacturerMnemonic}, {@code unitModelCode} and {@code unitSerialNumber} for the Table 78 structure. Null for Part A. */
     String vendorId;
-    /** Part B, bits 90-132 (Table 77): call sign, 7 six-bit ASCII characters; "@@@@@@@" = not available. Craft associated with a parent vessel use "A" plus the last 6 digits of the parent's MMSI. Null for Part A. */
+    /** Part B, bits 90-132 (Table 77): call sign, 7 six-bit ASCII characters; null when not available. Craft associated with a parent vessel use "A" plus the last 6 digits of the parent's MMSI. Null for Part A. */
     String callsign;
     /** Part B, bits 132-141 (Table 77, Fig. 38): dimension A, distance from the reference point to the bow in metres, 0-511. 0 (not available) for Part A. */
     int toBow;
