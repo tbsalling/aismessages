@@ -16,21 +16,47 @@
 
 package dk.tbsalling.aismessages.ais.messages.types;
 
+/**
+ * Type of electronic position fixing device (ITU-R M.1371-6, e.g. Table 49 and Table 50).
+ */
 public enum PositionFixingDevice {
+	/** 0 = not available (default). */
 	Undefined (0),
+	/** 1 = GPS. */
 	Gps(1),
+	/** 2 = GLONASS. */
 	Glonass(2),
+	/** Combined GNSS. */
 	CombinedGpsGlonass(3),
+	/** Loran. */
 	LoranC(4),
+	/** 5 = Chayka. */
 	Chayka(5),
+	/** INS. */
 	IntegratedNavigationSystem(6),
+	/** Manually inputted, i.e. surveyed or charted position. */
 	Surveyed(7),
-	Galileo(8);
+	/** 8 = Galileo. */
+	Galileo(8),
+	/** BDS, the BeiDou navigation satellite system. */
+	BeiDou(9),
+	/** 10 = not used, reserved for future use. */
+	ReservedForFutureUse10(10),
+	/** 11 = not used, reserved for future use. */
+	ReservedForFutureUse11(11),
+	/** Integrated positioning, navigation and timing (PNT) system. */
+	IntegratedPNT(12),
+	/** 13 = inertial navigation system. */
+	InertialNavigationSystem(13),
+	/** 14 = terrestrial radio navigation system. */
+	TerrestrialRadioNavigation(14),
+	/** Internal GNSS, as used by Class B "CS" stations. */
+	InternalGNSS(15);
 
 	PositionFixingDevice(int code) {
 		this.code = code;
 	}
-	
+
 	public int getCode() {
 		return code;
 	}

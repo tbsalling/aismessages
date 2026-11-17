@@ -108,6 +108,13 @@ public class AISTextTest {
         assertEquals("", AISText.decode(bs, 0, 0));
     }
 
+    @Test
+    public void decode_endBeforeBeginReturnsEmpty() {
+        // Happens when a payload is shorter than the bit offset where its text field starts.
+        BitString bs = BitString.ofBitString("000001000010");
+        assertEquals("", AISText.decode(bs, 72, 66));
+    }
+
     private static String toBits(int... codes) {
         StringBuilder sb = new StringBuilder();
         for (int c : codes) {

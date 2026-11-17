@@ -16,15 +16,23 @@
 
 package dk.tbsalling.aismessages.ais.messages.types;
 
+/**
+ * Special manoeuvre indicator of Messages 1, 2 and 3 (ITU-R M.1371-6 Table 46).
+ */
 public enum ManeuverIndicator {
+	/** 0 = not available (default). */
 	NotAvailable(0),
+	/** 1 = not engaged in special manoeuvre. */
 	NoSpecialManeuver(1),
-	SpecialManeuver(2);
+	/** Engaged in special manoeuvre, i.e. regional passing arrangement on inland waterway. */
+	SpecialManeuver(2),
+	/** 3 = reserved for regional use. */
+	ReservedForRegionalUse(3);
 
 	ManeuverIndicator(int code) {
 		this.code = code;
 	}
-	
+
 	public int getCode() {
 		return code;
 	}

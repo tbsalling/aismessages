@@ -18,6 +18,12 @@ package dk.tbsalling.aismessages.ais.messages.types;
 
 import lombok.Value;
 
+/**
+ * Maritime mobile service identity: the 30-bit source or destination ID of an AIS message, identifying the station
+ * per RR Article 19 and Recommendation ITU-R M.585 (ITU-R M.1371-6 § A2-3.3.7.2.1). Only values up to 999 999 999 are
+ * valid; the tenth digit of Rec. ITU-R M.1080 is not used. Special ranges include 970xxyyyy for AIS-SART, 972xxyyyy
+ * for MOB-AIS and 974xxyyyy for EPIRB-AIS (Annex 8 § A8-6) and 99MIDxxxx for aids to navigation.
+ */
 @Value
 public class MMSI {
 
@@ -48,5 +54,6 @@ public class MMSI {
         return String.format("%09d", mmsi);
     }
 
+    /** The MMSI as a number, 0-1 073 741 823 as transmitted; valid MMSIs are at most 999 999 999. */
     int mmsi;
 }

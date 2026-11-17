@@ -16,10 +16,18 @@
 
 package dk.tbsalling.aismessages.ais.messages.types;
 
+/**
+ * Tx/Rx mode commanded by Message 22 (bits 64-68, Table 73) or Message 23 (bits 144-146, Table 74) of ITU-R M.1371-6.
+ * When transmission on one channel is suspended, the required reporting interval is kept on the remaining channel.
+ */
 public enum TxRxMode {
+	/** 0 = transmit on A and B, receive on A and B (default). */
 	TxABRxAB (0),
+	/** 1 = transmit on A, receive on A and B. */
 	TxARxAB(1),
+	/** 2 = transmit on B, receive on A and B. */
 	TxBRxAB(2),
+	/** 3 = reserved for future use. */
 	FutureUse(3);
 
 	TxRxMode(int code) {

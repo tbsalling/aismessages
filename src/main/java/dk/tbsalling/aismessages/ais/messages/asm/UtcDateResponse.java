@@ -26,11 +26,17 @@ public class UtcDateResponse extends ApplicationSpecificMessage {
         this.second = getBinaryData().getUnsignedInt(34, 40);
     }
 
+    /** Bits 0-14 of the application data (IMO SN.1/Circ.289, DAC=1 FI=11): year. */
     int year;
+    /** Bits 14-18 of the application data (IMO SN.1/Circ.289, DAC=1 FI=11): month. */
     int month;
+    /** Bits 18-23 of the application data (IMO SN.1/Circ.289, DAC=1 FI=11): day. */
     int day;
+    /** Bits 23-28 of the application data (IMO SN.1/Circ.289, DAC=1 FI=11): hour. */
     int hour;
+    /** Bits 28-34 of the application data (IMO SN.1/Circ.289, DAC=1 FI=11): minute. */
     int minute;
+    /** Bits 34-40 of the application data (IMO SN.1/Circ.289, DAC=1 FI=11): second. */
     int second;
 
 }

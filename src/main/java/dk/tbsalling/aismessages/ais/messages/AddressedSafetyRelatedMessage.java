@@ -31,6 +31,11 @@ import java.time.Instant;
 
 import static java.lang.String.format;
 
+/**
+ * Message 12: addressed safety related message (ITU-R M.1371-6 § A7-3.10, Table 59). Point-to-point safety related
+ * text in six-bit ASCII from a mobile or base station, acknowledged by Message 13. Variable length, 72 to 1008 bits
+ * (1 to 5 slots; Table 60 gives the number of characters per slot count).
+ */
 @Value
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
@@ -58,7 +63,9 @@ public class AddressedSafetyRelatedMessage extends AISMessage {
 
         final int numberOfBits = getNumberOfBits();
 
-        if (numberOfBits > 1008)
+        if (numberOfBits < 72)
+            errorMessage.append(format("Message of type %s should be at least 72 bits long; not %d.", getMessageType(), numberOfBits));
+        else if (numberOfBits > 1008)
             errorMessage.append(format("Message of type %s should be at most 1008 bits long; not %d.", getMessageType(), numberOfBits));
 
         if (errorMessage.length() > 0) {
@@ -73,9 +80,14 @@ public class AddressedSafetyRelatedMessage extends AISMessage {
         return AISMessageType.AddressedSafetyRelatedMessage;
     }
 
+    /** Bits 38-40 (Table 59): sequence number, 0-3, used to pair the message with its acknowledgement (§ A2-5.3.1). */
     int sequenceNumber;
+    /** Bits 40-70 (Table 59): MMSI of the destination station. */
     MMSI destinationMmsi;
+    /** Bit 70 (Table 59): retransmit flag, true = retransmitted, false = first transmission (default). */
     boolean retransmit;
+    /** Bit 71 (Table 59): spare, should be zero. */
     int spare;
+    /** Bits 72 to end (Table 59): safety related text in six-bit ASCII (Table 45), at most 156 characters; trailing padding removed. */
     String text;
 }

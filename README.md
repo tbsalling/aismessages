@@ -24,7 +24,7 @@ small footprint that fits comfortably into high-throughput or real-time systems.
 - **High performance** with eager parsing and packed bit-level decoding
 - **Low memory footprint per message** to keep GC pressure down
 - **Immutable value objects** that are safe to share across threads
-- **Broad protocol coverage** for standard AIS messages and supported application-specific messages
+- **Broad protocol coverage**: all AIS message types 1 to 28 of Recommendation ITU-R M.1371-6 (02/2026), plus supported application-specific messages
 - **Simple integration** from `InputStream`, UDP, sockets, or your own NMEA pipeline
 - **Proven in production** for more than 15 years
 

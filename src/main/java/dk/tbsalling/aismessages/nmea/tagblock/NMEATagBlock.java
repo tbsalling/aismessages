@@ -57,15 +57,15 @@ public class NMEATagBlock {
         }
 
         this.timestamp = parameterMap.containsKey(TAGBlockParameterCodeType.c)
-                ? Long.valueOf(parameterMap.get(TAGBlockParameterCodeType.c).getValue()) : null;
+                ? parseLong(rawMessage, TAGBlockParameterCodeType.c) : null;
         this.destinationId = parameterMap.containsKey(TAGBlockParameterCodeType.d)
                 ? parameterMap.get(TAGBlockParameterCodeType.d).getValue() : null;
         this.sentenceGrouping = parameterMap.containsKey(TAGBlockParameterCodeType.g)
                 ? parameterMap.get(TAGBlockParameterCodeType.g).getValue() : null;
         this.lineCount = parameterMap.containsKey(TAGBlockParameterCodeType.n)
-                ? Integer.valueOf(parameterMap.get(TAGBlockParameterCodeType.n).getValue()) : null;
+                ? Math.toIntExact(parseLong(rawMessage, TAGBlockParameterCodeType.n)) : null;
         this.relativeTime = parameterMap.containsKey(TAGBlockParameterCodeType.r)
-                ? Long.valueOf(parameterMap.get(TAGBlockParameterCodeType.r).getValue()) : null;
+                ? parseLong(rawMessage, TAGBlockParameterCodeType.r) : null;
         this.sourceId = parameterMap.containsKey(TAGBlockParameterCodeType.s)
                 ? parameterMap.get(TAGBlockParameterCodeType.s).getValue() : null;
         this.text = parameterMap.containsKey(TAGBlockParameterCodeType.t)
@@ -76,6 +76,16 @@ public class NMEATagBlock {
         this.valid = validate(parameterString);
         if (!valid)
             throw new InvalidTagBlock(rawMessage);
+    }
+
+    /** @return the numeric value of the given parameter; a non-numeric value is an {@link NMEAParseException} */
+    private Long parseLong(String rawMessage, TAGBlockParameterCodeType code) {
+        String value = parameterMap.get(code).getValue();
+        try {
+            return Long.valueOf(value);
+        } catch (NumberFormatException e) {
+            throw new NMEAParseException(rawMessage, "Parameter \"%s\" (%s) is not a number: \"%s\"".formatted(code.name(), code.getName(), value));
+        }
     }
 
     private Boolean validate(String checkString) {

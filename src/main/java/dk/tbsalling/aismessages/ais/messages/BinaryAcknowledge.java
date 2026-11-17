@@ -33,12 +33,12 @@ import java.util.stream.IntStream;
 import static java.lang.String.format;
 
 /**
- * a receipt acknowledgement to the senders of a previous messages of type 6.
- * Total length varies between 72 and 168 bits by 32-bit increments, depending
- * on the number of destination MMSIs included.
- * 
+ * Message 7: binary acknowledgement (ITU-R M.1371-6 § A7-3.5, Table 54). Acknowledges up to four addressed binary
+ * messages (Message 6) received from up to four stations, transmitted on the channel the acknowledged message arrived
+ * on. 72 to 168 bits in 32-bit steps, one destination ID and sequence number per acknowledged message. Same layout as
+ * Message 13 ({@link SafetyRelatedAcknowledge}). These acknowledgements apply to the VHF data link only (§ A2-5.3.1).
+ *
  * @author tbsalling
- * 
  */
 @Value
 @EqualsAndHashCode(callSuper = true)
@@ -90,14 +90,24 @@ public class BinaryAcknowledge extends AISMessage {
         return AISMessageType.BinaryAcknowledge;
     }
 
+    /** Bits 38-40 (Table 54): spare, should be zero. */
     int spare;
+    /** Bits 40-70 (Table 54): destination ID 1, the MMSI whose message is acknowledged. */
     MMSI mmsi1;
+    /** Bits 70-72 (Table 54): sequence number of the acknowledged message from destination 1, 0-3. */
     int sequence1;
+    /** Bits 72-102 (Table 54): destination ID 2; null when the message carries fewer than two acknowledgements. */
     MMSI mmsi2;
+    /** Bits 102-104 (Table 54): sequence number for destination 2, 0-3; null when absent. */
     Integer sequence2;
+    /** Bits 104-134 (Table 54): destination ID 3; null when absent. */
     MMSI mmsi3;
+    /** Bits 134-136 (Table 54): sequence number for destination 3, 0-3; null when absent. */
     Integer sequence3;
+    /** Bits 136-166 (Table 54): destination ID 4; null when absent. */
     MMSI mmsi4;
+    /** Bits 166-168 (Table 54): sequence number for destination 4, 0-3; null when absent. */
     Integer sequence4;
+    /** Number of acknowledgements carried, 1-4, derived from the message length (72, 104, 136 or 168 bits). */
     int numOfAcks;
 }

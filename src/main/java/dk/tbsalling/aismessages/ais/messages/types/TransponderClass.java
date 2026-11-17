@@ -16,10 +16,18 @@
 
 package dk.tbsalling.aismessages.ais.messages.types;
 
+/**
+ * Class of AIS station that transmits a {@code DataReport}. Not a field of any ITU-R M.1371-6 message: it is
+ * implied by the message type (Table 44) and the station categories of Annex 1 § A1-2. The codes are this library's own.
+ */
 public enum TransponderClass {
+	/** Base station. */
 	BS(0),  // Base station
+	/** Class A shipborne mobile station (SOTDMA, IMO carriage requirement). */
 	A(1),   // Class A equipment
+	/** Class B shipborne mobile station, "SO" (SOTDMA) or "CS" (carrier sense TDMA). */
 	B(2),   // Class B equipment
+	/** Aircraft station in the maritime mobile service involved in search and rescue. */
 	SAR(3); // Search and rescue airborne equipment
 
 	TransponderClass(int code) {

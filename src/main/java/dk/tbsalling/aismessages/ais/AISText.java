@@ -27,7 +27,7 @@ package dk.tbsalling.aismessages.ais;
 public final class AISText {
 
     /**
-     * ITU-R M.1371-5 Table 47 — 0..31 → '@'..'_', 32..63 → ' '..'?'.
+     * ITU-R M.1371-6 Table 45 — 0..31 → '@'..'_', 32..63 → ' '..'?'.
      */
     private static final char[] ALPHABET = {
             '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', //  0.. 9 (ASCII 64..73)
@@ -58,7 +58,7 @@ public final class AISText {
     public static String decode(BitString bits, int begin, int end) {
         int width = end - begin;
         int numChars = width / 6;
-        if (numChars == 0) return "";
+        if (numChars <= 0) return "";
         // Walk the bits inline so we can apply '@' → space + trim in a single allocation.
         char[] chars = new char[numChars];
         for (int i = 0; i < numChars; i++) {

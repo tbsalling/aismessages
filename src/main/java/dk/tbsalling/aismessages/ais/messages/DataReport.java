@@ -19,9 +19,12 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 
 /**
- * AIS messages with a payload of ship static or voyage related data
- * or position reports implement this interface.
+ * Common super-interface of the AIS messages that report data about a vessel or station: dynamic position reports
+ * ({@link DynamicDataReport}) and static data reports ({@link StaticDataReport}). It identifies which class of AIS
+ * station transmitted the report, which is implied by the message type (ITU-R M.1371-6 Table 44) rather than carried
+ * in a field.
  */
 public interface DataReport {
+	/** @return the class of AIS station that transmits this message type: Class A, Class B, base station or SAR aircraft */
 	TransponderClass getTransponderClass();
 }

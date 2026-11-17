@@ -23,6 +23,11 @@ import lombok.extern.java.Log;
 
 import static java.util.Objects.requireNonNull;
 
+/**
+ * SOTDMA communication state (ITU-R M.1371-6 § A2-3.3.7.2.2, Table 18): slot time-out plus a sub-message whose meaning
+ * depends on the time-out value (Table 19). Carried by Messages 1, 2, 4 and 11 and, depending on their selector flag,
+ * Messages 9, 18 and 26. Exactly one of the sub-message fields is non-null (both UTC fields for time-out 1).
+ */
 @Value
 @EqualsAndHashCode(callSuper = true)
 @Log
@@ -50,9 +55,7 @@ public class SOTDMACommunicationState extends CommunicationState {
 
 		switch (slotTimeout) {
 			case 3, 5, 7 -> {
-				numberOfReceivedStations = bitString.getUnsignedInt(5, 19);
-				if (numberOfReceivedStations > 16383)
-					log.warning("numberOfReceivedStations: " + numberOfReceivedStations + ": Out of range.");
+				numberOfReceivedStations = bitString.getUnsignedInt(5, 19); // 14 bits: always within the valid range 0-16383
 			}
 			case 2, 4, 6 -> {
 				slotNumber = bitString.getUnsignedInt(5, 19);
@@ -73,11 +76,17 @@ public class SOTDMACommunicationState extends CommunicationState {
 		return new SOTDMACommunicationState(syncState, slotTimeout, numberOfReceivedStations, slotNumber, utcHour, utcMinute, slotOffset);
 	}
 
+    /** Bits 2-5 (Table 18): slot time-out, frames remaining until a new slot is selected, 0-7; 0 = last transmission in this slot. */
     Integer slotTimeout;
+    /** Bits 5-19 when slot time-out is 3, 5 or 7 (Table 19): number of other stations the transmitter currently receives, 0-16383; null otherwise. */
     Integer numberOfReceivedStations;
+    /** Bits 5-19 when slot time-out is 2, 4 or 6 (Table 19): slot number used for this transmission, 0-2249; null otherwise. */
     Integer slotNumber;
+    /** Bits 5-10 when slot time-out is 1 (Table 19): UTC hour, 0-23; null otherwise. */
     Integer utcHour;
+    /** Bits 10-17 when slot time-out is 1 (Table 19): UTC minute, 0-59; null otherwise. */
     Integer utcMinute;
+    /** Bits 5-19 when slot time-out is 0 (Table 19): offset to the slot used in the next frame; 0 = slot de-allocated after this transmission; null otherwise. */
     Integer slotOffset;
 
 }

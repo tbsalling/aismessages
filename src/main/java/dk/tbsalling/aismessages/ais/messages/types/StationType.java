@@ -16,22 +16,42 @@
 
 package dk.tbsalling.aismessages.ais.messages.types;
 
+/**
+ * Station type selector of Message 23, bits 110-114 (ITU-R M.1371-6 Table 74): which mobile stations a group
+ * assignment command applies to.
+ */
 public enum StationType {
+	/** 0 = all types of mobiles (default). */
 	AllTypesOfMobileStations(0),
+	/** 1 = Class A AIS stations only. */
 	ClassAMobileStation(1),
+	/** 2 = all types of Class B mobile stations. */
 	AllTypesOfClassBMobileStations(2),
+	/** 3 = SAR airborne mobile station. */
 	SARAirborneMobileStation(3),
+	/** 4 = Class B "SO" mobile stations only. */
 	ClassBSOMobileStation(4),
+	/** 5 = Class B "CS" AIS stations only. */
 	ClassBCSShipborneMobileStation(5),
+	/** 6 = inland waterways. */
 	InlandWaterways(6),
+	/** 7 = regional use. */
 	RegionalUse1(7),
+	/** 8 = regional use. */
 	RegionalUse2(8),
+	/** 9 = regional use. */
 	RegionalUse3(9),
+	/** 10 = base station coverage area, used with Message 4 to control Message 27 transmissions; only the area fields apply. */
 	BaseStationCoverageArea(10),
+	/** 11 = reserved for future use. */
 	FutureUse1(11),
+	/** 12 = reserved for future use. */
 	FutureUse2(12),
+	/** 13 = reserved for future use. */
 	FutureUse3(13),
+	/** 14 = reserved for future use. */
 	FutureUse4(14),
+	/** 15 = reserved for future use. */
 	FutureUse5(15);
 	
 	StationType(int code) {

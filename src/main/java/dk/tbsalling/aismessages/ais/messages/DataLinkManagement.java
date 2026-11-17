@@ -33,12 +33,12 @@ import static java.lang.String.format;
 
 
 /**
- * This message is used to pre-allocate TDMA slots within an AIS base station
- * network. It contains no navigational information, and is unlikely to be of
- * interest unless you are implementing or studying an AIS base station network.
- * 
+ * Message 20: data link management message (ITU-R M.1371-6 § A7-3.18, Table 70). Transmitted by base stations to
+ * pre-announce their FATDMA slot reservations (up to four reservation blocks of offset, number of slots, time-out and
+ * increment) on the channel the message is sent on; mobile stations within 120 NM must not use the reserved slots until
+ * the time-out expires. 72 to 160 bits, one block per 30 bits. Carries no navigational information.
+ *
  * @author tbsalling
- * 
  */
 @Value
 @EqualsAndHashCode(callSuper = true)
@@ -94,20 +94,36 @@ public class DataLinkManagement extends AISMessage {
         return AISMessageType.DataLinkManagement;
     }
 
+    /** Bits 40-52 (Table 70): offset number 1, from the slot this message was received in to the first reserved slot of block 1. */
     int offsetNumber1;
+    /** Bits 52-56 (Table 70): number of consecutive slots reserved in block 1, 1-15 (a block should not exceed 5 slots). */
     int reservedSlots1;
+    /** Bits 56-59 (Table 70): time-out of block 1 in minutes, after which the reservation lapses unless refreshed. */
     int timeout1;
+    /** Bits 59-70 (Table 70): increment 1 between the starting slots of repeated block 1 reservations; 0 = one block per frame. */
     int increment1;
+    /** Bits 70-82 (Table 70): offset number 2; null when the message carries fewer than two blocks. */
     Integer offsetNumber2;
+    /** Bits 82-86 (Table 70): number of slots 2, 1-15; null when absent. */
     Integer reservedSlots2;
+    /** Bits 86-89 (Table 70): time-out 2 in minutes; null when absent. */
     Integer timeout2;
+    /** Bits 89-100 (Table 70): increment 2; null when absent. */
     Integer increment2;
+    /** Bits 100-112 (Table 70): offset number 3; null when absent. */
     Integer offsetNumber3;
+    /** Bits 112-116 (Table 70): number of slots 3, 1-15; null when absent. */
     Integer reservedSlots3;
+    /** Bits 116-119 (Table 70): time-out 3 in minutes; null when absent. */
     Integer timeout3;
+    /** Bits 119-130 (Table 70): increment 3; null when absent. */
     Integer increment3;
+    /** Bits 130-142 (Table 70): offset number 4; null when absent. */
     Integer offsetNumber4;
+    /** Bits 142-146 (Table 70): number of slots 4, 1-15; null when absent. */
     Integer reservedSlots4;
+    /** Bits 146-149 (Table 70): time-out 4 in minutes; null when absent. */
     Integer timeout4;
+    /** Bits 149-160 (Table 70): increment 4; null when absent. */
     Integer increment4;
 }

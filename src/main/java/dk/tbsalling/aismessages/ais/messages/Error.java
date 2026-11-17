@@ -22,9 +22,11 @@ import lombok.ToString;
 import lombok.Value;
 
 /**
- * Identification and location message to be emitted by aids to navigation such as buoys and lighthouses.
- * @author tbsalling
+ * Placeholder message representing an NMEA sentence that could not be decoded into an AIS message. It is not an ITU-R
+ * M.1371 message type ({@link AISMessageType#Error} has code -1) and carries no metadata, repeat indicator or source
+ * MMSI; it only holds the raw input and a description of the problem.
  *
+ * @author tbsalling
  */
 @Value
 @EqualsAndHashCode(callSuper = true)
@@ -44,6 +46,8 @@ public class Error extends AISMessage {
 		this.errorDescription = errorDescription;
 	}
 
+    /** The raw NMEA input that failed to decode. */
     String rawMessage;
+    /** Human-readable description of why decoding failed. */
     String errorDescription;
 }

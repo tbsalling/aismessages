@@ -21,12 +21,18 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;
 
+/**
+ * The 19-bit communication state carried by Messages 1-4, 9, 11, 18 and 26 (ITU-R M.1371-6 § A2-3.3.7.2.2 and
+ * § A2-3.3.7.3.2). It tells receiving stations the transmitter's synchronization state and how it intends to use slots
+ * in the future; it applies only to the slot and channel of the transmission it is part of.
+ */
 @Getter
 @AllArgsConstructor
 @ToString
 @EqualsAndHashCode
 public sealed abstract class CommunicationState permits ITDMACommunicationState, SOTDMACommunicationState {
 
+	/** Bits 0-2 of the communication state (Tables 18 and 20): synchronization state of the transmitting station. */
 	private final SyncState syncState;
 
 }

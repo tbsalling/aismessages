@@ -18,6 +18,13 @@ import java.util.stream.IntStream;
 
 import static java.lang.String.format;
 
+/**
+ * Message 27: AIS satellite message, formerly the long-range AIS broadcast message (ITU-R M.1371-6 § A7-3.25,
+ * Table 83, Annex 3). Transmitted by Class A and Class B "SO" stations every 3 min on channels 75 and 76 for reception
+ * by satellites, with a compressed 96-bit content (coarser position, speed and course) to allow for the longer
+ * propagation delays. The repeat indicator is always 3. Some receivers pad it to a full 168-bit slot, which this class
+ * accepts. There is no time stamp; the receiving system is expected to supply one.
+ */
 @Value
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
@@ -75,17 +82,30 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
         return TransponderClass.A; // TODO this could also be type B (though expected to be very rare).
     }
 
+    /** Bit 38 (Table 83): position accuracy flag as in Message 1, true = high (≤ 10 m). */
     boolean positionAccuracy;
+    /** Bit 39 (Table 83): RAIM flag as in Message 1, true = RAIM in use. */
     boolean raim;
+    /** Bits 40-44 (Table 83): navigational status as in Message 1. */
     NavigationStatus navigationStatus;
+    /** Longitude in decimal degrees, {@code rawLongitude} / 600 (Table 83); east positive; 181 = position older than 6 hours or not available. */
     float longitude;
+    /** Latitude in decimal degrees, {@code rawLatitude} / 600 (Table 83); north positive; 91 = position older than 6 hours or not available. */
     float latitude;
+    /** Speed over ground in knots, equal to {@code rawSpeedOverGround} since Message 27 uses 1-knot steps (Table 83); 62 = 62 knots or faster, 63 = not available. */
     float speedOverGround;
+    /** Course over ground in degrees, equal to {@code rawCourseOverGround} since Message 27 uses 1-degree steps (Table 83); 511 = not available. */
     float courseOverGround;
+    /** Bit 94 (Table 83): position latency, 0 = reported position is less than 5 s old, 1 = more than 5 s old (default). */
     int positionLatency;
+    /** Bit 95 (Table 83): spare, set to zero to preserve the byte boundary. */
     int spare;
+    /** Bits 44-62 (Table 83): longitude in 1/10 min, two's complement; 181° (0x1A838) = not available. */
     int rawLongitude;
+    /** Bits 62-79 (Table 83): latitude in 1/10 min, two's complement; 91° (0xD548) = not available. */
     int rawLatitude;
+    /** Bits 79-85 (Table 83): speed over ground in knots, 0-62; 62 = 62 knots or faster, 63 = not available. */
     int rawSpeedOverGround;
+    /** Bits 85-94 (Table 83): course over ground in degrees, 0-359; 511 = not available. */
     int rawCourseOverGround;
 }

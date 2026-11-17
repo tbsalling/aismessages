@@ -23,16 +23,19 @@ public class GroupAssignmentCommandTest {
         GroupAssignmentCommand message = (GroupAssignmentCommand) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
         assertEquals(new MMSI(2268120), message.getSourceMmsi());
-        assertEquals("", message.getSpare1());
+        assertEquals(0, message.getSpare1Value());
+        assertEquals("0", message.getSpare1());
         assertEquals(157.8f, message.getNorthEastLongitude(), 0.0f);
         assertEquals(3064.2f, message.getNorthEastLatitude(), 0.0f);
         assertEquals(109.6f, message.getSouthWestLongitude(), 0.0f);
         assertEquals(3040.8f, message.getSouthWestLatitude(), 0.0f);
         assertEquals(StationType.InlandWaterways, message.getStationType());
         assertEquals(ShipType.NotAvailable, message.getShipType());
-        assertEquals("$", message.getSpare2());
+        assertEquals(0, message.getSpare2Value());
+        assertEquals("0", message.getSpare2());
         assertEquals(TxRxMode.TxABRxAB, message.getTransmitReceiveMode());
-        assertEquals(ReportingInterval.Autonomous, message.getReportingInterval());
+        // ITU-R M.1371-6 Table 74: reporting interval field is bits 146-150; this sample encodes 9 = "next shorter reporting interval".
+        assertEquals(ReportingInterval.NextShortReportingInterval, message.getReportingInterval());
         assertEquals(0, message.getQuietTime());
     }
 
@@ -58,7 +61,7 @@ public class GroupAssignmentCommandTest {
         assertEquals(StationType.InlandWaterways, message.getStationType());
         assertEquals(ShipType.NotAvailable, message.getShipType());
         assertEquals(TxRxMode.TxABRxAB, message.getTransmitReceiveMode());
-        assertEquals(ReportingInterval.Autonomous, message.getReportingInterval());
+        assertEquals(ReportingInterval.NextShortReportingInterval, message.getReportingInterval());
         assertEquals(0, message.getQuietTime());
     }
 }

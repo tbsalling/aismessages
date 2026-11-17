@@ -36,6 +36,10 @@ public class UTCAndDateResponseTest {
         assertEquals(-94.40768f, message.getLongitude(), 0.0f);
         assertEquals(PositionFixingDevice.Gps, message.getPositionFixingDevice());
         assertFalse(message.isRaimFlag());
+        assertFalse(message.isSatelliteBroadcastTransmissionControl());
+        assertNotNull(message.getCommunicationState());
+        assertEquals(0, message.getCommunicationState().getSlotTimeout());
+        assertEquals(0, message.getCommunicationState().getSlotOffset());
     }
 
     @Test
@@ -64,5 +68,9 @@ public class UTCAndDateResponseTest {
         assertEquals(-97.41047f, message.getLongitude(), 0.0f);
         assertEquals(PositionFixingDevice.Gps, message.getPositionFixingDevice());
         assertFalse(message.isRaimFlag());
+        assertFalse(message.isSatelliteBroadcastTransmissionControl());
+        assertNotNull(message.getCommunicationState());
+        assertEquals(0, message.getCommunicationState().getSlotTimeout());
+        assertEquals(0, message.getCommunicationState().getSlotOffset());
     }
 }

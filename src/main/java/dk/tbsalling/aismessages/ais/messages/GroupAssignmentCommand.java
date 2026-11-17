@@ -31,10 +31,11 @@ import java.time.Instant;
 import static java.lang.String.format;
 
 /**
- * intended to be broadcast by a competent authority (an AIS network-control
- * base station) to set to set operational parameters for all mobile stations in
- * an AIS coverage region
- * 
+ * Message 23: group assignment command (ITU-R M.1371-6 § A7-3.21, Table 74). Transmitted by a base station acting as
+ * controlling entity to all mobile stations within a geographical area that match the station type and ship type
+ * selectors, commanding their Tx/Rx mode, reporting interval (Table 75) and a quiet time. Station type 10 marks the
+ * base station coverage area used to control Message 27 transmissions. 160 bits.
+ *
  * @author tbsalling
  */
 @Value
@@ -46,19 +47,19 @@ public class GroupAssignmentCommand extends AISMessage {
      * Constructor accepting pre-parsed values for true immutability.
      */
     protected GroupAssignmentCommand(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
-                                     String spare1, float northEastLongitude, float northEastLatitude,
+                                     int spare1, float northEastLongitude, float northEastLatitude,
                                      float southWestLongitude, float southWestLatitude,
-                                     StationType stationType, ShipType shipType, String spare2,
+                                     StationType stationType, ShipType shipType, int spare2,
                                      TxRxMode transmitReceiveMode, ReportingInterval reportingInterval, int quietTime) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
-        this.spare1 = spare1;
+        this.spare1Value = spare1;
         this.northEastLongitude = northEastLongitude;
         this.northEastLatitude = northEastLatitude;
         this.southWestLongitude = southWestLongitude;
         this.southWestLatitude = southWestLatitude;
         this.stationType = stationType;
         this.shipType = shipType;
-        this.spare2 = spare2;
+        this.spare2Value = spare2;
         this.transmitReceiveMode = transmitReceiveMode;
         this.reportingInterval = reportingInterval;
         this.quietTime = quietTime;
@@ -87,15 +88,44 @@ public class GroupAssignmentCommand extends AISMessage {
         return AISMessageType.GroupAssignmentCommand;
     }
 
-    String spare1;
+    /**
+     * @return the 2 spare bits at bit offset 38 (ITU-R M.1371-6 Table 74), rendered as a decimal string.
+     * @deprecated since 5.1.0; the spare bits are not text. Use {@code getSpare1Value()} instead.
+     */
+    @Deprecated(since = "5.1.0")
+    public String getSpare1() {
+        return Integer.toString(spare1Value);
+    }
+
+    /**
+     * @return the 22 spare bits at bit offset 122 (ITU-R M.1371-6 Table 74), rendered as a decimal string.
+     * @deprecated since 5.1.0; the spare bits are not text. Use {@code getSpare2Value()} instead.
+     */
+    @Deprecated(since = "5.1.0")
+    public String getSpare2() {
+        return Integer.toString(spare2Value);
+    }
+
+    /** Bits 38-40 (Table 74): spare, should be zero. */
+    int spare1Value;
+    /** Bits 58-75 (Table 74): latitude of the north-east corner of the area in decimal degrees (1/10 min / 10); north positive. */
     float northEastLatitude;
+    /** Bits 40-58 (Table 74): longitude of the north-east corner of the area in decimal degrees (1/10 min / 10); east positive. */
     float northEastLongitude;
+    /** Bits 93-110 (Table 74): latitude of the south-west corner of the area in decimal degrees. */
     float southWestLatitude;
+    /** Bits 75-93 (Table 74): longitude of the south-west corner of the area in decimal degrees. */
     float southWestLongitude;
+    /** Bits 110-114 (Table 74): station type selector; 0 = all types of mobiles (default), 10 = base station coverage area. */
     StationType stationType;
+    /** Bits 114-122 (Table 74, Table 51): type of ship and cargo type selector; 0 = all types (default). */
     ShipType shipType;
+    /** Bits 144-146 (Table 74): commanded Tx/Rx mode; 0 = both channels (default). */
     TxRxMode transmitReceiveMode;
+    /** Bits 146-150 (Table 74, Table 75): commanded reporting interval; 0 = as given by the autonomous mode. */
     ReportingInterval reportingInterval;
+    /** Bits 150-154 (Table 74): quiet time in minutes, 1-15; 0 = no quiet time commanded (default). */
     int quietTime;
-    String spare2;
+    /** Bits 122-144 (Table 74): spare, should be zero. */
+    int spare2Value;
 }

@@ -5,6 +5,189 @@ traffic.
 
 ---
 
+## Version 5.1.0-SNAPSHOT
+
+**Development Version**
+
+Alignment with Recommendation ITU-R M.1371-6 (02/2026).
+
+### Breaking API Changes
+
+Binary compatible with 5.0.0. The following changes can require source changes or change decoded values:
+
+- **New message type in sealed hierarchies.** `AidToNavigationReportSingleSlot` is a new permitted subclass of
+  the sealed `AISMessage`, and `AidToNavigationReportSingleSlot` is a new `AISMessageType` constant. Code that
+  switches exhaustively over either without a `default` branch (pattern-matching `switch` on `AISMessage`, or
+  a `switch` expression on `AISMessageType`) must add a case for it before it compiles against 5.1.0.
+- **`fromInteger` returns new enum constants for codes now defined by M.1371-6.** `ShipType` 65-67, 75-78, 85
+  and 86, `ReportingInterval` 11 and `AidType` 4 resolve to the new named constants listed under "Completed
+  enumerations". The former placeholder constants are deprecated, and comparisons against them no longer match
+  decoded values.
+- **`ChannelManagement` coordinate getters return `Float`.** `getNorthEastLongitude()`, `getNorthEastLatitude()`,
+  `getSouthWestLongitude()` and `getSouthWestLatitude()` now return `Float` instead of `float` and are `null` for
+  addressed messages.
+- **Corrected decodings change values.** Messages 15, 20, 23, 25 and 26 and the IFM 0 text telegram now decode
+  per M.1371-6, so applications that worked around the old values see different results; see "Corrected
+  decodings".
+- **Stricter validation.** Messages 12, 14 and 25 shorter than their header, and Messages 26 shorter than 64 or
+  longer than 1064 bits, are now rejected with `InvalidMessage`.
+- **Constructors.** The `protected` constructors of several message classes gained parameters for the newly
+  decoded fields. They are not part of the supported API; construct messages through `AISMessageFactory`.
+
+### Upgrade Notes
+
+- No build changes: 5.1.0 still targets Java 25 and has no runtime dependencies.
+- Add a case for `AidToNavigationReportSingleSlot` to exhaustive `switch` statements or expressions over
+  `AISMessage` or `AISMessageType`, or handle it through a `default` branch.
+- Replace comparisons against the deprecated `ShipType.PassengerFuture1-3`, `CargoFuture1-4`,
+  `TankerFuture1-2`, `ReportingInterval.FutureUse1` and `AidType.FutureUse1` constants with their named
+  replacements, or compare `getCode()` values.
+- Unbox the `ChannelManagement` coordinate getters with a null check, or test `isAddressed()` first.
+- If you read Message 25 or 26 data, use `getData()`, `getDesignatedAreaCode()`, `getFunctionalId()` and
+  `getApplicationSpecificMessage()`; `BinaryMessageSingleSlot.getBinaryData()` still returns the old value but
+  is deprecated.
+- Stream readers (`AISInputStreamReader`, `NMEAMessageInputStreamReader`, `NMEAMessageUDPSocket`) no longer
+  stop on malformed sentences. Code that restarted a reader after such a failure can drop that workaround.
+
+### Corrected decodings (behaviour changes)
+
+- **Message 15 (Interrogation):** the second interrogated station was read from the wrong bit offsets
+  (MMSI at 120-150, message id at 150-156 and a 6-bit slot offset at 156-162). It is now decoded per
+  Table 64: MMSI at bits 110-140, message id at 140-146, 12-bit slot offset at 146-158.
+- **Message 20 (Data link management):** reservation blocks 2 to 4 were read from the wrong offsets and
+  their increments as 7 bits. All four blocks are now 12 + 4 + 3 + 11 bits starting at bits 40, 70, 100
+  and 130 (Table 70); blocks 2 to 4 are present when the message is at least 100, 130 and 160 bits long.
+- **Message 23 (Group assignment command):** Tx/Rx mode, reporting interval and quiet time were read from
+  bits 166-176, beyond the end of the 160-bit message, and therefore always decoded as 0. They are now
+  read from bits 144-146, 146-150 and 150-154 (Table 74).
+- **Message 25 (Single slot binary message):** the layout now follows Table 79. A destination MMSI is only
+  decoded when the destination indicator is set (`getDestinationMMSI()` returns `null` for broadcasts; it
+  used to return a value made of data bits). When the binary data flag is set, the 16-bit application
+  identifier is split into `getDesignatedAreaCode()` and `getFunctionalId()` (both -1 when unstructured)
+  and resolved to an `ApplicationSpecificMessage` via `getApplicationSpecificMessage()`. The application
+  data proper is available as `BitString getData()`, starting at bit 40, 56, 72 or 88 depending on the two
+  flags.
+- **Message 26 (Multiple slot binary message):** the layout now follows Table 81. Destination MMSI and
+  application identifier are only decoded when their flags are set (`getDestinationMmsi()` is `null` for
+  broadcasts, `getApplicationId()`, `getDesignatedAreaCode()` and `getFunctionalId()` are -1 when
+  unstructured). The trailing 4 spare bits, communication state selector and 19-bit communication state
+  are decoded into `isCommStateSelectorFlag()` and `getCommunicationState()` (SOTDMA or ITDMA).
+  `getData()` now holds exactly the application data between header and trailer and is no longer
+  zero-padded to 1005 bits. Messages shorter than 64 bits or longer than 1064 bits are rejected as
+  `InvalidMessage`.
+- **Message 22 (Channel management), addressed variant:** decoding threw a `NullPointerException` because
+  the four area coordinate fields were primitive `float` while the factory passes `null` for addressed
+  messages (whose area fields hold two station IDs instead). The getters `getNorthEastLongitude()`,
+  `getNorthEastLatitude()`, `getSouthWestLongitude()` and `getSouthWestLatitude()` now return `Float` and
+  are `null` when `isAddressed()` is true.
+- **Truncated or malformed payloads:** a payload shorter than its message type requires (for example a
+  163-bit position report) or an NMEA sentence with more than 5 fill bits made `AISMessageFactory.create`
+  leak an `IllegalArgumentException`, which `AISInputStreamReader` does not catch. Both cases now raise
+  `InvalidMessage` like every other undecodable input, so stream readers log and continue.
+- **Non-numeric NMEA fields stopped stream readers:** a sentence whose fragment count, fragment number,
+  sequential message identifier or fill bits field was not a number, or a tag block whose `c`, `n` or `r`
+  parameter was not a number, threw `NumberFormatException`. `NMEAMessageInputStreamReader`,
+  `AISInputStreamReader` and `NMEAMessageUDPSocket` did not catch it, so one such sentence ended the
+  reader. `NMEAMessage` and `NMEATagBlock` now throw `NMEAParseException`, which the readers log and skip.
+- **Tag blocks with a wrong checksum stopped stream readers:** `InvalidTagBlock` was not among the
+  exceptions `NMEAMessageInputStreamReader` and `NMEAMessageUDPSocket` catch. They now log and skip it.
+- **A failed decode lost the next multi-fragment message:** when a sentence or a complete set of
+  fragments failed to decode, `NMEAMessageHandler` kept the fragments buffered, so the first fragment of
+  the next multi-fragment message was discarded as out of sequence. The buffer is now cleared before
+  decoding.
+- **Payloads shorter than their header:** a Message 12 shorter than 72 bits made the six-bit text decoder
+  throw `NegativeArraySizeException`, and Messages 14 and 25 accepted payloads shorter than their 40-bit
+  header. Messages 12, 14 and 25 now enforce their minimum lengths (72, 40 and 40 bits; ITU-R M.1371-6
+  Tables 59, 61 and 79) and reject shorter payloads with `InvalidMessage`; `AISText.decode` returns an empty
+  string for an empty or negative bit range. The `InvalidMessage` for a wrong-length Message 5 now names the
+  assumed source MMSI like the other message types.
+- **IFM 0 text telegram (`TextDescription`, DAC 1 FI 0):** the text was decoded from bit 0 of the
+  application data, ignoring the 1-bit "acknowledge required" flag and 11-bit text sequence number that
+  Tables 25 to 28 place in front of it, so every text came out two characters out of phase. The text now
+  starts at bit 12 and the two header fields are exposed as `isAcknowledgeRequired()` and
+  `getTextSequenceNumber()`. FI 1 is marked discontinued in M.1371-6 but is still decoded as text.
+
+### New message type: Message 28, aid-to-navigation report (single slot)
+
+- New `AidToNavigationReportSingleSlot` (`AISMessageType.AidToNavigationReportSingleSlot`, code 28) decodes
+  the 168-bit report of Table 84: time stamp, position, `RestrictedUseIndicator`, `AtoNStationType`, a 7-bit
+  `AidType` (Table 72 codes 0-31 plus the Table 85 mobile AtoN codes 32-50), IALA MRN,
+  `AtoNDimensionsType` with raw dimensions A and B, multiple-dimension-types flag, charted flag,
+  `AtoNOnStationStatus`, AtoN status bits and authentication flag.
+- `AISMessageType.MAXIMUM_CODE` is now 28. Message IDs 29 and above are still rejected.
+
+### New application specific messages (ITU-R M.1371-6 Annex 4, DAC 1)
+
+- `InterrogationForSpecificFunctionalMessage` (IFM 2), `CapabilityInterrogation` (IFM 3),
+  `CapabilityReply` (IFM 4, with `isFunctionalIdAvailable(int)`) and `ApplicationAcknowledgement` (IFM 5)
+  replace `UnknownApplicationSpecificMessage` for these function identifiers.
+
+### Fields added in ITU-R M.1371-6 now decoded
+
+- Messages 1, 2, 3 (`PositionReport`) and 18 (`StandardClassBCSPositionReport`): `isTransmitPowerLow()`
+  (Tables 46 and 68; false = high power, true = low power).
+- Messages 4 (`BaseStationReport`) and 11 (`UTCAndDateResponse`):
+  `isSatelliteBroadcastTransmissionControl()` (Table 49, control of Message 27 transmission within the
+  base station coverage area). `UTCAndDateResponse` additionally exposes `getCommunicationState()`.
+- Message 5 (`ShipAndVoyageData`): `getAisVersionIndicator()` (Table 50; 3 = M.1371-6 or later).
+- Message 9 (`StandardSARAircraftPositionReport`): `isBarometricAltitude()` (Table 57 altitude sensor),
+  `isCommStateSelectorFlag()` and a typed `getCommunicationState()`. The `getRegionalReserved()` and
+  `getRadioStatus()` strings are unchanged.
+- Message 21 (`AidToNavigationReport`): `isNameExtensionIsLabel()`. When the name extension starts with
+  "@@@" (Table 71: portray as label, not as name), the marker is stripped from `getNameExtension()` and
+  this flag is true.
+- Message 24 Part B (`ClassBCSStaticDataReport`): `getPositionFixingDevice()` and `getVdesCapabilities()`
+  (Table 77), plus the Table 78 split of the manufacturer ID into `getManufacturerMnemonic()`,
+  `getUnitModelCode()` and `getUnitSerialNumber()`. `getVendorId()` is unchanged; `getMothershipMmsi()`
+  is kept but documented as not being part of M.1371-6.
+
+### Completed enumerations (ITU-R M.1371-6 Tables 46, 49, 51, 72, 75, 85)
+
+- `PositionFixingDevice`: added `BeiDou` (9), `ReservedForFutureUse10`, `ReservedForFutureUse11`,
+  `IntegratedPNT` (12), `InertialNavigationSystem` (13), `TerrestrialRadioNavigation` (14) and
+  `InternalGNSS` (15). Code 15 is what Class B "CS" stations transmit; `fromInteger(15)` previously
+  returned `null`.
+- `ManeuverIndicator`: added `ReservedForRegionalUse` (3).
+- `ReportingInterval`: added `TwoSeconds` (11); `FutureUse1` is deprecated and `fromInteger(11)` now
+  returns `TwoSeconds`.
+- `AidType`: added `EmergencyWreckMarkingBuoy` (4; `FutureUse1` deprecated) and the Table 85 mobile
+  aid-to-navigation types 32-50 used by Message 28.
+- `ShipType`: added the special purpose and support vessel codes 1-19, the reserved codes 25-28, 47 and
+  48, `WingInGroundNoAdditionalInfo` (29), `Trawler` (38), `PatrolVessel` (39),
+  `HighSpeedCraftPassenger` (45), `HighSpeedCraftRoRo` (46), `HighSpeedCraftNoAdditionalInfo` (49),
+  `PassengerCruiseShip` (65), `PassengerFerry` (66), `PassengerExcursionShip` (67), `CargoBulkCarrier`
+  (75), `CargoContainerShip` (76), `CargoRollOnRollOffCarrier` (77), `CargoLandingCraft` (78),
+  `TankerNonHazardous` (85) and `IntegratedTugAndTankBarge` (86). The former `PassengerFuture1-3`,
+  `CargoFuture1-4`, `TankerFuture1` and `TankerFuture2` constants are deprecated; `fromInteger` now
+  returns the new constants for those codes, so comparisons against the deprecated constants no longer
+  match decoded values.
+
+### New public APIs
+
+- `BinaryMessageSingleSlot`: `getDesignatedAreaCode()`, `getFunctionalId()`, `getData()`,
+  `getApplicationSpecificMessage()`.
+- `BinaryMessageMultipleSlot`: `getDesignatedAreaCode()`, `getFunctionalId()`,
+  `getApplicationSpecificMessage()`, `isCommStateSelectorFlag()`, `getCommunicationState()`.
+- `GroupAssignmentCommand`: `getSpare1Value()`, `getSpare2Value()`.
+
+### Deprecations
+
+- `BinaryMessageSingleSlot.getBinaryData()` (`String` of all bits from bit 40 to the end) is deprecated in
+  favour of the typed getters above; its value is unchanged.
+- `GroupAssignmentCommand.getSpare1()` and `getSpare2()` (both `String`) are deprecated. The spare
+  fields are not six-bit text; use the new `int getSpare1Value()` and `int getSpare2Value()`. The
+  deprecated getters now return the numeric value as a decimal string.
+
+### Documentation
+
+- Every message class, field and enum constant of the message model now has Javadoc referencing the defining
+  ITU-R M.1371-6 section, table and bit range (or IMO SN.1/Circ.289 for application specific messages), including
+  units, scaling and not-available values.
+
+**Full Changelog:** https://github.com/tbsalling/aismessages/compare/aismessages-5.0.0...master
+
+---
+
 ## Version 5.0.0
 
 **Release Date:** 2026-10-08
@@ -106,7 +289,9 @@ No application-facing changes.
 
 ### Upgrade Notes
 
-- Added upgrade guidance for moving from AISmessages 3.3.1 to 4.1.0.
+- Added upgrade guidance for moving from AISmessages 3.3.1 to 4.1.0 (`UPGRADE_GUIDE.md`, removed before 5.0.0;
+  still available at
+  [tag aismessages-4.1.2](https://github.com/tbsalling/aismessages/blob/aismessages-4.1.2/UPGRADE_GUIDE.md)).
 - Added Java modules examples and refreshed README usage examples to match the current API.
 
 ### Fixes

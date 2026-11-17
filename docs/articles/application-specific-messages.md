@@ -53,7 +53,9 @@ These messages support hazard warnings, traffic control, cargo awareness, and pa
 ### Vessel information
 
 - **FI=24**: Extended Ship Static and Voyage Related Data
-- **FI=0, 1**: Text Description
+- **FI=0**: Text Description (IFM 0 text telegram; FI=1 is discontinued in ITU-R M.1371-6 but still decoded)
+- **FI=2, 3, 4, 5**: ITU-R M.1371-6 Annex 4 system messages: interrogation for a specific functional message,
+  capability interrogation, capability reply, application acknowledgement
 
 ## Why application-specific messages matter
 
@@ -172,7 +174,11 @@ The repository README maintains the current support overview. The supported ASM 
 
 **International (`DAC=001`)**
 
-- Text Description (`FI=0, 1`)
+- Text Description (`FI=0`; `FI=1` discontinued but still decoded)
+- Interrogation for Specific Functional Message (`FI=2`)
+- Capability Interrogation (`FI=3`)
+- Capability Reply (`FI=4`)
+- Application Acknowledgement (`FI=5`)
 - UTC/Date Inquiry (`FI=10`)
 - UTC/Date Response (`FI=11`)
 - Tidal Window (`FI=14`)

@@ -23,6 +23,10 @@ import lombok.Value;
 
 import static java.util.Objects.requireNonNull;
 
+/**
+ * ITDMA communication state (ITU-R M.1371-6 § A2-3.3.7.3.2, Table 20): pre-announces the next transmission slot of
+ * an incremental TDMA sequence. Carried by Message 3 and, depending on their selector flag, Messages 9, 18 and 26.
+ */
 @Value
 @EqualsAndHashCode(callSuper = true)
 public class ITDMACommunicationState extends CommunicationState {
@@ -48,7 +52,10 @@ public class ITDMACommunicationState extends CommunicationState {
 		);
 	}
 
+    /** Bits 2-15 (Table 20): offset in slots from this transmission to the next slot to be used, 0-8191; 0 = no more ITDMA transmissions. Add 8192 when {@code numberOfSlots} is 5-7. */
     Integer slotIncrement;
+    /** Bits 15-18 (Table 20): number of consecutive slots to allocate, coded 0-4 = 1-5 slots, 5-7 = 1-3 slots at slot increment + 8192. */
     Integer numberOfSlots;
+    /** Bit 18 (Table 20): keep flag, true = the slot remains allocated for one additional frame. */
     Boolean keepFlag;
 }

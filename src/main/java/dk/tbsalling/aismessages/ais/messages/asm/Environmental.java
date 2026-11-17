@@ -46,31 +46,57 @@ public class Environmental extends ApplicationSpecificMessage {
         this.salinity = getBinaryData().getSignedFloat(234, 243) / 10f;
     }
 
+    /** Bits 0-10 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): linkage ID. */
     int linkageId;
+    /** Bits 10-35 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): longitude in decimal degrees (1/1 000 min ÷ 60 000), signed. */
     float longitude;
+    /** Bits 35-59 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): latitude in decimal degrees (1/1 000 min ÷ 60 000), signed. */
     float latitude;
+    /** Bits 59-64 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): day. */
     int day;
+    /** Bits 64-69 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): hour. */
     int hour;
+    /** Bits 69-75 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): minute. */
     int minute;
+    /** Bits 75-82 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): average wind speed. */
     int averageWindSpeed;
+    /** Bits 82-89 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): wind gust. */
     int windGust;
+    /** Bits 89-98 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): wind direction. */
     int windDirection;
+    /** Bits 98-107 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): wind gust direction. */
     int windGustDirection;
+    /** Bits 107-118 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): air temperature (transmitted value ÷ 10), signed. */
     float airTemperature;
+    /** Bits 118-125 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): relative humidity. */
     int relativeHumidity;
+    /** Bits 125-135 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): dew point (transmitted value ÷ 10), signed. */
     float dewPoint;
+    /** Bits 135-144 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): air pressure. */
     int airPressure;
+    /** Bits 144-152 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): horizontal visibility (transmitted value ÷ 10), signed. */
     float horizontalVisibility;
+    /** Bits 152-161 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): water level (transmitted value ÷ 10), signed. */
     float waterLevel;
+    /** Bits 161-169 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): surface current speed (transmitted value ÷ 10), signed. */
     float surfaceCurrentSpeed;
+    /** Bits 169-178 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): surface current direction. */
     int surfaceCurrentDirection;
+    /** Bits 178-186 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): wave height (transmitted value ÷ 10), signed. */
     float waveHeight;
+    /** Bits 186-192 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): wave period. */
     int wavePeriod;
+    /** Bits 192-201 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): wave direction. */
     int waveDirection;
+    /** Bits 201-209 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): swell height (transmitted value ÷ 10), signed. */
     float swellHeight;
+    /** Bits 209-215 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): swell period. */
     int swellPeriod;
+    /** Bits 215-224 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): swell direction. */
     int swellDirection;
+    /** Bits 224-234 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): water temperature (transmitted value ÷ 10), signed. */
     float waterTemperature;
+    /** Bits 234-243 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): salinity (transmitted value ÷ 10), signed. */
     float salinity;
 
 }

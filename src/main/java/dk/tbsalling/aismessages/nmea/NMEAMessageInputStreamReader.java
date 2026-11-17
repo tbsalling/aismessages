@@ -17,6 +17,7 @@
 package dk.tbsalling.aismessages.nmea;
 
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
+import dk.tbsalling.aismessages.nmea.exceptions.InvalidTagBlock;
 import dk.tbsalling.aismessages.nmea.exceptions.NMEAParseException;
 import dk.tbsalling.aismessages.nmea.exceptions.UnsupportedMessageType;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
@@ -102,6 +103,8 @@ public class NMEAMessageInputStreamReader {
                 log.warning("Received unsupported NMEA message: \"%s\"".formatted(string));
 			} catch (NMEAParseException _) {
                 log.warning("Received non-compliant NMEA message: \"%s\"".formatted(string));
+			} catch (InvalidTagBlock _) {
+                log.warning("Received NMEA message with invalid tag block: \"%s\"".formatted(string));
 			}
 		}
 

@@ -79,9 +79,9 @@ public class NMEAMessageHandler implements Consumer<NMEAMessage> {
 			messageFragments.clear();
 		} else if (numberOfFragments == 1) {
             log.fine("Handling unfragmented NMEA message");
+			messageFragments.clear();
             AISMessage aisMessage = AISMessageFactory.create(Instant.now(), source, nmeaMessage.getTagBlock(), nmeaMessage);
             sendToAisMessageReceivers(aisMessage);
-			messageFragments.clear();
 		} else {
 			int fragmentNumber = nmeaMessage.getFragmentNumber();
             log.fine("Handling fragmented NMEA message with fragment number %d".formatted(fragmentNumber));
@@ -103,9 +103,11 @@ public class NMEAMessageHandler implements Consumer<NMEAMessage> {
                     log.fine("nmeaMessage.getNumberOfFragments(): %d".formatted(nmeaMessage.getNumberOfFragments()));
                     log.fine("messageFragments.size(): %d".formatted(messageFragments.size()));
 					if (nmeaMessage.getNumberOfFragments() == messageFragments.size()) {
-                        AISMessage aisMessage = AISMessageFactory.create(Instant.now(), source, nmeaMessage.getTagBlock(), messageFragments.toArray(new NMEAMessage[0]));
-                        sendToAisMessageReceivers(aisMessage);
+                        NMEAMessage[] fragments = messageFragments.toArray(new NMEAMessage[0]);
+                        // Clear before decoding, so that a fragment set which fails to decode cannot poison the next one.
 						messageFragments.clear();
+                        AISMessage aisMessage = AISMessageFactory.create(Instant.now(), source, nmeaMessage.getTagBlock(), fragments);
+                        sendToAisMessageReceivers(aisMessage);
 					} else
                         log.fine("Fragmented message not yet complete; missing " + (nmeaMessage.getNumberOfFragments() - messageFragments.size()) + " fragment(s).");
 				}

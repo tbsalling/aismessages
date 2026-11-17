@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 AISmessages is a Java library that decodes NMEA-armoured AIS messages (ITU 1371) used in maritime navigation and safety. It is published on Maven Central as `dk.tbsalling:aismessages` and is intentionally zero runtime dependencies, lightweight, and high-throughput. Lombok is `provided`/`optional`-scoped, so it does not become a runtime dependency.
 
+The reference text is Recommendation ITU-R M.1371-6 (02/2026); message layouts are its Annex 7 tables and application-specific messages its Annex 4. A local copy of the PDF may be kept at `docs/itu/`, which is git-ignored because the ITU copyright forbids redistribution.
+
 Java release target is set by `maven.compiler.release` in `pom.xml` (currently 25). Lombok is used heavily in the codebase (`@Value`, `@Getter`, `@ToString`, `@EqualsAndHashCode`, `@Log`); make sure your IDE has Lombok support enabled. Since JDK 23, javac no longer discovers annotation processors on the classpath, so Lombok is declared explicitly in `<annotationProcessorPaths>` on `maven-compiler-plugin` (and alongside `jmh-generator-annprocess` in the `bench` profile) — any new annotation processor must be added there or it will silently not run.
 
 ## Build & test
@@ -54,6 +56,8 @@ These are load-bearing — preserve them when changing code:
 - 4-space indent; standard Java style; match the surrounding file's indentation/whitespace exactly so diffs stay reviewable.
 - Single concern per change/PR. Avoid reformatting unrelated code.
 - Update JavaDoc when public API behavior changes.
+- In the message model (`ais/messages`, `ais/messages/types`, `ais/messages/asm`) every class, field and enum constant has Javadoc. Message classes start with `Message N: <name> (ITU-R M.1371-6 § A7-3.x, Table T).`; fields with `Bits a-b (Table T): <meaning>; <units>; <not-available value>.`; derived fields name their raw counterpart and conversion; ASM classes cite IMO SN.1/Circ.289 (DAC/FI) or Annex 4.
+- Never write `{@link #getX()}` to a Lombok-generated getter: javadoc runs on the undelomboked source and fails on the unresolved reference. Use `{@code getX()}` instead.
 
 ## Release
 

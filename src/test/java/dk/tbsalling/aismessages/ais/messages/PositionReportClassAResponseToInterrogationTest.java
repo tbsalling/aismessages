@@ -8,8 +8,11 @@ import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import org.junit.jupiter.api.Test;
 
 import java.security.NoSuchAlgorithmException;
+import dk.tbsalling.aismessages.testsupport.NmeaSentences.Bits;
+import dk.tbsalling.aismessages.ais.messages.types.*;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static dk.tbsalling.aismessages.testsupport.NmeaSentences.*;
 
 public class PositionReportClassAResponseToInterrogationTest {
 
@@ -89,5 +92,27 @@ public class PositionReportClassAResponseToInterrogationTest {
 
         // Assert
         assertEquals("673ac3b20886868cafe7376e05092bf625f00b75", digestAsString);
+    }
+
+    /**
+     * ITDMA number-of-slots code 6, meaning 2 slots at slot increment + 8192 (ITU-R M.1371-6 Table 20); also special
+     * manoeuvre and transmit power low. Table 46. Synthetic sentence built from the spec layout.
+     */
+    @Test
+    public void canDecodeItdmaNumberOfSlotsCodeBeyondFive() {
+        Bits b = bits().u(3, 6).u(0, 2).u(219000401, 30).u(0, 4).s(-127, 8).u(55, 10).b(true).s(6450000, 28).s(33300000, 27).u(1800, 12).u(181, 9).u(42, 6)
+                .u(2, 2).u(0, 2).b(true).b(false)
+                .u(0, 2).u(1000, 13).u(6, 3).b(false);
+        assertEquals(168, b.length());
+
+        PositionReportClassAResponseToInterrogation message = (PositionReportClassAResponseToInterrogation) AISMessageFactory.create(null, null, null, nmea(b.toBitString()));
+
+        assertEquals(-127, message.getRawRateOfTurn());
+        assertEquals(ManeuverIndicator.SpecialManeuver, message.getSpecialManeuverIndicator());
+        assertTrue(message.isTransmitPowerLow());
+        ITDMACommunicationState communicationState = (ITDMACommunicationState) message.getCommunicationState();
+        assertEquals(1000, communicationState.getSlotIncrement());
+        assertEquals(6, communicationState.getNumberOfSlots());
+        assertFalse(communicationState.getKeepFlag());
     }
 }

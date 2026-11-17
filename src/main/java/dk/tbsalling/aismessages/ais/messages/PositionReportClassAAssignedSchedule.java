@@ -27,6 +27,11 @@ import lombok.Value;
 
 import java.time.Instant;
 
+/**
+ * Message 2: assigned scheduled position report of a Class A station (ITU-R M.1371-6 § A7-3.1, Table 46). Used instead
+ * of Message 1 while the station operates in assigned mode (Message 16 or 23, § A2-3.3.6); transmitted in SOTDMA or
+ * FATDMA slots and carries a SOTDMA communication state (Table 44). See {@link PositionReport} for the field layout.
+ */
 @Value
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
@@ -36,11 +41,11 @@ public class PositionReportClassAAssignedSchedule extends PositionReport {
                                                    boolean positionAccuracy, float latitude, float longitude,
                                                    float courseOverGround, int trueHeading, int second,
                                                    ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState,
-                                                   int rawRateOfTurn, int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround) {
+                                                   int rawRateOfTurn, int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround, boolean transmitPowerLow) {
         super(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 navigationStatus, rateOfTurn, speedOverGround, positionAccuracy, latitude, longitude,
                 courseOverGround, trueHeading, second, specialManeuverIndicator, raimFlag, communicationState,
-                rawRateOfTurn, rawSpeedOverGround, rawLatitude, rawLongitude, rawCourseOverGround);
+                rawRateOfTurn, rawSpeedOverGround, rawLatitude, rawLongitude, rawCourseOverGround, transmitPowerLow);
     }
 
     @Override

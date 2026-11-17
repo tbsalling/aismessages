@@ -33,9 +33,13 @@ import java.util.stream.IntStream;
 import static java.lang.String.format;
 
 /**
- * Used by a base station to query one or two other AIS transceivers for status messages of specified types.
- * @author tbsalling
+ * Message 15: interrogation (ITU-R M.1371-6 § A7-3.13, Table 64). Requests one or two specific message types from one
+ * station, or one message type each from two stations; the responses are transmitted on the channel the interrogation
+ * was received on, in the slot given by the offset when a base station assigns one. Table 63 lists which message types
+ * may be requested from which station class. 88, 110 or 160 bits depending on how many requests are present
+ * (also accepted at 112 bits, the byte-aligned form of the 110-bit variant).
  *
+ * @author tbsalling
  */
 @Value
 @EqualsAndHashCode(callSuper = true)
@@ -82,12 +86,20 @@ public class Interrogation extends AISMessage {
         return AISMessageType.Interrogation;
     }
 
+    /** Bits 40-70 (Table 64): destination ID 1, the MMSI of the first interrogated station. */
     MMSI interrogatedMmsi1;
+    /** Bits 70-76 (Table 64): message ID 1.1, the first message type requested from the first station. */
     int type1_1;
+    /** Bits 76-88 (Table 64): slot offset 1.1 for the response, relative to this transmission; 0 = responder allocates the slot itself. */
     int offset1_1;
+    /** Bits 90-96 (Table 64): message ID 1.2, the second message type requested from the first station; -1 when absent, 0 when set to zero because a second station is interrogated instead. */
     int type1_2;
+    /** Bits 96-108 (Table 64): slot offset 1.2 for the second response from the first station; -1 when absent. */
     int offset1_2;
+    /** Bits 110-140 (Table 64): destination ID 2, the MMSI of the second interrogated station; null when absent. */
     MMSI interrogatedMmsi2;
+    /** Bits 140-146 (Table 64): message ID 2.1, the message type requested from the second station; -1 when absent. */
     int type2_1;
+    /** Bits 146-158 (Table 64): slot offset 2.1 for the response from the second station; -1 when absent. */
     int offset2_1;
 }

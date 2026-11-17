@@ -14,15 +14,13 @@
  *
  */
 
-/**
- * Interface for AIS messages containing dynamic ship data.
- * Dynamic data includes position, speed, and course information that changes frequently.
- */
 package dk.tbsalling.aismessages.ais.messages;
 
 /**
- * Interface for AIS messages containing dynamic ship data such as position, speed, and course.
- * This data typically changes frequently during vessel operation.
+ * Interface for AIS messages containing dynamic data such as position, speed and course, which changes frequently
+ * during operation. Implemented by Messages 1, 2, 3, 18 and 19 (through {@link ExtendedDynamicDataReport}) and by
+ * Messages 9 ({@link StandardSARAircraftPositionReport}) and 27 ({@link LongRangeBroadcastMessage}). Units and
+ * not-available values are those of the respective ITU-R M.1371-6 message tables.
  */
 public interface DynamicDataReport extends DataReport {
     /**
