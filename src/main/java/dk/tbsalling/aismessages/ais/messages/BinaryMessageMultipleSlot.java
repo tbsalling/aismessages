@@ -51,7 +51,7 @@ public class BinaryMessageMultipleSlot extends AISMessage {
      */
     protected BinaryMessageMultipleSlot(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                         boolean addressed, boolean structured, MMSI destinationMmsi,
-                                        int applicationId, int designatedAreaCode, int functionalId, BitString data,
+                                        Integer applicationId, Integer designatedAreaCode, Integer functionalId, BitString data,
                                         ApplicationSpecificMessage applicationSpecificMessage,
                                         boolean commStateSelectorFlag, CommunicationState communicationState) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
@@ -74,8 +74,15 @@ public class BinaryMessageMultipleSlot extends AISMessage {
         final StringBuilder errorMessage = new StringBuilder();
 
         final int numberOfBits = getNumberOfBits();
-        if (numberOfBits < 64 || numberOfBits > 1064)
-            errorMessage.append(format("Message of type %s should be 64-1064 bits long; not %d.", getMessageType(), numberOfBits));
+        // Table 81: 40-bit header, a 32-bit destination ID when addressed, a 16-bit application identifier when structured,
+        // and the 24-bit trailer (4 spare bits, communication state selector and communication state). The flags are read from
+        // the bit string because this check runs before the subclass fields are set.
+        final BitString bits = getMetadata().bitString();
+        final boolean addressed = numberOfBits >= 39 && bits.getBoolean(38, 39);
+        final boolean structured = numberOfBits >= 40 && bits.getBoolean(39, 40);
+        final int minimum = 40 + (addressed ? 32 : 0) + (structured ? 16 : 0) + 24;
+        if (numberOfBits < minimum || numberOfBits > 1064)
+            errorMessage.append(format("Message of type %s (%s, %s) should be %d-1064 bits long; not %d.", getMessageType(), addressed ? "addressed" : "broadcast", structured ? "structured" : "unstructured", minimum, numberOfBits));
 
         if (errorMessage.length() > 0) {
             if (numberOfBits >= 38)
@@ -89,23 +96,23 @@ public class BinaryMessageMultipleSlot extends AISMessage {
         return AISMessageType.BinaryMessageMultipleSlot;
     }
 
-    /** True when the message is addressed to {@link #getDestinationMmsi()}; false for a broadcast. */
+    /** True when the message is addressed to {@code getDestinationMmsi()}; false for a broadcast. */
     boolean addressed;
     /** True when the data is structured, i.e. preceded by a 16-bit application identifier (DAC + FI). */
     boolean structured;
     /** Destination of an addressed message; null for a broadcast. */
     MMSI destinationMmsi;
-    /** The 16-bit application identifier (DAC in the upper 10 bits, FI in the lower 6) of a structured message; -1 when unstructured. */
-    int applicationId;
-    /** Designated area code of a structured message; -1 when unstructured. */
-    int designatedAreaCode;
-    /** Function identifier of a structured message; -1 when unstructured. */
-    int functionalId;
+    /** The 16-bit application identifier (DAC in the upper 10 bits, FI in the lower 6) of a structured message; null when unstructured. */
+    Integer applicationId;
+    /** Designated area code of a structured message; null when unstructured. */
+    Integer designatedAreaCode;
+    /** Function identifier of a structured message; null when unstructured. */
+    Integer functionalId;
     /** The application data, excluding destination ID, application identifier and the trailing communication state. */
     BitString data;
     /** Decoded application specific message of a structured message; null when unstructured. */
     ApplicationSpecificMessage applicationSpecificMessage;
-    /** False when {@link #getCommunicationState()} is SOTDMA, true when it is ITDMA. */
+    /** False when {@code getCommunicationState()} is SOTDMA, true when it is ITDMA. */
     boolean commStateSelectorFlag;
     /** The communication state carried in the last 19 bits of the message. */
     CommunicationState communicationState;

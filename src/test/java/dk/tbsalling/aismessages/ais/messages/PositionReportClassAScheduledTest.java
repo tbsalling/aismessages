@@ -22,7 +22,7 @@ public class PositionReportClassAScheduledTest {
         Instant received = Instant.EPOCH;
 
         NavigationStatus navigationStatus = NavigationStatus.UnderwayUsingEngine;
-        int rateOfTurn = 0;
+        float rateOfTurn = 0;
         float speedOverGround = 12.3f;
         boolean positionAccuracy = true;
         float latitude = 55.0f;
@@ -33,17 +33,11 @@ public class PositionReportClassAScheduledTest {
         ManeuverIndicator specialManeuverIndicator = ManeuverIndicator.NotAvailable;
         boolean raimFlag = true;
         CommunicationState communicationState = SOTDMACommunicationState.fromBitString(BitString.ofBitString("0000000000000000000"));
-        int rawRateOfTurn = 0;
-        int rawSpeedOverGround = 123;
-        int rawLatitude = 100000;
-        int rawLongitude = 200000;
-        int rawCourseOverGround = 3590;
 
         PositionReportClassAScheduled msg = new PositionReportClassAScheduled(
                 mmsi, repeatIndicator, null, nmeaMessages, bitString, source, received,
-                navigationStatus, rateOfTurn, speedOverGround, positionAccuracy, latitude, longitude,
-                courseOverGround, trueHeading, second, specialManeuverIndicator, raimFlag, communicationState,
-                rawRateOfTurn, rawSpeedOverGround, rawLatitude, rawLongitude, rawCourseOverGround, false);
+                navigationStatus, rateOfTurn, RateOfTurnIndicator.Measured, speedOverGround, SpeedOverGroundIndicator.Measured, positionAccuracy, latitude, longitude,
+                courseOverGround, trueHeading, second, TimeStampIndicator.Available, specialManeuverIndicator, raimFlag, communicationState, false);
 
         // Act
         String s = msg.toString();

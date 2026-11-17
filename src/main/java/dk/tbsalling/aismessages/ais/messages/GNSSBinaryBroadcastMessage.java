@@ -48,7 +48,7 @@ public class GNSSBinaryBroadcastMessage extends AISMessage {
      * Constructor accepting pre-parsed values for true immutability.
      */
     protected GNSSBinaryBroadcastMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
-                                         int spare1, float latitude, float longitude, int spare2,
+                                         int spare1, double latitude, double longitude, int spare2,
                                          Integer mType, Integer stationId, Integer zCount,
                                          Integer sequenceNumber, Integer numOfWords, Integer health,
                                          BitString binaryData) {
@@ -90,10 +90,10 @@ public class GNSSBinaryBroadcastMessage extends AISMessage {
 
     /** Bits 38-40 (Table 66): spare, should be zero. */
     int spare1;
-    /** Bits 58-75 (Table 66): surveyed latitude of the DGNSS reference station in decimal degrees (1/10 min / 10); north positive; 91 = correction service not available. */
-    float latitude;
-    /** Bits 40-58 (Table 66): surveyed longitude of the DGNSS reference station in decimal degrees (1/10 min / 10); east positive; 181 = correction service not available. */
-    float longitude;
+    /** Bits 58-75 (Table 66): surveyed latitude of the DGNSS reference station in decimal degrees, transmitted in 1/10 min; north positive; {@code NaN} when the correction service is not available (transmitted as 91°). */
+    double latitude;
+    /** Bits 40-58 (Table 66): surveyed longitude of the DGNSS reference station in decimal degrees, transmitted in 1/10 min; east positive; {@code NaN} when the correction service is not available (transmitted as 181°). */
+    double longitude;
     /** Bits 75-80 (Table 66): spare, should be zero. */
     int spare2;
     /** Bits 80-86 (Table 67): Rec. ITU-R M.823 message type; null when the data field is empty. */

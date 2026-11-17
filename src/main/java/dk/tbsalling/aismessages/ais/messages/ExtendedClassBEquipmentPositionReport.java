@@ -45,22 +45,23 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
      * Constructor accepting pre-parsed values for true immutability.
      */
     protected ExtendedClassBEquipmentPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
-                                                    String regionalReserved1, float speedOverGround, boolean positionAccuracy,
-                                                    float latitude, float longitude, float courseOverGround, int trueHeading,
-                                                    int second, String regionalReserved2, String shipName, ShipType shipType,
+                                                    int regionalReserved1, float speedOverGround, SpeedOverGroundIndicator speedOverGroundIndicator, boolean positionAccuracy,
+                                                    double latitude, double longitude, float courseOverGround, Integer trueHeading,
+                                                    Integer second, TimeStampIndicator timeStampIndicator, int regionalReserved2, String shipName, ShipType shipType,
                                                     int toBow, int toStern, int toPort, int toStarboard,
                                                     PositionFixingDevice positionFixingDevice, boolean raimFlag,
-                                                    boolean dataTerminalReady, boolean assigned, String regionalReserved3,
-                                                    int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround) {
+                                                    boolean dataTerminalReady, boolean assigned, int regionalReserved3) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.regionalReserved1 = regionalReserved1;
         this.speedOverGround = speedOverGround;
+        this.speedOverGroundIndicator = speedOverGroundIndicator;
         this.positionAccuracy = positionAccuracy;
         this.latitude = latitude;
         this.longitude = longitude;
         this.courseOverGround = courseOverGround;
         this.trueHeading = trueHeading;
         this.second = second;
+        this.timeStampIndicator = timeStampIndicator;
         this.regionalReserved2 = regionalReserved2;
         this.shipName = shipName;
         this.shipType = shipType;
@@ -73,10 +74,6 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
         this.dataTerminalReady = dataTerminalReady;
         this.assigned = assigned;
         this.regionalReserved3 = regionalReserved3;
-        this.rawSpeedOverGround = rawSpeedOverGround;
-        this.rawLatitude = rawLatitude;
-        this.rawLongitude = rawLongitude;
-        this.rawCourseOverGround = rawCourseOverGround;
     }
 
     @Override
@@ -107,25 +104,29 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
         return TransponderClass.B;
     }
 
-    /** Bits 38-46 (Table 69) as a string of '0'/'1': 8 spare bits, should be zero. */
-    String regionalReserved1;
-    /** Speed over ground in knots, {@code rawSpeedOverGround} / 10 (Table 69); 102.2 = 102.2 knots or higher, 102.3 = not available. */
+    /** Bits 38-46 (Table 69) as an unsigned integer, first bit most significant: 8 spare bits, should be zero. */
+    int regionalReserved1;
+    /** Speed over ground in knots, transmitted in 1/10 knot (Table 69); 102.2 when 102.2 knots or higher and {@code NaN} when not available, as told by {@code speedOverGroundIndicator}. */
     float speedOverGround;
+    /** Meaning of {@code speedOverGround}: measured, at least the field's maximum, or not available (see {@link SpeedOverGroundIndicator}). */
+    SpeedOverGroundIndicator speedOverGroundIndicator;
     /** Bit 56 (Table 69): position accuracy flag, true = high (≤ 10 m), false = low (&gt; 10 m, default); see Table 48. */
     boolean positionAccuracy;
-    /** Latitude in decimal degrees, {@code rawLatitude} / 600 000 (Table 69); north positive; 91 = not available. */
-    float latitude;
-    /** Longitude in decimal degrees, {@code rawLongitude} / 600 000 (Table 69); east positive; 181 = not available. */
-    float longitude;
-    /** Course over ground in degrees, {@code rawCourseOverGround} / 10 (Table 69); 360 = not available. */
+    /** Latitude in decimal degrees, transmitted in 1/10 000 min (Table 69); north positive; {@code NaN} when not available (transmitted as 91°). */
+    double latitude;
+    /** Longitude in decimal degrees, transmitted in 1/10 000 min (Table 69); east positive; {@code NaN} when not available (transmitted as 181°). */
+    double longitude;
+    /** Course over ground in degrees, transmitted in 1/10° (Table 69); {@code NaN} when not available (transmitted as 360°). */
     float courseOverGround;
-    /** Bits 124-133 (Table 69): true heading in degrees, 0-359; 511 = not available. */
-    int trueHeading;
-    /** Bits 133-139 (Table 69): UTC second when the report was generated, 0-59; 60 = not available (default), 61 = manual input, 62 = dead reckoning, 63 = EPFS inoperative. */
-    int second;
-    /** Bits 139-143 (Table 69) as a string of '0'/'1': 4 spare bits, should be zero. */
-    String regionalReserved2;
-    /** Bits 143-263 (Table 69): name, up to 20 six-bit ASCII characters (Table 45); all "@" = not available. */
+    /** Bits 124-133 (Table 69): true heading in degrees, 0-359; null when not available. */
+    Integer trueHeading;
+    /** Bits 133-139 (Table 69): UTC second when the report was generated, 0-59; null unless {@code timeStampIndicator} is {@link TimeStampIndicator#Available}. */
+    Integer second;
+    /** What the time stamp field carries: the UTC second in {@code second}, or the state of the position fixing system (see {@link TimeStampIndicator}). */
+    TimeStampIndicator timeStampIndicator;
+    /** Bits 139-143 (Table 69) as an unsigned integer, first bit most significant: 4 spare bits, should be zero. */
+    int regionalReserved2;
+    /** Bits 143-263 (Table 69): name, up to 20 six-bit ASCII characters (Table 45); null when not available. */
     String shipName;
     /** Bits 263-271 (Table 69, Table 51): type of ship and cargo type; null for the regional (100-199) and future-use (200-255) codes. */
     ShipType shipType;
@@ -145,14 +146,6 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
     boolean dataTerminalReady;
     /** Bit 307 (Table 69): assigned mode flag, true = station operating in assigned mode, false = autonomous and continuous mode (default). */
     boolean assigned;
-    /** Bits 308-312 (Table 69) as a string of '0'/'1': 4 spare bits, should be zero. */
-    String regionalReserved3;
-    /** Bits 46-56 (Table 69): speed over ground in 1/10 knot steps, 0-1022; 1022 = 102.2 knots or higher, 1023 = not available. */
-    int rawSpeedOverGround;
-    /** Bits 85-112 (Table 69): latitude in 1/10 000 min, two's complement; 91° (0x3412140) = not available. */
-    int rawLatitude;
-    /** Bits 57-85 (Table 69): longitude in 1/10 000 min, two's complement; 181° (0x6791AC0) = not available. */
-    int rawLongitude;
-    /** Bits 112-124 (Table 69): course over ground in 1/10 degree, 0-3599; 3600 = not available. */
-    int rawCourseOverGround;
+    /** Bits 308-312 (Table 69) as an unsigned integer, first bit most significant: 4 spare bits, should be zero. */
+    int regionalReserved3;
 }

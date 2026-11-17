@@ -44,17 +44,20 @@ public class ITDMACommunicationState extends CommunicationState {
         if (bitString.length() != 19)
 			return null;
 
+		// Table 20: number-of-slots codes 0-4 mean 1-5 slots; codes 5-7 mean 1-3 slots at slot increment + 8192.
+		int increment = bitString.getUnsignedInt(2, 15);
+		int code = bitString.getUnsignedInt(15, 18);
 		return new ITDMACommunicationState(
                 SyncState.fromInteger(bitString.getUnsignedInt(0, 2)),
-                bitString.getUnsignedInt(2, 15),
-                bitString.getUnsignedInt(15, 18),
+                code <= 4 ? increment : increment + 8192,
+                code <= 4 ? code + 1 : code - 4,
                 bitString.getBoolean(18, 19)
 		);
 	}
 
-    /** Bits 2-15 (Table 20): offset in slots from this transmission to the next slot to be used, 0-8191; 0 = no more ITDMA transmissions. Add 8192 when {@code numberOfSlots} is 5-7. */
+    /** Bits 2-18 (Table 20): offset in slots from this transmission to the next slot to be used, 0-16 383, including the extension by 8 192 that number-of-slots codes 5-7 signal; 0 = no more ITDMA transmissions. */
     Integer slotIncrement;
-    /** Bits 15-18 (Table 20): number of consecutive slots to allocate, coded 0-4 = 1-5 slots, 5-7 = 1-3 slots at slot increment + 8192. */
+    /** Bits 15-18 (Table 20): number of consecutive slots to allocate, 1-5. */
     Integer numberOfSlots;
     /** Bit 18 (Table 20): keep flag, true = the slot remains allocated for one additional frame. */
     Boolean keepFlag;

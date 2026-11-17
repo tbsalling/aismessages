@@ -20,8 +20,8 @@ public class MeteorologicalAndHydrographicalData extends ApplicationSpecificMess
         super(designatedAreaCode, functionalId, binaryData);
 
         // Eagerly decode all fields
-        this.longitude = getBinaryData().getSignedFloat(0, 25) / 60000f;
-        this.latitude = getBinaryData().getSignedFloat(25, 49) / 60000f;
+        this.longitude = getBinaryData().getSignedInt(0, 25) / 60000.0;
+        this.latitude = getBinaryData().getSignedInt(25, 49) / 60000.0;
         this.accuracy = getBinaryData().getBoolean(49, 50);
         this.day = getBinaryData().getUnsignedInt(50, 55);
         this.hour = getBinaryData().getUnsignedInt(55, 60);
@@ -60,9 +60,9 @@ public class MeteorologicalAndHydrographicalData extends ApplicationSpecificMess
     }
 
     /** Bits 0-25 of the application data (IMO SN.1/Circ.289, DAC=1 FI=31): longitude in decimal degrees (1/1 000 min ÷ 60 000), signed. */
-    float longitude;
+    double longitude;
     /** Bits 25-49 of the application data (IMO SN.1/Circ.289, DAC=1 FI=31): latitude in decimal degrees (1/1 000 min ÷ 60 000), signed. */
-    float latitude;
+    double latitude;
     /** Bit 49 of the application data (IMO SN.1/Circ.289, DAC=1 FI=31): accuracy flag. */
     boolean accuracy;
     /** Bits 50-55 of the application data (IMO SN.1/Circ.289, DAC=1 FI=31): day. */

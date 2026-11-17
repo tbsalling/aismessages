@@ -19,6 +19,9 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.BitString;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.ais.messages.types.AltitudeIndicator;
+import dk.tbsalling.aismessages.ais.messages.types.TimeStampIndicator;
+import dk.tbsalling.aismessages.ais.messages.types.SpeedOverGroundIndicator;
 import dk.tbsalling.aismessages.ais.messages.types.CommunicationState;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
@@ -48,29 +51,27 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
      * Constructor accepting pre-parsed values for true immutability.
      */
     protected StandardSARAircraftPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
-                                                int altitude, float speedOverGround, boolean positionAccuracy,
-                                                float latitude, float longitude, float courseOverGround,
-                                                int second, String regionalReserved, boolean dataTerminalReady,
-                                                boolean assigned, boolean raimFlag, String radioStatus,
-                                                int rawSpeedOverGround, int rawLongitude, int rawLatitude, int rawCourseOverGround,
+                                                Integer altitude, AltitudeIndicator altitudeIndicator, float speedOverGround, SpeedOverGroundIndicator speedOverGroundIndicator, boolean positionAccuracy,
+                                                double latitude, double longitude, float courseOverGround,
+                                                Integer second, TimeStampIndicator timeStampIndicator, int regionalReserved, boolean dataTerminalReady,
+                                                boolean assigned, boolean raimFlag, int radioStatus,
                                                 boolean barometricAltitude, boolean commStateSelectorFlag, CommunicationState communicationState) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.altitude = altitude;
+        this.altitudeIndicator = altitudeIndicator;
         this.speedOverGround = speedOverGround;
+        this.speedOverGroundIndicator = speedOverGroundIndicator;
         this.positionAccuracy = positionAccuracy;
         this.latitude = latitude;
         this.longitude = longitude;
         this.courseOverGround = courseOverGround;
         this.second = second;
+        this.timeStampIndicator = timeStampIndicator;
         this.regionalReserved = regionalReserved;
         this.dataTerminalReady = dataTerminalReady;
         this.assigned = assigned;
         this.raimFlag = raimFlag;
         this.radioStatus = radioStatus;
-        this.rawSpeedOverGround = rawSpeedOverGround;
-        this.rawLongitude = rawLongitude;
-        this.rawLatitude = rawLatitude;
-        this.rawCourseOverGround = rawCourseOverGround;
         this.barometricAltitude = barometricAltitude;
         this.commStateSelectorFlag = commStateSelectorFlag;
         this.communicationState = communicationState;
@@ -104,43 +105,41 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
         return TransponderClass.SAR;
     }
 
-    /** Bits 38-50 (Table 57): altitude in metres from GNSS or barometric sensor (see {@code barometricAltitude}), 0-4094; 4094 = 4094 m or higher, 4095 = not available. */
-    int altitude;
-    /** Speed over ground in knots, equal to {@code rawSpeedOverGround} since Message 9 uses 1-knot steps (Table 57); 1022 = 1022 knots or higher, 1023 = not available. */
+    /** Bits 38-50 (Table 57): altitude in metres from GNSS or barometric sensor (see {@code barometricAltitude}), 0-4094; 4094 when 4 094 m or higher and null when not available, as told by {@code altitudeIndicator}. */
+    Integer altitude;
+    /** Meaning of {@code altitude}: measured, 4 094 m or higher, or not available (see {@link AltitudeIndicator}). */
+    AltitudeIndicator altitudeIndicator;
+    /** Speed over ground in knots, transmitted in 1-knot steps (Table 57); 1022 when 1 022 knots or higher and {@code NaN} when not available, as told by {@code speedOverGroundIndicator}. */
     float speedOverGround;
+    /** Meaning of {@code speedOverGround}: measured, at least the field's maximum, or not available (see {@link SpeedOverGroundIndicator}). */
+    SpeedOverGroundIndicator speedOverGroundIndicator;
     /** Bit 60 (Table 57): position accuracy flag, true = high (≤ 10 m), false = low (&gt; 10 m, default); see Table 48. */
     boolean positionAccuracy;
-    /** Latitude in decimal degrees, {@code rawLatitude} / 600 000 (Table 57); north positive; 91 = not available. */
-    float latitude;
-    /** Longitude in decimal degrees, {@code rawLongitude} / 600 000 (Table 57); east positive; 181 = not available. */
-    float longitude;
-    /** Course over ground in degrees, {@code rawCourseOverGround} / 10 (Table 57); 360 = not available. */
+    /** Latitude in decimal degrees, transmitted in 1/10 000 min (Table 57); north positive; {@code NaN} when not available (transmitted as 91°). */
+    double latitude;
+    /** Longitude in decimal degrees, transmitted in 1/10 000 min (Table 57); east positive; {@code NaN} when not available (transmitted as 181°). */
+    double longitude;
+    /** Course over ground in degrees, transmitted in 1/10° (Table 57); {@code NaN} when not available (transmitted as 360°). */
     float courseOverGround;
-    /** Bits 128-134 (Table 57): UTC second when the report was generated, 0-59; 60 = not available (default), 61 = manual input, 62 = dead reckoning, 63 = EPFS inoperative. */
-    int second;
-    /** Bits 134-142 (Table 57) as a string of '0'/'1': the altitude sensor bit followed by 7 spare bits. See {@code barometricAltitude} for the typed value. */
-    String regionalReserved;
+    /** Bits 128-134 (Table 57): UTC second when the report was generated, 0-59; null unless {@code timeStampIndicator} is {@link TimeStampIndicator#Available}. */
+    Integer second;
+    /** What the time stamp field carries: the UTC second in {@code second}, or the state of the position fixing system (see {@link TimeStampIndicator}). */
+    TimeStampIndicator timeStampIndicator;
+    /** Bits 134-142 (Table 57) as an unsigned integer, first bit most significant: the altitude sensor bit followed by 7 spare bits. See {@code barometricAltitude} for the typed value. */
+    int regionalReserved;
     /** Bit 142 (Table 57, § A7-3.3.1): data terminal equipment ready, true = available (bit 0), false = not available (bit 1, default). */
     boolean dataTerminalReady;
     /** Bit 146 (Table 57): assigned mode flag, true = station operating in assigned mode, false = autonomous and continuous mode (default). */
     boolean assigned;
     /** Bit 147 (Table 57): RAIM flag of the electronic position fixing device, true = RAIM in use; see Table 48. */
     boolean raimFlag;
-    /** Bits 148-168 (Table 57) as a string of '0'/'1': the communication state selector flag followed by the 19-bit communication state. See {@code communicationState} for the typed value. */
-    String radioStatus;
-    /** Bits 50-60 (Table 57): speed over ground in knots, 0-1022; 1022 = 1022 knots or higher, 1023 = not available. */
-    int rawSpeedOverGround;
-    /** Bits 61-89 (Table 57): longitude in 1/10 000 min, two's complement; 181° (0x6791AC0) = not available. */
-    int rawLongitude;
-    /** Bits 89-116 (Table 57): latitude in 1/10 000 min, two's complement; 91° (0x3412140) = not available. */
-    int rawLatitude;
-    /** Bits 116-128 (Table 57): course over ground in 1/10 degree, 0-3599; 3600 = not available. */
-    int rawCourseOverGround;
+    /** Bits 148-168 (Table 57) as an unsigned integer, first bit most significant: the communication state selector flag followed by the 19-bit communication state. See {@code communicationState} for the typed value. */
+    int radioStatus;
     /** Altitude sensor, bit 134 (ITU-R M.1371-6 Table 57): false = GNSS, true = barometric source. */
     boolean barometricAltitude;
     /** Communication state selector flag, bit 148: false = SOTDMA communication state follows, true = ITDMA. */
     boolean commStateSelectorFlag;
-    /** The communication state in bits 149-168, typed according to {@link #isCommStateSelectorFlag()}. */
+    /** The communication state in bits 149-168, typed according to {@code isCommStateSelectorFlag()}. */
     CommunicationState communicationState;
 
 }

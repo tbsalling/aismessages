@@ -50,8 +50,8 @@ public class ChannelManagement extends AISMessage {
      */
     protected ChannelManagement(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                 int channelA, int channelB, TxRxMode transmitReceiveMode, boolean power,
-                                Float northEastLongitude, Float northEastLatitude,
-                                Float southWestLongitude, Float southWestLatitude,
+                                Double northEastLongitude, Double northEastLatitude,
+                                Double southWestLongitude, Double southWestLatitude,
                                 MMSI destinationMmsi1, MMSI destinationMmsi2,
                                 boolean addressed, boolean bandA, boolean bandB, int zoneSize) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
@@ -102,14 +102,14 @@ public class ChannelManagement extends AISMessage {
     TxRxMode transmitReceiveMode;
     /** Bit 68 (Table 73): power, false = high (default), true = low. */
     boolean power;
-    /** Bits 69-87 (Table 73): longitude of the north-east corner of the area in decimal degrees (1/10 min / 10); east positive; 181 = not available. Null in the addressed form. */
-    Float northEastLongitude;
-    /** Bits 87-104 (Table 73): latitude of the north-east corner of the area in decimal degrees (1/10 min / 10); north positive; 91 = not available. Null in the addressed form. */
-    Float northEastLatitude;
+    /** Bits 69-87 (Table 73): longitude of the north-east corner of the area in decimal degrees, transmitted in 1/10 min; east positive; null when not available (transmitted as 181°) and in the addressed form. */
+    Double northEastLongitude;
+    /** Bits 87-104 (Table 73): latitude of the north-east corner of the area in decimal degrees, transmitted in 1/10 min; north positive; null when not available (transmitted as 91°) and in the addressed form. */
+    Double northEastLatitude;
     /** Bits 104-122 (Table 73): longitude of the south-west corner of the area in decimal degrees; null in the addressed form. */
-    Float southWestLongitude;
+    Double southWestLongitude;
     /** Bits 122-139 (Table 73): latitude of the south-west corner of the area in decimal degrees; null in the addressed form. */
-    Float southWestLatitude;
+    Double southWestLatitude;
     /** Bits 69-99 (Table 73): addressed station ID 1 (18 MSBs in the longitude 1 field, 12 LSBs in the latitude 1 field); null in the broadcast form. */
     MMSI destinationMmsi1;
     /** Bits 104-134 (Table 73): addressed station ID 2 (18 MSBs in the longitude 2 field, 12 LSBs in the latitude 2 field); null in the broadcast form. */

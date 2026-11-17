@@ -19,6 +19,7 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.BitString;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.ais.messages.types.TimeStampIndicator;
 import dk.tbsalling.aismessages.ais.messages.types.AidType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
@@ -51,12 +52,12 @@ public class AidToNavigationReport extends AISMessage {
      */
     protected AidToNavigationReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                     AidType aidType, String name, boolean positionAccurate,
-                                    float latitude, float longitude,
+                                    double latitude, double longitude,
                                     int toBow, int toStern, int toPort, int toStarboard,
-                                    PositionFixingDevice positionFixingDevice, int second,
-                                    boolean offPosition, String regionalUse, boolean raimFlag,
+                                    PositionFixingDevice positionFixingDevice, Integer second, TimeStampIndicator timeStampIndicator,
+                                    Boolean offPosition, int regionalUse, boolean raimFlag,
                                     boolean virtualAid, boolean assignedMode, int spare1,
-                                    String nameExtension, Integer spare2, boolean nameExtensionIsLabel) {
+                                    String nameExtension, Integer spare2, boolean nameExtensionLabel) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.aidType = aidType;
         this.name = name;
@@ -69,6 +70,7 @@ public class AidToNavigationReport extends AISMessage {
         this.toStarboard = toStarboard;
         this.positionFixingDevice = positionFixingDevice;
         this.second = second;
+        this.timeStampIndicator = timeStampIndicator;
         this.offPosition = offPosition;
         this.regionalUse = regionalUse;
         this.raimFlag = raimFlag;
@@ -77,7 +79,7 @@ public class AidToNavigationReport extends AISMessage {
         this.spare1 = spare1;
         this.nameExtension = nameExtension;
         this.spare2 = spare2;
-        this.nameExtensionIsLabel = nameExtensionIsLabel;
+        this.nameExtensionLabel = nameExtensionLabel;
     }
 
     @Override
@@ -104,14 +106,14 @@ public class AidToNavigationReport extends AISMessage {
 
     /** Bits 38-43 (Table 71, Table 72): type of aid to navigation, 0 = not available (default). */
     AidType aidType;
-    /** Bits 43-163 (Table 71): name of the aid to navigation, up to 20 six-bit ASCII characters (Table 45); all "@" = not available. Extended by {@code nameExtension}. */
+    /** Bits 43-163 (Table 71): name of the aid to navigation, up to 20 six-bit ASCII characters (Table 45); null when not available. Extended by {@code nameExtension}. */
     String name;
     /** Bit 163 (Table 71): position accuracy flag, true = high (≤ 10 m), false = low (&gt; 10 m, default); see Table 48. */
     boolean positionAccurate;
-    /** Bits 192-219 (Table 71): latitude in decimal degrees (1/10 000 min / 600 000); north positive; 91 = not available. */
-    float latitude;
-    /** Bits 164-192 (Table 71): longitude in decimal degrees (1/10 000 min / 600 000); east positive; 181 = not available. */
-    float longitude;
+    /** Bits 192-219 (Table 71): latitude in decimal degrees, transmitted in 1/10 000 min; north positive; {@code NaN} when not available (transmitted as 91°). */
+    double latitude;
+    /** Bits 164-192 (Table 71): longitude in decimal degrees, transmitted in 1/10 000 min; east positive; {@code NaN} when not available (transmitted as 181°). */
+    double longitude;
     /** Bits 219-228 (Table 71, Fig. 39, § A7-3.19.1): dimension A in metres, 0-511; points to true north for fixed aids; A = B = C = D for floating aids; 1 for objects ≤ 2 m × 2 m; 0 for virtual aids. */
     int toBow;
     /** Bits 228-237 (Table 71, Fig. 39): dimension B in metres, 0-511. */
@@ -122,12 +124,18 @@ public class AidToNavigationReport extends AISMessage {
     int toStarboard;
     /** Bits 249-253 (Table 71): type of electronic position fixing device; 7 = surveyed position is typical for fixed aids. */
     PositionFixingDevice positionFixingDevice;
-    /** Bits 253-259 (Table 71): UTC second when the report was generated, 0-59; 60 = not available (default), 61 = manual input, 62 = dead reckoning, 63 = EPFS inoperative. */
-    int second;
-    /** Bit 259 (Table 71): off-position indicator, true = off position (floating aid outside its zone, or fixed aid with suspected GNSS anomaly); only meaningful when {@code second} ≤ 59. */
-    boolean offPosition;
-    /** Bits 260-268 (Table 71) as a string of '0'/'1': the 8 AtoN status bits reserved for IALA Recommendation R0126; all zero = default. */
-    String regionalUse;
+    /** Bits 253-259 (Table 71): UTC second when the report was generated, 0-59; null unless {@code timeStampIndicator} is {@link TimeStampIndicator#Available}. */
+    Integer second;
+    /** What the time stamp field carries: the UTC second in {@code second}, or the state of the position fixing system (see {@link TimeStampIndicator}). */
+    TimeStampIndicator timeStampIndicator;
+    /**
+     * Bit 259 (Table 71): off-position indicator, true = off position (floating aid outside its zone, or fixed aid with
+     * suspected GNSS anomaly); null unless {@code timeStampIndicator} is {@link TimeStampIndicator#Available}, because
+     * Table 71 says the flag should only be considered when the time stamp is 59 or below.
+     */
+    Boolean offPosition;
+    /** Bits 260-268 (Table 71) as an unsigned integer, first bit most significant: the 8 AtoN status bits reserved for IALA Recommendation R0126; all zero = default. */
+    int regionalUse;
     /** Bit 268 (Table 71): RAIM flag of the electronic position fixing device, true = RAIM in use; see Table 48. */
     boolean raimFlag;
     /** Bit 269 (Table 71): virtual AtoN flag, true = virtual aid that does not physically exist, false = physical aid at the indicated position (default). */
@@ -137,15 +145,15 @@ public class AidToNavigationReport extends AISMessage {
     /** Bit 271 (Table 71): spare, should be zero. */
     int spare1;
     /**
-     * Bits 272 to end (Table 71): up to 14 additional six-bit characters extending {@link #getName()}, or, when {@link #isNameExtensionIsLabel()}
-     * is true, the AtoN's label (e.g. "LB1" for Lighted Buoy 1) with the leading "@@@" marker removed. Null when absent.
+     * Bits 272 to end (Table 71): up to 14 additional six-bit characters extending {@code getName()}, or, when {@code isNameExtensionLabel()}
+     * is true, the AtoN's label (e.g. "LB1" for Lighted Buoy 1). Null when absent.
      */
     String nameExtension;
     /** Bits after the name extension (Table 71): 0, 2, 4 or 6 spare bits inserted to reach a byte boundary; 0 when no extension is present. */
     int spare2;
     /**
-     * True when the name extension was preceded by "@@@", which per ITU-R M.1371-6 Table 71 means the text is to be
-     * portrayed as the AtoN's label rather than as part of its name.
+     * True when the name extension is marked as the AtoN's label, to be portrayed as a label rather than as part of its
+     * name (ITU-R M.1371-6 Table 71).
      */
-    boolean nameExtensionIsLabel;
+    boolean nameExtensionLabel;
 }

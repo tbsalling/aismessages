@@ -50,8 +50,8 @@ public class Interrogation extends AISMessage {
      * Constructor accepting pre-parsed values for true immutability.
      */
     protected Interrogation(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
-                            MMSI interrogatedMmsi1, int type1_1, int offset1_1, int type1_2, int offset1_2,
-                            MMSI interrogatedMmsi2, int type2_1, int offset2_1) {
+                            MMSI interrogatedMmsi1, AISMessageType type1_1, int offset1_1, AISMessageType type1_2, Integer offset1_2,
+                            MMSI interrogatedMmsi2, AISMessageType type2_1, Integer offset2_1) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.interrogatedMmsi1 = interrogatedMmsi1;
         this.type1_1 = type1_1;
@@ -88,18 +88,18 @@ public class Interrogation extends AISMessage {
 
     /** Bits 40-70 (Table 64): destination ID 1, the MMSI of the first interrogated station. */
     MMSI interrogatedMmsi1;
-    /** Bits 70-76 (Table 64): message ID 1.1, the first message type requested from the first station. */
-    int type1_1;
+    /** Bits 70-76 (Table 64): message ID 1.1, the first message type requested from the first station; null for an undefined message ID. */
+    AISMessageType type1_1;
     /** Bits 76-88 (Table 64): slot offset 1.1 for the response, relative to this transmission; 0 = responder allocates the slot itself. */
     int offset1_1;
-    /** Bits 90-96 (Table 64): message ID 1.2, the second message type requested from the first station; -1 when absent, 0 when set to zero because a second station is interrogated instead. */
-    int type1_2;
-    /** Bits 96-108 (Table 64): slot offset 1.2 for the second response from the first station; -1 when absent. */
-    int offset1_2;
+    /** Bits 90-96 (Table 64): message ID 1.2, the second message type requested from the first station; null when absent or zero (a second station is interrogated instead). */
+    AISMessageType type1_2;
+    /** Bits 96-108 (Table 64): slot offset 1.2 for the second response from the first station; null when absent. */
+    Integer offset1_2;
     /** Bits 110-140 (Table 64): destination ID 2, the MMSI of the second interrogated station; null when absent. */
     MMSI interrogatedMmsi2;
-    /** Bits 140-146 (Table 64): message ID 2.1, the message type requested from the second station; -1 when absent. */
-    int type2_1;
-    /** Bits 146-158 (Table 64): slot offset 2.1 for the response from the second station; -1 when absent. */
-    int offset2_1;
+    /** Bits 140-146 (Table 64): message ID 2.1, the message type requested from the second station; null when absent or undefined. */
+    AISMessageType type2_1;
+    /** Bits 146-158 (Table 64): slot offset 2.1 for the response from the second station; null when absent. */
+    Integer offset2_1;
 }

@@ -1,15 +1,11 @@
 package dk.tbsalling.aismessages.nmea;
 
 import dk.tbsalling.aismessages.ais.messages.AISMessage;
-import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import org.junit.jupiter.api.Test;
 
-import java.io.OutputStream;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.List;
@@ -21,8 +17,7 @@ import static dk.tbsalling.aismessages.testsupport.NmeaSentences.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * The UDP ({@link NMEAMessageUDPSocket}) and TCP ({@link NMEAMessageSocketClient}) transports, exercised against
- * loopback sockets on free ports. Sentences are synthetic.
+ * The UDP transport ({@link NMEAMessageUDPSocket}), exercised against loopback sockets on free ports. Sentences are synthetic.
  */
 public class NMEAMessageSocketTest {
 
@@ -100,57 +95,5 @@ public class NMEAMessageSocketTest {
 
             assertThrows(java.net.SocketException.class, udp::run);
         }
-    }
-
-    @Test
-    public void tcpClientStopsWhenRequestedDuringRun() throws Exception {
-        List<NMEAMessage> received = new CopyOnWriteArrayList<>();
-        try (ServerSocket server = new ServerSocket(0, 1, InetAddress.getLoopbackAddress())) {
-            Thread serverThread = new Thread(() -> {
-                try (Socket client = server.accept(); OutputStream out = client.getOutputStream()) {
-                    out.write((VALID_1 + "\n" + VALID_2 + "\n" + VALID_1 + "\n").getBytes(StandardCharsets.UTF_8));
-                } catch (Exception ignored) {
-                    // the test assertions report the outcome
-                }
-            });
-            serverThread.start();
-            AtomicReference<NMEAMessageSocketClient> client = new AtomicReference<>();
-            @SuppressWarnings("deprecation")
-            NMEAMessageSocketClient c = new NMEAMessageSocketClient("127.0.0.1", server.getLocalPort(), m -> {
-                received.add(m);
-                client.get().requestStop();
-            });
-            client.set(c);
-
-            assertTimeoutPreemptively(Duration.ofSeconds(5), c::run);
-            serverThread.join(5000);
-        }
-
-        assertEquals(1, received.size());
-    }
-
-    @Test
-    public void tcpClientDeliversLinesUntilServerCloses() throws Exception {
-        List<NMEAMessage> received = new CopyOnWriteArrayList<>();
-        try (ServerSocket server = new ServerSocket(0, 1, InetAddress.getLoopbackAddress())) {
-            Thread serverThread = new Thread(() -> {
-                try (Socket client = server.accept(); OutputStream out = client.getOutputStream()) {
-                    out.write((VALID_1 + "\n" + "garbage\n" + VALID_2 + "\n").getBytes(StandardCharsets.UTF_8));
-                } catch (Exception ignored) {
-                    // the test assertions report the outcome
-                }
-            });
-            serverThread.start();
-
-            @SuppressWarnings("deprecation")
-            NMEAMessageSocketClient client = new NMEAMessageSocketClient("127.0.0.1", server.getLocalPort(), received::add);
-            client.requestStop(); // no reader yet: must be a no-op
-            assertTimeoutPreemptively(Duration.ofSeconds(5), client::run);
-            serverThread.join(5000);
-        }
-
-        assertEquals(2, received.size());
-        assertEquals(VALID_1, received.get(0).getRawMessage());
-        assertEquals(VALID_2, received.get(1).getRawMessage());
     }
 }

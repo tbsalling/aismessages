@@ -55,12 +55,9 @@ public class PositionReportClassAAssignedScheduleTest {
         assertEquals(0, message.getRateOfTurn());
         assertEquals(13.6f, message.getSpeedOverGround(), 0.0f);
         assertTrue(message.isPositionAccuracy());
-        assertEquals(37.21113f, message.getLatitude(), 0.0f);
-        assertEquals(22326676, message.getRawLatitude());
-        assertEquals(-123.45053f, message.getLongitude(), 0.0f);
-        assertEquals(-74070321, message.getRawLongitude());
+        assertEquals(22326676 / 600000.0, message.getLatitude(), 0.0f);
+        assertEquals(-74070321 / 600000.0, message.getLongitude(), 0.0f);
         assertEquals(329.7f, message.getCourseOverGround(), 0.0f);
-        assertEquals(3297, message.getRawCourseOverGround());
         assertEquals(331, message.getTrueHeading());
         assertEquals(7, message.getSecond());
         assertEquals(ManeuverIndicator.NotAvailable, message.getSpecialManeuverIndicator());

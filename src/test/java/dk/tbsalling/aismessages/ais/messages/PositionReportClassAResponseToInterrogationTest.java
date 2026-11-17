@@ -34,14 +34,10 @@ public class PositionReportClassAResponseToInterrogationTest {
         assertEquals(NavigationStatus.UnderwayUsingEngine, message.getNavigationStatus());
         assertEquals(0, message.getRateOfTurn());
         assertEquals(13.6f, message.getSpeedOverGround());
-        assertEquals(136, message.getRawSpeedOverGround());
         assertTrue(message.isPositionAccuracy());
-        assertEquals(37.21113f, message.getLatitude());
-        assertEquals(22326676, message.getRawLatitude());
-        assertEquals(-123.45053f, message.getLongitude());
-        assertEquals(-74070321, message.getRawLongitude());
+        assertEquals(22326676 / 600000.0, message.getLatitude());
+        assertEquals(-74070321 / 600000.0, message.getLongitude());
         assertEquals(329.7f, message.getCourseOverGround());
-        assertEquals(3297, message.getRawCourseOverGround());
         assertEquals(331, message.getTrueHeading());
         assertEquals(7, message.getSecond());
         assertEquals(ManeuverIndicator.NotAvailable, message.getSpecialManeuverIndicator());
@@ -64,16 +60,13 @@ public class PositionReportClassAResponseToInterrogationTest {
         PositionReportClassAResponseToInterrogation message = (PositionReportClassAResponseToInterrogation) aisMessage;
         assertEquals(new MMSI(710000815), message.getSourceMmsi());
         assertEquals(NavigationStatus.UnderwayUsingEngine, message.getNavigationStatus());
-        assertEquals(-720, message.getRateOfTurn());
+        assertTrue(Float.isNaN(message.getRateOfTurn()));
+        assertEquals(RateOfTurnIndicator.TurningLeftWithoutTurnIndicator, message.getRateOfTurnIndicator());
         assertEquals(0.7f, message.getSpeedOverGround());
-        assertEquals(7, message.getRawSpeedOverGround());
         assertFalse(message.isPositionAccuracy());
-        assertEquals(-22.862577f, message.getLatitude());
-        assertEquals(-13717547, message.getRawLatitude());
-        assertEquals(-43.175175f, message.getLongitude());
-        assertEquals(-25905103, message.getRawLongitude());
+        assertEquals(-13717547 / 600000.0, message.getLatitude());
+        assertEquals(-25905103 / 600000.0, message.getLongitude());
         assertEquals(290.4f, message.getCourseOverGround());
-        assertEquals(2904, message.getRawCourseOverGround());
         assertEquals(286, message.getTrueHeading());
         assertEquals(56, message.getSecond());
         assertEquals(ManeuverIndicator.NotAvailable, message.getSpecialManeuverIndicator());
@@ -107,12 +100,11 @@ public class PositionReportClassAResponseToInterrogationTest {
 
         PositionReportClassAResponseToInterrogation message = (PositionReportClassAResponseToInterrogation) AISMessageFactory.create(null, null, null, nmea(b.toBitString()));
 
-        assertEquals(-127, message.getRawRateOfTurn());
         assertEquals(ManeuverIndicator.SpecialManeuver, message.getSpecialManeuverIndicator());
         assertTrue(message.isTransmitPowerLow());
         ITDMACommunicationState communicationState = (ITDMACommunicationState) message.getCommunicationState();
-        assertEquals(1000, communicationState.getSlotIncrement());
-        assertEquals(6, communicationState.getNumberOfSlots());
+        assertEquals(1000 + 8192, communicationState.getSlotIncrement()); // code 6: 2 slots at increment + 8192
+        assertEquals(2, communicationState.getNumberOfSlots());
         assertFalse(communicationState.getKeepFlag());
     }
 }

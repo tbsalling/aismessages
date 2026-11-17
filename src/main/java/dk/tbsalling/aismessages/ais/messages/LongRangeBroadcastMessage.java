@@ -3,7 +3,9 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.BitString;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.ais.messages.types.SpeedOverGroundIndicator;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
+import dk.tbsalling.aismessages.ais.messages.types.PositionLatency;
 import dk.tbsalling.aismessages.ais.messages.types.NavigationStatus;
 import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
@@ -35,9 +37,8 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
      */
     protected LongRangeBroadcastMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                         boolean positionAccuracy, boolean raim, NavigationStatus navigationStatus,
-                                        float latitude, float longitude, float speedOverGround, float courseOverGround,
-                                        int positionLatency, int spare,
-                                        int rawLongitude, int rawLatitude, int rawSpeedOverGround, int rawCourseOverGround) {
+                                        double latitude, double longitude, float speedOverGround, SpeedOverGroundIndicator speedOverGroundIndicator, float courseOverGround,
+                                        PositionLatency positionLatency, int spare) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.positionAccuracy = positionAccuracy;
         this.raim = raim;
@@ -45,13 +46,10 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
         this.latitude = latitude;
         this.longitude = longitude;
         this.speedOverGround = speedOverGround;
+        this.speedOverGroundIndicator = speedOverGroundIndicator;
         this.courseOverGround = courseOverGround;
         this.positionLatency = positionLatency;
         this.spare = spare;
-        this.rawLongitude = rawLongitude;
-        this.rawLatitude = rawLatitude;
-        this.rawSpeedOverGround = rawSpeedOverGround;
-        this.rawCourseOverGround = rawCourseOverGround;
     }
 
     @Override
@@ -88,24 +86,18 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
     boolean raim;
     /** Bits 40-44 (Table 83): navigational status as in Message 1. */
     NavigationStatus navigationStatus;
-    /** Longitude in decimal degrees, {@code rawLongitude} / 600 (Table 83); east positive; 181 = position older than 6 hours or not available. */
-    float longitude;
-    /** Latitude in decimal degrees, {@code rawLatitude} / 600 (Table 83); north positive; 91 = position older than 6 hours or not available. */
-    float latitude;
-    /** Speed over ground in knots, equal to {@code rawSpeedOverGround} since Message 27 uses 1-knot steps (Table 83); 62 = 62 knots or faster, 63 = not available. */
+    /** Longitude in decimal degrees, transmitted in 1/10 min (Table 83); east positive; {@code NaN} when the position is older than 6 hours or not available (transmitted as 181°). */
+    double longitude;
+    /** Latitude in decimal degrees, transmitted in 1/10 min (Table 83); north positive; {@code NaN} when the position is older than 6 hours or not available (transmitted as 91°). */
+    double latitude;
+    /** Speed over ground in knots, transmitted in 1-knot steps (Table 83); 62 when 62 knots or faster and {@code NaN} when not available, as told by {@code speedOverGroundIndicator}. */
     float speedOverGround;
-    /** Course over ground in degrees, equal to {@code rawCourseOverGround} since Message 27 uses 1-degree steps (Table 83); 511 = not available. */
+    /** Meaning of {@code speedOverGround}: measured, at least the field's maximum, or not available (see {@link SpeedOverGroundIndicator}). */
+    SpeedOverGroundIndicator speedOverGroundIndicator;
+    /** Course over ground in degrees, transmitted in 1° steps (Table 83); {@code NaN} when not available (transmitted as 511). */
     float courseOverGround;
-    /** Bit 94 (Table 83): position latency, 0 = reported position is less than 5 s old, 1 = more than 5 s old (default). */
-    int positionLatency;
+    /** Bit 94 (Table 83): position latency, whether the reported position is more or less than 5 s old. */
+    PositionLatency positionLatency;
     /** Bit 95 (Table 83): spare, set to zero to preserve the byte boundary. */
     int spare;
-    /** Bits 44-62 (Table 83): longitude in 1/10 min, two's complement; 181° (0x1A838) = not available. */
-    int rawLongitude;
-    /** Bits 62-79 (Table 83): latitude in 1/10 min, two's complement; 91° (0xD548) = not available. */
-    int rawLatitude;
-    /** Bits 79-85 (Table 83): speed over ground in knots, 0-62; 62 = 62 knots or faster, 63 = not available. */
-    int rawSpeedOverGround;
-    /** Bits 85-94 (Table 83): course over ground in degrees, 0-359; 511 = not available. */
-    int rawCourseOverGround;
 }

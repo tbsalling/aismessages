@@ -69,15 +69,14 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
      * @param draught              the draught
      * @param destination          the destination
      * @param dataTerminalReady    the data terminal ready flag
-     * @param rawDraught           the raw draught value
      * @param aisVersionIndicator  the AIS version indicator
      */
     protected ShipAndVoyageData(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                 IMO imo, String callsign, String shipName, ShipType shipType,
                                 int toBow, int toStern, int toPort, int toStarboard,
                                 PositionFixingDevice positionFixingDevice,
-                                int etaMonth, int etaDay, int etaHour, int etaMinute,
-                                float draught, String destination, boolean dataTerminalReady, int rawDraught, int aisVersionIndicator) {
+                                Integer etaMonth, Integer etaDay, Integer etaHour, Integer etaMinute,
+                                float draught, DraughtIndicator draughtIndicator, String destination, boolean dataTerminalReady, AisVersionIndicator aisVersionIndicator) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.imo = imo;
         this.callsign = callsign;
@@ -93,9 +92,9 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
         this.etaHour = etaHour;
         this.etaMinute = etaMinute;
         this.draught = draught;
+        this.draughtIndicator = draughtIndicator;
         this.destination = destination;
         this.dataTerminalReady = dataTerminalReady;
-        this.rawDraught = rawDraught;
         this.aisVersionIndicator = aisVersionIndicator;
     }
 
@@ -123,13 +122,13 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
     /**
      * @return The vessel AIS ETA, with the year filled in based on the metadata received time.
      * If the AIS Month and day are the received date or later, the first calendar date after the received is used for the year.
-     * Unavailable hour (24) or minute (60) will be treated as 0
+     * An unavailable hour or minute is treated as 0
      * Examples:
      * Received on 2018-06-01 and ETA AIS is 06-03, this will return 2018-06-03
      * Received on 2018-12-31 and ETA AIS is 01-02, this will return 2019-01-02
      * Received on 2018-06-01 and ETA AIS is 05-31, this will return 2019-05-31
-     * Received on 2018-06-01 and ETA AIS is 06-03 24:00, this will return 2018-06-01 00:00
-     * Received on 2018-06-01 and ETA AIS is 06-03 12:60, this will return 2018-06-03 12:00
+     * Received on 2018-06-01 and ETA is 06-03 with the hour not available, this will return 2018-06-03 00:00
+     * Received on 2018-06-01 and ETA is 06-03 12h with the minute not available, this will return 2018-06-03 12:00
      */
 	public Optional<ZonedDateTime> getEtaAfterReceived() {
         Metadata meta = this.getMetadata();
@@ -137,10 +136,13 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
         if(received == null) {
             return Optional.empty();
         }
+        if (etaMonth == null || etaDay == null) {
+            return Optional.empty();
+        }
         int month = etaMonth;
         int day = etaDay;
-        int hour = etaHour == 24 ? 0 : etaHour;
-        int minute = etaMinute == 60 ? 0 : etaMinute;
+        int hour = etaHour == null ? 0 : etaHour;
+        int minute = etaMinute == null ? 0 : etaMinute;
         if(month <= 0 || month > 12 || day <= 0 || day > 31 || hour < 0 || hour >= 24 || minute < 0 || minute >= 60) {
             return Optional.empty();
         } else {
@@ -155,43 +157,42 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
         }
     }
 
-    /** Bits 40-70 (Table 50): IMO number per IMO Resolution A.1117(30), 1 000 000-9 999 999; 0 = not available; 10 000 000 and above = official flag state number. */
+    /** Bits 40-70 (Table 50): IMO number per IMO Resolution A.1117(30), 1 000 000-9 999 999, or an official flag state number from 10 000 000; null when not available. */
     IMO imo;
-    /** Bits 70-112 (Table 50): call sign, 7 six-bit ASCII characters (Table 45); "@@@@@@@" = not available. Craft associated with a parent vessel use "A" plus the last 6 digits of the parent's MMSI. */
+    /** Bits 70-112 (Table 50): call sign, 7 six-bit ASCII characters (Table 45); null when not available. Craft associated with a parent vessel use "A" plus the last 6 digits of the parent's MMSI. */
     String callsign;
-    /** Bits 112-232 (Table 50): name as on the station radio licence, up to 20 six-bit ASCII characters; all "@" = not available. */
+    /** Bits 112-232 (Table 50): name as on the station radio licence, up to 20 six-bit ASCII characters; null when not available. */
     String shipName;
     /** Bits 232-240 (Table 50, Table 51): type of ship and cargo type; null for the regional (100-199) and future-use (200-255) codes. */
     ShipType shipType;
-    /** Bits 240-249 (Table 50, Fig. 38): dimension A, distance from the reference point to the bow in metres, 0-511; 511 = 511 m or greater. */
+    /** Bits 240-249 (Table 50, Fig. 38): dimension A, distance from the reference point to the bow in metres, 0-511; 511 = 511 m or greater; 0 = not available. */
     int toBow;
-    /** Bits 249-258 (Table 50, Fig. 38): dimension B, distance from the reference point to the stern in metres, 0-511. */
+    /** Bits 249-258 (Table 50, Fig. 38): dimension B, distance from the reference point to the stern in metres, 0-511; 0 = not available. */
     int toStern;
-    /** Bits 264-270 (Table 50, Fig. 38): dimension D, distance from the reference point to the starboard side in metres, 0-63; 63 = 63 m or greater. */
+    /** Bits 264-270 (Table 50, Fig. 38): dimension D, distance from the reference point to the starboard side in metres, 0-63; 63 = 63 m or greater; 0 = not available. */
     int toStarboard;
-    /** Bits 258-264 (Table 50, Fig. 38): dimension C, distance from the reference point to the port side in metres, 0-63. */
+    /** Bits 258-264 (Table 50, Fig. 38): dimension C, distance from the reference point to the port side in metres, 0-63; 0 = not available. */
     int toPort;
     /** Bits 270-274 (Table 50): type of electronic position fixing device. */
     PositionFixingDevice positionFixingDevice;
-    /** Bits 274-278 (Table 50): ETA month (UTC), 1-12; 0 = not available. */
-    int etaMonth;
-    /** Bits 278-283 (Table 50): ETA day (UTC), 1-31; 0 = not available. */
-    int etaDay;
-    /** Bits 283-288 (Table 50): ETA hour (UTC), 0-23; 24 = not available. */
-    int etaHour;
-    /** Bits 288-294 (Table 50): ETA minute (UTC), 0-59; 60 = not available. */
-    int etaMinute;
-    /** Maximum present static draught in metres, {@code rawDraught} / 10 (Table 50); 25.5 = 25.5 m or greater; 0 = not available. */
+    /** Bits 274-278 (Table 50): ETA month (UTC), 1-12; null when not available. */
+    Integer etaMonth;
+    /** Bits 278-283 (Table 50): ETA day (UTC), 1-31; null when not available. */
+    Integer etaDay;
+    /** Bits 283-288 (Table 50): ETA hour (UTC), 0-23; null when not available. */
+    Integer etaHour;
+    /** Bits 288-294 (Table 50): ETA minute (UTC), 0-59; null when not available. */
+    Integer etaMinute;
+    /** Maximum present static draught in metres, transmitted in 1/10 m (Table 50); 25.5 when 25.5 m or greater and {@code NaN} when not available, as told by {@code draughtIndicator}. */
     float draught;
-    /** Bits 302-422 (Table 50): destination, up to 20 six-bit ASCII characters; all "@" = not available. */
+    /** Meaning of {@code draught}: measured, 25.5 m or greater, or not available (see {@link DraughtIndicator}). */
+    DraughtIndicator draughtIndicator;
+    /** Bits 302-422 (Table 50): destination, up to 20 six-bit ASCII characters; null when not available. */
     String destination;
     /** Bit 422 (Table 50, § A7-3.3.1): data terminal equipment ready, true = available (bit 0), false = not available (bit 1, default). */
     boolean dataTerminalReady;
-    /** Bits 294-302 (Table 50): maximum present static draught in 1/10 m, 0-255; 255 = 25.5 m or greater; 0 = not available. */
-    int rawDraught;
     /**
-     * AIS version indicator, bits 38-40 (ITU-R M.1371-6 Table 50): 0 = station compliant with M.1371-1,
-     * 1 = compliant with M.1371-3, 2 = compliant with M.1371-5, 3 = compliant with M.1371-6 or later.
+     * AIS version indicator, bits 38-40 (ITU-R M.1371-6 Table 50): the edition of M.1371 the station complies with.
      */
-    int aisVersionIndicator;
+    AisVersionIndicator aisVersionIndicator;
 }

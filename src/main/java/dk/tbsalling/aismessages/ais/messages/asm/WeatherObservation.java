@@ -20,8 +20,8 @@ public class WeatherObservation extends ApplicationSpecificMessage {
         super(designatedAreaCode, functionalId, binaryData);
 
         // Eagerly decode all fields according to ITU-R M.1371-5
-        this.longitude = getBinaryData().getSignedFloat(0, 25) / 60000f;
-        this.latitude = getBinaryData().getSignedFloat(25, 49) / 60000f;
+        this.longitude = getBinaryData().getSignedInt(0, 25) / 60000.0;
+        this.latitude = getBinaryData().getSignedInt(25, 49) / 60000.0;
         this.day = getBinaryData().getUnsignedInt(49, 54);
         this.hour = getBinaryData().getUnsignedInt(54, 59);
         this.minute = getBinaryData().getUnsignedInt(59, 65);
@@ -59,9 +59,9 @@ public class WeatherObservation extends ApplicationSpecificMessage {
     }
 
     /** Bits 0-25 of the application data (IMO SN.1/Circ.289, DAC=1 FI=21): longitude in decimal degrees (1/1 000 min ÷ 60 000), signed. */
-    float longitude;
+    double longitude;
     /** Bits 25-49 of the application data (IMO SN.1/Circ.289, DAC=1 FI=21): latitude in decimal degrees (1/1 000 min ÷ 60 000), signed. */
-    float latitude;
+    double latitude;
     /** Bits 49-54 of the application data (IMO SN.1/Circ.289, DAC=1 FI=21): day. */
     int day;
     /** Bits 54-59 of the application data (IMO SN.1/Circ.289, DAC=1 FI=21): hour. */

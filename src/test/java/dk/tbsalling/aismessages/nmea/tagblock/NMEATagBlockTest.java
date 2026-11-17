@@ -103,4 +103,12 @@ public class NMEATagBlockTest {
         NMEAParseException e = assertThrows(NMEAParseException.class, () -> NMEATagBlock.fromString(input));
         assertTrue(e.getMessage().contains("not a number"), e.getMessage());
     }
+
+    @Test
+    public void rejectsLineCountBeyondIntRange() {
+        String input = tagBlock(Map.of("n", "2147483648"));
+
+        NMEAParseException e = assertThrows(NMEAParseException.class, () -> NMEATagBlock.fromString(input));
+        assertTrue(e.getMessage().contains("int range"), e.getMessage());
+    }
 }

@@ -49,7 +49,7 @@ public class BinaryMessageSingleSlot extends AISMessage {
      */
     protected BinaryMessageSingleSlot(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                       boolean destinationIndicator, boolean binaryDataFlag,
-                                      MMSI destinationMMSI, int designatedAreaCode, int functionalId,
+                                      MMSI destinationMMSI, Integer designatedAreaCode, Integer functionalId,
                                       BitString data, ApplicationSpecificMessage applicationSpecificMessage) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.destinationIndicator = destinationIndicator;
@@ -68,8 +68,14 @@ public class BinaryMessageSingleSlot extends AISMessage {
         final StringBuilder errorMessage = new StringBuilder();
 
         final int numberOfBits = getNumberOfBits();
-        if (numberOfBits < 40)
-            errorMessage.append(format("Message of type %s should be at least 40 bits long; not %d.", getMessageType(), numberOfBits));
+        // Table 79: 40-bit header, plus a 32-bit destination ID when addressed and a 16-bit application identifier when structured.
+        // The flags are read from the bit string because this check runs before the subclass fields are set.
+        final BitString bits = getMetadata().bitString();
+        final boolean addressed = numberOfBits >= 39 && bits.getBoolean(38, 39);
+        final boolean structured = numberOfBits >= 40 && bits.getBoolean(39, 40);
+        final int minimum = 40 + (addressed ? 32 : 0) + (structured ? 16 : 0);
+        if (numberOfBits < minimum)
+            errorMessage.append(format("Message of type %s (%s, %s) should be at least %d bits long; not %d.", getMessageType(), addressed ? "addressed" : "broadcast", structured ? "structured" : "unstructured", minimum, numberOfBits));
         else if (numberOfBits > 168)
             errorMessage.append(format("Message of type %s should be at most 168 bits long; not %d.", getMessageType(), numberOfBits));
 
@@ -85,28 +91,16 @@ public class BinaryMessageSingleSlot extends AISMessage {
         return AISMessageType.BinaryMessageSingleSlot;
     }
 
-    /**
-     * @return all bits following the two flags (bit 40 to the end of the message) as a string of '0' and '1',
-     * regardless of whether they hold a destination ID, an application identifier or application data.
-     * @deprecated since 5.1.0; use {@code getDestinationMMSI()}, {@code getDesignatedAreaCode()},
-     * {@code getFunctionalId()} and {@code getData()}, which follow the layout of ITU-R M.1371-6 Table 79.
-     */
-    @Deprecated(since = "5.1.0")
-    public String getBinaryData() {
-        BitString bitString = getMetadata().bitString();
-        return bitString.length() > 40 ? bitString.getBits(40, bitString.length()) : "";
-    }
-
-    /** True when the message is addressed to {@link #getDestinationMMSI()}; false for a broadcast. */
+    /** True when the message is addressed to {@code getDestinationMMSI()}; false for a broadcast. */
     boolean destinationIndicator;
     /** True when the data is structured, i.e. preceded by a 16-bit application identifier (DAC + FI). */
     boolean binaryDataFlag;
     /** Destination of an addressed message; null for a broadcast. */
     MMSI destinationMMSI;
-    /** Designated area code of a structured message; -1 when the binary data flag is not set. */
-    int designatedAreaCode;
-    /** Function identifier of a structured message; -1 when the binary data flag is not set. */
-    int functionalId;
+    /** Designated area code of a structured message; null when the binary data flag is not set. */
+    Integer designatedAreaCode;
+    /** Function identifier of a structured message; null when the binary data flag is not set. */
+    Integer functionalId;
     /** The application data (at most 128 bits), excluding destination ID and application identifier. */
     BitString data;
     /** Decoded application specific message of a structured message; null when the binary data flag is not set. */

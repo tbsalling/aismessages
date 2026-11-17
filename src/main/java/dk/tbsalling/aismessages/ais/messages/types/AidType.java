@@ -20,8 +20,6 @@ package dk.tbsalling.aismessages.ais.messages.types;
  * Type of aid to navigation. Codes 0-31 are defined in ITU-R M.1371-6 Table 72 and are used by Message 21 (5-bit
  * field) and Message 28 (7-bit field). Codes 32-50 are the mobile aid-to-navigation types of Table 85 and only occur
  * in Message 28; 51-63 are reserved for future use and 64-127 for regional use, both of which map to {@code null}.
- * <p>
- * Where two constants share a code, {@link #fromInteger(int)} returns the one declared first.
  */
 public enum AidType {
 	/** 0 = default, type of AtoN not specified. */
@@ -34,9 +32,6 @@ public enum AidType {
 	FixedStructure(3),
 	/** 4 = emergency wreck marking buoy. */
 	EmergencyWreckMarkingBuoy(4),
-	/** @deprecated since 5.1.0; code 4 is defined as {@link #EmergencyWreckMarkingBuoy} in ITU-R M.1371-6. */
-	@Deprecated(since = "5.1.0")
-	FutureUse1(4),
 	/** 5 = fixed AtoN: light, without sectors. */
 	LightWithoutSectors(5),
 	/** 6 = fixed AtoN: light, with sectors. */

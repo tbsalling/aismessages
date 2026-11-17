@@ -23,16 +23,14 @@ public class GroupAssignmentCommandTest {
         GroupAssignmentCommand message = (GroupAssignmentCommand) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
         assertEquals(new MMSI(2268120), message.getSourceMmsi());
-        assertEquals(0, message.getSpare1Value());
-        assertEquals("0", message.getSpare1());
-        assertEquals(157.8f, message.getNorthEastLongitude(), 0.0f);
-        assertEquals(3064.2f, message.getNorthEastLatitude(), 0.0f);
-        assertEquals(109.6f, message.getSouthWestLongitude(), 0.0f);
-        assertEquals(3040.8f, message.getSouthWestLatitude(), 0.0f);
+        assertEquals(0, message.getSpare1());
+        assertEquals(157.8 / 60, message.getNorthEastLongitude(), 1e-9);
+        assertEquals(3064.2 / 60, message.getNorthEastLatitude(), 1e-9);
+        assertEquals(109.6 / 60, message.getSouthWestLongitude(), 1e-9);
+        assertEquals(3040.8 / 60, message.getSouthWestLatitude(), 1e-9);
         assertEquals(StationType.InlandWaterways, message.getStationType());
         assertEquals(ShipType.NotAvailable, message.getShipType());
-        assertEquals(0, message.getSpare2Value());
-        assertEquals("0", message.getSpare2());
+        assertEquals(0, message.getSpare2());
         assertEquals(TxRxMode.TxABRxAB, message.getTransmitReceiveMode());
         // ITU-R M.1371-6 Table 74: reporting interval field is bits 146-150; this sample encodes 9 = "next shorter reporting interval".
         assertEquals(ReportingInterval.NextShortReportingInterval, message.getReportingInterval());
@@ -54,10 +52,10 @@ public class GroupAssignmentCommandTest {
         GroupAssignmentCommand message = (GroupAssignmentCommand) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
         assertEquals(new MMSI(2268120), message.getSourceMmsi());
-        assertEquals(157.8f, message.getNorthEastLongitude(), 0.0f);
-        assertEquals(3064.2f, message.getNorthEastLatitude(), 0.0f);
-        assertEquals(109.6f, message.getSouthWestLongitude(), 0.0f);
-        assertEquals(3040.8f, message.getSouthWestLatitude(), 0.0f);
+        assertEquals(157.8 / 60, message.getNorthEastLongitude(), 1e-9);
+        assertEquals(3064.2 / 60, message.getNorthEastLatitude(), 1e-9);
+        assertEquals(109.6 / 60, message.getSouthWestLongitude(), 1e-9);
+        assertEquals(3040.8 / 60, message.getSouthWestLatitude(), 1e-9);
         assertEquals(StationType.InlandWaterways, message.getStationType());
         assertEquals(ShipType.NotAvailable, message.getShipType());
         assertEquals(TxRxMode.TxABRxAB, message.getTransmitReceiveMode());

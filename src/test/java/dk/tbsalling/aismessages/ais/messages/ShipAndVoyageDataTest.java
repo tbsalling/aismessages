@@ -38,9 +38,11 @@ public class ShipAndVoyageDataTest {
         assertEquals(36, message.getToStern());
         assertEquals(18, message.getToStarboard());
         assertEquals(14, message.getToPort());
+        assertEquals(190, message.getLength());
+        assertEquals(32, message.getBeam());
+        assertTrue(message.isReferencePointAvailable());
         assertEquals(PositionFixingDevice.Gps, message.getPositionFixingDevice());
         assertEquals(8.3f, message.getDraught(), 0.0f);
-        assertEquals(83, message.getRawDraught());
         assertEquals(String.format("%02d-%02d %02d:%02d", message.getEtaDay(), message.getEtaMonth(), message.getEtaHour(), message.getEtaMinute()), "06-03 19:00");
         assertEquals(3, message.getEtaMonth());
         assertEquals(6, message.getEtaDay());
@@ -48,7 +50,7 @@ public class ShipAndVoyageDataTest {
         assertEquals(0, message.getEtaMinute());
         assertEquals(Optional.empty(), message.getEtaAfterReceived());
         assertEquals("SFO 70", message.getDestination());
-        assertEquals(0, message.getAisVersionIndicator());
+        assertEquals(AisVersionIndicator.ITU_R_M1371_1, message.getAisVersionIndicator());
         assertFalse(message.isDataTerminalReady());
     }
 
@@ -70,7 +72,7 @@ public class ShipAndVoyageDataTest {
         ShipAndVoyageData message = (ShipAndVoyageData) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
         assertEquals(new MMSI(211339980), message.getSourceMmsi());
-        assertEquals(new IMO(0), message.getImo());
+        assertNull(message.getImo());
         assertEquals("J050A", message.getCallsign());
         assertEquals("HHLA 3         B", message.getShipName());
         assertEquals(ShipType.LawEnforcement, message.getShipType());
@@ -79,15 +81,16 @@ public class ShipAndVoyageDataTest {
         assertEquals(2, message.getToStarboard());
         assertEquals(23, message.getToPort());
         assertEquals(PositionFixingDevice.InternalGNSS, message.getPositionFixingDevice());
-        assertEquals(0.0f, message.getDraught(), 0.0f);
+        assertTrue(Float.isNaN(message.getDraught()));
+        assertEquals(DraughtIndicator.NotAvailable, message.getDraughtIndicator());
         assertEquals(String.format("%02d-%02d %02d:%02d", message.getEtaDay(), message.getEtaMonth(), message.getEtaHour(), message.getEtaMinute()), "14-05 20:10");
         assertEquals(5, message.getEtaMonth());
         assertEquals(14, message.getEtaDay());
         assertEquals(20, message.getEtaHour());
         assertEquals(10, message.getEtaMinute());
         assertEquals(Optional.of(ZonedDateTime.of(2011, 5, 14, 20, 10, 0, 0, ZoneOffset.UTC)), message.getEtaAfterReceived());
-        assertEquals("", message.getDestination());
-        assertEquals(1, message.getAisVersionIndicator());
+        assertNull(message.getDestination());
+        assertEquals(AisVersionIndicator.ITU_R_M1371_3, message.getAisVersionIndicator());
         assertFalse(message.isDataTerminalReady());
     }
 

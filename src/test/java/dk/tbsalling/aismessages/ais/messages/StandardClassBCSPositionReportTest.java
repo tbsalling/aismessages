@@ -25,19 +25,15 @@ public class StandardClassBCSPositionReportTest {
         StandardClassBCSPositionReport message = (StandardClassBCSPositionReport) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
         assertEquals(new MMSI(367430530), message.getSourceMmsi());
-        assertEquals("00000000", message.getRegionalReserved1());
+        assertEquals(0b00000000, message.getRegionalReserved1());
         assertEquals(0.0f, message.getSpeedOverGround(), 0.0f);
-        assertEquals(0, message.getRawSpeedOverGround());
         assertFalse(message.isPositionAccuracy());
-        assertEquals(37.785034f, message.getLatitude(), 0.0f);
-        assertEquals(22671021, message.getRawLatitude());
-        assertEquals(-122.26732f, message.getLongitude(), 0.0f);
-        assertEquals(-73360392, message.getRawLongitude());
+        assertEquals(22671021 / 600000.0, message.getLatitude(), 0.0f);
+        assertEquals(-73360392 / 600000.0, message.getLongitude(), 0.0f);
         assertEquals(0.0f, message.getCourseOverGround(), 0.0f);
-        assertEquals(0, message.getRawCourseOverGround());
-        assertEquals(511, message.getTrueHeading());
+        assertNull(message.getTrueHeading());
         assertEquals(55, message.getSecond());
-        assertEquals("00", message.getRegionalReserved2());
+        assertEquals(0b00, message.getRegionalReserved2());
         assertTrue(message.isCsUnit());
         assertFalse(message.isDisplay());
         assertTrue(message.isDsc());
@@ -46,7 +42,7 @@ public class StandardClassBCSPositionReportTest {
         assertFalse(message.isAssigned());
         assertFalse(message.isRaimFlag());
         assertFalse(message.isTransmitPowerLow());
-        //assertEquals("11100000000000000110", message.getRadioStatus());
+        //assertEquals(0b11100000000000000110, message.getRadioStatus());
     }
 
     @Test
@@ -64,15 +60,16 @@ public class StandardClassBCSPositionReportTest {
         StandardClassBCSPositionReport message = (StandardClassBCSPositionReport) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
         assertEquals(new MMSI(941204826), message.getSourceMmsi());
-        assertEquals("00000000", message.getRegionalReserved1());
+        assertEquals(0b00000000, message.getRegionalReserved1());
         assertEquals(0.3f, message.getSpeedOverGround(), 0.0f);
         assertTrue(message.isPositionAccuracy());
-        assertEquals(42.020855f, message.getLatitude(), 0.0f);
-        assertEquals(-87.70006f, message.getLongitude(), 0.0f);
+        assertEquals(25212511 / 600000.0, message.getLatitude(), 0.0f);
+        assertEquals(-52620037 / 600000.0, message.getLongitude(), 0.0f);
         assertEquals(186.2f, message.getCourseOverGround(), 0.0f);
-        assertEquals(511, message.getTrueHeading());
-        assertEquals(60, message.getSecond());
-        assertEquals("00", message.getRegionalReserved2());
+        assertNull(message.getTrueHeading());
+        assertNull(message.getSecond());
+        assertEquals(TimeStampIndicator.NotAvailable, message.getTimeStampIndicator());
+        assertEquals(0b00, message.getRegionalReserved2());
         assertFalse(message.isCsUnit());
         assertFalse(message.isDisplay());
         assertFalse(message.isDsc());
@@ -98,15 +95,15 @@ public class StandardClassBCSPositionReportTest {
         StandardClassBCSPositionReport message = (StandardClassBCSPositionReport) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
         assertEquals(new MMSI(423302100), message.getSourceMmsi());
-        assertEquals("00001111", message.getRegionalReserved1());
+        assertEquals(0b00001111, message.getRegionalReserved1());
         assertEquals(1.4f, message.getSpeedOverGround(), 0.0f);
         assertTrue(message.isPositionAccuracy());
-        assertEquals(40.005283f, message.getLatitude(), 0.0f);
-        assertEquals(53.010998f, message.getLongitude(), 0.0f);
+        assertEquals(24003170 / 600000.0, message.getLatitude(), 0.0f);
+        assertEquals(31806598 / 600000.0, message.getLongitude(), 0.0f);
         assertEquals(177f, message.getCourseOverGround(), 0.0f);
         assertEquals(177, message.getTrueHeading());
         assertEquals(34, message.getSecond());
-        assertEquals("00", message.getRegionalReserved2());
+        assertEquals(0b00, message.getRegionalReserved2());
         assertTrue(message.isCsUnit());
         assertTrue(message.isDisplay());
         assertTrue(message.isDsc());
@@ -122,7 +119,7 @@ public class StandardClassBCSPositionReportTest {
         assertTrue(communicationState instanceof ITDMACommunicationState);
         if (communicationState instanceof ITDMACommunicationState itdmaCommunicationState) {
             assertEquals(0, itdmaCommunicationState.getSlotIncrement());
-            assertEquals(3, itdmaCommunicationState.getNumberOfSlots());
+            assertEquals(4, itdmaCommunicationState.getNumberOfSlots());
             assertFalse(itdmaCommunicationState.getKeepFlag());
         }
     }

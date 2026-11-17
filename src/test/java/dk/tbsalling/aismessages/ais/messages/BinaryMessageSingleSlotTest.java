@@ -32,12 +32,11 @@ public class BinaryMessageSingleSlotTest {
         assertTrue(message.isDestinationIndicator());
         assertFalse(message.isBinaryDataFlag());
         assertEquals(new MMSI(134218384), message.getDestinationMMSI());
-        assertEquals(-1, message.getDesignatedAreaCode());
-        assertEquals(-1, message.getFunctionalId());
+        assertNull(message.getDesignatedAreaCode());
+        assertNull(message.getFunctionalId());
         assertNull(message.getApplicationSpecificMessage());
         assertEquals(96, message.getData().length());
         assertEquals("100000011011111000010101011011010101100110110010000000001111111110011110100000001100000110000101", message.getData().toString());
-        assertEquals("00100000000000000000101001000011100000011011111000010101011011010101100110110010000000001111111110011110100000001100000110000101", message.getBinaryData());
     }
 
     @Test
@@ -107,8 +106,8 @@ public class BinaryMessageSingleSlotTest {
         assertFalse(message.isDestinationIndicator());
         assertFalse(message.isBinaryDataFlag());
         assertNull(message.getDestinationMMSI());
-        assertEquals(-1, message.getDesignatedAreaCode());
-        assertEquals(-1, message.getFunctionalId());
+        assertNull(message.getDesignatedAreaCode());
+        assertNull(message.getFunctionalId());
         assertNull(message.getApplicationSpecificMessage());
         assertEquals(128, message.getData().length());
     }

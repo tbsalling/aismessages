@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import static dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice.Gps;
 import static dk.tbsalling.aismessages.ais.messages.types.ShipType.Fishing;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ExtendedClassBEquipmentPositionReportTest {
 
@@ -27,15 +28,15 @@ public class ExtendedClassBEquipmentPositionReportTest {
         assertEquals(new MMSI(412432822), aisMessage.getSourceMmsi());
 
         ExtendedClassBEquipmentPositionReport message = (ExtendedClassBEquipmentPositionReport) aisMessage;
-        assertEquals("00000000", message.getRegionalReserved1());
+        assertEquals(0b00000000, message.getRegionalReserved1());
         assertEquals(7.1, message.getSpeedOverGround(), 1e-6);
         assertEquals(Boolean.TRUE, message.isPositionAccuracy());
-        assertEquals(118.994422, message.getLongitude(), 1e-6);
-        assertEquals(24.695787, message.getLatitude(), 1e-6);
+        assertEquals(71396656 / 600000.0, message.getLongitude(), 1e-6);
+        assertEquals(14817473 / 600000.0, message.getLatitude(), 1e-6);
         assertEquals(49.7, message.getCourseOverGround(), 1e-1);
-        assertEquals(511, message.getTrueHeading());
+        assertNull(message.getTrueHeading());
         assertEquals(15, message.getSecond());
-        assertEquals("0000", message.getRegionalReserved2());
+        assertEquals(0b0000, message.getRegionalReserved2());
         assertEquals("ZHECANGYU4078", message.getShipName());
         assertEquals(Fishing, message.getShipType());
         assertEquals(16, message.getToBow());
@@ -46,7 +47,7 @@ public class ExtendedClassBEquipmentPositionReportTest {
         assertEquals(Boolean.FALSE, message.isRaimFlag());
         assertEquals(Boolean.TRUE, message.isDataTerminalReady());
         assertEquals(Boolean.FALSE, message.isAssigned());
-        assertEquals("0000", message.getRegionalReserved3());
+        assertEquals(0b0000, message.getRegionalReserved3());
     }
 
 }

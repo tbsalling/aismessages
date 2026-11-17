@@ -29,13 +29,13 @@ public class InterrogationTest {
         assertEquals(3, message.getRepeatIndicator());
         assertEquals(new MMSI(3669708), message.getSourceMmsi());
         assertEquals(new MMSI(366969740), message.getInterrogatedMmsi1());
-        assertEquals(0, message.getType1_1());
+        assertNull(message.getType1_1());
         assertEquals(0, message.getOffset1_1());
-        assertEquals(-1, message.getType1_2());
-        assertEquals(-1, message.getOffset1_2());
+        assertNull(message.getType1_2());
+        assertNull(message.getOffset1_2());
         assertNull(message.getInterrogatedMmsi2());
-        assertEquals(-1, message.getType2_1());
-        assertEquals(-1, message.getOffset2_1());
+        assertNull(message.getType2_1());
+        assertNull(message.getOffset2_1());
     }
 
     /**
@@ -56,13 +56,13 @@ public class InterrogationTest {
         assertEquals(3, message.getRepeatIndicator());
         assertEquals(new MMSI(2655201), message.getSourceMmsi());
         assertEquals(new MMSI(219012345), message.getInterrogatedMmsi1());
-        assertEquals(3, message.getType1_1());
+        assertEquals(AISMessageType.PositionReportClassAResponseToInterrogation, message.getType1_1());
         assertEquals(516, message.getOffset1_1());
-        assertEquals(5, message.getType1_2());
+        assertEquals(AISMessageType.ShipAndVoyageRelatedData, message.getType1_2());
         assertEquals(617, message.getOffset1_2());
         assertNull(message.getInterrogatedMmsi2());
-        assertEquals(-1, message.getType2_1());
-        assertEquals(-1, message.getOffset2_1());
+        assertNull(message.getType2_1());
+        assertNull(message.getOffset2_1());
     }
 
     /**
@@ -84,12 +84,12 @@ public class InterrogationTest {
         assertEquals(0, message.getRepeatIndicator());
         assertEquals(new MMSI(2655200), message.getSourceMmsi());
         assertEquals(new MMSI(211507560), message.getInterrogatedMmsi1());
-        assertEquals(5, message.getType1_1());
+        assertEquals(AISMessageType.ShipAndVoyageRelatedData, message.getType1_1());
         assertEquals(100, message.getOffset1_1());
-        assertEquals(24, message.getType1_2());
+        assertEquals(AISMessageType.ClassBCSStaticDataReport, message.getType1_2());
         assertEquals(150, message.getOffset1_2());
         assertEquals(new MMSI(219000001), message.getInterrogatedMmsi2());
-        assertEquals(3, message.getType2_1());
+        assertEquals(AISMessageType.PositionReportClassAResponseToInterrogation, message.getType2_1());
         assertEquals(200, message.getOffset2_1());
     }
 
@@ -102,9 +102,9 @@ public class InterrogationTest {
         Interrogation message = (Interrogation) AISMessageFactory.create(null, null, null, nmea(b.toBitString()));
 
         assertEquals(new MMSI(219000101), message.getInterrogatedMmsi1());
-        assertEquals(5, message.getType1_1());
+        assertEquals(AISMessageType.ShipAndVoyageRelatedData, message.getType1_1());
         assertEquals(10, message.getOffset1_1());
-        assertEquals(24, message.getType1_2());
+        assertEquals(AISMessageType.ClassBCSStaticDataReport, message.getType1_2());
         assertEquals(20, message.getOffset1_2());
         assertNull(message.getInterrogatedMmsi2());
     }

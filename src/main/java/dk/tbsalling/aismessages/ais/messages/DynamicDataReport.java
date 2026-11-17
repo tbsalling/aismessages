@@ -16,6 +16,8 @@
 
 package dk.tbsalling.aismessages.ais.messages;
 
+import dk.tbsalling.aismessages.ais.messages.types.SpeedOverGroundIndicator;
+
 /**
  * Interface for AIS messages containing dynamic data such as position, speed and course, which changes frequently
  * during operation. Implemented by Messages 1, 2, 3, 18 and 19 (through {@link ExtendedDynamicDataReport}) and by
@@ -26,22 +28,12 @@ public interface DynamicDataReport extends DataReport {
     /**
      * @return Latitude in decimal degrees
      */
-    float getLatitude();
-
-    /**
-     * @return Raw latitude value before conversion to decimal degrees
-     */
-    int getRawLatitude();
+    double getLatitude();
 
     /**
      * @return Longitude in decimal degrees
      */
-    float getLongitude();
-
-    /**
-     * @return Raw longitude value before conversion to decimal degrees
-     */
-    int getRawLongitude();
+    double getLongitude();
 
     /**
      * @return Speed over ground in knots
@@ -49,19 +41,14 @@ public interface DynamicDataReport extends DataReport {
     float getSpeedOverGround();
 
     /**
-     * @return Raw speed over ground value before conversion to knots
+     * @return Whether {@link #getSpeedOverGround()} is a measured speed, the lower bound of "maximum or higher", or not available
      */
-    int getRawSpeedOverGround();
+    SpeedOverGroundIndicator getSpeedOverGroundIndicator();
 
     /**
      * @return Course over ground in degrees (0-359)
      */
     float getCourseOverGround();
-
-    /**
-     * @return Raw course over ground value before conversion to degrees
-     */
-    int getRawCourseOverGround();
 
     /**
      * @return True if position accuracy is high (DGPS quality), false otherwise

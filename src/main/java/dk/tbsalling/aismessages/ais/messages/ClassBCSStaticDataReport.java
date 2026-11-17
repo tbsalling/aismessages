@@ -20,6 +20,8 @@ import dk.tbsalling.aismessages.ais.BitString;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
+import dk.tbsalling.aismessages.ais.messages.types.Message24Part;
+import dk.tbsalling.aismessages.ais.messages.types.VdesCapabilities;
 import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
 import dk.tbsalling.aismessages.ais.messages.types.ShipType;
 import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
@@ -40,7 +42,7 @@ import static java.lang.String.format;
  * the MMSI-registered vessel and may be used by any station; Part B (168 bits) carries type of ship, manufacturer ID,
  * call sign, dimensions, EPFD type and VDES capabilities. Class B "CS" and "SO" stations transmit both parts every
  * 6 min, Part B within 1 min of Part A; Class A stations transmit Part B within 12 min of start-up and every 24 h.
- * Which part an instance holds is given by {@code partNumber}; the other part's fields are null or -1.
+ * Which part an instance holds is given by {@code part}; the other part's fields are null, or 0 for the dimensions.
  */
 @Value
 @EqualsAndHashCode(callSuper = true)
@@ -51,13 +53,13 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
      * Constructor accepting pre-parsed values for true immutability.
      */
     protected ClassBCSStaticDataReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
-                                       int partNumber, String shipName, ShipType shipType,
+                                       Message24Part part, String shipName, ShipType shipType,
                                        String vendorId, String callsign,
                                        int toBow, int toStern, int toStarboard, int toPort,
-                                       MMSI mothershipMmsi, String manufacturerMnemonic, int unitModelCode, int unitSerialNumber,
-                                       PositionFixingDevice positionFixingDevice, int vdesCapabilities) {
+                                       MMSI mothershipMmsi, String manufacturerMnemonic, Integer unitModelCode, Integer unitSerialNumber,
+                                       PositionFixingDevice positionFixingDevice, VdesCapabilities vdesCapabilities) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
-        this.partNumber = partNumber;
+        this.part = part;
         this.shipName = shipName;
         this.shipType = shipType;
         this.vendorId = vendorId;
@@ -102,23 +104,23 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
         return TransponderClass.B;
     }
 
-    /** Bits 38-40 (Tables 76 and 77): part number, 0 = Part A (name), 1 = Part B (static data). Fields of the other part are null or -1. */
-    int partNumber;
-    /** Part A, bits 40-160 (Table 76): name of the MMSI-registered vessel, up to 20 six-bit ASCII characters (Table 45); all "@" = not available; "SAR AIRCRAFT NNNNNNN" for SAR aircraft. Null for Part B. */
+    /** Bits 38-40 (Tables 76 and 77): which part this report holds. Fields of the other part are null, or 0 for the dimensions. */
+    Message24Part part;
+    /** Part A, bits 40-160 (Table 76): name of the MMSI-registered vessel, up to 20 six-bit ASCII characters (Table 45); null when not available; "SAR AIRCRAFT NNNNNNN" for SAR aircraft. Null for Part B. */
     String shipName;
     /** Part B, bits 40-48 (Table 77, Table 51): type of ship and cargo type; 0 = not available; not applicable to SAR aircraft. Null for Part A. */
     ShipType shipType;
     /** Part B, bits 48-90 (Table 77): the 42-bit manufacturer ID rendered as 7 six-bit ASCII characters, as older decoders did; see {@code manufacturerMnemonic}, {@code unitModelCode} and {@code unitSerialNumber} for the Table 78 structure. Null for Part A. */
     String vendorId;
-    /** Part B, bits 90-132 (Table 77): call sign, 7 six-bit ASCII characters; "@@@@@@@" = not available. Craft associated with a parent vessel use "A" plus the last 6 digits of the parent's MMSI. Null for Part A. */
+    /** Part B, bits 90-132 (Table 77): call sign, 7 six-bit ASCII characters; null when not available. Craft associated with a parent vessel use "A" plus the last 6 digits of the parent's MMSI. Null for Part A. */
     String callsign;
-    /** Part B, bits 132-141 (Table 77, Fig. 38): dimension A, distance from the reference point to the bow in metres, 0-511. -1 for Part A. */
+    /** Part B, bits 132-141 (Table 77, Fig. 38): dimension A, distance from the reference point to the bow in metres, 0-511. 0 (not available) for Part A. */
     int toBow;
-    /** Part B, bits 141-150 (Table 77, Fig. 38): dimension B, distance from the reference point to the stern in metres, 0-511. -1 for Part A. */
+    /** Part B, bits 141-150 (Table 77, Fig. 38): dimension B, distance from the reference point to the stern in metres, 0-511. 0 (not available) for Part A. */
     int toStern;
-    /** Part B, bits 156-162 (Table 77, Fig. 38): dimension D, distance from the reference point to the starboard side in metres, 0-63. -1 for Part A. */
+    /** Part B, bits 156-162 (Table 77, Fig. 38): dimension D, distance from the reference point to the starboard side in metres, 0-63. 0 (not available) for Part A. */
     int toStarboard;
-    /** Part B, bits 150-156 (Table 77, Fig. 38): dimension C, distance from the reference point to the port side in metres, 0-63. -1 for Part A. */
+    /** Part B, bits 150-156 (Table 77, Fig. 38): dimension C, distance from the reference point to the port side in metres, 0-63. 0 (not available) for Part A. */
     int toPort;
     /**
      * The 30 bits of the Part B dimension fields read as one MMSI, following the convention of some auxiliary craft
@@ -128,16 +130,15 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
     MMSI mothershipMmsi;
     /** Part B, bits 48-66 (ITU-R M.1371-6 Table 78): the manufacturer's three-character NMEA mnemonic code. Null for Part A. */
     String manufacturerMnemonic;
-    /** Part B, bits 66-70 (Table 78): unit model code 1-15 (0 not used). -1 for Part A. */
-    int unitModelCode;
-    /** Part B, bits 70-90 (Table 78): manufacturer-traceable unit serial number. -1 for Part A. */
-    int unitSerialNumber;
+    /** Part B, bits 66-70 (Table 78): unit model code 1-15 (0 not used). Null for Part A. */
+    Integer unitModelCode;
+    /** Part B, bits 70-90 (Table 78): manufacturer-traceable unit serial number. Null for Part A. */
+    Integer unitSerialNumber;
     /** Part B, bits 162-166 (Table 77): type of electronic position fixing device. Null for Part A. */
     PositionFixingDevice positionFixingDevice;
     /**
-     * Part B, bits 166-168 (Table 77): 0 = AIS only, 1 = supports VDES ASM, 2 = supports VDES ASM/VDE-TER,
-     * 3 = supports VDES ASM/VDE-TER/VDE-SAT. -1 for Part A.
+     * Part B, bits 166-168 (Table 77): VDES capabilities of the station. Null for Part A.
      */
-    int vdesCapabilities;
+    VdesCapabilities vdesCapabilities;
 
 }

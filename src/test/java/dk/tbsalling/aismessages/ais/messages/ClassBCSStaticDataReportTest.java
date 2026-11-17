@@ -2,8 +2,10 @@ package dk.tbsalling.aismessages.ais.messages;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
+import dk.tbsalling.aismessages.ais.messages.types.Message24Part;
 import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
 import dk.tbsalling.aismessages.ais.messages.types.ShipType;
+import dk.tbsalling.aismessages.ais.messages.types.VdesCapabilities;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -27,7 +29,7 @@ public class ClassBCSStaticDataReportTest {
         ClassBCSStaticDataReport message = (ClassBCSStaticDataReport) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
         assertEquals(new MMSI(367468490), message.getSourceMmsi());
-        assertEquals(1, message.getPartNumber());
+        assertEquals(Message24Part.PartB, message.getPart());
         assertNull(message.getShipName());
         assertEquals(ShipType.PleasureCraft, message.getShipType());
         assertEquals("WESTMAR", message.getVendorId());
@@ -41,7 +43,7 @@ public class ClassBCSStaticDataReportTest {
         assertEquals(5, message.getUnitModelCode());
         assertEquals(53330, message.getUnitSerialNumber());
         assertEquals(PositionFixingDevice.Undefined, message.getPositionFixingDevice());
-        assertEquals(0, message.getVdesCapabilities());
+        assertEquals(VdesCapabilities.AisOnly, message.getVdesCapabilities());
 
     }
 
@@ -72,7 +74,7 @@ public class ClassBCSStaticDataReportTest {
         // Assert
         assertInstanceOf(ClassBCSStaticDataReport.class, aisMessage);
         assertEquals(24, aisMessage.getMessageType().getCode());
-        assertEquals(0, ((ClassBCSStaticDataReport) aisMessage).getPartNumber());
+        assertEquals(Message24Part.PartA, ((ClassBCSStaticDataReport) aisMessage).getPart());
         assertEquals(533130721, aisMessage.getSourceMmsi().getMmsi());
         assertEquals("FC ORCHID", ((ClassBCSStaticDataReport) aisMessage).getShipName());
     }
@@ -95,16 +97,24 @@ public class ClassBCSStaticDataReportTest {
         assertTrue(aisMessagePartA instanceof ClassBCSStaticDataReport);
         if (aisMessagePartA instanceof ClassBCSStaticDataReport reportA) {
             assertEquals(24, aisMessagePartA.getMessageType().getCode());
-            assertEquals(0, reportA.getPartNumber());
+            assertEquals(Message24Part.PartA, reportA.getPart());
             assertEquals(271041815, aisMessagePartA.getSourceMmsi().getMmsi());
             assertEquals("PROGUY", reportA.getShipName());
+            assertEquals(0, reportA.getToBow());
+            assertEquals(0, reportA.getToStern());
+            assertEquals(0, reportA.getToStarboard());
+            assertEquals(0, reportA.getToPort());
+            assertNull(reportA.getLength());
+            assertNull(reportA.getBeam());
+            assertFalse(reportA.isReferencePointAvailable());
+            assertNull(reportA.getVdesCapabilities());
         }
 
         System.out.println(aisMessagePartB.toString());
         assertTrue(aisMessagePartB instanceof ClassBCSStaticDataReport);
         if (aisMessagePartB instanceof ClassBCSStaticDataReport reportB) {
             assertEquals(24, aisMessagePartB.getMessageType().getCode());
-            assertEquals(1, reportB.getPartNumber());
+            assertEquals(Message24Part.PartB, reportB.getPart());
             assertEquals(271041815, aisMessagePartB.getSourceMmsi().getMmsi());
             assertEquals(60, reportB.getShipType().getCode());
             assertEquals("1D00014", reportB.getVendorId());
@@ -117,7 +127,7 @@ public class ClassBCSStaticDataReportTest {
             assertEquals(12, reportB.getUnitModelCode());
             assertEquals(199796, reportB.getUnitSerialNumber());
             assertEquals(PositionFixingDevice.Undefined, reportB.getPositionFixingDevice());
-            assertEquals(0, reportB.getVdesCapabilities());
+            assertEquals(VdesCapabilities.AisOnly, reportB.getVdesCapabilities());
         }
     }
 

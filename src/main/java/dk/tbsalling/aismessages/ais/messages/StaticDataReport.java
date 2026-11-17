@@ -42,23 +42,47 @@ public interface StaticDataReport extends DataReport {
 	ShipType getShipType();
 
     /**
-     * @return Distance from reference position to bow in meters
+     * @return Distance from reference position to bow in meters; 0 when not available, also for Message 24 Part A (see {@link #getLength()}, {@link #getBeam()} and {@link #isReferencePointAvailable()})
      */
     int getToBow();
 
     /**
-     * @return Distance from reference position to stern in meters
+     * @return Distance from reference position to stern in meters; 0 when not available, also for Message 24 Part A (see {@link #getLength()}, {@link #getBeam()} and {@link #isReferencePointAvailable()})
      */
     int getToStern();
 
     /**
-     * @return Distance from reference position to starboard side in meters
+     * @return Distance from reference position to starboard side in meters; 0 when not available, also for Message 24 Part A (see {@link #getLength()}, {@link #getBeam()} and {@link #isReferencePointAvailable()})
      */
     int getToStarboard();
 
     /**
-     * @return Distance from reference position to port side in meters
+     * @return Distance from reference position to port side in meters; 0 when not available, also for Message 24 Part A (see {@link #getLength()}, {@link #getBeam()} and {@link #isReferencePointAvailable()})
      */
     int getToPort();
 
+    /**
+     * @return the overall length in metres, dimension A + B (ITU-R M.1371-6 Fig. 38); null when not available
+     */
+    default Integer getLength() {
+        int length = getToBow() + getToStern();
+        return length > 0 ? length : null;
+    }
+
+    /**
+     * @return the overall beam in metres, dimension C + D (ITU-R M.1371-6 Fig. 38); null when not available
+     */
+    default Integer getBeam() {
+        int beam = getToPort() + getToStarboard();
+        return beam > 0 ? beam : null;
+    }
+
+    /**
+     * @return whether {@link #getToBow()}, {@link #getToStern()}, {@link #getToPort()} and {@link #getToStarboard()} locate the
+     * position reference point; false when dimensions A and C are both 0, which ITU-R M.1371-6 Fig. 38 uses for an unknown
+     * reference point (the length and beam may still be available)
+     */
+    default boolean isReferencePointAvailable() {
+        return getToBow() != 0 || getToPort() != 0;
+    }
 }

@@ -34,7 +34,8 @@ public class NMEAMessageReaderRobustnessTest {
                 sentence(message(1, 163)),                           // InvalidMessage
                 withChecksum("AIVDM,X,1,,A,0000,0"),                 // non-numeric fragment count
                 wrongChecksumTagBlock,                               // tag block with wrong checksum
-                tagBlock(Map.of("c", "abc")) + VALID);              // tag block with non-numeric timestamp
+                tagBlock(Map.of("c", "abc")) + VALID,               // tag block with non-numeric timestamp
+                tagBlock(Map.of("n", "2147483648")) + VALID);       // tag block with a line count beyond the int range
     }
 
     private static List<String> mixed() {

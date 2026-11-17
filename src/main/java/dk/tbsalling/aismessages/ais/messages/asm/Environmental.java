@@ -19,8 +19,8 @@ public class Environmental extends ApplicationSpecificMessage {
 
         // Eagerly decode all fields
         this.linkageId = getBinaryData().getUnsignedInt(0, 10);
-        this.longitude = getBinaryData().getSignedFloat(10, 35) / 60000f;
-        this.latitude = getBinaryData().getSignedFloat(35, 59) / 60000f;
+        this.longitude = getBinaryData().getSignedInt(10, 35) / 60000.0;
+        this.latitude = getBinaryData().getSignedInt(35, 59) / 60000.0;
         this.day = getBinaryData().getUnsignedInt(59, 64);
         this.hour = getBinaryData().getUnsignedInt(64, 69);
         this.minute = getBinaryData().getUnsignedInt(69, 75);
@@ -49,9 +49,9 @@ public class Environmental extends ApplicationSpecificMessage {
     /** Bits 0-10 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): linkage ID. */
     int linkageId;
     /** Bits 10-35 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): longitude in decimal degrees (1/1 000 min ÷ 60 000), signed. */
-    float longitude;
+    double longitude;
     /** Bits 35-59 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): latitude in decimal degrees (1/1 000 min ÷ 60 000), signed. */
-    float latitude;
+    double latitude;
     /** Bits 59-64 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): day. */
     int day;
     /** Bits 64-69 of the application data (IMO SN.1/Circ.289, DAC=1 FI=26): hour. */

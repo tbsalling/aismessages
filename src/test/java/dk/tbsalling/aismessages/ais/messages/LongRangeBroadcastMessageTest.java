@@ -29,12 +29,10 @@ public class LongRangeBroadcastMessageTest {
         assertFalse(message.isPositionAccuracy());
         assertFalse(message.isRaim());
         assertEquals(NavigationStatus.NotUnderCommand, message.getNavigationStatus());
-        assertEquals(137.02333f, message.getLongitude(), 0.0f);
-        assertEquals(4.84f, message.getLatitude(), 0.0f);
+        assertEquals(82214 / 600.0, message.getLongitude(), 0.0f);
+        assertEquals(2904 / 600.0, message.getLatitude(), 0.0f);
         assertEquals(57f, message.getSpeedOverGround(), 1e-5);
-        assertEquals(57, message.getRawSpeedOverGround());
         assertEquals(167f, message.getCourseOverGround(), 1e-5);
-        assertEquals(167, message.getRawCourseOverGround());
     }
 
     @Test
@@ -56,12 +54,10 @@ public class LongRangeBroadcastMessageTest {
         assertTrue(message.isPositionAccuracy());
         assertFalse(message.isRaim());
         assertEquals(NavigationStatus.Moored, message.getNavigationStatus());
-        assertEquals(176.18167f, message.getLongitude(), 0.0f);
-        assertEquals(-37.65333f, message.getLatitude(), 0.0f);
+        assertEquals(105709 / 600.0, message.getLongitude(), 0.0f);
+        assertEquals(-22592 / 600.0, message.getLatitude(), 0.0f);
         assertEquals(0f, message.getSpeedOverGround(), 1e-5);
-        assertEquals(0, message.getRawSpeedOverGround());
         assertEquals(11f, message.getCourseOverGround(), 1e-5);
-        assertEquals(11, message.getRawCourseOverGround());
     }
 
 }
