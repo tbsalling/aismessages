@@ -6,6 +6,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 AISmessages is a Java library that decodes NMEA-armoured AIS messages (ITU 1371) used in maritime navigation and safety. It is published on Maven Central as `dk.tbsalling:aismessages` and is intentionally zero runtime dependencies, lightweight, and high-throughput. Lombok is `provided`/`optional`-scoped, so it does not become a runtime dependency.
 
+The reference text is Recommendation ITU-R M.1371-6 (02/2026); message layouts are its Annex 7 tables and application-specific messages its Annex 4. A local copy of the PDF may be kept at `docs/itu/`, which is git-ignored because the ITU copyright forbids redistribution.
+
 Java release target is set by `maven.compiler.release` in `pom.xml` (currently 25). Lombok is used heavily in the codebase (`@Value`, `@Getter`, `@ToString`, `@EqualsAndHashCode`, `@Log`); make sure your IDE has Lombok support enabled. Since JDK 23, javac no longer discovers annotation processors on the classpath, so Lombok is declared explicitly in `<annotationProcessorPaths>` on `maven-compiler-plugin` (and alongside `jmh-generator-annprocess` in the `bench` profile) — any new annotation processor must be added there or it will silently not run.
 
 ## Build & test
