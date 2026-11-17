@@ -103,6 +103,9 @@ public class ClassBCSStaticDataReportTest {
             assertEquals(0, reportA.getToStern());
             assertEquals(0, reportA.getToStarboard());
             assertEquals(0, reportA.getToPort());
+            assertNull(reportA.getLength());
+            assertNull(reportA.getBeam());
+            assertFalse(reportA.isReferencePointAvailable());
             assertNull(reportA.getVdesCapabilities());
         }
 
