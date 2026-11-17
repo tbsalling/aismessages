@@ -5,36 +5,49 @@ traffic.
 
 ---
 
-## Version 5.1.0
+## Version 5.1.0-SNAPSHOT
 
-**Release Date:** unreleased
+**Development Version**
 
 Alignment with Recommendation ITU-R M.1371-6 (02/2026).
 
-### New message type: Message 28, aid-to-navigation report (single slot)
+### Breaking API Changes
 
-- New `AidToNavigationReportSingleSlot` (`AISMessageType.AidToNavigationReportSingleSlot`, code 28) decodes
-  the 168-bit report of Table 84: time stamp, position, `RestrictedUseIndicator`, `AtoNStationType`, a 7-bit
-  `AidType` (Table 72 codes 0-31 plus the Table 85 mobile AtoN codes 32-50), IALA MRN,
-  `AtoNDimensionsType` with raw dimensions A and B, multiple-dimension-types flag, charted flag,
-  `AtoNOnStationStatus`, AtoN status bits and authentication flag.
-- `AISMessageType.MAXIMUM_CODE` is now 28. Message IDs 29 and above are still rejected.
+Binary compatible with 5.0.0. The following changes can require source changes or change decoded values:
 
-### Documentation
+- **New message type in sealed hierarchies.** `AidToNavigationReportSingleSlot` is a new permitted subclass of
+  the sealed `AISMessage`, and `AidToNavigationReportSingleSlot` is a new `AISMessageType` constant. Code that
+  switches exhaustively over either without a `default` branch (pattern-matching `switch` on `AISMessage`, or
+  a `switch` expression on `AISMessageType`) must add a case for it before it compiles against 5.1.0.
+- **`fromInteger` returns new enum constants for codes now defined by M.1371-6.** `ShipType` 65-67, 75-78, 85
+  and 86, `ReportingInterval` 11 and `AidType` 4 resolve to the new named constants listed under "Completed
+  enumerations". The former placeholder constants are deprecated, and comparisons against them no longer match
+  decoded values.
+- **`ChannelManagement` coordinate getters return `Float`.** `getNorthEastLongitude()`, `getNorthEastLatitude()`,
+  `getSouthWestLongitude()` and `getSouthWestLatitude()` now return `Float` instead of `float` and are `null` for
+  addressed messages.
+- **Corrected decodings change values.** Messages 15, 20, 23, 25 and 26 and the IFM 0 text telegram now decode
+  per M.1371-6, so applications that worked around the old values see different results; see "Corrected
+  decodings".
+- **Stricter validation.** Messages 12, 14 and 25 shorter than their header, and Messages 26 shorter than 64 or
+  longer than 1064 bits, are now rejected with `InvalidMessage`.
+- **Constructors.** The `protected` constructors of several message classes gained parameters for the newly
+  decoded fields. They are not part of the supported API; construct messages through `AISMessageFactory`.
 
-- Every message class, field and enum constant of the message model now has Javadoc referencing the defining
-  ITU-R M.1371-6 section, table and bit range (or IMO SN.1/Circ.289 for application specific messages), including
-  units, scaling and not-available values.
+### Upgrade Notes
 
-### Source compatibility notes
-
-- `AidToNavigationReportSingleSlot` is a new permitted subclass of the sealed `AISMessage`, and
-  `AidToNavigationReportSingleSlot` is a new `AISMessageType` constant. Code that switches exhaustively over
-  either without a `default` branch (pattern-matching `switch` on `AISMessage`, or a `switch` expression on
-  `AISMessageType`) must add a case for it before it compiles against 5.1.0. Binary compatibility is
-  unaffected.
-- The `protected` constructors of several message classes gained parameters for the newly decoded fields.
-  They are not part of the supported API; construct messages through `AISMessageFactory`.
+- No build changes: 5.1.0 still targets Java 25 and has no runtime dependencies.
+- Add a case for `AidToNavigationReportSingleSlot` to exhaustive `switch` statements or expressions over
+  `AISMessage` or `AISMessageType`, or handle it through a `default` branch.
+- Replace comparisons against the deprecated `ShipType.PassengerFuture1-3`, `CargoFuture1-4`,
+  `TankerFuture1-2`, `ReportingInterval.FutureUse1` and `AidType.FutureUse1` constants with their named
+  replacements, or compare `getCode()` values.
+- Unbox the `ChannelManagement` coordinate getters with a null check, or test `isAddressed()` first.
+- If you read Message 25 or 26 data, use `getData()`, `getDesignatedAreaCode()`, `getFunctionalId()` and
+  `getApplicationSpecificMessage()`; `BinaryMessageSingleSlot.getBinaryData()` still returns the old value but
+  is deprecated.
+- Stream readers (`AISInputStreamReader`, `NMEAMessageInputStreamReader`, `NMEAMessageUDPSocket`) no longer
+  stop on malformed sentences. Code that restarted a reader after such a failure can drop that workaround.
 
 ### Corrected decodings (behaviour changes)
 
@@ -94,11 +107,39 @@ Alignment with Recommendation ITU-R M.1371-6 (02/2026).
   starts at bit 12 and the two header fields are exposed as `isAcknowledgeRequired()` and
   `getTextSequenceNumber()`. FI 1 is marked discontinued in M.1371-6 but is still decoded as text.
 
+### New message type: Message 28, aid-to-navigation report (single slot)
+
+- New `AidToNavigationReportSingleSlot` (`AISMessageType.AidToNavigationReportSingleSlot`, code 28) decodes
+  the 168-bit report of Table 84: time stamp, position, `RestrictedUseIndicator`, `AtoNStationType`, a 7-bit
+  `AidType` (Table 72 codes 0-31 plus the Table 85 mobile AtoN codes 32-50), IALA MRN,
+  `AtoNDimensionsType` with raw dimensions A and B, multiple-dimension-types flag, charted flag,
+  `AtoNOnStationStatus`, AtoN status bits and authentication flag.
+- `AISMessageType.MAXIMUM_CODE` is now 28. Message IDs 29 and above are still rejected.
+
 ### New application specific messages (ITU-R M.1371-6 Annex 4, DAC 1)
 
 - `InterrogationForSpecificFunctionalMessage` (IFM 2), `CapabilityInterrogation` (IFM 3),
   `CapabilityReply` (IFM 4, with `isFunctionalIdAvailable(int)`) and `ApplicationAcknowledgement` (IFM 5)
   replace `UnknownApplicationSpecificMessage` for these function identifiers.
+
+### Fields added in ITU-R M.1371-6 now decoded
+
+- Messages 1, 2, 3 (`PositionReport`) and 18 (`StandardClassBCSPositionReport`): `isTransmitPowerLow()`
+  (Tables 46 and 68; false = high power, true = low power).
+- Messages 4 (`BaseStationReport`) and 11 (`UTCAndDateResponse`):
+  `isSatelliteBroadcastTransmissionControl()` (Table 49, control of Message 27 transmission within the
+  base station coverage area). `UTCAndDateResponse` additionally exposes `getCommunicationState()`.
+- Message 5 (`ShipAndVoyageData`): `getAisVersionIndicator()` (Table 50; 3 = M.1371-6 or later).
+- Message 9 (`StandardSARAircraftPositionReport`): `isBarometricAltitude()` (Table 57 altitude sensor),
+  `isCommStateSelectorFlag()` and a typed `getCommunicationState()`. The `getRegionalReserved()` and
+  `getRadioStatus()` strings are unchanged.
+- Message 21 (`AidToNavigationReport`): `isNameExtensionIsLabel()`. When the name extension starts with
+  "@@@" (Table 71: portray as label, not as name), the marker is stripped from `getNameExtension()` and
+  this flag is true.
+- Message 24 Part B (`ClassBCSStaticDataReport`): `getPositionFixingDevice()` and `getVdesCapabilities()`
+  (Table 77), plus the Table 78 split of the manufacturer ID into `getManufacturerMnemonic()`,
+  `getUnitModelCode()` and `getUnitSerialNumber()`. `getVendorId()` is unchanged; `getMothershipMmsi()`
+  is kept but documented as not being part of M.1371-6.
 
 ### Completed enumerations (ITU-R M.1371-6 Tables 46, 49, 51, 72, 75, 85)
 
@@ -121,25 +162,6 @@ Alignment with Recommendation ITU-R M.1371-6 (02/2026).
   returns the new constants for those codes, so comparisons against the deprecated constants no longer
   match decoded values.
 
-### Fields added in ITU-R M.1371-6 now decoded
-
-- Messages 1, 2, 3 (`PositionReport`) and 18 (`StandardClassBCSPositionReport`): `isTransmitPowerLow()`
-  (Tables 46 and 68; false = high power, true = low power).
-- Messages 4 (`BaseStationReport`) and 11 (`UTCAndDateResponse`):
-  `isSatelliteBroadcastTransmissionControl()` (Table 49, control of Message 27 transmission within the
-  base station coverage area). `UTCAndDateResponse` additionally exposes `getCommunicationState()`.
-- Message 5 (`ShipAndVoyageData`): `getAisVersionIndicator()` (Table 50; 3 = M.1371-6 or later).
-- Message 9 (`StandardSARAircraftPositionReport`): `isBarometricAltitude()` (Table 57 altitude sensor),
-  `isCommStateSelectorFlag()` and a typed `getCommunicationState()`. The `getRegionalReserved()` and
-  `getRadioStatus()` strings are unchanged.
-- Message 21 (`AidToNavigationReport`): `isNameExtensionIsLabel()`. When the name extension starts with
-  "@@@" (Table 71: portray as label, not as name), the marker is stripped from `getNameExtension()` and
-  this flag is true.
-- Message 24 Part B (`ClassBCSStaticDataReport`): `getPositionFixingDevice()` and `getVdesCapabilities()`
-  (Table 77), plus the Table 78 split of the manufacturer ID into `getManufacturerMnemonic()`,
-  `getUnitModelCode()` and `getUnitSerialNumber()`. `getVendorId()` is unchanged; `getMothershipMmsi()`
-  is kept but documented as not being part of M.1371-6.
-
 ### New public APIs
 
 - `BinaryMessageSingleSlot`: `getDesignatedAreaCode()`, `getFunctionalId()`, `getData()`,
@@ -152,10 +174,17 @@ Alignment with Recommendation ITU-R M.1371-6 (02/2026).
 
 - `BinaryMessageSingleSlot.getBinaryData()` (`String` of all bits from bit 40 to the end) is deprecated in
   favour of the typed getters above; its value is unchanged.
-
 - `GroupAssignmentCommand.getSpare1()` and `getSpare2()` (both `String`) are deprecated. The spare
   fields are not six-bit text; use the new `int getSpare1Value()` and `int getSpare2Value()`. The
   deprecated getters now return the numeric value as a decimal string.
+
+### Documentation
+
+- Every message class, field and enum constant of the message model now has Javadoc referencing the defining
+  ITU-R M.1371-6 section, table and bit range (or IMO SN.1/Circ.289 for application specific messages), including
+  units, scaling and not-available values.
+
+**Full Changelog:** https://github.com/tbsalling/aismessages/compare/aismessages-5.0.0...master
 
 ---
 
@@ -260,7 +289,9 @@ No application-facing changes.
 
 ### Upgrade Notes
 
-- Added upgrade guidance for moving from AISmessages 3.3.1 to 4.1.0.
+- Added upgrade guidance for moving from AISmessages 3.3.1 to 4.1.0 (`UPGRADE_GUIDE.md`, removed before 5.0.0;
+  still available at
+  [tag aismessages-4.1.2](https://github.com/tbsalling/aismessages/blob/aismessages-4.1.2/UPGRADE_GUIDE.md)).
 - Added Java modules examples and refreshed README usage examples to match the current API.
 
 ### Fixes
