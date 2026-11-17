@@ -564,7 +564,7 @@ public class AISMessageFactory {
         int rawSecond = bitString.getUnsignedInt(253, 259);
         Integer second = FieldDecoder.timeStampSecond(rawSecond);
         TimeStampIndicator timeStampIndicator = FieldDecoder.timeStampIndicator(rawSecond);
-        boolean offPosition = bitString.getBoolean(259, 260);
+        Boolean offPosition = timeStampIndicator == TimeStampIndicator.Available ? bitString.getBoolean(259, 260) : null;
         int regionalUse = bitString.getUnsignedInt(260, 268);
         boolean raimFlag = bitString.getBoolean(268, 269);
         boolean virtualAid = bitString.getBoolean(269, 270);

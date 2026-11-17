@@ -55,7 +55,7 @@ public class AidToNavigationReport extends AISMessage {
                                     double latitude, double longitude,
                                     int toBow, int toStern, int toPort, int toStarboard,
                                     PositionFixingDevice positionFixingDevice, Integer second, TimeStampIndicator timeStampIndicator,
-                                    boolean offPosition, int regionalUse, boolean raimFlag,
+                                    Boolean offPosition, int regionalUse, boolean raimFlag,
                                     boolean virtualAid, boolean assignedMode, int spare1,
                                     String nameExtension, Integer spare2, boolean nameExtensionLabel) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
@@ -128,8 +128,12 @@ public class AidToNavigationReport extends AISMessage {
     Integer second;
     /** What the time stamp field carries: the UTC second in {@code second}, or the state of the position fixing system (see {@link TimeStampIndicator}). */
     TimeStampIndicator timeStampIndicator;
-    /** Bit 259 (Table 71): off-position indicator, true = off position (floating aid outside its zone, or fixed aid with suspected GNSS anomaly); only meaningful when {@code second} ≤ 59. */
-    boolean offPosition;
+    /**
+     * Bit 259 (Table 71): off-position indicator, true = off position (floating aid outside its zone, or fixed aid with
+     * suspected GNSS anomaly); null unless {@code timeStampIndicator} is {@link TimeStampIndicator#Available}, because
+     * Table 71 says the flag should only be considered when the time stamp is 59 or below.
+     */
+    Boolean offPosition;
     /** Bits 260-268 (Table 71) as an unsigned integer, first bit most significant: the 8 AtoN status bits reserved for IALA Recommendation R0126; all zero = default. */
     int regionalUse;
     /** Bit 268 (Table 71): RAIM flag of the electronic position fixing device, true = RAIM in use; see Table 48. */

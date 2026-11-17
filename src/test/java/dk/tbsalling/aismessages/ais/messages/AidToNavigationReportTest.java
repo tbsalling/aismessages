@@ -36,7 +36,7 @@ public class AidToNavigationReportTest {
         assertEquals(false, message.isAssignedMode());
         assertEquals("S16A GLT VIRT ATON", message.getName());
         assertEquals(null, message.getNameExtension());
-        assertEquals(false, message.isOffPosition());
+        assertNull(message.getOffPosition());
         assertNull(message.getSecond());
         assertEquals(TimeStampIndicator.NotAvailable, message.getTimeStampIndicator());
         assertEquals(0, message.getToBow());
@@ -70,7 +70,7 @@ public class AidToNavigationReportTest {
         assertEquals(false, message.isAssignedMode());
         assertEquals("S6A GLT VIRTU ATON", message.getName());
         assertEquals(null, message.getNameExtension());
-        assertEquals(false, message.isOffPosition());
+        assertNull(message.getOffPosition());
         assertNull(message.getSecond());
         assertEquals(TimeStampIndicator.NotAvailable, message.getTimeStampIndicator());
         assertEquals(0, message.getToBow());
@@ -138,5 +138,18 @@ public class AidToNavigationReportTest {
             assertEquals(c.spareValue(), message.getSpare2());
             assertFalse(message.isNameExtensionLabel());
         }
+    }
+
+    /** Table 71: the off-position indicator only counts when the time stamp is 0-59. */
+    @org.junit.jupiter.params.ParameterizedTest
+    @org.junit.jupiter.params.provider.CsvSource({"30, true", "59, true", "60, ", "61, ", "63, "})
+    public void offPositionOnlyWithValidTimeStamp(int timeStamp, Boolean expected) {
+        Bits b = bits().u(21, 6).u(0, 2).u(219000901, 30).u(1, 5).zeros(120).b(false).s(6000000, 28).s(33000000, 27).zeros(30).u(1, 4).u(timeStamp, 6)
+                .b(true).u(0, 8).b(false).b(false).b(false).u(0, 1);
+        assertEquals(272, b.length());
+
+        AidToNavigationReport message = (AidToNavigationReport) AISMessageFactory.create(null, null, null, nmea(b.toBitString()));
+
+        assertEquals(expected, message.getOffPosition());
     }
 }
