@@ -99,6 +99,11 @@ public class ClassBCSStaticDataReportTest {
             assertEquals(0, reportA.getPartNumber());
             assertEquals(271041815, aisMessagePartA.getSourceMmsi().getMmsi());
             assertEquals("PROGUY", reportA.getShipName());
+            assertEquals(0, reportA.getToBow());
+            assertEquals(0, reportA.getToStern());
+            assertEquals(0, reportA.getToStarboard());
+            assertEquals(0, reportA.getToPort());
+            assertNull(reportA.getVdesCapabilities());
         }
 
         System.out.println(aisMessagePartB.toString());

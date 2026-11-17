@@ -646,10 +646,10 @@ public class AISMessageFactory {
         Integer unitModelCode = null;
         Integer unitSerialNumber = null;
         String callsign = null;
-        Integer toBow = null;
-        Integer toStern = null;
-        Integer toStarboard = null;
-        Integer toPort = null;
+        int toBow = 0;
+        int toStern = 0;
+        int toStarboard = 0;
+        int toPort = 0;
         MMSI mothershipMmsi = null;
         PositionFixingDevice positionFixingDevice = null;
         VdesCapabilities vdesCapabilities = null;

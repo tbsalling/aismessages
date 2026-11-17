@@ -32,9 +32,8 @@ for source changes.
   `SafetyRelatedAcknowledge.getSequence2()`-`getSequence4()`; `Interrogation.getType1_2()`,
   `getOffset1_2()`, `getType2_1()` and `getOffset2_1()`; `ClassBCSStaticDataReport.getUnitModelCode()` and
   `getUnitSerialNumber()` for Part A; and the application identifier, `getDesignatedAreaCode()` and
-  `getFunctionalId()` of unstructured Messages 25 and 26. `StaticDataReport.getToBow()`, `getToStern()`,
-  `getToStarboard()` and `getToPort()` return `Integer` (`null` for Message 24 Part A), also on
-  `ShipAndVoyageData`.
+  `getFunctionalId()` of unstructured Messages 25 and 26. Message 24 Part A reports the
+  ship dimensions as 0, the spec's "not available" value (Fig. 38), instead of -1; they stay `int`.
 - **Coded fields are enums.** `ShipAndVoyageData.getAisVersionIndicator()` returns `AisVersionIndicator`,
   `ClassBCSStaticDataReport.getVdesCapabilities()` returns `VdesCapabilities` (`null` for Part A) and
   `LongRangeBroadcastMessage.getPositionLatency()` returns `PositionLatency`.

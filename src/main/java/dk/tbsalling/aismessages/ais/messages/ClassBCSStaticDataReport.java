@@ -41,7 +41,7 @@ import static java.lang.String.format;
  * the MMSI-registered vessel and may be used by any station; Part B (168 bits) carries type of ship, manufacturer ID,
  * call sign, dimensions, EPFD type and VDES capabilities. Class B "CS" and "SO" stations transmit both parts every
  * 6 min, Part B within 1 min of Part A; Class A stations transmit Part B within 12 min of start-up and every 24 h.
- * Which part an instance holds is given by {@code partNumber}; the other part's fields are null.
+ * Which part an instance holds is given by {@code partNumber}; the other part's fields are null, or 0 for the dimensions.
  */
 @Value
 @EqualsAndHashCode(callSuper = true)
@@ -54,7 +54,7 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
     protected ClassBCSStaticDataReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                        int partNumber, String shipName, ShipType shipType,
                                        String vendorId, String callsign,
-                                       Integer toBow, Integer toStern, Integer toStarboard, Integer toPort,
+                                       int toBow, int toStern, int toStarboard, int toPort,
                                        MMSI mothershipMmsi, String manufacturerMnemonic, Integer unitModelCode, Integer unitSerialNumber,
                                        PositionFixingDevice positionFixingDevice, VdesCapabilities vdesCapabilities) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
@@ -103,7 +103,7 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
         return TransponderClass.B;
     }
 
-    /** Bits 38-40 (Tables 76 and 77): part number, 0 = Part A (name), 1 = Part B (static data). Fields of the other part are null. */
+    /** Bits 38-40 (Tables 76 and 77): part number, 0 = Part A (name), 1 = Part B (static data). Fields of the other part are null, or 0 for the dimensions. */
     int partNumber;
     /** Part A, bits 40-160 (Table 76): name of the MMSI-registered vessel, up to 20 six-bit ASCII characters (Table 45); all "@" = not available; "SAR AIRCRAFT NNNNNNN" for SAR aircraft. Null for Part B. */
     String shipName;
@@ -113,14 +113,14 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
     String vendorId;
     /** Part B, bits 90-132 (Table 77): call sign, 7 six-bit ASCII characters; "@@@@@@@" = not available. Craft associated with a parent vessel use "A" plus the last 6 digits of the parent's MMSI. Null for Part A. */
     String callsign;
-    /** Part B, bits 132-141 (Table 77, Fig. 38): dimension A, distance from the reference point to the bow in metres, 0-511. Null for Part A. */
-    Integer toBow;
-    /** Part B, bits 141-150 (Table 77, Fig. 38): dimension B, distance from the reference point to the stern in metres, 0-511. Null for Part A. */
-    Integer toStern;
-    /** Part B, bits 156-162 (Table 77, Fig. 38): dimension D, distance from the reference point to the starboard side in metres, 0-63. Null for Part A. */
-    Integer toStarboard;
-    /** Part B, bits 150-156 (Table 77, Fig. 38): dimension C, distance from the reference point to the port side in metres, 0-63. Null for Part A. */
-    Integer toPort;
+    /** Part B, bits 132-141 (Table 77, Fig. 38): dimension A, distance from the reference point to the bow in metres, 0-511. 0 (not available) for Part A. */
+    int toBow;
+    /** Part B, bits 141-150 (Table 77, Fig. 38): dimension B, distance from the reference point to the stern in metres, 0-511. 0 (not available) for Part A. */
+    int toStern;
+    /** Part B, bits 156-162 (Table 77, Fig. 38): dimension D, distance from the reference point to the starboard side in metres, 0-63. 0 (not available) for Part A. */
+    int toStarboard;
+    /** Part B, bits 150-156 (Table 77, Fig. 38): dimension C, distance from the reference point to the port side in metres, 0-63. 0 (not available) for Part A. */
+    int toPort;
     /**
      * The 30 bits of the Part B dimension fields read as one MMSI, following the convention of some auxiliary craft
      * transponders. Not part of ITU-R M.1371-6, which instead has craft associated with a parent vessel use a call sign
