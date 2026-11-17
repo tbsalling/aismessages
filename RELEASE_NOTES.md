@@ -22,8 +22,34 @@ Alignment with Recommendation ITU-R M.1371-6 (02/2026).
 - **Message 23 (Group assignment command):** Tx/Rx mode, reporting interval and quiet time were read from
   bits 166-176, beyond the end of the 160-bit message, and therefore always decoded as 0. They are now
   read from bits 144-146, 146-150 and 150-154 (Table 74).
+- **Message 25 (Single slot binary message):** the layout now follows Table 79. A destination MMSI is only
+  decoded when the destination indicator is set (`getDestinationMMSI()` returns `null` for broadcasts; it
+  used to return a value made of data bits). When the binary data flag is set, the 16-bit application
+  identifier is split into `getDesignatedAreaCode()` and `getFunctionalId()` (both -1 when unstructured)
+  and resolved to an `ApplicationSpecificMessage` via `getApplicationSpecificMessage()`. The application
+  data proper is available as `BitString getData()`, starting at bit 40, 56, 72 or 88 depending on the two
+  flags.
+- **Message 26 (Multiple slot binary message):** the layout now follows Table 81. Destination MMSI and
+  application identifier are only decoded when their flags are set (`getDestinationMmsi()` is `null` for
+  broadcasts, `getApplicationId()`, `getDesignatedAreaCode()` and `getFunctionalId()` are -1 when
+  unstructured). The trailing 4 spare bits, communication state selector and 19-bit communication state
+  are decoded into `isCommStateSelectorFlag()` and `getCommunicationState()` (SOTDMA or ITDMA).
+  `getData()` now holds exactly the application data between header and trailer and is no longer
+  zero-padded to 1005 bits. Messages shorter than 64 bits or longer than 1064 bits are rejected as
+  `InvalidMessage`.
+
+### New public APIs
+
+- `BinaryMessageSingleSlot`: `getDesignatedAreaCode()`, `getFunctionalId()`, `getData()`,
+  `getApplicationSpecificMessage()`.
+- `BinaryMessageMultipleSlot`: `getDesignatedAreaCode()`, `getFunctionalId()`,
+  `getApplicationSpecificMessage()`, `isCommStateSelectorFlag()`, `getCommunicationState()`.
+- `GroupAssignmentCommand`: `getSpare1Value()`, `getSpare2Value()`.
 
 ### Deprecations
+
+- `BinaryMessageSingleSlot.getBinaryData()` (`String` of all bits from bit 40 to the end) is deprecated in
+  favour of the typed getters above; its value is unchanged.
 
 - `GroupAssignmentCommand.getSpare1()` and `getSpare2()` (both `String`) are deprecated. The spare
   fields are not six-bit text; use the new `int getSpare1Value()` and `int getSpare2Value()`. The

@@ -640,31 +640,62 @@ public class AISMessageFactory {
     }
 
     private static BinaryMessageSingleSlot createBinaryMessageSingleSlot(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
+        // ITU-R M.1371-6 Table 79: destination ID (30 bits + 2 spare) only when addressed; application identifier (16 bits) only when the binary data flag is set.
         boolean destinationIndicator = bitString.getBoolean(38, 39);
         boolean binaryDataFlag = bitString.getBoolean(39, 40);
-        MMSI destinationMMSI = new MMSI(bitString.getUnsignedInt(40, 70));
-        String binaryData = bitString.getBits(40, 168);
+        int dataStart = 40;
+        MMSI destinationMMSI = null;
+        if (destinationIndicator) {
+            destinationMMSI = new MMSI(bitString.getUnsignedInt(40, 70));
+            dataStart = 72;
+        }
+        int designatedAreaCode = -1;
+        int functionalId = -1;
+        if (binaryDataFlag) {
+            designatedAreaCode = bitString.getUnsignedInt(dataStart, dataStart + 10);
+            functionalId = bitString.getUnsignedInt(dataStart + 10, dataStart + 16);
+            dataStart += 16;
+        }
+        BitString data = dataStart < bitString.length() ? bitString.slice(dataStart, bitString.length()) : BitString.EMPTY;
+        ApplicationSpecificMessage applicationSpecificMessage = binaryDataFlag ? ApplicationSpecificMessage.create(designatedAreaCode, functionalId, data) : null;
 
         return new BinaryMessageSingleSlot(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
-                destinationIndicator, binaryDataFlag, destinationMMSI, binaryData);
+                destinationIndicator, binaryDataFlag, destinationMMSI, designatedAreaCode, functionalId, data, applicationSpecificMessage);
     }
 
     private static BinaryMessageMultipleSlot createBinaryMessageMultipleSlot(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
+        // ITU-R M.1371-6 Table 81: destination ID (30 bits + 2 spare) only when addressed; application identifier (16 bits) only when
+        // structured; the message ends with 4 spare bits, a 1-bit communication state selector and a 19-bit communication state.
         boolean addressed = bitString.getBoolean(38, 39);
         boolean structured = bitString.getBoolean(39, 40);
-
-        MMSI destinationMmsi = new MMSI(bitString.getUnsignedInt(40, 70));
-
-        int applicationId = bitString.getUnsignedInt(70, 86);
-
-        // Extract data and pad with zeros to match expected length (1005 bits, bits 86..1091)
-        int maxDataBits = 1004 + 1;
-        int availableBits = Math.max(0, bitString.length() - 86);
-        int slicedEnd = 86 + Math.min(availableBits, maxDataBits);
-        BitString data = bitString.slice(86, slicedEnd).withLengthPaddedTo(maxDataBits);
+        int length = bitString.length();
+        int dataStart = 40;
+        MMSI destinationMmsi = null;
+        if (addressed) {
+            destinationMmsi = new MMSI(bitString.getUnsignedInt(40, 70));
+            dataStart = 72;
+        }
+        int designatedAreaCode = -1;
+        int functionalId = -1;
+        int applicationId = -1;
+        if (structured) {
+            designatedAreaCode = bitString.getUnsignedInt(dataStart, dataStart + 10);
+            functionalId = bitString.getUnsignedInt(dataStart + 10, dataStart + 16);
+            applicationId = bitString.getUnsignedInt(dataStart, dataStart + 16);
+            dataStart += 16;
+        }
+        int dataEnd = length - 24;
+        BitString data = dataEnd > dataStart ? bitString.slice(dataStart, dataEnd) : BitString.EMPTY;
+        ApplicationSpecificMessage applicationSpecificMessage = structured ? ApplicationSpecificMessage.create(designatedAreaCode, functionalId, data) : null;
+        boolean commStateSelectorFlag = false;
+        CommunicationState communicationState = null;
+        if (length >= 64) {
+            commStateSelectorFlag = bitString.getBoolean(length - 20, length - 19);
+            communicationState = commStateSelectorFlag ? ITDMACommunicationState.fromBitString(bitString.slice(length - 19, length)) : SOTDMACommunicationState.fromBitString(bitString.slice(length - 19, length));
+        }
 
         return new BinaryMessageMultipleSlot(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
-                addressed, structured, destinationMmsi, applicationId, data);
+                addressed, structured, destinationMmsi, applicationId, designatedAreaCode, functionalId, data, applicationSpecificMessage, commStateSelectorFlag, communicationState);
     }
 
     private static LongRangeBroadcastMessage createLongRangeBroadcastMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
