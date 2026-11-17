@@ -10,6 +10,9 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static dk.tbsalling.aismessages.testsupport.NmeaSentences.*;
+import static org.junit.jupiter.api.Assertions.*;
+import dk.tbsalling.aismessages.testsupport.NmeaSentences.Bits;
 
 public class AidToNavigationReportTest {
 
@@ -105,4 +108,32 @@ public class AidToNavigationReportTest {
         assertEquals("LB1", message.getNameExtension());
     }
 
+    /** The 272 fixed bits of Message 21 (ITU-R M.1371-6 Table 71) for a port hand mark named "MARK". */
+    private static Bits aidToNavigationHeader() {
+        return bits().u(21, 6).u(0, 2).u(992191001, 30).u(24, 5).text("MARK", 20).b(true)
+                .s(6450000, 28).s(33300000, 27).u(1, 9).u(1, 9).u(1, 6).u(1, 6).u(7, 4).u(60, 6)
+                .b(false).u(0, 8).b(false).b(false).b(false).u(0, 1);
+    }
+
+    /**
+     * Name extensions of 1, 2, 3 and 14 characters followed by 2, 4, 6 and 4 spare bits respectively, which pad the
+     * message to a byte boundary (Table 71). Two and four spare bits are set to non-zero values to check their
+     * extraction. Six spare bits cannot be told apart from one more six-bit character; Table 71 requires them to be zero,
+     * which decodes as the padding character "@" and is trimmed, so that case uses zero.
+     */
+    @Test
+    public void canDecodeNameExtensionWithSpareBits() {
+        record Case(String extension, int spareBits, int spareValue, int totalBits) {}
+        for (Case c : new Case[]{new Case("A", 2, 2, 280), new Case("AB", 4, 5, 288), new Case("ABC", 6, 0, 296), new Case("ABCDEFGHIJKLMN", 4, 9, 360)}) {
+            Bits b = aidToNavigationHeader().text(c.extension(), c.extension().length()).u(c.spareValue(), c.spareBits());
+            assertEquals(c.totalBits(), b.length());
+
+            AidToNavigationReport message = (AidToNavigationReport) AISMessageFactory.create(null, null, null, nmea(b.toBitString()));
+
+            assertEquals("MARK", message.getName());
+            assertEquals(c.extension(), message.getNameExtension());
+            assertEquals(c.spareValue(), message.getSpare2());
+            assertFalse(message.isNameExtensionIsLabel());
+        }
+    }
 }

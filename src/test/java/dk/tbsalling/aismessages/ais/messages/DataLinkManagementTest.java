@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static dk.tbsalling.aismessages.testsupport.NmeaSentences.*;
+import static org.junit.jupiter.api.Assertions.*;
+import dk.tbsalling.aismessages.testsupport.NmeaSentences.Bits;
 
 public class DataLinkManagementTest {
 
@@ -102,5 +105,31 @@ public class DataLinkManagementTest {
         assertNull(message.getReservedSlots4());
         assertNull(message.getTimeout4());
         assertNull(message.getIncrement4());
+    }
+
+    /** Four reservation blocks (160 bits, ITU-R M.1371-6 Table 70). Synthetic sentence built from the spec layout. */
+    @Test
+    public void canDecodeFourReservationBlocks() {
+        Bits b = bits().u(20, 6).u(0, 2).u(2190047, 30).u(0, 2);
+        for (int i = 1; i <= 4; i++) b.u(100 * i, 12).u(i, 4).u(i + 2, 3).u(250 * i, 11);
+
+        DataLinkManagement message = (DataLinkManagement) AISMessageFactory.create(null, null, null, nmea(b.toBitString()));
+
+        assertEquals(100, message.getOffsetNumber1());
+        assertEquals(1, message.getReservedSlots1());
+        assertEquals(3, message.getTimeout1());
+        assertEquals(250, message.getIncrement1());
+        assertEquals(200, message.getOffsetNumber2());
+        assertEquals(2, message.getReservedSlots2());
+        assertEquals(4, message.getTimeout2());
+        assertEquals(500, message.getIncrement2());
+        assertEquals(300, message.getOffsetNumber3());
+        assertEquals(3, message.getReservedSlots3());
+        assertEquals(5, message.getTimeout3());
+        assertEquals(750, message.getIncrement3());
+        assertEquals(400, message.getOffsetNumber4());
+        assertEquals(4, message.getReservedSlots4());
+        assertEquals(6, message.getTimeout4());
+        assertEquals(1000, message.getIncrement4());
     }
 }

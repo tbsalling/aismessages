@@ -7,6 +7,9 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
+import static dk.tbsalling.aismessages.testsupport.NmeaSentences.*;
+import static org.junit.jupiter.api.Assertions.*;
+import dk.tbsalling.aismessages.testsupport.NmeaSentences.Bits;
 
 public class InterrogationTest {
 
@@ -88,5 +91,21 @@ public class InterrogationTest {
         assertEquals(new MMSI(219000001), message.getInterrogatedMmsi2());
         assertEquals(3, message.getType2_1());
         assertEquals(200, message.getOffset2_1());
+    }
+
+    /** One station, two messages, in the byte-aligned 112-bit form (110 bits plus 2 spare, ITU-R M.1371-6 Table 64). */
+    @Test
+    public void canDecodeOneStationTwoMessagesByteAligned() {
+        Bits b = bits().u(15, 6).u(0, 2).u(2190047, 30).u(0, 2).u(219000101, 30).u(5, 6).u(10, 12).u(0, 2).u(24, 6).u(20, 12).u(0, 2).u(0, 2);
+        assertEquals(112, b.length());
+
+        Interrogation message = (Interrogation) AISMessageFactory.create(null, null, null, nmea(b.toBitString()));
+
+        assertEquals(new MMSI(219000101), message.getInterrogatedMmsi1());
+        assertEquals(5, message.getType1_1());
+        assertEquals(10, message.getOffset1_1());
+        assertEquals(24, message.getType1_2());
+        assertEquals(20, message.getOffset1_2());
+        assertNull(message.getInterrogatedMmsi2());
     }
 }
