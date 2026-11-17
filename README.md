@@ -241,6 +241,24 @@ public class UDPExample {
 
 See `dk.tbsalling.aismessages.demo.UDPDemoApp` for a complete example.
 
+## Receiving live AIS over WebSocket
+
+`WebSocketDemoApp` decodes live traffic from the [Open Waters](https://openwaters.io/api/ais/) WebSocket stream and
+prints one readable line per message. It uses the JDK's built-in WebSocket client, so no dependency is added:
+
+```bash
+java -cp aismessages.jar dk.tbsalling.aismessages.demo.WebSocketDemoApp 55.0,10.0,56.5,13.0
+```
+
+```text
+12:00:01Z  MMSI 219000123  Position report class A scheduled                   55.50000°N 11.25000°E  12.3 kn  course 123.4°  heading 120°  Underway using engine
+12:00:02Z  MMSI 219000456  Ship and voyage related data                        "EXAMPLE SHIP"  call sign OXYZ1  Cargo no additional info  120 × 20 m  to AARHUS  draught 6.5 m
+```
+
+The optional argument is a bounding box `minLat,minLon,maxLat,maxLon` of at most 100 square degrees; the default
+covers Danish waters. Open Waters' anonymous stream needs no account, is free for personal use (commercial use needs a
+plan) and requires a `User-Agent` naming the application; set `-Daismessages.userAgent=...` to send your own.
+
 ## Demos and related projects
 
 The repository includes ready-to-run demo applications:
@@ -248,6 +266,7 @@ The repository includes ready-to-run demo applications:
 - `dk.tbsalling.aismessages.demo.SimpleDemoApp`
 - `dk.tbsalling.aismessages.demo.RouterDemoApp`
 - `dk.tbsalling.aismessages.demo.UDPDemoApp`
+- `dk.tbsalling.aismessages.demo.WebSocketDemoApp`
 
 You may also want:
 

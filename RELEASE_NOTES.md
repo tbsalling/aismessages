@@ -121,7 +121,7 @@ for source changes.
 - For Message 25 data use `getData()`, `getDesignatedAreaCode()`, `getFunctionalId()` and
   `getApplicationSpecificMessage()` instead of `getBinaryData()`.
 - Use `NMEAMessageUDPSocket`, or an `AISInputStreamReader` over a socket's input stream, instead of
-  `NMEAMessageSocketClient`.
+  `NMEAMessageSocketClient`. The new `WebSocketDemoApp` shows how to decode a live network feed.
 - Stream readers (`AISInputStreamReader`, `NMEAMessageInputStreamReader`, `NMEAMessageUDPSocket`) no longer
   stop on malformed sentences. Code that restarted a reader after such a failure can drop that workaround.
 
@@ -253,6 +253,11 @@ for source changes.
   (75), `CargoContainerShip` (76), `CargoRollOnRollOffCarrier` (77), `CargoLandingCraft` (78),
   `TankerNonHazardous` (85) and `IntegratedTugAndTankBarge` (86). These replace the former `PassengerFuture1-3`,
   `CargoFuture1-4`, `TankerFuture1` and `TankerFuture2` constants.
+
+### Demos
+
+- New `WebSocketDemoApp` decodes live AIS from the Open Waters WebSocket stream (anonymous, free for personal
+  use) and prints one readable line per message. It uses the JDK's WebSocket client, so no dependency is added.
 
 ### New public APIs
 
