@@ -55,16 +55,17 @@ These are load-bearing — preserve them when changing code:
 
 AISmessages is a decoding library: its public API exposes decoded, self-explanatory values, so users need no knowledge of ITU-R M.1371 codes or bit layouts.
 
-1. **Decimals:** primitive `double`/`float` fields (coordinates, speed, course, rate of turn, draught) are `NaN` when not available. Boxed `Double`/`Float` fields, used only where a part can be absent, are `null` when not available or absent — never `NaN`.
-2. **Integers with a not-available code** (heading, time-stamp second, altitude, date and time parts, ETA parts) are `Integer`, `null` when not available. Integers that are always valid stay primitive.
-3. **Parts that may be absent** (optional trailing parts, variant-only fields, the other Message 24 part) are `null`. Never use -1 or another made-up sentinel.
-4. **A field with more than one special value gets a companion `<Field>Indicator` enum** (e.g. `RateOfTurnIndicator`, `SpeedOverGroundIndicator`, `TimeStampIndicator`). The value is `NaN`/`null` unless the indicator says it holds one; for "X or higher" it holds that lower bound. A field with a single not-available code needs no indicator.
-5. **No raw values.** Do not expose transmitted values next to decoded ones (no `getRaw*`). Fields that ITU-R M.1371 itself defines as spare, regional reserved, radio status or AtoN status bits stay as `int`, documented per their table.
-6. **Coded values are enums**, `null` for undefined codes or absent parts. **Every enum corresponds to a table or field description of ITU-R M.1371-6, cited in its class Javadoc**, and each constant states the code(s) it stands for.
-7. **Text** transmitted as all "@" (not available) is `null`, not "".
-8. **Interfaces** declare the most primitive type all implementers can satisfy.
-9. **Decode eagerly.** Convert codes in `AISMessageFactory` or the constructor; keep the code constants in the package-private `FieldDecoder`.
-10. **Allocation.** Box only through autoboxing (`Integer.valueOf`); no custom caches and no `Optional`/`OptionalInt`. A change that adds objects to the hot-path messages (1-3, 18, 19, 27) needs a `-prof gc` JMH comparison of bytes allocated per operation.
+1. **Units.** Getters return values in the maritime standard units of ITU-R M.1371: degrees (coordinates, course, heading), knots (speed), metres (distances, draught, altitude), degrees per minute (rate of turn), and seconds. Never transmitted steps such as 1/10 min, 1/10 knot or 1/10 m. The Javadoc names the transmitted unit for maintainers.
+2. **Decimals:** primitive `double`/`float` fields (coordinates, speed, course, rate of turn, draught) are `NaN` when not available. Boxed `Double`/`Float` fields, used only where a part can be absent, are `null` when not available or absent — never `NaN`.
+3. **Integers with a not-available code** (heading, time-stamp second, altitude, date and time parts, ETA parts) are `Integer`, `null` when not available. Integers that are always valid stay primitive.
+4. **Parts that may be absent** (optional trailing parts, variant-only fields, the other Message 24 part) are `null`. Never use -1 or another made-up sentinel.
+5. **A field with more than one special value gets a companion `<Field>Indicator` enum** (e.g. `RateOfTurnIndicator`, `SpeedOverGroundIndicator`, `TimeStampIndicator`). The value is `NaN`/`null` unless the indicator says it holds one; for "X or higher" it holds that lower bound. A field with a single not-available code needs no indicator.
+6. **No raw values.** Do not expose transmitted values next to decoded ones (no `getRaw*`). Fields that ITU-R M.1371 itself defines as spare, regional reserved, radio status or AtoN status bits stay as `int`, documented per their table.
+7. **Coded values are enums**, `null` for undefined codes or absent parts. **Every enum corresponds to a table or field description of ITU-R M.1371-6, cited in its class Javadoc**, and each constant states the code(s) it stands for.
+8. **Text** transmitted as all "@" (not available) is `null`, not "".
+9. **Interfaces** declare the most primitive type all implementers can satisfy.
+10. **Decode eagerly.** Convert codes in `AISMessageFactory` or the constructor; keep the code constants in the package-private `FieldDecoder`.
+11. **Allocation.** Box only through autoboxing (`Integer.valueOf`); no custom caches and no `Optional`/`OptionalInt`. A change that adds objects to the hot-path messages (1-3, 18, 19, 27) needs a `-prof gc` JMH comparison of bytes allocated per operation.
 
 ## Conventions
 
