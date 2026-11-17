@@ -81,16 +81,72 @@ public class NMEAMessageHandlerFragmentTest {
     }
 
     @Test
-    public void unfragmentedSentenceBetweenFragmentsDiscardsPendingFragments() {
-        // Known limitation: fragments are not keyed by sequence id or channel, so they must arrive consecutively.
+    public void unfragmentedSentenceBetweenFragmentsDoesNotDisturbPendingMessage() {
         List<NMEAMessage> fragments = nmea(fragments(shipAndVoyageData("INTERLEAVED"), 5, 50));
 
         handler.accept(fragments.get(0));
         handler.accept(dk.tbsalling.aismessages.testsupport.NmeaSentences.nmea(message(1, 168)));
         handler.accept(fragments.get(1));
 
-        assertEquals(1, received.size());
+        assertEquals(2, received.size());
+        assertEquals("INTERLEAVED", ((ShipAndVoyageData) received.get(1)).getShipName());
         assertTrue(handler.flush().isEmpty());
+    }
+
+    @Test
+    public void interleavedMessagesWithDifferentSequenceIdsAreBothReassembled() {
+        List<NMEAMessage> first = nmea(fragments(shipAndVoyageData("FIRST"), 1, 30));
+        List<NMEAMessage> second = nmea(fragments(shipAndVoyageData("SECOND"), 2, 30));
+        assertEquals(3, first.size());
+
+        for (int i = 0; i < first.size(); i++) {
+            handler.accept(first.get(i));
+            handler.accept(second.get(i));
+        }
+
+        assertEquals(List.of("FIRST", "SECOND"), received.stream().map(m -> ((ShipAndVoyageData) m).getShipName()).toList());
+        assertTrue(handler.flush().isEmpty());
+    }
+
+    @Test
+    public void sameSequenceIdOnDifferentChannelsIsReassembledSeparately() {
+        List<NMEAMessage> channelA = nmea(fragments(shipAndVoyageData("ON A"), 3, 50));
+        List<NMEAMessage> channelB = nmea(fragments(shipAndVoyageData("ON B"), 3, 50).stream().map(NMEAMessageHandlerFragmentTest::onChannelB).toList());
+
+        handler.accept(channelA.get(0));
+        handler.accept(channelB.get(0));
+        handler.accept(channelA.get(1));
+        handler.accept(channelB.get(1));
+
+        assertEquals(List.of("ON A", "ON B"), received.stream().map(m -> ((ShipAndVoyageData) m).getShipName()).toList());
+    }
+
+    @Test
+    public void fragmentOneRestartsAnIncompleteMessageWithTheSameSequenceId() {
+        List<NMEAMessage> abandoned = nmea(fragments(shipAndVoyageData("ABANDONED"), 4, 50));
+        List<NMEAMessage> next = nmea(fragments(shipAndVoyageData("RESTARTED"), 4, 50));
+
+        handler.accept(abandoned.get(0));
+        next.forEach(handler);
+
+        assertEquals(1, received.size());
+        assertEquals("RESTARTED", ((ShipAndVoyageData) received.get(0)).getShipName());
+        assertTrue(handler.flush().isEmpty());
+    }
+
+    @Test
+    public void flushReturnsEveryIncompleteMessage() {
+        handler.accept(nmea(fragments(shipAndVoyageData("ONE"), 1, 50)).get(0));
+        handler.accept(nmea(fragments(shipAndVoyageData("TWO"), 2, 50)).get(0));
+
+        assertEquals(2, handler.flush().size());
+        assertTrue(handler.flush().isEmpty());
+    }
+
+    /** The same sentence received on AIS channel B: the channel field changes and the checksum is recomputed. */
+    private static String onChannelB(String sentence) {
+        String body = sentence.substring(1, sentence.indexOf('*')).replace(",A,", ",B,");
+        return withChecksum(body);
     }
 
     @Test
