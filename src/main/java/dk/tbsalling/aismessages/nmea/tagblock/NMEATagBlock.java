@@ -62,7 +62,7 @@ public class NMEATagBlock {
         this.sentenceGrouping = parameterMap.containsKey(NMEATagBlockParameterCode.g)
                 ? parameterMap.get(NMEATagBlockParameterCode.g).getValue() : null;
         this.lineCount = parameterMap.containsKey(NMEATagBlockParameterCode.n)
-                ? Math.toIntExact(parseLong(rawMessage, NMEATagBlockParameterCode.n)) : null;
+                ? parseInt(rawMessage, NMEATagBlockParameterCode.n) : null;
         this.relativeTime = parameterMap.containsKey(NMEATagBlockParameterCode.r)
                 ? parseLong(rawMessage, NMEATagBlockParameterCode.r) : null;
         this.sourceId = parameterMap.containsKey(NMEATagBlockParameterCode.s)
@@ -84,6 +84,16 @@ public class NMEATagBlock {
             return Long.valueOf(value);
         } catch (NumberFormatException e) {
             throw new NMEAParseException(rawMessage, "Parameter \"%s\" (%s) is not a number: \"%s\"".formatted(code.name(), code.getName(), value));
+        }
+    }
+
+    /** @return the numeric value of the given parameter; a non-numeric value, or one outside the int range, is an {@link NMEAParseException} */
+    private Integer parseInt(String rawMessage, NMEATagBlockParameterCode code) {
+        String value = parameterMap.get(code).getValue();
+        try {
+            return Integer.valueOf(value);
+        } catch (NumberFormatException e) {
+            throw new NMEAParseException(rawMessage, "Parameter \"%s\" (%s) is not a number in the int range: \"%s\"".formatted(code.name(), code.getName(), value));
         }
     }
 
