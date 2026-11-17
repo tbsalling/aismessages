@@ -55,7 +55,7 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
                                              String regionalReserved2, boolean csUnit, boolean display, boolean dsc, boolean band,
                                              boolean message22, boolean assigned, boolean raimFlag, boolean commStateSelectorFlag,
                                              CommunicationState communicationState,
-                                             int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround) {
+                                             int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround, boolean transmitPowerLow) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.regionalReserved1 = regionalReserved1;
         this.speedOverGround = speedOverGround;
@@ -79,6 +79,7 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
         this.rawLatitude = rawLatitude;
         this.rawLongitude = rawLongitude;
         this.rawCourseOverGround = rawCourseOverGround;
+        this.transmitPowerLow = transmitPowerLow;
     }
 
     @Override
@@ -131,5 +132,7 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
     int rawLatitude;
     int rawLongitude;
     int rawCourseOverGround;
+    /** Transmit power flag at bit 139 (ITU-R M.1371-6 Table 68): false = high power (default), true = low power. */
+    boolean transmitPowerLow;
 
 }

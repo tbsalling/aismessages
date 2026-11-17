@@ -43,6 +43,7 @@ public class StandardClassBCSPositionReportTest {
         assertTrue(message.isMessage22());
         assertFalse(message.isAssigned());
         assertFalse(message.isRaimFlag());
+        assertFalse(message.isTransmitPowerLow());
         //assertEquals("11100000000000000110", message.getRadioStatus());
     }
 
@@ -77,6 +78,7 @@ public class StandardClassBCSPositionReportTest {
         assertFalse(message.isMessage22());
         assertFalse(message.isAssigned());
         assertFalse(message.isRaimFlag());
+        assertFalse(message.isTransmitPowerLow());
     }
 
     @Test
@@ -110,6 +112,7 @@ public class StandardClassBCSPositionReportTest {
         assertTrue(message.isMessage22());
         assertFalse(message.isAssigned());
         assertFalse(message.isRaimFlag());
+        assertFalse(message.isTransmitPowerLow());
         assertTrue(message.isCommStateSelectorFlag());
 
         CommunicationState communicationState = message.getCommunicationState();   // 1100000000000000110b = 3, slot incr = 6

@@ -53,7 +53,7 @@ public class AidToNavigationReport extends AISMessage {
                                     PositionFixingDevice positionFixingDevice, int second,
                                     boolean offPosition, String regionalUse, boolean raimFlag,
                                     boolean virtualAid, boolean assignedMode, int spare1,
-                                    String nameExtension, Integer spare2) {
+                                    String nameExtension, Integer spare2, boolean nameExtensionIsLabel) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.aidType = aidType;
         this.name = name;
@@ -74,6 +74,7 @@ public class AidToNavigationReport extends AISMessage {
         this.spare1 = spare1;
         this.nameExtension = nameExtension;
         this.spare2 = spare2;
+        this.nameExtensionIsLabel = nameExtensionIsLabel;
     }
 
     @Override
@@ -115,6 +116,15 @@ public class AidToNavigationReport extends AISMessage {
     boolean virtualAid;
     boolean assignedMode;
     int spare1;
+    /**
+     * Up to 14 additional six-bit characters extending {@link #getName()}, or, when {@link #isNameExtensionIsLabel()}
+     * is true, the AtoN's label (e.g. "LB1" for Lighted Buoy 1) with the leading "@@@" marker removed. Null when absent.
+     */
     String nameExtension;
     int spare2;
+    /**
+     * True when the name extension was preceded by "@@@", which per ITU-R M.1371-6 Table 71 means the text is to be
+     * portrayed as the AtoN's label rather than as part of its name.
+     */
+    boolean nameExtensionIsLabel;
 }

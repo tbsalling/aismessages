@@ -5,6 +5,9 @@ import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import org.junit.jupiter.api.Test;
 
+import dk.tbsalling.aismessages.ais.messages.types.SOTDMACommunicationState;
+import dk.tbsalling.aismessages.ais.messages.types.SyncState;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class StandardSARAircraftPositionReportTest {
@@ -36,6 +39,12 @@ class StandardSARAircraftPositionReportTest {
         assertFalse(message.isAssigned());
         assertEquals(Boolean.FALSE, message.isRaimFlag());
         assertEquals("00010000000110001010", message.getRadioStatus());
+        assertTrue(message.isBarometricAltitude());
+        assertFalse(message.isCommStateSelectorFlag());
+        SOTDMACommunicationState communicationState = (SOTDMACommunicationState) message.getCommunicationState();
+        assertEquals(SyncState.UTCDirect, communicationState.getSyncState());
+        assertEquals(4, communicationState.getSlotTimeout());
+        assertEquals(394, communicationState.getSlotNumber());
     }
 
 }

@@ -20,6 +20,7 @@ import dk.tbsalling.aismessages.ais.BitString;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
+import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
 import dk.tbsalling.aismessages.ais.messages.types.ShipType;
 import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
@@ -46,7 +47,8 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
                                        int partNumber, String shipName, ShipType shipType,
                                        String vendorId, String callsign,
                                        int toBow, int toStern, int toStarboard, int toPort,
-                                       MMSI mothershipMmsi) {
+                                       MMSI mothershipMmsi, String manufacturerMnemonic, int unitModelCode, int unitSerialNumber,
+                                       PositionFixingDevice positionFixingDevice, int vdesCapabilities) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.partNumber = partNumber;
         this.shipName = shipName;
@@ -58,6 +60,11 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
         this.toStarboard = toStarboard;
         this.toPort = toPort;
         this.mothershipMmsi = mothershipMmsi;
+        this.manufacturerMnemonic = manufacturerMnemonic;
+        this.unitModelCode = unitModelCode;
+        this.unitSerialNumber = unitSerialNumber;
+        this.positionFixingDevice = positionFixingDevice;
+        this.vdesCapabilities = vdesCapabilities;
     }
 
     @Override
@@ -88,15 +95,35 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
         return TransponderClass.B;
     }
 
+    /** 0 = Part A (name), 1 = Part B (static data). Fields of the other part are null or -1. */
     int partNumber;
     String shipName;
     ShipType shipType;
+    /** The 42-bit manufacturer ID of Part B rendered as 7 six-bit characters; see {@link #getManufacturerMnemonic()} for the structured form. */
     String vendorId;
     String callsign;
     int toBow;
     int toStern;
     int toStarboard;
     int toPort;
+    /**
+     * The 30 bits of the Part B dimension fields read as one MMSI, following the convention of some auxiliary craft
+     * transponders. Not part of ITU-R M.1371-6, which instead has craft associated with a parent vessel use a call sign
+     * of "A" followed by the last 6 digits of the parent's MMSI. Null when the dimension bits are all zero or for Part A.
+     */
     MMSI mothershipMmsi;
+    /** Part B, bits 48-66 (ITU-R M.1371-6 Table 78): the manufacturer's three-character NMEA mnemonic code. Null for Part A. */
+    String manufacturerMnemonic;
+    /** Part B, bits 66-70 (Table 78): unit model code 1-15 (0 not used). -1 for Part A. */
+    int unitModelCode;
+    /** Part B, bits 70-90 (Table 78): manufacturer-traceable unit serial number. -1 for Part A. */
+    int unitSerialNumber;
+    /** Part B, bits 162-166 (Table 77): type of electronic position fixing device. Null for Part A. */
+    PositionFixingDevice positionFixingDevice;
+    /**
+     * Part B, bits 166-168 (Table 77): 0 = AIS only, 1 = supports VDES ASM, 2 = supports VDES ASM/VDE-TER,
+     * 3 = supports VDES ASM/VDE-TER/VDE-SAT. -1 for Part A.
+     */
+    int vdesCapabilities;
 
 }

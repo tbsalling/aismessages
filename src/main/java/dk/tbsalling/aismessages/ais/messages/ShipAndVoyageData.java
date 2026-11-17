@@ -70,13 +70,14 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
      * @param destination          the destination
      * @param dataTerminalReady    the data terminal ready flag
      * @param rawDraught           the raw draught value
+     * @param aisVersionIndicator  the AIS version indicator
      */
     protected ShipAndVoyageData(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                 IMO imo, String callsign, String shipName, ShipType shipType,
                                 int toBow, int toStern, int toPort, int toStarboard,
                                 PositionFixingDevice positionFixingDevice,
                                 int etaMonth, int etaDay, int etaHour, int etaMinute,
-                                float draught, String destination, boolean dataTerminalReady, int rawDraught) {
+                                float draught, String destination, boolean dataTerminalReady, int rawDraught, int aisVersionIndicator) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.imo = imo;
         this.callsign = callsign;
@@ -95,6 +96,7 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
         this.destination = destination;
         this.dataTerminalReady = dataTerminalReady;
         this.rawDraught = rawDraught;
+        this.aisVersionIndicator = aisVersionIndicator;
     }
 
     @Override
@@ -170,4 +172,9 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
     String destination;
     boolean dataTerminalReady;
     int rawDraught;
+    /**
+     * AIS version indicator, bits 38-40 (ITU-R M.1371-6 Table 50): 0 = station compliant with M.1371-1,
+     * 1 = compliant with M.1371-3, 2 = compliant with M.1371-5, 3 = compliant with M.1371-6 or later.
+     */
+    int aisVersionIndicator;
 }

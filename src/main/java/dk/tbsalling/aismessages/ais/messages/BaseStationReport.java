@@ -50,7 +50,7 @@ public class BaseStationReport extends AISMessage {
                                 int year, int month, int day, int hour, int minute, int second,
                                 boolean positionAccurate, float latitude, float longitude,
                                 PositionFixingDevice positionFixingDevice, boolean raimFlag,
-                                SOTDMACommunicationState communicationState) {
+                                SOTDMACommunicationState communicationState, boolean satelliteBroadcastTransmissionControl) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.year = year;
         this.month = month;
@@ -64,6 +64,7 @@ public class BaseStationReport extends AISMessage {
         this.positionFixingDevice = positionFixingDevice;
         this.raimFlag = raimFlag;
         this.communicationState = communicationState;
+        this.satelliteBroadcastTransmissionControl = satelliteBroadcastTransmissionControl;
     }
 
     @Override
@@ -101,5 +102,11 @@ public class BaseStationReport extends AISMessage {
     PositionFixingDevice positionFixingDevice;
     boolean raimFlag;
     SOTDMACommunicationState communicationState;
+    /**
+     * Transmission control for AIS satellite broadcast message, bit 138 (ITU-R M.1371-6 Table 49): false = Class A
+     * stations stop transmitting Message 27 within this base station's coverage area (default), true = Class A
+     * stations are requested to transmit Message 27 within the coverage area. The coverage area is defined by Message 23.
+     */
+    boolean satelliteBroadcastTransmissionControl;
 
 }

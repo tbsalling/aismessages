@@ -19,6 +19,7 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.BitString;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.ais.messages.types.CommunicationState;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
@@ -45,7 +46,8 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
                                                 float latitude, float longitude, float courseOverGround,
                                                 int second, String regionalReserved, boolean dataTerminalReady,
                                                 boolean assigned, boolean raimFlag, String radioStatus,
-                                                int rawSpeedOverGround, int rawLongitude, int rawLatitude, int rawCourseOverGround) {
+                                                int rawSpeedOverGround, int rawLongitude, int rawLatitude, int rawCourseOverGround,
+                                                boolean barometricAltitude, boolean commStateSelectorFlag, CommunicationState communicationState) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.altitude = altitude;
         this.speedOverGround = speedOverGround;
@@ -63,6 +65,9 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
         this.rawLongitude = rawLongitude;
         this.rawLatitude = rawLatitude;
         this.rawCourseOverGround = rawCourseOverGround;
+        this.barometricAltitude = barometricAltitude;
+        this.commStateSelectorFlag = commStateSelectorFlag;
+        this.communicationState = communicationState;
     }
 
     @Override
@@ -109,5 +114,11 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
     int rawLongitude;
     int rawLatitude;
     int rawCourseOverGround;
+    /** Altitude sensor, bit 134 (ITU-R M.1371-6 Table 57): false = GNSS, true = barometric source. */
+    boolean barometricAltitude;
+    /** Communication state selector flag, bit 148: false = SOTDMA communication state follows, true = ITDMA. */
+    boolean commStateSelectorFlag;
+    /** The communication state in bits 149-168, typed according to {@link #isCommStateSelectorFlag()}. */
+    CommunicationState communicationState;
 
 }

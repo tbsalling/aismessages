@@ -21,6 +21,7 @@ import dk.tbsalling.aismessages.ais.BitString;
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
+import dk.tbsalling.aismessages.ais.messages.types.SOTDMACommunicationState;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlock;
@@ -43,7 +44,8 @@ public class UTCAndDateResponse extends AISMessage {
     protected UTCAndDateResponse(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                  int year, int month, int day, int hour, int minute, int second,
                                  boolean positionAccurate, float latitude, float longitude,
-                                 PositionFixingDevice positionFixingDevice, boolean raimFlag) {
+                                 PositionFixingDevice positionFixingDevice, boolean raimFlag,
+                                 boolean satelliteBroadcastTransmissionControl, SOTDMACommunicationState communicationState) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.year = year;
         this.month = month;
@@ -56,6 +58,8 @@ public class UTCAndDateResponse extends AISMessage {
         this.longitude = longitude;
         this.positionFixingDevice = positionFixingDevice;
         this.raimFlag = raimFlag;
+        this.satelliteBroadcastTransmissionControl = satelliteBroadcastTransmissionControl;
+        this.communicationState = communicationState;
     }
 
     @Override
@@ -92,4 +96,8 @@ public class UTCAndDateResponse extends AISMessage {
     float longitude;
     PositionFixingDevice positionFixingDevice;
     boolean raimFlag;
+    /** Transmission control for AIS satellite broadcast message, bit 138 (ITU-R M.1371-6 Table 49); see {@link BaseStationReport#isSatelliteBroadcastTransmissionControl()}. */
+    boolean satelliteBroadcastTransmissionControl;
+    /** SOTDMA communication state, bits 149-168 (ITU-R M.1371-6 Table 49). */
+    SOTDMACommunicationState communicationState;
 }

@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class AidToNavigationReportTest {
 
@@ -76,6 +77,32 @@ public class AidToNavigationReportTest {
         assertEquals(151.49791f, message.getLongitude(), 0.0f);
         assertEquals(PositionFixingDevice.Surveyed, message.getPositionFixingDevice());
         assertFalse(message.isRaimFlag());
+        assertFalse(message.isNameExtensionIsLabel());
+    }
+
+    /**
+     * Name extension preceded by "@@@", which ITU-R M.1371-6 Table 71 defines as the AtoN's label (here "LB1") rather
+     * than a continuation of the name. Synthetic sentence built from the spec layout; verified with pyais, which
+     * reports the raw extension "@@@LB1".
+     */
+    @Test
+    public void canDecodeNameExtensionLabel() {
+        // Arrange
+        NMEAMessage nmeaMessage = new NMEAMessage("!AIVDM,1,1,,A,E>jHC6L64ST:2R@1:WdhHP000000LW3P?tl201088;v0000030d@,4*13");
+
+        // Act
+        AISMessage aisMessage = dk.tbsalling.aismessages.ais.messages.AISMessageFactory.create(null, null, null, nmeaMessage);
+
+        // Assert
+        AidToNavigationReport message = (AidToNavigationReport) aisMessage;
+        assertEquals(new MMSI(992351001), message.getSourceMmsi());
+        assertEquals(AidType.PortHandMark, message.getAidType());
+        assertEquals("LIGHTED BUOY 1", message.getName());
+        assertEquals(12.5f, message.getLongitude(), 0.0f);
+        assertEquals(55.75f, message.getLatitude(), 0.0f);
+        assertEquals(PositionFixingDevice.Surveyed, message.getPositionFixingDevice());
+        assertTrue(message.isNameExtensionIsLabel());
+        assertEquals("LB1", message.getNameExtension());
     }
 
 }

@@ -34,6 +34,7 @@ public class BaseStationReportTest {
         assertEquals(-122.59837f, message.getLongitude(), 0.0f);
         assertEquals(PositionFixingDevice.Surveyed, message.getPositionFixingDevice());
         assertFalse(message.isRaimFlag());
+        assertFalse(message.isSatelliteBroadcastTransmissionControl());
     }
 
     @Test
@@ -62,6 +63,7 @@ public class BaseStationReportTest {
         assertEquals(31.033514f, message.getLongitude(), 0.0f);
         assertEquals(PositionFixingDevice.Gps, message.getPositionFixingDevice());
         assertFalse(message.isRaimFlag());
+        assertFalse(message.isSatelliteBroadcastTransmissionControl());
 
         SOTDMACommunicationState sotdmaCommunicationState = message.getCommunicationState();
         assertEquals(SyncState.UTCDirect, sotdmaCommunicationState.getSyncState());

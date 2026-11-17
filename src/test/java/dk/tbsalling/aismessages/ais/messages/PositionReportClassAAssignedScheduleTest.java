@@ -65,5 +65,6 @@ public class PositionReportClassAAssignedScheduleTest {
         assertEquals(7, message.getSecond());
         assertEquals(ManeuverIndicator.NotAvailable, message.getSpecialManeuverIndicator());
         assertFalse(message.isRaimFlag());
+        assertFalse(message.isTransmitPowerLow());
     }
 }

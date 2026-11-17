@@ -59,6 +59,25 @@ Alignment with Recommendation ITU-R M.1371-6 (02/2026).
   returns the new constants for those codes, so comparisons against the deprecated constants no longer
   match decoded values.
 
+### Fields added in ITU-R M.1371-6 now decoded
+
+- Messages 1, 2, 3 (`PositionReport`) and 18 (`StandardClassBCSPositionReport`): `isTransmitPowerLow()`
+  (Tables 46 and 68; false = high power, true = low power).
+- Messages 4 (`BaseStationReport`) and 11 (`UTCAndDateResponse`):
+  `isSatelliteBroadcastTransmissionControl()` (Table 49, control of Message 27 transmission within the
+  base station coverage area). `UTCAndDateResponse` additionally exposes `getCommunicationState()`.
+- Message 5 (`ShipAndVoyageData`): `getAisVersionIndicator()` (Table 50; 3 = M.1371-6 or later).
+- Message 9 (`StandardSARAircraftPositionReport`): `isBarometricAltitude()` (Table 57 altitude sensor),
+  `isCommStateSelectorFlag()` and a typed `getCommunicationState()`. The `getRegionalReserved()` and
+  `getRadioStatus()` strings are unchanged.
+- Message 21 (`AidToNavigationReport`): `isNameExtensionIsLabel()`. When the name extension starts with
+  "@@@" (Table 71: portray as label, not as name), the marker is stripped from `getNameExtension()` and
+  this flag is true.
+- Message 24 Part B (`ClassBCSStaticDataReport`): `getPositionFixingDevice()` and `getVdesCapabilities()`
+  (Table 77), plus the Table 78 split of the manufacturer ID into `getManufacturerMnemonic()`,
+  `getUnitModelCode()` and `getUnitSerialNumber()`. `getVendorId()` is unchanged; `getMothershipMmsi()`
+  is kept but documented as not being part of M.1371-6.
+
 ### New public APIs
 
 - `BinaryMessageSingleSlot`: `getDesignatedAreaCode()`, `getFunctionalId()`, `getData()`,

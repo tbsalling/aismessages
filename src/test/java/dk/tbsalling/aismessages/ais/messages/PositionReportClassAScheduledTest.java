@@ -43,7 +43,7 @@ public class PositionReportClassAScheduledTest {
                 mmsi, repeatIndicator, null, nmeaMessages, bitString, source, received,
                 navigationStatus, rateOfTurn, speedOverGround, positionAccuracy, latitude, longitude,
                 courseOverGround, trueHeading, second, specialManeuverIndicator, raimFlag, communicationState,
-                rawRateOfTurn, rawSpeedOverGround, rawLatitude, rawLongitude, rawCourseOverGround);
+                rawRateOfTurn, rawSpeedOverGround, rawLatitude, rawLongitude, rawCourseOverGround, false);
 
         // Act
         String s = msg.toString();

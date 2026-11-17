@@ -56,6 +56,7 @@ public class AISMessageFactory {
     }
 
     private static ShipAndVoyageData createShipAndVoyageData(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
+        int aisVersionIndicator = bitString.getUnsignedInt(38, 40);
         IMO imo = new IMO(bitString.getUnsignedInt(40, 70));
         String callsign = AISText.decode(bitString, 70, 112);
         String shipName = AISText.decode(bitString, 112, 232);
@@ -76,7 +77,7 @@ public class AISMessageFactory {
 
         return new ShipAndVoyageData(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 imo, callsign, shipName, shipType, toBow, toStern, toPort, toStarboard,
-                positionFixingDevice, etaMonth, etaDay, etaHour, etaMinute, draught, destination, dataTerminalReady, rawDraught);
+                positionFixingDevice, etaMonth, etaDay, etaHour, etaMinute, draught, destination, dataTerminalReady, rawDraught, aisVersionIndicator);
     }
 
     private static PositionReport createPositionReportClassAScheduled(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
@@ -115,6 +116,7 @@ public class AISMessageFactory {
         int trueHeading = bitString.getUnsignedInt(128, 137);
         int second = bitString.getUnsignedInt(137, 143);
         ManeuverIndicator specialManeuverIndicator = ManeuverIndicator.fromInteger(bitString.getUnsignedInt(143, 145));
+        boolean transmitPowerLow = bitString.getBoolean(147, 148);
         boolean raimFlag = bitString.getBoolean(148, 149);
 
         // Communication state depends on the message type
@@ -130,7 +132,7 @@ public class AISMessageFactory {
         return constructor.create(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 navigationStatus, rateOfTurn, speedOverGround, positionAccuracy, latitude, longitude,
                 courseOverGround, trueHeading, second, specialManeuverIndicator, raimFlag, communicationState,
-                rawRateOfTurn, rawSpeedOverGround, rawLatitude, rawLongitude, rawCourseOverGround);
+                rawRateOfTurn, rawSpeedOverGround, rawLatitude, rawLongitude, rawCourseOverGround, transmitPowerLow);
     }
 
     private static BaseStationReport createBaseStationReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
@@ -144,12 +146,13 @@ public class AISMessageFactory {
         float longitude = bitString.getSignedFloat(79, 107) / 600000f;
         float latitude = bitString.getSignedFloat(107, 134) / 600000f;
         PositionFixingDevice positionFixingDevice = PositionFixingDevice.fromInteger(bitString.getUnsignedInt(134, 138));
+        boolean satelliteBroadcastTransmissionControl = bitString.getBoolean(138, 139);
         boolean raimFlag = bitString.getBoolean(148, 149);
         SOTDMACommunicationState communicationState = SOTDMACommunicationState.fromBitString(bitString.slice(149, 168));
 
         return new BaseStationReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 year, month, day, hour, minute, second, positionAccurate, latitude, longitude,
-                positionFixingDevice, raimFlag, communicationState);
+                positionFixingDevice, raimFlag, communicationState, satelliteBroadcastTransmissionControl);
     }
 
     private static AddressedBinaryMessage createAddressedBinaryMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
@@ -227,16 +230,22 @@ public class AISMessageFactory {
         int rawCourseOverGround = bitString.getUnsignedInt(116, 128);
         float courseOverGround = rawCourseOverGround / 10f;
         int second = bitString.getUnsignedInt(128, 134);
+        boolean barometricAltitude = bitString.getBoolean(134, 135);
         String regionalReserved = bitString.getBits(134, 142);
         boolean dataTerminalReady = bitString.getBoolean(142, 143);
         boolean assigned = bitString.getBoolean(146, 147);
         boolean raimFlag = bitString.getBoolean(147, 148);
         String radioStatus = bitString.getBits(148, 168);
+        boolean commStateSelectorFlag = bitString.getBoolean(148, 149);
+        CommunicationState communicationState = commStateSelectorFlag
+                ? ITDMACommunicationState.fromBitString(bitString.slice(149, 168))
+                : SOTDMACommunicationState.fromBitString(bitString.slice(149, 168));
 
         return new StandardSARAircraftPositionReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 altitude, speed, positionAccuracy, latitude, longitude, courseOverGround, second,
                 regionalReserved, dataTerminalReady, assigned, raimFlag, radioStatus,
-                rawSpeedOverGround, rawLongitude, rawLatitude, rawCourseOverGround);
+                rawSpeedOverGround, rawLongitude, rawLatitude, rawCourseOverGround,
+                barometricAltitude, commStateSelectorFlag, communicationState);
     }
 
     private static UTCAndDateInquiry createUTCAndDateInquiry(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
@@ -257,11 +266,13 @@ public class AISMessageFactory {
         float longitude = bitString.getSignedFloat(79, 107) / 600000f;
         float latitude = bitString.getSignedFloat(107, 134) / 600000f;
         PositionFixingDevice positionFixingDevice = PositionFixingDevice.fromInteger(bitString.getUnsignedInt(134, 138));
+        boolean satelliteBroadcastTransmissionControl = bitString.getBoolean(138, 139);
         boolean raimFlag = bitString.getBoolean(148, 149);
+        SOTDMACommunicationState communicationState = SOTDMACommunicationState.fromBitString(bitString.slice(149, 168));
 
         return new UTCAndDateResponse(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 year, month, day, hour, minute, second, positionAccurate, latitude, longitude,
-                positionFixingDevice, raimFlag);
+                positionFixingDevice, raimFlag, satelliteBroadcastTransmissionControl, communicationState);
     }
 
     private static AddressedSafetyRelatedMessage createAddressedSafetyRelatedMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
@@ -409,6 +420,7 @@ public class AISMessageFactory {
         float courseOverGround = rawCourseOverGround / 10f;
         int trueHeading = bitString.getUnsignedInt(124, 133);
         int second = bitString.getUnsignedInt(133, 139);
+        boolean transmitPowerLow = bitString.getBoolean(139, 140);
         String regionalReserved2 = bitString.getBits(139, 141);
         boolean csUnit = bitString.getBoolean(141, 142);
         boolean display = bitString.getBoolean(142, 143);
@@ -427,7 +439,7 @@ public class AISMessageFactory {
                 regionalReserved1, speedOverGround, positionAccuracy, latitude, longitude, courseOverGround,
                 trueHeading, second, regionalReserved2, csUnit, display, dsc, band, message22, assigned,
                 raimFlag, commStateSelectorFlag, commState,
-                rawSpeedOverGround, rawLatitude, rawLongitude, rawCourseOverGround);
+                rawSpeedOverGround, rawLatitude, rawLongitude, rawCourseOverGround, transmitPowerLow);
     }
 
     private static ExtendedClassBEquipmentPositionReport createExtendedClassBEquipmentPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
@@ -531,6 +543,7 @@ public class AISMessageFactory {
         int spare1 = bitString.getUnsignedInt(271, 272);
 
         String nameExtension = null;
+        boolean nameExtensionIsLabel = false;
         Integer spare2 = 0;
 
         if (bitString.length() > 272) {
@@ -538,7 +551,13 @@ public class AISMessageFactory {
             int extraChars = extraBits / 6;
             int extraBitsOfChars = extraChars * 6;
             if (extraBits > 0) {
-                nameExtension = AISText.decode(bitString, 272, 272 + extraBitsOfChars);
+                // ITU-R M.1371-6 Table 71: an extension preceded by "@@@" is to be portrayed as the AtoN's label, not as part of its name.
+                int textStart = 272;
+                if (extraChars >= 3 && bitString.getUnsignedInt(272, 290) == 0) {
+                    nameExtensionIsLabel = true;
+                    textStart = 290;
+                }
+                nameExtension = AISText.decode(bitString, textStart, 272 + extraBitsOfChars);
                 spare2 = (extraBits == extraBitsOfChars) ? 0 : bitString.getUnsignedInt(272 + extraBitsOfChars, bitString.length());
             }
         }
@@ -546,7 +565,7 @@ public class AISMessageFactory {
         return new AidToNavigationReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 aidType, name, positionAccurate, latitude, longitude, toBow, toStern, toPort, toStarboard,
                 positionFixingDevice, second, offPosition, regionalUse, raimFlag, virtualAid, assignedMode,
-                spare1, nameExtension, spare2);
+                spare1, nameExtension, spare2, nameExtensionIsLabel);
     }
 
     private static ChannelManagement createChannelManagement(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
@@ -604,29 +623,39 @@ public class AISMessageFactory {
     }
 
     private static ClassBCSStaticDataReport createClassBCSStaticDataReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
-        int spare = bitString.getUnsignedInt(38, 40);
         int partNumber = bitString.getUnsignedInt(38, 40);
 
         String shipName = null;
         ShipType shipType = null;
         String vendorId = null;
+        String manufacturerMnemonic = null;
+        int unitModelCode = -1;
+        int unitSerialNumber = -1;
         String callsign = null;
         int toBow = -1;
         int toStern = -1;
         int toStarboard = -1;
         int toPort = -1;
         MMSI mothershipMmsi = null;
+        PositionFixingDevice positionFixingDevice = null;
+        int vdesCapabilities = -1;
 
         switch (partNumber) {
             case 0 -> shipName = AISText.decode(bitString, 40, 160);
             case 1 -> {
                 shipType = ShipType.fromInteger(bitString.getUnsignedInt(40, 48));
                 vendorId = AISText.decode(bitString, 48, 90);
+                // ITU-R M.1371-6 Table 78: the 42-bit manufacturer ID is a 3-character mnemonic, a 4-bit model code and a 20-bit serial number.
+                manufacturerMnemonic = AISText.decode(bitString, 48, 66);
+                unitModelCode = bitString.getUnsignedInt(66, 70);
+                unitSerialNumber = bitString.getUnsignedInt(70, 90);
                 callsign = AISText.decode(bitString, 90, 132);
                 toBow = bitString.getUnsignedInt(132, 141);
                 toStern = bitString.getUnsignedInt(141, 150);
                 toPort = bitString.getUnsignedInt(150, 156);
                 toStarboard = bitString.getUnsignedInt(156, 162);
+                positionFixingDevice = PositionFixingDevice.fromInteger(bitString.getUnsignedInt(162, 166));
+                vdesCapabilities = bitString.getUnsignedInt(166, 168);
 
                 int mmsiValue = bitString.getUnsignedInt(132, 162);
                 if (mmsiValue != 0) {
@@ -636,7 +665,8 @@ public class AISMessageFactory {
         }
 
         return new ClassBCSStaticDataReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
-                partNumber, shipName, shipType, vendorId, callsign, toBow, toStern, toStarboard, toPort, mothershipMmsi);
+                partNumber, shipName, shipType, vendorId, callsign, toBow, toStern, toStarboard, toPort, mothershipMmsi,
+                manufacturerMnemonic, unitModelCode, unitSerialNumber, positionFixingDevice, vdesCapabilities);
     }
 
     private static BinaryMessageSingleSlot createBinaryMessageSingleSlot(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
@@ -820,7 +850,7 @@ public class AISMessageFactory {
                               boolean positionAccuracy, float latitude, float longitude,
                               float courseOverGround, int trueHeading, int second,
                               ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState,
-                              int rawRateOfTurn, int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround);
+                              int rawRateOfTurn, int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround, boolean transmitPowerLow);
     }
 
 }

@@ -67,13 +67,14 @@ public abstract sealed class PositionReport extends AISMessage implements Extend
      * @param rawLatitude              the raw latitude value
      * @param rawLongitude             the raw longitude value
      * @param rawCourseOverGround      the raw course over ground value
+     * @param transmitPowerLow         the transmit power flag (false = high power, true = low power)
      */
     protected PositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                              NavigationStatus navigationStatus, int rateOfTurn, float speedOverGround,
                              boolean positionAccuracy, float latitude, float longitude,
                              float courseOverGround, int trueHeading, int second,
                              ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState,
-                             int rawRateOfTurn, int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround) {
+                             int rawRateOfTurn, int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround, boolean transmitPowerLow) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.navigationStatus = navigationStatus;
         this.rateOfTurn = rateOfTurn;
@@ -92,6 +93,7 @@ public abstract sealed class PositionReport extends AISMessage implements Extend
         this.rawLatitude = rawLatitude;
         this.rawLongitude = rawLongitude;
         this.rawCourseOverGround = rawCourseOverGround;
+        this.transmitPowerLow = transmitPowerLow;
     }
 
     @Override
@@ -135,4 +137,6 @@ public abstract sealed class PositionReport extends AISMessage implements Extend
     int rawLatitude;
     int rawLongitude;
     int rawCourseOverGround;
+    /** Transmit power flag at bit 147 (ITU-R M.1371-6 Table 46): false = high power (default), true = low power. */
+    boolean transmitPowerLow;
 }

@@ -27,7 +27,7 @@ package dk.tbsalling.aismessages.ais;
 public final class AISText {
 
     /**
-     * ITU-R M.1371-5 Table 47 — 0..31 → '@'..'_', 32..63 → ' '..'?'.
+     * ITU-R M.1371-6 Table 45 — 0..31 → '@'..'_', 32..63 → ' '..'?'.
      */
     private static final char[] ALPHABET = {
             '@', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', //  0.. 9 (ASCII 64..73)

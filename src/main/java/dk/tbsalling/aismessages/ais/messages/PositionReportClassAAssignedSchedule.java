@@ -36,11 +36,11 @@ public class PositionReportClassAAssignedSchedule extends PositionReport {
                                                    boolean positionAccuracy, float latitude, float longitude,
                                                    float courseOverGround, int trueHeading, int second,
                                                    ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState,
-                                                   int rawRateOfTurn, int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround) {
+                                                   int rawRateOfTurn, int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround, boolean transmitPowerLow) {
         super(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 navigationStatus, rateOfTurn, speedOverGround, positionAccuracy, latitude, longitude,
                 courseOverGround, trueHeading, second, specialManeuverIndicator, raimFlag, communicationState,
-                rawRateOfTurn, rawSpeedOverGround, rawLatitude, rawLongitude, rawCourseOverGround);
+                rawRateOfTurn, rawSpeedOverGround, rawLatitude, rawLongitude, rawCourseOverGround, transmitPowerLow);
     }
 
     @Override
