@@ -158,18 +158,18 @@ public enum ShipType {
 	PassengerHazardousD(64),
 	/** 65 = passenger (cruise) ship. */
 	PassengerCruiseShip(65),
-	/** @deprecated since 5.1.0; code 65 is defined as {@link #PassengerCruiseShip} in ITU-R M.1371-6. */
-	@Deprecated(since = "5.1.0")
+	/** @deprecated since 6.0.0; code 65 is defined as {@link #PassengerCruiseShip} in ITU-R M.1371-6. */
+	@Deprecated(since = "6.0.0")
 	PassengerFuture1(65),
 	/** 66 = passenger (ferry) ship. */
 	PassengerFerry(66),
-	/** @deprecated since 5.1.0; code 66 is defined as {@link #PassengerFerry} in ITU-R M.1371-6. */
-	@Deprecated(since = "5.1.0")
+	/** @deprecated since 6.0.0; code 66 is defined as {@link #PassengerFerry} in ITU-R M.1371-6. */
+	@Deprecated(since = "6.0.0")
 	PassengerFuture2(66),
 	/** Passenger (excursion) ship, i.e. harbour cruise boat, whale watcher, etc. */
 	PassengerExcursionShip(67),
-	/** @deprecated since 5.1.0; code 67 is defined as {@link #PassengerExcursionShip} in ITU-R M.1371-6. */
-	@Deprecated(since = "5.1.0")
+	/** @deprecated since 6.0.0; code 67 is defined as {@link #PassengerExcursionShip} in ITU-R M.1371-6. */
+	@Deprecated(since = "6.0.0")
 	PassengerFuture3(67),
 	/** 68 = reserved for future use. */
 	PassengerFuture4(68),
@@ -187,23 +187,23 @@ public enum ShipType {
 	CargoHazardousD(74),
 	/** 75 = cargo ship, bulk carrier. */
 	CargoBulkCarrier(75),
-	/** @deprecated since 5.1.0; code 75 is defined as {@link #CargoBulkCarrier} in ITU-R M.1371-6. */
-	@Deprecated(since = "5.1.0")
+	/** @deprecated since 6.0.0; code 75 is defined as {@link #CargoBulkCarrier} in ITU-R M.1371-6. */
+	@Deprecated(since = "6.0.0")
 	CargoFuture1(75),
 	/** 76 = cargo ship, container ship. */
 	CargoContainerShip(76),
-	/** @deprecated since 5.1.0; code 76 is defined as {@link #CargoContainerShip} in ITU-R M.1371-6. */
-	@Deprecated(since = "5.1.0")
+	/** @deprecated since 6.0.0; code 76 is defined as {@link #CargoContainerShip} in ITU-R M.1371-6. */
+	@Deprecated(since = "6.0.0")
 	CargoFuture2(76),
 	/** 77 = cargo ship, roll-on roll-off carrier. */
 	CargoRollOnRollOffCarrier(77),
-	/** @deprecated since 5.1.0; code 77 is defined as {@link #CargoRollOnRollOffCarrier} in ITU-R M.1371-6. */
-	@Deprecated(since = "5.1.0")
+	/** @deprecated since 6.0.0; code 77 is defined as {@link #CargoRollOnRollOffCarrier} in ITU-R M.1371-6. */
+	@Deprecated(since = "6.0.0")
 	CargoFuture3(77),
 	/** 78 = cargo ship, landing craft. */
 	CargoLandingCraft(78),
-	/** @deprecated since 5.1.0; code 78 is defined as {@link #CargoLandingCraft} in ITU-R M.1371-6. */
-	@Deprecated(since = "5.1.0")
+	/** @deprecated since 6.0.0; code 78 is defined as {@link #CargoLandingCraft} in ITU-R M.1371-6. */
+	@Deprecated(since = "6.0.0")
 	CargoFuture4(78),
 	/** 79 = cargo ship, no additional information. */
 	CargoNoAdditionalInfo(79),
@@ -219,13 +219,13 @@ public enum ShipType {
 	TankerHazardousD(84),
 	/** Tanker, non-hazardous or non-pollutant carrier. */
 	TankerNonHazardous(85),
-	/** @deprecated since 5.1.0; code 85 is defined as {@link #TankerNonHazardous} in ITU-R M.1371-6. */
-	@Deprecated(since = "5.1.0")
+	/** @deprecated since 6.0.0; code 85 is defined as {@link #TankerNonHazardous} in ITU-R M.1371-6. */
+	@Deprecated(since = "6.0.0")
 	TankerFuture1(85),
 	/** Integrated / articulated tug and tank barge (dimensions should reflect tug and barge). */
 	IntegratedTugAndTankBarge(86),
-	/** @deprecated since 5.1.0; code 86 is defined as {@link #IntegratedTugAndTankBarge} in ITU-R M.1371-6. */
-	@Deprecated(since = "5.1.0")
+	/** @deprecated since 6.0.0; code 86 is defined as {@link #IntegratedTugAndTankBarge} in ITU-R M.1371-6. */
+	@Deprecated(since = "6.0.0")
 	TankerFuture2(86),
 	/** 87 = reserved for future use. */
 	TankerFuture3(87),

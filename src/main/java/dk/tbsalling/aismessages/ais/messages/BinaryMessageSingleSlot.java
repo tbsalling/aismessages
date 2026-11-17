@@ -88,10 +88,10 @@ public class BinaryMessageSingleSlot extends AISMessage {
     /**
      * @return all bits following the two flags (bit 40 to the end of the message) as a string of '0' and '1',
      * regardless of whether they hold a destination ID, an application identifier or application data.
-     * @deprecated since 5.1.0; use {@code getDestinationMMSI()}, {@code getDesignatedAreaCode()},
+     * @deprecated since 6.0.0; use {@code getDestinationMMSI()}, {@code getDesignatedAreaCode()},
      * {@code getFunctionalId()} and {@code getData()}, which follow the layout of ITU-R M.1371-6 Table 79.
      */
-    @Deprecated(since = "5.1.0")
+    @Deprecated(since = "6.0.0")
     public String getBinaryData() {
         BitString bitString = getMetadata().bitString();
         return bitString.length() > 40 ? bitString.getBits(40, bitString.length()) : "";

@@ -34,8 +34,8 @@ public enum AidType {
 	FixedStructure(3),
 	/** 4 = emergency wreck marking buoy. */
 	EmergencyWreckMarkingBuoy(4),
-	/** @deprecated since 5.1.0; code 4 is defined as {@link #EmergencyWreckMarkingBuoy} in ITU-R M.1371-6. */
-	@Deprecated(since = "5.1.0")
+	/** @deprecated since 6.0.0; code 4 is defined as {@link #EmergencyWreckMarkingBuoy} in ITU-R M.1371-6. */
+	@Deprecated(since = "6.0.0")
 	FutureUse1(4),
 	/** 5 = fixed AtoN: light, without sectors. */
 	LightWithoutSectors(5),

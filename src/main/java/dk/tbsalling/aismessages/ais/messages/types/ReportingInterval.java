@@ -46,8 +46,8 @@ public enum ReportingInterval {
 	NextLongerReportingInterval(10),
 	/** 2 s; not applicable to Class B "CS" and Class B "SO". */
 	TwoSeconds(11),
-	/** @deprecated since 5.1.0; code 11 is defined as {@link #TwoSeconds} in ITU-R M.1371-6. */
-	@Deprecated(since = "5.1.0")
+	/** @deprecated since 6.0.0; code 11 is defined as {@link #TwoSeconds} in ITU-R M.1371-6. */
+	@Deprecated(since = "6.0.0")
 	FutureUse1(11),
 	/** 12 = reserved for future use. */
 	FutureUse2(12),
