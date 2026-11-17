@@ -19,6 +19,8 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.BitString;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.ais.messages.types.AltitudeIndicator;
+import dk.tbsalling.aismessages.ais.messages.types.TimeStampIndicator;
 import dk.tbsalling.aismessages.ais.messages.types.SpeedOverGroundIndicator;
 import dk.tbsalling.aismessages.ais.messages.types.CommunicationState;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
@@ -49,13 +51,14 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
      * Constructor accepting pre-parsed values for true immutability.
      */
     protected StandardSARAircraftPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
-                                                int altitude, float speedOverGround, SpeedOverGroundIndicator speedOverGroundIndicator, boolean positionAccuracy,
+                                                Integer altitude, AltitudeIndicator altitudeIndicator, float speedOverGround, SpeedOverGroundIndicator speedOverGroundIndicator, boolean positionAccuracy,
                                                 double latitude, double longitude, float courseOverGround,
-                                                int second, int regionalReserved, boolean dataTerminalReady,
+                                                Integer second, TimeStampIndicator timeStampIndicator, int regionalReserved, boolean dataTerminalReady,
                                                 boolean assigned, boolean raimFlag, int radioStatus,
                                                 boolean barometricAltitude, boolean commStateSelectorFlag, CommunicationState communicationState) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.altitude = altitude;
+        this.altitudeIndicator = altitudeIndicator;
         this.speedOverGround = speedOverGround;
         this.speedOverGroundIndicator = speedOverGroundIndicator;
         this.positionAccuracy = positionAccuracy;
@@ -63,6 +66,7 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
         this.longitude = longitude;
         this.courseOverGround = courseOverGround;
         this.second = second;
+        this.timeStampIndicator = timeStampIndicator;
         this.regionalReserved = regionalReserved;
         this.dataTerminalReady = dataTerminalReady;
         this.assigned = assigned;
@@ -101,8 +105,10 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
         return TransponderClass.SAR;
     }
 
-    /** Bits 38-50 (Table 57): altitude in metres from GNSS or barometric sensor (see {@code barometricAltitude}), 0-4094; 4094 = 4094 m or higher, 4095 = not available. */
-    int altitude;
+    /** Bits 38-50 (Table 57): altitude in metres from GNSS or barometric sensor (see {@code barometricAltitude}), 0-4094; 4094 when 4 094 m or higher and null when not available, as told by {@code altitudeIndicator}. */
+    Integer altitude;
+    /** Meaning of {@code altitude}: measured, 4 094 m or higher, or not available (see {@link AltitudeIndicator}). */
+    AltitudeIndicator altitudeIndicator;
     /** Speed over ground in knots, transmitted in 1-knot steps (Table 57); 1022 when 1 022 knots or higher and {@code NaN} when not available, as told by {@code speedOverGroundIndicator}. */
     float speedOverGround;
     /** Meaning of {@code speedOverGround}: measured, at least the field's maximum, or not available (see {@link SpeedOverGroundIndicator}). */
@@ -115,8 +121,10 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
     double longitude;
     /** Course over ground in degrees, transmitted in 1/10° (Table 57); {@code NaN} when not available (transmitted as 360°). */
     float courseOverGround;
-    /** Bits 128-134 (Table 57): UTC second when the report was generated, 0-59; 60 = not available (default), 61 = manual input, 62 = dead reckoning, 63 = EPFS inoperative. */
-    int second;
+    /** Bits 128-134 (Table 57): UTC second when the report was generated, 0-59; null unless {@code timeStampIndicator} is {@link TimeStampIndicator#Available}. */
+    Integer second;
+    /** What the time stamp field carries: the UTC second in {@code second}, or the state of the position fixing system (see {@link TimeStampIndicator}). */
+    TimeStampIndicator timeStampIndicator;
     /** Bits 134-142 (Table 57) as an unsigned integer, first bit most significant: the altitude sensor bit followed by 7 spare bits. See {@code barometricAltitude} for the typed value. */
     int regionalReserved;
     /** Bit 142 (Table 57, § A7-3.3.1): data terminal equipment ready, true = available (bit 0), false = not available (bit 1, default). */

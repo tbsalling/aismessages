@@ -19,6 +19,7 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.BitString;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.ais.messages.types.TimeStampIndicator;
 import dk.tbsalling.aismessages.ais.messages.types.SpeedOverGroundIndicator;
 import dk.tbsalling.aismessages.ais.messages.types.CommunicationState;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
@@ -54,7 +55,7 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
     protected StandardClassBCSPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                              int regionalReserved1, float speedOverGround, SpeedOverGroundIndicator speedOverGroundIndicator,
                                              boolean positionAccuracy, double latitude, double longitude,
-                                             float courseOverGround, int trueHeading, int second,
+                                             float courseOverGround, Integer trueHeading, Integer second, TimeStampIndicator timeStampIndicator,
                                              int regionalReserved2, boolean csUnit, boolean display, boolean dsc, boolean band,
                                              boolean message22, boolean assigned, boolean raimFlag, boolean commStateSelectorFlag,
                                              CommunicationState communicationState, boolean transmitPowerLow) {
@@ -68,6 +69,7 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
         this.courseOverGround = courseOverGround;
         this.trueHeading = trueHeading;
         this.second = second;
+        this.timeStampIndicator = timeStampIndicator;
         this.regionalReserved2 = regionalReserved2;
         this.csUnit = csUnit;
         this.display = display;
@@ -123,10 +125,12 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
     double longitude;
     /** Course over ground in degrees, transmitted in 1/10° (Table 68); {@code NaN} when not available (transmitted as 360°). */
     float courseOverGround;
-    /** Bits 124-133 (Table 68): true heading in degrees, 0-359; 511 = not available. */
-    int trueHeading;
-    /** Bits 133-139 (Table 68): UTC second when the report was generated, 0-59; 60 = not available (default), 61 = manual input, 62 = dead reckoning, 63 = EPFS inoperative (61-63 not used by Class B "CS"). */
-    int second;
+    /** Bits 124-133 (Table 68): true heading in degrees, 0-359; null when not available. */
+    Integer trueHeading;
+    /** Bits 133-139 (Table 68): UTC second when the report was generated, 0-59; null unless {@code timeStampIndicator} is {@link TimeStampIndicator#Available}. */
+    Integer second;
+    /** What the time stamp field carries: the UTC second in {@code second}, or the state of the position fixing system (see {@link TimeStampIndicator}). */
+    TimeStampIndicator timeStampIndicator;
     /** Bits 139-141 (Table 68) as an unsigned integer, first bit most significant: the transmit power flag (see {@code transmitPowerLow}) followed by one spare bit. */
     int regionalReserved2;
     /** Bit 141 (Table 68): Class B unit flag, true = Class B "CS" (carrier sense) unit, false = Class B "SO" (SOTDMA) unit. */

@@ -69,7 +69,7 @@ public class ShipAndVoyageDataTest {
         ShipAndVoyageData message = (ShipAndVoyageData) aisMessage;
         assertEquals(0, message.getRepeatIndicator());
         assertEquals(new MMSI(211339980), message.getSourceMmsi());
-        assertEquals(new IMO(0), message.getImo());
+        assertNull(message.getImo());
         assertEquals("J050A", message.getCallsign());
         assertEquals("HHLA 3         B", message.getShipName());
         assertEquals(ShipType.LawEnforcement, message.getShipType());

@@ -46,8 +46,8 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
      */
     protected ExtendedClassBEquipmentPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                                     int regionalReserved1, float speedOverGround, SpeedOverGroundIndicator speedOverGroundIndicator, boolean positionAccuracy,
-                                                    double latitude, double longitude, float courseOverGround, int trueHeading,
-                                                    int second, int regionalReserved2, String shipName, ShipType shipType,
+                                                    double latitude, double longitude, float courseOverGround, Integer trueHeading,
+                                                    Integer second, TimeStampIndicator timeStampIndicator, int regionalReserved2, String shipName, ShipType shipType,
                                                     int toBow, int toStern, int toPort, int toStarboard,
                                                     PositionFixingDevice positionFixingDevice, boolean raimFlag,
                                                     boolean dataTerminalReady, boolean assigned, int regionalReserved3) {
@@ -61,6 +61,7 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
         this.courseOverGround = courseOverGround;
         this.trueHeading = trueHeading;
         this.second = second;
+        this.timeStampIndicator = timeStampIndicator;
         this.regionalReserved2 = regionalReserved2;
         this.shipName = shipName;
         this.shipType = shipType;
@@ -117,10 +118,12 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
     double longitude;
     /** Course over ground in degrees, transmitted in 1/10° (Table 69); {@code NaN} when not available (transmitted as 360°). */
     float courseOverGround;
-    /** Bits 124-133 (Table 69): true heading in degrees, 0-359; 511 = not available. */
-    int trueHeading;
-    /** Bits 133-139 (Table 69): UTC second when the report was generated, 0-59; 60 = not available (default), 61 = manual input, 62 = dead reckoning, 63 = EPFS inoperative. */
-    int second;
+    /** Bits 124-133 (Table 69): true heading in degrees, 0-359; null when not available. */
+    Integer trueHeading;
+    /** Bits 133-139 (Table 69): UTC second when the report was generated, 0-59; null unless {@code timeStampIndicator} is {@link TimeStampIndicator#Available}. */
+    Integer second;
+    /** What the time stamp field carries: the UTC second in {@code second}, or the state of the position fixing system (see {@link TimeStampIndicator}). */
+    TimeStampIndicator timeStampIndicator;
     /** Bits 139-143 (Table 69) as an unsigned integer, first bit most significant: 4 spare bits, should be zero. */
     int regionalReserved2;
     /** Bits 143-263 (Table 69): name, up to 20 six-bit ASCII characters (Table 45); all "@" = not available. */

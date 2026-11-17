@@ -19,6 +19,7 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.BitString;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.ais.messages.types.TimeStampIndicator;
 import dk.tbsalling.aismessages.ais.messages.types.AidType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
@@ -53,7 +54,7 @@ public class AidToNavigationReport extends AISMessage {
                                     AidType aidType, String name, boolean positionAccurate,
                                     double latitude, double longitude,
                                     int toBow, int toStern, int toPort, int toStarboard,
-                                    PositionFixingDevice positionFixingDevice, int second,
+                                    PositionFixingDevice positionFixingDevice, Integer second, TimeStampIndicator timeStampIndicator,
                                     boolean offPosition, int regionalUse, boolean raimFlag,
                                     boolean virtualAid, boolean assignedMode, int spare1,
                                     String nameExtension, Integer spare2, boolean nameExtensionLabel) {
@@ -69,6 +70,7 @@ public class AidToNavigationReport extends AISMessage {
         this.toStarboard = toStarboard;
         this.positionFixingDevice = positionFixingDevice;
         this.second = second;
+        this.timeStampIndicator = timeStampIndicator;
         this.offPosition = offPosition;
         this.regionalUse = regionalUse;
         this.raimFlag = raimFlag;
@@ -122,8 +124,10 @@ public class AidToNavigationReport extends AISMessage {
     int toStarboard;
     /** Bits 249-253 (Table 71): type of electronic position fixing device; 7 = surveyed position is typical for fixed aids. */
     PositionFixingDevice positionFixingDevice;
-    /** Bits 253-259 (Table 71): UTC second when the report was generated, 0-59; 60 = not available (default), 61 = manual input, 62 = dead reckoning, 63 = EPFS inoperative. */
-    int second;
+    /** Bits 253-259 (Table 71): UTC second when the report was generated, 0-59; null unless {@code timeStampIndicator} is {@link TimeStampIndicator#Available}. */
+    Integer second;
+    /** What the time stamp field carries: the UTC second in {@code second}, or the state of the position fixing system (see {@link TimeStampIndicator}). */
+    TimeStampIndicator timeStampIndicator;
     /** Bit 259 (Table 71): off-position indicator, true = off position (floating aid outside its zone, or fixed aid with suspected GNSS anomaly); only meaningful when {@code second} ≤ 59. */
     boolean offPosition;
     /** Bits 260-268 (Table 71) as an unsigned integer, first bit most significant: the 8 AtoN status bits reserved for IALA Recommendation R0126; all zero = default. */

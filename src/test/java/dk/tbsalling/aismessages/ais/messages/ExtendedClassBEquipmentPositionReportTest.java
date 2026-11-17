@@ -8,6 +8,7 @@ import org.junit.jupiter.api.Test;
 import static dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice.Gps;
 import static dk.tbsalling.aismessages.ais.messages.types.ShipType.Fishing;
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 public class ExtendedClassBEquipmentPositionReportTest {
 
@@ -33,7 +34,7 @@ public class ExtendedClassBEquipmentPositionReportTest {
         assertEquals(71396656 / 600000.0, message.getLongitude(), 1e-6);
         assertEquals(14817473 / 600000.0, message.getLatitude(), 1e-6);
         assertEquals(49.7, message.getCourseOverGround(), 1e-1);
-        assertEquals(511, message.getTrueHeading());
+        assertNull(message.getTrueHeading());
         assertEquals(15, message.getSecond());
         assertEquals(0b0000, message.getRegionalReserved2());
         assertEquals("ZHECANGYU4078", message.getShipName());

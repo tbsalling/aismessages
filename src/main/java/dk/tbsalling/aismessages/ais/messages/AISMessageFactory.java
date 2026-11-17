@@ -71,7 +71,8 @@ public class AISMessageFactory {
 
     private static ShipAndVoyageData createShipAndVoyageData(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
         AisVersionIndicator aisVersionIndicator = AisVersionIndicator.fromInteger(bitString.getUnsignedInt(38, 40));
-        IMO imo = new IMO(bitString.getUnsignedInt(40, 70));
+        int rawImo = bitString.getUnsignedInt(40, 70);
+        IMO imo = rawImo == 0 ? null : new IMO(rawImo);
         String callsign = AISText.decode(bitString, 70, 112);
         String shipName = AISText.decode(bitString, 112, 232);
         ShipType shipType = ShipType.fromInteger(bitString.getUnsignedInt(232, 240));
@@ -80,10 +81,10 @@ public class AISMessageFactory {
         int toPort = bitString.getUnsignedInt(258, 264);
         int toStarboard = bitString.getUnsignedInt(264, 270);
         PositionFixingDevice positionFixingDevice = PositionFixingDevice.fromInteger(bitString.getUnsignedInt(270, 274));
-        int etaMonth = bitString.getUnsignedInt(274, 278);
-        int etaDay = bitString.getUnsignedInt(278, 283);
-        int etaHour = bitString.getUnsignedInt(283, 288);
-        int etaMinute = bitString.getUnsignedInt(288, 294);
+        Integer etaMonth = FieldDecoder.valueOrNull(bitString.getUnsignedInt(274, 278), 0);
+        Integer etaDay = FieldDecoder.valueOrNull(bitString.getUnsignedInt(278, 283), 0);
+        Integer etaHour = FieldDecoder.valueOrNull(bitString.getUnsignedInt(283, 288), 24);
+        Integer etaMinute = FieldDecoder.valueOrNull(bitString.getUnsignedInt(288, 294), 60);
         int rawDraught = bitString.getUnsignedInt(294, 302);
         float draught = FieldDecoder.draught(rawDraught);
         DraughtIndicator draughtIndicator = FieldDecoder.draughtIndicator(rawDraught);
@@ -130,8 +131,10 @@ public class AISMessageFactory {
         double latitude = FieldDecoder.latitude(rawLatitude, FieldDecoder.TEN_THOUSANDTHS_OF_MINUTE);
         int rawCourseOverGround = bitString.getUnsignedInt(116, 128);
         float courseOverGround = FieldDecoder.courseOverGroundTenths(rawCourseOverGround);
-        int trueHeading = bitString.getUnsignedInt(128, 137);
-        int second = bitString.getUnsignedInt(137, 143);
+        Integer trueHeading = FieldDecoder.trueHeading(bitString.getUnsignedInt(128, 137));
+        int rawSecond = bitString.getUnsignedInt(137, 143);
+        Integer second = FieldDecoder.timeStampSecond(rawSecond);
+        TimeStampIndicator timeStampIndicator = FieldDecoder.timeStampIndicator(rawSecond);
         ManeuverIndicator specialManeuverIndicator = ManeuverIndicator.fromInteger(bitString.getUnsignedInt(143, 145));
         boolean transmitPowerLow = bitString.getBoolean(147, 148);
         boolean raimFlag = bitString.getBoolean(148, 149);
@@ -148,16 +151,16 @@ public class AISMessageFactory {
 
         return constructor.create(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 navigationStatus, rateOfTurn, rateOfTurnIndicator, speedOverGround, speedOverGroundIndicator, positionAccuracy, latitude, longitude,
-                courseOverGround, trueHeading, second, specialManeuverIndicator, raimFlag, communicationState, transmitPowerLow);
+                courseOverGround, trueHeading, second, timeStampIndicator, specialManeuverIndicator, raimFlag, communicationState, transmitPowerLow);
     }
 
     private static BaseStationReport createBaseStationReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
-        int year = bitString.getUnsignedInt(38, 52);
-        int month = bitString.getUnsignedInt(52, 56);
-        int day = bitString.getUnsignedInt(56, 61);
-        int hour = bitString.getUnsignedInt(61, 66);
-        int minute = bitString.getUnsignedInt(66, 72);
-        int second = bitString.getUnsignedInt(72, 78);
+        Integer year = FieldDecoder.valueOrNull(bitString.getUnsignedInt(38, 52), 0);
+        Integer month = FieldDecoder.valueOrNull(bitString.getUnsignedInt(52, 56), 0);
+        Integer day = FieldDecoder.valueOrNull(bitString.getUnsignedInt(56, 61), 0);
+        Integer hour = FieldDecoder.valueOrNull(bitString.getUnsignedInt(61, 66), 24);
+        Integer minute = FieldDecoder.valueOrNull(bitString.getUnsignedInt(66, 72), 60);
+        Integer second = FieldDecoder.valueOrNull(bitString.getUnsignedInt(72, 78), 60);
         boolean positionAccurate = bitString.getBoolean(78, 79);
         double longitude = FieldDecoder.longitude(bitString.getSignedInt(79, 107), FieldDecoder.TEN_THOUSANDTHS_OF_MINUTE);
         double latitude = FieldDecoder.latitude(bitString.getSignedInt(107, 134), FieldDecoder.TEN_THOUSANDTHS_OF_MINUTE);
@@ -235,7 +238,9 @@ public class AISMessageFactory {
     }
 
     private static StandardSARAircraftPositionReport createStandardSARAircraftPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
-        int altitude = bitString.getUnsignedInt(38, 50);
+        int rawAltitude = bitString.getUnsignedInt(38, 50);
+        Integer altitude = FieldDecoder.valueOrNull(rawAltitude, 4095);
+        AltitudeIndicator altitudeIndicator = FieldDecoder.altitudeIndicator(rawAltitude);
         int rawSpeedOverGround = bitString.getUnsignedInt(50, 60);
         float speed = FieldDecoder.speedOverGround(rawSpeedOverGround, 1022, 1f);
         SpeedOverGroundIndicator speedOverGroundIndicator = FieldDecoder.speedOverGroundIndicator(rawSpeedOverGround, 1022);
@@ -246,7 +251,9 @@ public class AISMessageFactory {
         double latitude = FieldDecoder.latitude(rawLatitude, FieldDecoder.TEN_THOUSANDTHS_OF_MINUTE);
         int rawCourseOverGround = bitString.getUnsignedInt(116, 128);
         float courseOverGround = FieldDecoder.courseOverGroundTenths(rawCourseOverGround);
-        int second = bitString.getUnsignedInt(128, 134);
+        int rawSecond = bitString.getUnsignedInt(128, 134);
+        Integer second = FieldDecoder.timeStampSecond(rawSecond);
+        TimeStampIndicator timeStampIndicator = FieldDecoder.timeStampIndicator(rawSecond);
         boolean barometricAltitude = bitString.getBoolean(134, 135);
         int regionalReserved = bitString.getUnsignedInt(134, 142);
         boolean dataTerminalReady = bitString.getBoolean(142, 143);
@@ -259,7 +266,7 @@ public class AISMessageFactory {
                 : SOTDMACommunicationState.fromBitString(bitString.slice(149, 168));
 
         return new StandardSARAircraftPositionReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
-                altitude, speed, speedOverGroundIndicator, positionAccuracy, latitude, longitude, courseOverGround, second,
+                altitude, altitudeIndicator, speed, speedOverGroundIndicator, positionAccuracy, latitude, longitude, courseOverGround, second, timeStampIndicator,
                 regionalReserved, dataTerminalReady, assigned, raimFlag, radioStatus,
                 barometricAltitude, commStateSelectorFlag, communicationState);
     }
@@ -272,12 +279,12 @@ public class AISMessageFactory {
     }
 
     private static UTCAndDateResponse createUTCAndDateResponse(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
-        int year = bitString.getUnsignedInt(38, 52);
-        int month = bitString.getUnsignedInt(52, 56);
-        int day = bitString.getUnsignedInt(56, 61);
-        int hour = bitString.getUnsignedInt(61, 66);
-        int minute = bitString.getUnsignedInt(66, 72);
-        int second = bitString.getUnsignedInt(72, 78);
+        Integer year = FieldDecoder.valueOrNull(bitString.getUnsignedInt(38, 52), 0);
+        Integer month = FieldDecoder.valueOrNull(bitString.getUnsignedInt(52, 56), 0);
+        Integer day = FieldDecoder.valueOrNull(bitString.getUnsignedInt(56, 61), 0);
+        Integer hour = FieldDecoder.valueOrNull(bitString.getUnsignedInt(61, 66), 24);
+        Integer minute = FieldDecoder.valueOrNull(bitString.getUnsignedInt(66, 72), 60);
+        Integer second = FieldDecoder.valueOrNull(bitString.getUnsignedInt(72, 78), 60);
         boolean positionAccurate = bitString.getBoolean(78, 79);
         double longitude = FieldDecoder.longitude(bitString.getSignedInt(79, 107), FieldDecoder.TEN_THOUSANDTHS_OF_MINUTE);
         double latitude = FieldDecoder.latitude(bitString.getSignedInt(107, 134), FieldDecoder.TEN_THOUSANDTHS_OF_MINUTE);
@@ -435,8 +442,10 @@ public class AISMessageFactory {
         double latitude = FieldDecoder.latitude(rawLatitude, FieldDecoder.TEN_THOUSANDTHS_OF_MINUTE);
         int rawCourseOverGround = bitString.getUnsignedInt(112, 124);
         float courseOverGround = FieldDecoder.courseOverGroundTenths(rawCourseOverGround);
-        int trueHeading = bitString.getUnsignedInt(124, 133);
-        int second = bitString.getUnsignedInt(133, 139);
+        Integer trueHeading = FieldDecoder.trueHeading(bitString.getUnsignedInt(124, 133));
+        int rawSecond = bitString.getUnsignedInt(133, 139);
+        Integer second = FieldDecoder.timeStampSecond(rawSecond);
+        TimeStampIndicator timeStampIndicator = FieldDecoder.timeStampIndicator(rawSecond);
         boolean transmitPowerLow = bitString.getBoolean(139, 140);
         int regionalReserved2 = bitString.getUnsignedInt(139, 141);
         boolean csUnit = bitString.getBoolean(141, 142);
@@ -454,7 +463,7 @@ public class AISMessageFactory {
 
         return new StandardClassBCSPositionReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 regionalReserved1, speedOverGround, speedOverGroundIndicator, positionAccuracy, latitude, longitude, courseOverGround,
-                trueHeading, second, regionalReserved2, csUnit, display, dsc, band, message22, assigned,
+                trueHeading, second, timeStampIndicator, regionalReserved2, csUnit, display, dsc, band, message22, assigned,
                 raimFlag, commStateSelectorFlag, commState, transmitPowerLow);
     }
 
@@ -470,8 +479,10 @@ public class AISMessageFactory {
         double latitude = FieldDecoder.latitude(rawLatitude, FieldDecoder.TEN_THOUSANDTHS_OF_MINUTE);
         int rawCourseOverGround = bitString.getUnsignedInt(112, 124);
         float courseOverGround = FieldDecoder.courseOverGroundTenths(rawCourseOverGround);
-        int trueHeading = bitString.getUnsignedInt(124, 133);
-        int second = bitString.getUnsignedInt(133, 139);
+        Integer trueHeading = FieldDecoder.trueHeading(bitString.getUnsignedInt(124, 133));
+        int rawSecond = bitString.getUnsignedInt(133, 139);
+        Integer second = FieldDecoder.timeStampSecond(rawSecond);
+        TimeStampIndicator timeStampIndicator = FieldDecoder.timeStampIndicator(rawSecond);
         int regionalReserved2 = bitString.getUnsignedInt(139, 143);
         String shipName = AISText.decode(bitString, 143, 263);
         ShipType shipType = ShipType.fromInteger(bitString.getUnsignedInt(263, 271));
@@ -487,7 +498,7 @@ public class AISMessageFactory {
 
         return new ExtendedClassBEquipmentPositionReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 regionalReserved1, speedOverGround, speedOverGroundIndicator, positionAccuracy, latitude, longitude, courseOverGround, trueHeading,
-                second, regionalReserved2, shipName, shipType, toBow, toStern, toPort, toStarboard,
+                second, timeStampIndicator, regionalReserved2, shipName, shipType, toBow, toStern, toPort, toStarboard,
                 positionFixingDevice, raimFlag, dataTerminalReady, assigned, regionalReserved3);
     }
 
@@ -550,7 +561,9 @@ public class AISMessageFactory {
         int toPort = bitString.getUnsignedInt(237, 243);
         int toStarboard = bitString.getUnsignedInt(243, 249);
         PositionFixingDevice positionFixingDevice = PositionFixingDevice.fromInteger(bitString.getUnsignedInt(249, 253));
-        int second = bitString.getUnsignedInt(253, 259);
+        int rawSecond = bitString.getUnsignedInt(253, 259);
+        Integer second = FieldDecoder.timeStampSecond(rawSecond);
+        TimeStampIndicator timeStampIndicator = FieldDecoder.timeStampIndicator(rawSecond);
         boolean offPosition = bitString.getBoolean(259, 260);
         int regionalUse = bitString.getUnsignedInt(260, 268);
         boolean raimFlag = bitString.getBoolean(268, 269);
@@ -580,7 +593,7 @@ public class AISMessageFactory {
 
         return new AidToNavigationReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 aidType, name, positionAccurate, latitude, longitude, toBow, toStern, toPort, toStarboard,
-                positionFixingDevice, second, offPosition, regionalUse, raimFlag, virtualAid, assignedMode,
+                positionFixingDevice, second, timeStampIndicator, offPosition, regionalUse, raimFlag, virtualAid, assignedMode,
                 spare1, nameExtension, spare2, nameExtensionLabel);
     }
 
@@ -766,7 +779,9 @@ public class AISMessageFactory {
 
     private static AidToNavigationReportSingleSlot createAidToNavigationReportSingleSlot(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
         // ITU-R M.1371-6 Table 84
-        int second = bitString.getUnsignedInt(38, 44);
+        int rawSecond = bitString.getUnsignedInt(38, 44);
+        Integer second = FieldDecoder.timeStampSecond(rawSecond);
+        TimeStampIndicator timeStampIndicator = FieldDecoder.timeStampIndicator(rawSecond);
         int rawLongitude = bitString.getSignedInt(44, 72);
         double longitude = FieldDecoder.longitude(rawLongitude, FieldDecoder.TEN_THOUSANDTHS_OF_MINUTE);
         int rawLatitude = bitString.getSignedInt(72, 99);
@@ -785,7 +800,7 @@ public class AISMessageFactory {
         boolean authenticated = bitString.getBoolean(167, 168);
 
         return new AidToNavigationReportSingleSlot(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
-                second, latitude, longitude, restrictedUse, stationType, aidType, ialaMrn,
+                second, timeStampIndicator, latitude, longitude, restrictedUse, stationType, aidType, ialaMrn,
                 dimensionsType, dimensionA, dimensionB, multipleDimensionTypes, charted, onStationStatus, atonStatusBits, authenticated);
     }
 
@@ -891,7 +906,7 @@ public class AISMessageFactory {
         PositionReport create(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                               NavigationStatus navigationStatus, float rateOfTurn, RateOfTurnIndicator rateOfTurnIndicator, float speedOverGround,
                               SpeedOverGroundIndicator speedOverGroundIndicator, boolean positionAccuracy, double latitude, double longitude,
-                              float courseOverGround, int trueHeading, int second,
+                              float courseOverGround, Integer trueHeading, Integer second, TimeStampIndicator timeStampIndicator,
                               ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState, boolean transmitPowerLow);
     }
 

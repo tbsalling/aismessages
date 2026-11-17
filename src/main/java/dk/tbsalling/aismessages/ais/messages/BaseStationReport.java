@@ -50,7 +50,7 @@ public class BaseStationReport extends AISMessage {
      * Constructor accepting pre-parsed values for true immutability.
      */
     protected BaseStationReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
-                                int year, int month, int day, int hour, int minute, int second,
+                                Integer year, Integer month, Integer day, Integer hour, Integer minute, Integer second,
                                 boolean positionAccurate, double latitude, double longitude,
                                 PositionFixingDevice positionFixingDevice, boolean raimFlag,
                                 SOTDMACommunicationState communicationState, boolean satelliteBroadcastTransmissionControl) {
@@ -93,18 +93,18 @@ public class BaseStationReport extends AISMessage {
         return AISMessageType.BaseStationReport;
     }
 
-    /** Bits 38-52 (Table 49): UTC year, 1-9999; 0 = not available. */
-    int year;
-    /** Bits 52-56 (Table 49): UTC month, 1-12; 0 = not available. */
-    int month;
-    /** Bits 56-61 (Table 49): UTC day, 1-31; 0 = not available. */
-    int day;
-    /** Bits 61-66 (Table 49): UTC hour, 0-23; 24 = not available. */
-    int hour;
-    /** Bits 66-72 (Table 49): UTC minute, 0-59; 60 = not available. */
-    int minute;
-    /** Bits 72-78 (Table 49): UTC second, 0-59; 60 = not available. */
-    int second;
+    /** Bits 38-52 (Table 49): UTC year, 1-9999; null when not available. */
+    Integer year;
+    /** Bits 52-56 (Table 49): UTC month, 1-12; null when not available. */
+    Integer month;
+    /** Bits 56-61 (Table 49): UTC day, 1-31; null when not available. */
+    Integer day;
+    /** Bits 61-66 (Table 49): UTC hour, 0-23; null when not available. */
+    Integer hour;
+    /** Bits 66-72 (Table 49): UTC minute, 0-59; null when not available. */
+    Integer minute;
+    /** Bits 72-78 (Table 49): UTC second, 0-59; null when not available. */
+    Integer second;
     /** Bit 78 (Table 49): position accuracy flag, true = high (≤ 10 m), false = low (&gt; 10 m, default); see Table 48. */
     boolean positionAccurate;
     /** Bits 107-134 (Table 49): latitude in decimal degrees, transmitted in 1/10 000 min; north positive; {@code NaN} when not available (transmitted as 91°). */

@@ -37,7 +37,7 @@ public class PositionReportClassAScheduledTest {
         PositionReportClassAScheduled msg = new PositionReportClassAScheduled(
                 mmsi, repeatIndicator, null, nmeaMessages, bitString, source, received,
                 navigationStatus, rateOfTurn, RateOfTurnIndicator.Measured, speedOverGround, SpeedOverGroundIndicator.Measured, positionAccuracy, latitude, longitude,
-                courseOverGround, trueHeading, second, specialManeuverIndicator, raimFlag, communicationState, false);
+                courseOverGround, trueHeading, second, TimeStampIndicator.Available, specialManeuverIndicator, raimFlag, communicationState, false);
 
         // Act
         String s = msg.toString();

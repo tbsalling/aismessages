@@ -15,8 +15,10 @@
  */
 package dk.tbsalling.aismessages.ais.messages;
 
+import dk.tbsalling.aismessages.ais.messages.types.AltitudeIndicator;
 import dk.tbsalling.aismessages.ais.messages.types.DraughtIndicator;
 import dk.tbsalling.aismessages.ais.messages.types.SpeedOverGroundIndicator;
+import dk.tbsalling.aismessages.ais.messages.types.TimeStampIndicator;
 
 /**
  * Converts transmitted field values to the decoded values of the public API, mapping the "not available" codes of
@@ -118,5 +120,52 @@ final class FieldDecoder {
      */
     static Double orNull(double value) {
         return Double.isNaN(value) ? null : value;
+    }
+
+    /**
+     * @param raw          a transmitted integer value.
+     * @param notAvailable the field's "not available" code.
+     * @return the value, or null when it is the "not available" code.
+     */
+    static Integer valueOrNull(int raw, int notAvailable) {
+        return raw == notAvailable ? null : raw;
+    }
+
+    /**
+     * @param raw the transmitted true heading (Table 46).
+     * @return the heading in degrees 0-359, or null for 511 (not available) and the unused values 360-510.
+     */
+    static Integer trueHeading(int raw) {
+        return raw < 360 ? raw : null;
+    }
+
+    /**
+     * @param raw the transmitted time stamp (Tables 46, 57, 68, 69, 71, 84).
+     * @return the UTC second 0-59, or null for the special codes 60-63.
+     */
+    static Integer timeStampSecond(int raw) {
+        return raw < 60 ? raw : null;
+    }
+
+    /**
+     * @param raw the transmitted time stamp (Tables 46, 57, 68, 69, 71, 84).
+     * @return what the time stamp field carries.
+     */
+    static TimeStampIndicator timeStampIndicator(int raw) {
+        return switch (raw) {
+            case 60 -> TimeStampIndicator.NotAvailable;
+            case 61 -> TimeStampIndicator.ManualInputMode;
+            case 62 -> TimeStampIndicator.DeadReckoningMode;
+            case 63 -> TimeStampIndicator.PositioningSystemInoperative;
+            default -> TimeStampIndicator.Available;
+        };
+    }
+
+    /**
+     * @param raw the transmitted altitude in metres (Table 57).
+     * @return the indicator for the transmitted altitude.
+     */
+    static AltitudeIndicator altitudeIndicator(int raw) {
+        return raw == 4095 ? AltitudeIndicator.NotAvailable : raw == 4094 ? AltitudeIndicator.AtLeast4094Metres : AltitudeIndicator.Measured;
     }
 }

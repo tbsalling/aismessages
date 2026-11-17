@@ -5,6 +5,7 @@ import dk.tbsalling.aismessages.ais.messages.types.AidType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
+import dk.tbsalling.aismessages.ais.messages.types.TimeStampIndicator;
 import org.junit.jupiter.api.Test;
 import dk.tbsalling.aismessages.testsupport.NmeaSentences.Bits;
 
@@ -36,7 +37,8 @@ public class AidToNavigationReportTest {
         assertEquals("S16A GLT VIRT ATON", message.getName());
         assertEquals(null, message.getNameExtension());
         assertEquals(false, message.isOffPosition());
-        assertEquals(60, message.getSecond());
+        assertNull(message.getSecond());
+        assertEquals(TimeStampIndicator.NotAvailable, message.getTimeStampIndicator());
         assertEquals(0, message.getToBow());
         assertEquals(0, message.getToPort());
         assertEquals(0, message.getToStern());
@@ -69,7 +71,8 @@ public class AidToNavigationReportTest {
         assertEquals("S6A GLT VIRTU ATON", message.getName());
         assertEquals(null, message.getNameExtension());
         assertEquals(false, message.isOffPosition());
-        assertEquals(60, message.getSecond());
+        assertNull(message.getSecond());
+        assertEquals(TimeStampIndicator.NotAvailable, message.getTimeStampIndicator());
         assertEquals(0, message.getToBow());
         assertEquals(0, message.getToPort());
         assertEquals(0, message.getToStern());

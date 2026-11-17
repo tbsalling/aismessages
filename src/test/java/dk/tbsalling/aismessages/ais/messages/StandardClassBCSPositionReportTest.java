@@ -31,7 +31,7 @@ public class StandardClassBCSPositionReportTest {
         assertEquals(22671021 / 600000.0, message.getLatitude(), 0.0f);
         assertEquals(-73360392 / 600000.0, message.getLongitude(), 0.0f);
         assertEquals(0.0f, message.getCourseOverGround(), 0.0f);
-        assertEquals(511, message.getTrueHeading());
+        assertNull(message.getTrueHeading());
         assertEquals(55, message.getSecond());
         assertEquals(0b00, message.getRegionalReserved2());
         assertTrue(message.isCsUnit());
@@ -66,8 +66,9 @@ public class StandardClassBCSPositionReportTest {
         assertEquals(25212511 / 600000.0, message.getLatitude(), 0.0f);
         assertEquals(-52620037 / 600000.0, message.getLongitude(), 0.0f);
         assertEquals(186.2f, message.getCourseOverGround(), 0.0f);
-        assertEquals(511, message.getTrueHeading());
-        assertEquals(60, message.getSecond());
+        assertNull(message.getTrueHeading());
+        assertNull(message.getSecond());
+        assertEquals(TimeStampIndicator.NotAvailable, message.getTimeStampIndicator());
         assertEquals(0b00, message.getRegionalReserved2());
         assertFalse(message.isCsUnit());
         assertFalse(message.isDisplay());

@@ -75,7 +75,7 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
                                 IMO imo, String callsign, String shipName, ShipType shipType,
                                 int toBow, int toStern, int toPort, int toStarboard,
                                 PositionFixingDevice positionFixingDevice,
-                                int etaMonth, int etaDay, int etaHour, int etaMinute,
+                                Integer etaMonth, Integer etaDay, Integer etaHour, Integer etaMinute,
                                 float draught, DraughtIndicator draughtIndicator, String destination, boolean dataTerminalReady, AisVersionIndicator aisVersionIndicator) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.imo = imo;
@@ -122,13 +122,13 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
     /**
      * @return The vessel AIS ETA, with the year filled in based on the metadata received time.
      * If the AIS Month and day are the received date or later, the first calendar date after the received is used for the year.
-     * Unavailable hour (24) or minute (60) will be treated as 0
+     * An unavailable hour or minute is treated as 0
      * Examples:
      * Received on 2018-06-01 and ETA AIS is 06-03, this will return 2018-06-03
      * Received on 2018-12-31 and ETA AIS is 01-02, this will return 2019-01-02
      * Received on 2018-06-01 and ETA AIS is 05-31, this will return 2019-05-31
-     * Received on 2018-06-01 and ETA AIS is 06-03 24:00, this will return 2018-06-01 00:00
-     * Received on 2018-06-01 and ETA AIS is 06-03 12:60, this will return 2018-06-03 12:00
+     * Received on 2018-06-01 and ETA is 06-03 with the hour not available, this will return 2018-06-03 00:00
+     * Received on 2018-06-01 and ETA is 06-03 12h with the minute not available, this will return 2018-06-03 12:00
      */
 	public Optional<ZonedDateTime> getEtaAfterReceived() {
         Metadata meta = this.getMetadata();
@@ -136,10 +136,13 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
         if(received == null) {
             return Optional.empty();
         }
+        if (etaMonth == null || etaDay == null) {
+            return Optional.empty();
+        }
         int month = etaMonth;
         int day = etaDay;
-        int hour = etaHour == 24 ? 0 : etaHour;
-        int minute = etaMinute == 60 ? 0 : etaMinute;
+        int hour = etaHour == null ? 0 : etaHour;
+        int minute = etaMinute == null ? 0 : etaMinute;
         if(month <= 0 || month > 12 || day <= 0 || day > 31 || hour < 0 || hour >= 24 || minute < 0 || minute >= 60) {
             return Optional.empty();
         } else {
@@ -154,7 +157,7 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
         }
     }
 
-    /** Bits 40-70 (Table 50): IMO number per IMO Resolution A.1117(30), 1 000 000-9 999 999; 0 = not available; 10 000 000 and above = official flag state number. */
+    /** Bits 40-70 (Table 50): IMO number per IMO Resolution A.1117(30), 1 000 000-9 999 999, or an official flag state number from 10 000 000; null when not available. */
     IMO imo;
     /** Bits 70-112 (Table 50): call sign, 7 six-bit ASCII characters (Table 45); "@@@@@@@" = not available. Craft associated with a parent vessel use "A" plus the last 6 digits of the parent's MMSI. */
     String callsign;
@@ -172,14 +175,14 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
     int toPort;
     /** Bits 270-274 (Table 50): type of electronic position fixing device. */
     PositionFixingDevice positionFixingDevice;
-    /** Bits 274-278 (Table 50): ETA month (UTC), 1-12; 0 = not available. */
-    int etaMonth;
-    /** Bits 278-283 (Table 50): ETA day (UTC), 1-31; 0 = not available. */
-    int etaDay;
-    /** Bits 283-288 (Table 50): ETA hour (UTC), 0-23; 24 = not available. */
-    int etaHour;
-    /** Bits 288-294 (Table 50): ETA minute (UTC), 0-59; 60 = not available. */
-    int etaMinute;
+    /** Bits 274-278 (Table 50): ETA month (UTC), 1-12; null when not available. */
+    Integer etaMonth;
+    /** Bits 278-283 (Table 50): ETA day (UTC), 1-31; null when not available. */
+    Integer etaDay;
+    /** Bits 283-288 (Table 50): ETA hour (UTC), 0-23; null when not available. */
+    Integer etaHour;
+    /** Bits 288-294 (Table 50): ETA minute (UTC), 0-59; null when not available. */
+    Integer etaMinute;
     /** Maximum present static draught in metres, transmitted in 1/10 m (Table 50); 25.5 when 25.5 m or greater and {@code NaN} when not available, as told by {@code draughtIndicator}. */
     float draught;
     /** Meaning of {@code draught}: measured, 25.5 m or greater, or not available (see {@link DraughtIndicator}). */
