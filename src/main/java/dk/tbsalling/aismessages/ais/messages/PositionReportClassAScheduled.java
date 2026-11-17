@@ -31,8 +31,11 @@ import lombok.Value;
 import java.time.Instant;
 
 /**
- * @author tbsalling
+ * Message 1: scheduled position report of a Class A station (ITU-R M.1371-6 § A7-3.1, Table 46). Transmitted using
+ * SOTDMA during continuous operation (RATDMA or ITDMA when additional reports are needed) and carries a SOTDMA
+ * communication state (Table 44). See {@link PositionReport} for the field layout.
  *
+ * @author tbsalling
  */
 @Value
 @EqualsAndHashCode(callSuper = true)

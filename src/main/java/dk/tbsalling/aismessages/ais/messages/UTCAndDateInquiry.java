@@ -31,6 +31,11 @@ import java.time.Instant;
 
 import static java.lang.String.format;
 
+/**
+ * Message 10: UTC and date inquiry (ITU-R M.1371-6 § A7-3.8, Table 58). Sent by a mobile or base station to request
+ * UTC and date from another station, which answers with Message 11 ({@link UTCAndDateResponse}) on the same channel.
+ * 72 bits.
+ */
 @Value
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
@@ -68,6 +73,7 @@ public class UTCAndDateInquiry extends AISMessage {
         return AISMessageType.UTCAndDateInquiry;
     }
 
+    /** Bits 40-70 (Table 58): MMSI of the station whose UTC and date is inquired. Bits 38-40 and 70-72 are spare. */
     @SuppressWarnings("unused")
     MMSI destinationMmsi;
 }

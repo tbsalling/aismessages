@@ -56,6 +56,8 @@ These are load-bearing — preserve them when changing code:
 - 4-space indent; standard Java style; match the surrounding file's indentation/whitespace exactly so diffs stay reviewable.
 - Single concern per change/PR. Avoid reformatting unrelated code.
 - Update JavaDoc when public API behavior changes.
+- In the message model (`ais/messages`, `ais/messages/types`, `ais/messages/asm`) every class, field and enum constant has Javadoc. Message classes start with `Message N: <name> (ITU-R M.1371-6 § A7-3.x, Table T).`; fields with `Bits a-b (Table T): <meaning>; <units>; <not-available value>.`; derived fields name their raw counterpart and conversion; ASM classes cite IMO SN.1/Circ.289 (DAC/FI) or Annex 4.
+- Never write `{@link #getX()}` to a Lombok-generated getter: javadoc runs on the undelomboked source and fails on the unresolved reference. Use `{@code getX()}` instead.
 
 ## Release
 

@@ -34,7 +34,10 @@ import java.time.Instant;
 import static java.lang.String.format;
 
 /**
- * Identification and location message to be emitted by aids to navigation such as buoys and lighthouses.
+ * Message 21: aids-to-navigation report (ITU-R M.1371-6 § A7-3.19, Table 71). Transmitted by AIS AtoN stations
+ * (physical, virtual or integrated into a base station) every 3 min, when assigned, or when a parameter changes, to
+ * report the position and status of an aid to navigation. 272 to 360 bits in two slots, the variable part being the
+ * name extension. Dimensions follow § A7-3.19.1: floating aids report a circle (A = B = C = D), virtual aids report zero.
  *
  * @author tbsalling
  */
@@ -99,28 +102,46 @@ public class AidToNavigationReport extends AISMessage {
         return AISMessageType.AidToNavigationReport;
     }
 
+    /** Bits 38-43 (Table 71, Table 72): type of aid to navigation, 0 = not available (default). */
     AidType aidType;
+    /** Bits 43-163 (Table 71): name of the aid to navigation, up to 20 six-bit ASCII characters (Table 45); all "@" = not available. Extended by {@code nameExtension}. */
     String name;
+    /** Bit 163 (Table 71): position accuracy flag, true = high (≤ 10 m), false = low (&gt; 10 m, default); see Table 48. */
     boolean positionAccurate;
+    /** Bits 192-219 (Table 71): latitude in decimal degrees (1/10 000 min / 600 000); north positive; 91 = not available. */
     float latitude;
+    /** Bits 164-192 (Table 71): longitude in decimal degrees (1/10 000 min / 600 000); east positive; 181 = not available. */
     float longitude;
+    /** Bits 219-228 (Table 71, Fig. 39, § A7-3.19.1): dimension A in metres, 0-511; points to true north for fixed aids; A = B = C = D for floating aids; 1 for objects ≤ 2 m × 2 m; 0 for virtual aids. */
     int toBow;
+    /** Bits 228-237 (Table 71, Fig. 39): dimension B in metres, 0-511. */
     int toStern;
+    /** Bits 237-243 (Table 71, Fig. 39): dimension C in metres, 0-63. */
     int toPort;
+    /** Bits 243-249 (Table 71, Fig. 39): dimension D in metres, 0-63. */
     int toStarboard;
+    /** Bits 249-253 (Table 71): type of electronic position fixing device; 7 = surveyed position is typical for fixed aids. */
     PositionFixingDevice positionFixingDevice;
+    /** Bits 253-259 (Table 71): UTC second when the report was generated, 0-59; 60 = not available (default), 61 = manual input, 62 = dead reckoning, 63 = EPFS inoperative. */
     int second;
+    /** Bit 259 (Table 71): off-position indicator, true = off position (floating aid outside its zone, or fixed aid with suspected GNSS anomaly); only meaningful when {@code second} ≤ 59. */
     boolean offPosition;
+    /** Bits 260-268 (Table 71) as a string of '0'/'1': the 8 AtoN status bits reserved for IALA Recommendation R0126; all zero = default. */
     String regionalUse;
+    /** Bit 268 (Table 71): RAIM flag of the electronic position fixing device, true = RAIM in use; see Table 48. */
     boolean raimFlag;
+    /** Bit 269 (Table 71): virtual AtoN flag, true = virtual aid that does not physically exist, false = physical aid at the indicated position (default). */
     boolean virtualAid;
+    /** Bit 270 (Table 71): assigned mode flag, true = station operating in assigned mode, false = autonomous and continuous mode (default). */
     boolean assignedMode;
+    /** Bit 271 (Table 71): spare, should be zero. */
     int spare1;
     /**
-     * Up to 14 additional six-bit characters extending {@link #getName()}, or, when {@link #isNameExtensionIsLabel()}
+     * Bits 272 to end (Table 71): up to 14 additional six-bit characters extending {@link #getName()}, or, when {@link #isNameExtensionIsLabel()}
      * is true, the AtoN's label (e.g. "LB1" for Lighted Buoy 1) with the leading "@@@" marker removed. Null when absent.
      */
     String nameExtension;
+    /** Bits after the name extension (Table 71): 0, 2, 4 or 6 spare bits inserted to reach a byte boundary; 0 when no extension is present. */
     int spare2;
     /**
      * True when the name extension was preceded by "@@@", which per ITU-R M.1371-6 Table 71 means the text is to be

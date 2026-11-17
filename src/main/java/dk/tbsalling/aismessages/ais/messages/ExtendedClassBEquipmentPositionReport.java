@@ -30,6 +30,12 @@ import java.time.Instant;
 
 import static java.lang.String.format;
 
+/**
+ * Message 19: extended Class B equipment position report (ITU-R M.1371-6 § A7-3.17, Table 69). Legacy Class B
+ * message combining a position report with static data (name, type, dimensions), transmitted every 6 min in two slots
+ * allocated through Message 18's ITDMA communication state. M.1371-6 states that future equipment does not need this
+ * message, since Message 18 together with Messages 24A and 24B carries the same content. 312 bits.
+ */
 @Value
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
@@ -101,28 +107,52 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
         return TransponderClass.B;
     }
 
+    /** Bits 38-46 (Table 69) as a string of '0'/'1': 8 spare bits, should be zero. */
     String regionalReserved1;
+    /** Speed over ground in knots, {@code rawSpeedOverGround} / 10 (Table 69); 102.2 = 102.2 knots or higher, 102.3 = not available. */
     float speedOverGround;
+    /** Bit 56 (Table 69): position accuracy flag, true = high (≤ 10 m), false = low (&gt; 10 m, default); see Table 48. */
     boolean positionAccuracy;
+    /** Latitude in decimal degrees, {@code rawLatitude} / 600 000 (Table 69); north positive; 91 = not available. */
     float latitude;
+    /** Longitude in decimal degrees, {@code rawLongitude} / 600 000 (Table 69); east positive; 181 = not available. */
     float longitude;
+    /** Course over ground in degrees, {@code rawCourseOverGround} / 10 (Table 69); 360 = not available. */
     float courseOverGround;
+    /** Bits 124-133 (Table 69): true heading in degrees, 0-359; 511 = not available. */
     int trueHeading;
+    /** Bits 133-139 (Table 69): UTC second when the report was generated, 0-59; 60 = not available (default), 61 = manual input, 62 = dead reckoning, 63 = EPFS inoperative. */
     int second;
+    /** Bits 139-143 (Table 69) as a string of '0'/'1': 4 spare bits, should be zero. */
     String regionalReserved2;
+    /** Bits 143-263 (Table 69): name, up to 20 six-bit ASCII characters (Table 45); all "@" = not available. */
     String shipName;
+    /** Bits 263-271 (Table 69, Table 51): type of ship and cargo type; null for the regional (100-199) and future-use (200-255) codes. */
     ShipType shipType;
+    /** Bits 271-280 (Table 69, Fig. 38): dimension A, distance from the reference point to the bow in metres, 0-511. */
     int toBow;
+    /** Bits 280-289 (Table 69, Fig. 38): dimension B, distance from the reference point to the stern in metres, 0-511. */
     int toStern;
+    /** Bits 295-301 (Table 69, Fig. 38): dimension D, distance from the reference point to the starboard side in metres, 0-63. */
     int toStarboard;
+    /** Bits 289-295 (Table 69, Fig. 38): dimension C, distance from the reference point to the port side in metres, 0-63. */
     int toPort;
+    /** Bits 301-305 (Table 69): type of electronic position fixing device. */
     PositionFixingDevice positionFixingDevice;
+    /** Bit 305 (Table 69): RAIM flag of the electronic position fixing device, true = RAIM in use; see Table 48. */
     boolean raimFlag;
+    /** Bit 306 (Table 69, § A7-3.3.1): data terminal equipment ready, true = available (bit 0), false = not available (bit 1, default). */
     boolean dataTerminalReady;
+    /** Bit 307 (Table 69): assigned mode flag, true = station operating in assigned mode, false = autonomous and continuous mode (default). */
     boolean assigned;
+    /** Bits 308-312 (Table 69) as a string of '0'/'1': 4 spare bits, should be zero. */
     String regionalReserved3;
+    /** Bits 46-56 (Table 69): speed over ground in 1/10 knot steps, 0-1022; 1022 = 102.2 knots or higher, 1023 = not available. */
     int rawSpeedOverGround;
+    /** Bits 85-112 (Table 69): latitude in 1/10 000 min, two's complement; 91° (0x3412140) = not available. */
     int rawLatitude;
+    /** Bits 57-85 (Table 69): longitude in 1/10 000 min, two's complement; 181° (0x6791AC0) = not available. */
     int rawLongitude;
+    /** Bits 112-124 (Table 69): course over ground in 1/10 degree, 0-3599; 3600 = not available. */
     int rawCourseOverGround;
 }

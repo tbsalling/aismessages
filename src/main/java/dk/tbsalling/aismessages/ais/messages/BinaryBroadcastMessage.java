@@ -33,13 +33,12 @@ import java.time.Instant;
 import static java.lang.String.format;
 
 /**
- * Broadcast message with unspecified binary payload. The St. Lawrence Seaway
- * AIS system and the USG PAWSS system use this payload for local extension
- * messages. It is variable in length up to a maximum of 1008 bits (up to 5
- * AIVDM sentence payloads).
- * 
+ * Message 8: binary broadcast message (ITU-R M.1371-6 § A7-3.6, Table 55). Broadcast of application specific data
+ * (Annex 4) from a mobile or base station; never acknowledged. Variable length, 56 to 1008 bits (1 to 5 slots; mobile
+ * stations should not exceed 3 slots without FATDMA reservations). The 16-bit application identifier (DAC + FI,
+ * Table 23) selects the {@link ApplicationSpecificMessage} the data is decoded into.
+ *
  * @author tbsalling
- * 
  */
 @Value
 @EqualsAndHashCode(callSuper = true)
@@ -100,10 +99,15 @@ public class BinaryBroadcastMessage extends AISMessage {
         return applicationSpecificMessage;
     }
 
+    /** Bits 38-40 (Table 55): spare, should be zero. */
     int spare;
+    /** Bits 40-50 (Table 55, Table 23): designated area code of the application identifier, 0 = test, 1-9 = international, 10-999 = regional. */
     int designatedAreaCode;
+    /** Bits 50-56 (Table 55, Table 23): function identifier of the application identifier, 0-63. */
     int functionalId;
+    /** Bits 56 to end (Table 55): application data, at most 952 bits. */
     BitString binaryData;
+    /** The application data decoded according to the application identifier; {@code UnknownApplicationSpecificMessage} for unsupported DAC/FI pairs. */
     ApplicationSpecificMessage applicationSpecificMessage;
 
 }

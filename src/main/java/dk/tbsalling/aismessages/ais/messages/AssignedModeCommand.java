@@ -33,10 +33,11 @@ import java.util.stream.IntStream;
 import static java.lang.String.format;
 
 /**
- * used by a base station with control authority to configure the scheduling of
- * AIS informational messages from subordinate stations, either as a frequency
- * per 10-minute interval or by specifying the TDMA slot(s) offset on which
- * those messages should be transmitted.
+ * Message 16: assignment mode command (ITU-R M.1371-6 § A7-3.14, Table 65). Transmitted by a base station acting as
+ * controlling entity to put one or two mobile stations into assigned mode (§ A2-3.3.6), either by assigning a reporting
+ * rate (increment 0, offset = number of reports per 10 min, multiples of 20 up to 600) or by assigning transmission
+ * slots (offset to the first slot and an increment code 1-6 = 1125, 375, 225, 125, 75 or 45 slots; 7 = disregard).
+ * 96 bits for one station, 144 bits for two. The assignment times out 4 to 8 min after the first transmission.
  *
  * @author tbsalling
  */
@@ -83,11 +84,17 @@ public class AssignedModeCommand extends AISMessage {
         return AISMessageType.AssignedModeCommand;
     }
 
+    /** Bits 40-70 (Table 65): destination ID A, the MMSI of the first assigned station. */
     MMSI destinationMmsiA;
+    /** Bits 70-82 (Table 65): offset A, from the current slot to the first assigned slot; when increment A is 0, the number of reports per 10 min instead. */
     Integer offsetA;
+    /** Bits 82-92 (Table 65): increment A to the next assigned slot, coded 0 = reporting rate assignment, 1 = 1125, 2 = 375, 3 = 225, 4 = 125, 5 = 75, 6 = 45 slots, 7 = undefined (disregard). */
     Integer incrementA;
+    /** Bits 92-122 (Table 65): destination ID B, the MMSI of the second assigned station; null in the 96-bit single-station form. */
     MMSI destinationMmsiB;
+    /** Bits 122-134 (Table 65): offset B, as offset A; null when absent. */
     Integer offsetB;
+    /** Bits 134-144 (Table 65): increment B, coded as increment A; null when absent. */
     Integer incrementB;
 
 }

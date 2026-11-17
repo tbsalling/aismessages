@@ -32,10 +32,11 @@ import java.time.Instant;
 import static java.lang.String.format;
 
 /**
- * used to broadcast differential corrections for GPS. The data in the payload
- * is intended to be passed directly to GPS receivers capable of accepting such
- * corrections.
- * 
+ * Message 17: GNSS broadcast binary message (ITU-R M.1371-6 § A7-3.15, Tables 66 and 67). Transmitted by a base
+ * station connected to a DGNSS reference source to distribute differential corrections in the format of
+ * Recommendation ITU-R M.823 without preamble and parity. 80 bits without data, up to 816 bits with the maximum of 29
+ * 24-bit data words.
+ *
  * @author tbsalling
  */
 @Value
@@ -87,15 +88,26 @@ public class GNSSBinaryBroadcastMessage extends AISMessage {
         return AISMessageType.GNSSBinaryBroadcastMessage;
     }
 
+    /** Bits 38-40 (Table 66): spare, should be zero. */
     int spare1;
+    /** Bits 58-75 (Table 66): surveyed latitude of the DGNSS reference station in decimal degrees (1/10 min / 10); north positive; 91 = correction service not available. */
     float latitude;
+    /** Bits 40-58 (Table 66): surveyed longitude of the DGNSS reference station in decimal degrees (1/10 min / 10); east positive; 181 = correction service not available. */
     float longitude;
+    /** Bits 75-80 (Table 66): spare, should be zero. */
     int spare2;
+    /** Bits 80-86 (Table 67): Rec. ITU-R M.823 message type; null when the data field is empty. */
     Integer mType;
+    /** Bits 86-96 (Table 67): Rec. ITU-R M.823 reference station identifier; null when the data field is empty. */
     Integer stationId;
+    /** Bits 96-109 (Table 67): Z count, time value in 0.6 s units (0-3599.4 s); null when the data field is empty. */
     Integer zCount;
+    /** Bits 109-112 (Table 67): message sequence number, cyclic 0-7; null when the data field is empty. */
     Integer sequenceNumber;
+    /** Bits 112-117 (Table 67): N, the number of 24-bit DGNSS data words that follow the two-word header, 0-29; null when the data field is empty. */
     Integer numOfWords;
+    /** Bits 117-120 (Table 67): reference station health per Rec. ITU-R M.823; null when the data field is empty. */
     Integer health;
+    /** Bits 80 to end (Table 66): the whole differential correction data field including its header; empty when no corrections are carried. */
     BitString binaryData;
 }

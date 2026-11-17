@@ -19,9 +19,10 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.messages.types.ShipType;
 
 /**
- * Interface for AIS messages containing static ship data.
- * Static data includes vessel identification, dimensions, and type information
- * that typically does not change during a voyage.
+ * Interface for AIS messages containing static ship data: vessel identification, dimensions and type, which
+ * typically do not change during a voyage. Implemented by Message 5 ({@link ShipAndVoyageData}, ITU-R M.1371-6
+ * Table 50) and Message 24 ({@link ClassBCSStaticDataReport}, Tables 76 and 77; each part fills only some of these
+ * values). Dimensions are measured from the position reference point as in Fig. 38 (§ A7-3.3.3).
  */
 public interface StaticDataReport extends DataReport {
 

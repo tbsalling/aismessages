@@ -27,6 +27,12 @@ import lombok.Value;
 
 import java.time.Instant;
 
+/**
+ * Message 3: special position report of a Class A station (ITU-R M.1371-6 § A7-3.1, Table 46). Sent in response to an
+ * interrogation (Message 15), during network entry and the first frame phase, and when the reporting interval changes
+ * (§ A2-3.3.5); transmitted with RATDMA, ITDMA or SOTDMA access and carries an ITDMA communication state (Table 44).
+ * See {@link PositionReport} for the field layout.
+ */
 @Value
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)

@@ -31,6 +31,12 @@ import java.time.Instant;
 
 import static java.lang.String.format;
 
+/**
+ * Message 14: safety related broadcast message (ITU-R M.1371-6 § A7-3.12, Table 61). Broadcast of safety related
+ * text in six-bit ASCII from a mobile or base station; also used by AIS-SART, MOB and EPIRB-AIS devices for their
+ * "SART ACTIVE", "MOB ACTIVE" and "EPIRB ACTIVE" texts (§ A1-2.1.5). Variable length, 40 to 1008 bits (1 to 5 slots;
+ * Table 62 gives the number of characters per slot count; Class B "CS" stations use one slot).
+ */
 @Value
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
@@ -69,7 +75,9 @@ public class SafetyRelatedBroadcastMessage extends AISMessage {
         return AISMessageType.SafetyRelatedBroadcastMessage;
     }
 
+    /** Bits 38-40 (Table 61): spare, should be zero. */
     int spare;
+    /** Bits 40 to end (Table 61): safety related text in six-bit ASCII (Table 45), at most 161 characters; trailing padding removed. */
     String text;
 
 }

@@ -33,6 +33,12 @@ import java.time.Instant;
 
 import static java.lang.String.format;
 
+/**
+ * Message 9: standard SAR aircraft position report (ITU-R M.1371-6 § A7-3.7, Table 57). Transmitted by aircraft
+ * stations in the maritime mobile service involved in search and rescue operations, every 10 s (2 s when changing
+ * course, speed or altitude, Table 2). 168 bits; SOTDMA, RATDMA or ITDMA access with a SOTDMA or ITDMA communication
+ * state selected by a flag (Table 44).
+ */
 @Value
 @EqualsAndHashCode(callSuper = true)
 @ToString(callSuper = true)
@@ -98,21 +104,37 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
         return TransponderClass.SAR;
     }
 
+    /** Bits 38-50 (Table 57): altitude in metres from GNSS or barometric sensor (see {@code barometricAltitude}), 0-4094; 4094 = 4094 m or higher, 4095 = not available. */
     int altitude;
+    /** Speed over ground in knots, equal to {@code rawSpeedOverGround} since Message 9 uses 1-knot steps (Table 57); 1022 = 1022 knots or higher, 1023 = not available. */
     float speedOverGround;
+    /** Bit 60 (Table 57): position accuracy flag, true = high (≤ 10 m), false = low (&gt; 10 m, default); see Table 48. */
     boolean positionAccuracy;
+    /** Latitude in decimal degrees, {@code rawLatitude} / 600 000 (Table 57); north positive; 91 = not available. */
     float latitude;
+    /** Longitude in decimal degrees, {@code rawLongitude} / 600 000 (Table 57); east positive; 181 = not available. */
     float longitude;
+    /** Course over ground in degrees, {@code rawCourseOverGround} / 10 (Table 57); 360 = not available. */
     float courseOverGround;
+    /** Bits 128-134 (Table 57): UTC second when the report was generated, 0-59; 60 = not available (default), 61 = manual input, 62 = dead reckoning, 63 = EPFS inoperative. */
     int second;
+    /** Bits 134-142 (Table 57) as a string of '0'/'1': the altitude sensor bit followed by 7 spare bits. See {@code barometricAltitude} for the typed value. */
     String regionalReserved;
+    /** Bit 142 (Table 57, § A7-3.3.1): data terminal equipment ready, true = available (bit 0), false = not available (bit 1, default). */
     boolean dataTerminalReady;
+    /** Bit 146 (Table 57): assigned mode flag, true = station operating in assigned mode, false = autonomous and continuous mode (default). */
     boolean assigned;
+    /** Bit 147 (Table 57): RAIM flag of the electronic position fixing device, true = RAIM in use; see Table 48. */
     boolean raimFlag;
+    /** Bits 148-168 (Table 57) as a string of '0'/'1': the communication state selector flag followed by the 19-bit communication state. See {@code communicationState} for the typed value. */
     String radioStatus;
+    /** Bits 50-60 (Table 57): speed over ground in knots, 0-1022; 1022 = 1022 knots or higher, 1023 = not available. */
     int rawSpeedOverGround;
+    /** Bits 61-89 (Table 57): longitude in 1/10 000 min, two's complement; 181° (0x6791AC0) = not available. */
     int rawLongitude;
+    /** Bits 89-116 (Table 57): latitude in 1/10 000 min, two's complement; 91° (0x3412140) = not available. */
     int rawLatitude;
+    /** Bits 116-128 (Table 57): course over ground in 1/10 degree, 0-3599; 3600 = not available. */
     int rawCourseOverGround;
     /** Altitude sensor, bit 134 (ITU-R M.1371-6 Table 57): false = GNSS, true = barometric source. */
     boolean barometricAltitude;

@@ -74,10 +74,14 @@ public abstract sealed class AISMessage permits AddressedBinaryMessage, Addresse
                 """.formatted(Version.VERSION, Version.BUILD_TIMESTAMP, Version.JAVA_VERSION));
     }
 
+    /** Decoding metadata: when and from where the message was received, the NMEA sentences and tag block it came in, and the raw payload bits. */
     private final Metadata metadata;
+    /** Bits 6-8 of every message (e.g. ITU-R M.1371-6 Table 46): repeat indicator, 0 = not repeated (default, set by mobile stations), 1-2 = repeated that many times by repeater stations, 3 = do not repeat any more (§ A2-4.6.1). */
     private final int repeatIndicator;
+    /** Bits 8-38 of every message: source ID, the MMSI of the transmitting station per Recommendation ITU-R M.585 (§ A2-3.3.7.2.1). */
     private final MMSI sourceMmsi;
 
+    /** Length of the decoded payload in bits, after removal of the NMEA fill bits. */
     @ToString.Exclude
     private final int numberOfBits;
 
@@ -88,6 +92,7 @@ public abstract sealed class AISMessage permits AddressedBinaryMessage, Addresse
         this.sourceMmsi = null;
     }
 
+    /** @return the message type, i.e. the value of the 6-bit message ID in bits 0-6 (ITU-R M.1371-6 Table 44) */
     public abstract AISMessageType getMessageType();
 
     /**

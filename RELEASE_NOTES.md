@@ -20,6 +20,12 @@ Alignment with Recommendation ITU-R M.1371-6 (02/2026).
   `AtoNOnStationStatus`, AtoN status bits and authentication flag.
 - `AISMessageType.MAXIMUM_CODE` is now 28. Message IDs 29 and above are still rejected.
 
+### Documentation
+
+- Every message class, field and enum constant of the message model now has Javadoc referencing the defining
+  ITU-R M.1371-6 section, table and bit range (or IMO SN.1/Circ.289 for application specific messages), including
+  units, scaling and not-available values.
+
 ### Source compatibility notes
 
 - `AidToNavigationReportSingleSlot` is a new permitted subclass of the sealed `AISMessage`, and
