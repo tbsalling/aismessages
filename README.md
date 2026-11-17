@@ -247,7 +247,6 @@ The repository includes ready-to-run demo applications:
 
 - `dk.tbsalling.aismessages.demo.SimpleDemoApp`
 - `dk.tbsalling.aismessages.demo.RouterDemoApp`
-- `dk.tbsalling.aismessages.demo.SocketDemoApp`
 - `dk.tbsalling.aismessages.demo.UDPDemoApp`
 
 You may also want:

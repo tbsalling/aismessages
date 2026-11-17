@@ -37,7 +37,6 @@ public class BinaryMessageSingleSlotTest {
         assertNull(message.getApplicationSpecificMessage());
         assertEquals(96, message.getData().length());
         assertEquals("100000011011111000010101011011010101100110110010000000001111111110011110100000001100000110000101", message.getData().toString());
-        assertEquals("00100000000000000000101001000011100000011011111000010101011011010101100110110010000000001111111110011110100000001100000110000101", message.getBinaryData());
     }
 
     @Test

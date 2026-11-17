@@ -52,14 +52,14 @@ public class GroupAssignmentCommand extends AISMessage {
                                      StationType stationType, ShipType shipType, int spare2,
                                      TxRxMode transmitReceiveMode, ReportingInterval reportingInterval, int quietTime) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
-        this.spare1Value = spare1;
+        this.spare1 = spare1;
         this.northEastLongitude = northEastLongitude;
         this.northEastLatitude = northEastLatitude;
         this.southWestLongitude = southWestLongitude;
         this.southWestLatitude = southWestLatitude;
         this.stationType = stationType;
         this.shipType = shipType;
-        this.spare2Value = spare2;
+        this.spare2 = spare2;
         this.transmitReceiveMode = transmitReceiveMode;
         this.reportingInterval = reportingInterval;
         this.quietTime = quietTime;
@@ -88,26 +88,8 @@ public class GroupAssignmentCommand extends AISMessage {
         return AISMessageType.GroupAssignmentCommand;
     }
 
-    /**
-     * @return the 2 spare bits at bit offset 38 (ITU-R M.1371-6 Table 74), rendered as a decimal string.
-     * @deprecated since 6.0.0; the spare bits are not text. Use {@code getSpare1Value()} instead.
-     */
-    @Deprecated(since = "6.0.0")
-    public String getSpare1() {
-        return Integer.toString(spare1Value);
-    }
-
-    /**
-     * @return the 22 spare bits at bit offset 122 (ITU-R M.1371-6 Table 74), rendered as a decimal string.
-     * @deprecated since 6.0.0; the spare bits are not text. Use {@code getSpare2Value()} instead.
-     */
-    @Deprecated(since = "6.0.0")
-    public String getSpare2() {
-        return Integer.toString(spare2Value);
-    }
-
     /** Bits 38-40 (Table 74): spare, should be zero. */
-    int spare1Value;
+    int spare1;
     /** Bits 58-75 (Table 74): latitude of the north-east corner of the area in decimal degrees (1/10 min / 10); north positive. */
     float northEastLatitude;
     /** Bits 40-58 (Table 74): longitude of the north-east corner of the area in decimal degrees (1/10 min / 10); east positive. */
@@ -127,5 +109,5 @@ public class GroupAssignmentCommand extends AISMessage {
     /** Bits 150-154 (Table 74): quiet time in minutes, 1-15; 0 = no quiet time commanded (default). */
     int quietTime;
     /** Bits 122-144 (Table 74): spare, should be zero. */
-    int spare2Value;
+    int spare2;
 }
