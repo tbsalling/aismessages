@@ -59,6 +59,7 @@ public abstract sealed class PositionReport extends AISMessage implements Extend
      * @param bitString                the bit string
      * @param navigationStatus         the navigation status
      * @param rateOfTurn               the rate of turn in degrees per minute (calculated from raw value; 0 unless measured)
+     * @param rateOfTurnIndicator      what kind of rate of turn value was transmitted
      * @param speedOverGround          the speed over ground
      * @param positionAccuracy         the position accuracy flag
      * @param latitude                 the latitude
@@ -69,19 +70,13 @@ public abstract sealed class PositionReport extends AISMessage implements Extend
      * @param specialManeuverIndicator the special maneuver indicator
      * @param raimFlag                 the RAIM flag
      * @param communicationState       the communication state
-     * @param rawRateOfTurn            the raw rate of turn value
-     * @param rawSpeedOverGround       the raw speed over ground value
-     * @param rawLatitude              the raw latitude value
-     * @param rawLongitude             the raw longitude value
-     * @param rawCourseOverGround      the raw course over ground value
      * @param transmitPowerLow         the transmit power flag (false = high power, true = low power)
      */
     protected PositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
-                             NavigationStatus navigationStatus, int rateOfTurn, float speedOverGround,
+                             NavigationStatus navigationStatus, int rateOfTurn, RateOfTurnIndicator rateOfTurnIndicator, float speedOverGround,
                              boolean positionAccuracy, double latitude, double longitude,
                              float courseOverGround, int trueHeading, int second,
-                             ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState,
-                             int rawRateOfTurn, int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround, boolean transmitPowerLow) {
+                             ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState, boolean transmitPowerLow) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.navigationStatus = navigationStatus;
         this.rateOfTurn = rateOfTurn;
@@ -95,12 +90,7 @@ public abstract sealed class PositionReport extends AISMessage implements Extend
         this.specialManeuverIndicator = specialManeuverIndicator;
         this.raimFlag = raimFlag;
         this.communicationState = communicationState;
-        this.rawRateOfTurn = rawRateOfTurn;
-        this.rateOfTurnIndicator = RateOfTurnIndicator.fromRawRateOfTurn(rawRateOfTurn);
-        this.rawSpeedOverGround = rawSpeedOverGround;
-        this.rawLatitude = rawLatitude;
-        this.rawLongitude = rawLongitude;
-        this.rawCourseOverGround = rawCourseOverGround;
+        this.rateOfTurnIndicator = rateOfTurnIndicator;
         this.transmitPowerLow = transmitPowerLow;
     }
 
@@ -161,16 +151,6 @@ public abstract sealed class PositionReport extends AISMessage implements Extend
     boolean raimFlag;
     /** Bits 149-168 (Table 46, Table 47): SOTDMA communication state for Messages 1 and 2 (Table 18), ITDMA for Message 3 (Table 20). */
     CommunicationState communicationState;
-    /** Bits 42-50 (Table 46): rate of turn as transmitted (ROT_AIS), -128 to +127; +127/-127 = turning right/left at more than 5° per 30 s without turn indicator, -128 = not available. */
-    int rawRateOfTurn;
-    /** Bits 50-60 (Table 46): speed over ground in 1/10 knot steps, 0-1022; 1022 = 102.2 knots or higher, 1023 = not available. */
-    int rawSpeedOverGround;
-    /** Bits 89-116 (Table 46): latitude in 1/10 000 min, two's complement; 91° (0x3412140) = not available. */
-    int rawLatitude;
-    /** Bits 61-89 (Table 46): longitude in 1/10 000 min, two's complement; 181° (0x6791AC0) = not available. */
-    int rawLongitude;
-    /** Bits 116-128 (Table 46): course over ground in 1/10 degree, 0-3599; 3600 = not available. */
-    int rawCourseOverGround;
     /** Bit 147 (Table 46): transmit power flag, false = high power (default), true = low power. Bits 145-147 are spare. */
     boolean transmitPowerLow;
 }

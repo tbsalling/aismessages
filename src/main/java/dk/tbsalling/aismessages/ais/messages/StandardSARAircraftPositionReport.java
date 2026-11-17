@@ -52,7 +52,6 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
                                                 double latitude, double longitude, float courseOverGround,
                                                 int second, int regionalReserved, boolean dataTerminalReady,
                                                 boolean assigned, boolean raimFlag, int radioStatus,
-                                                int rawSpeedOverGround, int rawLongitude, int rawLatitude, int rawCourseOverGround,
                                                 boolean barometricAltitude, boolean commStateSelectorFlag, CommunicationState communicationState) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.altitude = altitude;
@@ -67,10 +66,6 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
         this.assigned = assigned;
         this.raimFlag = raimFlag;
         this.radioStatus = radioStatus;
-        this.rawSpeedOverGround = rawSpeedOverGround;
-        this.rawLongitude = rawLongitude;
-        this.rawLatitude = rawLatitude;
-        this.rawCourseOverGround = rawCourseOverGround;
         this.barometricAltitude = barometricAltitude;
         this.commStateSelectorFlag = commStateSelectorFlag;
         this.communicationState = communicationState;
@@ -128,14 +123,6 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
     boolean raimFlag;
     /** Bits 148-168 (Table 57) as an unsigned integer, first bit most significant: the communication state selector flag followed by the 19-bit communication state. See {@code communicationState} for the typed value. */
     int radioStatus;
-    /** Bits 50-60 (Table 57): speed over ground in knots, 0-1022; 1022 = 1022 knots or higher, 1023 = not available. */
-    int rawSpeedOverGround;
-    /** Bits 61-89 (Table 57): longitude in 1/10 000 min, two's complement; 181° (0x6791AC0) = not available. */
-    int rawLongitude;
-    /** Bits 89-116 (Table 57): latitude in 1/10 000 min, two's complement; 91° (0x3412140) = not available. */
-    int rawLatitude;
-    /** Bits 116-128 (Table 57): course over ground in 1/10 degree, 0-3599; 3600 = not available. */
-    int rawCourseOverGround;
     /** Altitude sensor, bit 134 (ITU-R M.1371-6 Table 57): false = GNSS, true = barometric source. */
     boolean barometricAltitude;
     /** Communication state selector flag, bit 148: false = SOTDMA communication state follows, true = ITDMA. */

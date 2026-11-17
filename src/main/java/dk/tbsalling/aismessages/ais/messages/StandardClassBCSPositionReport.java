@@ -56,8 +56,7 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
                                              float courseOverGround, int trueHeading, int second,
                                              int regionalReserved2, boolean csUnit, boolean display, boolean dsc, boolean band,
                                              boolean message22, boolean assigned, boolean raimFlag, boolean commStateSelectorFlag,
-                                             CommunicationState communicationState,
-                                             int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround, boolean transmitPowerLow) {
+                                             CommunicationState communicationState, boolean transmitPowerLow) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.regionalReserved1 = regionalReserved1;
         this.speedOverGround = speedOverGround;
@@ -77,10 +76,6 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
         this.raimFlag = raimFlag;
         this.commStateSelectorFlag = commStateSelectorFlag;
         this.communicationState = communicationState;
-        this.rawSpeedOverGround = rawSpeedOverGround;
-        this.rawLatitude = rawLatitude;
-        this.rawLongitude = rawLongitude;
-        this.rawCourseOverGround = rawCourseOverGround;
         this.transmitPowerLow = transmitPowerLow;
     }
 
@@ -148,14 +143,6 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
     boolean commStateSelectorFlag;
     /** Bits 149-168 (Table 68): SOTDMA (Table 18) or ITDMA (Table 20) communication state according to {@code commStateSelectorFlag}. */
     CommunicationState communicationState;
-    /** Bits 46-56 (Table 68): speed over ground in 1/10 knot steps, 0-1022; 1022 = 102.2 knots or higher, 1023 = not available. */
-    int rawSpeedOverGround;
-    /** Bits 85-112 (Table 68): latitude in 1/10 000 min, two's complement; 91° (0x3412140) = not available. */
-    int rawLatitude;
-    /** Bits 57-85 (Table 68): longitude in 1/10 000 min, two's complement; 181° (0x6791AC0) = not available. */
-    int rawLongitude;
-    /** Bits 112-124 (Table 68): course over ground in 1/10 degree, 0-3599; 3600 = not available. */
-    int rawCourseOverGround;
     /** Transmit power flag at bit 139 (ITU-R M.1371-6 Table 68): false = high power (default), true = low power. */
     boolean transmitPowerLow;
 

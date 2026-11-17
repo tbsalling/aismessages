@@ -37,8 +37,7 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
     protected LongRangeBroadcastMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                         boolean positionAccuracy, boolean raim, NavigationStatus navigationStatus,
                                         double latitude, double longitude, float speedOverGround, float courseOverGround,
-                                        PositionLatency positionLatency, int spare,
-                                        int rawLongitude, int rawLatitude, int rawSpeedOverGround, int rawCourseOverGround) {
+                                        PositionLatency positionLatency, int spare) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.positionAccuracy = positionAccuracy;
         this.raim = raim;
@@ -49,10 +48,6 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
         this.courseOverGround = courseOverGround;
         this.positionLatency = positionLatency;
         this.spare = spare;
-        this.rawLongitude = rawLongitude;
-        this.rawLatitude = rawLatitude;
-        this.rawSpeedOverGround = rawSpeedOverGround;
-        this.rawCourseOverGround = rawCourseOverGround;
     }
 
     @Override
@@ -101,12 +96,4 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
     PositionLatency positionLatency;
     /** Bit 95 (Table 83): spare, set to zero to preserve the byte boundary. */
     int spare;
-    /** Bits 44-62 (Table 83): longitude in 1/10 min, two's complement; 181° (0x1A838) = not available. */
-    int rawLongitude;
-    /** Bits 62-79 (Table 83): latitude in 1/10 min, two's complement; 91° (0xD548) = not available. */
-    int rawLatitude;
-    /** Bits 79-85 (Table 83): speed over ground in knots, 0-62; 62 = 62 knots or faster, 63 = not available. */
-    int rawSpeedOverGround;
-    /** Bits 85-94 (Table 83): course over ground in degrees, 0-359; 511 = not available. */
-    int rawCourseOverGround;
 }

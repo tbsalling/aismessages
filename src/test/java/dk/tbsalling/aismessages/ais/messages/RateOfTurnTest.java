@@ -34,7 +34,6 @@ public class RateOfTurnTest {
     public void decodesRateOfTurnAndIndicator(int raw, int degreesPerMinute, RateOfTurnIndicator indicator) {
         PositionReport report = positionReport(raw);
 
-        assertEquals(raw, report.getRawRateOfTurn());
         assertEquals(degreesPerMinute, report.getRateOfTurn());
         assertEquals(indicator, report.getRateOfTurnIndicator());
     }

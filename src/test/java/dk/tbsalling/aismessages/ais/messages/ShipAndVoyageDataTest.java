@@ -40,7 +40,6 @@ public class ShipAndVoyageDataTest {
         assertEquals(14, message.getToPort());
         assertEquals(PositionFixingDevice.Gps, message.getPositionFixingDevice());
         assertEquals(8.3f, message.getDraught(), 0.0f);
-        assertEquals(83, message.getRawDraught());
         assertEquals(String.format("%02d-%02d %02d:%02d", message.getEtaDay(), message.getEtaMonth(), message.getEtaHour(), message.getEtaMinute()), "06-03 19:00");
         assertEquals(3, message.getEtaMonth());
         assertEquals(6, message.getEtaDay());

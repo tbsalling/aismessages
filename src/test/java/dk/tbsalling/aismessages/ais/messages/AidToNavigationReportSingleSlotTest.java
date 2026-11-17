@@ -40,8 +40,6 @@ public class AidToNavigationReportSingleSlotTest {
         assertEquals(1, message.getSecond());
         assertEquals(10.75f, message.getLongitude(), 0.0f);
         assertEquals(55.5f, message.getLatitude(), 0.0f);
-        assertEquals(6450000, message.getRawLongitude());
-        assertEquals(33300000, message.getRawLatitude());
         assertEquals(RestrictedUseIndicator.UnrestrictedUse, message.getRestrictedUse());
         assertEquals(AtoNStationType.PhysicalFixed, message.getStationType());
         assertEquals(AidType.LeadingLightFront, message.getAidType());

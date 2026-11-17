@@ -54,7 +54,7 @@ public class AidToNavigationReportSingleSlot extends AISMessage {
      * Constructor accepting pre-parsed values for true immutability.
      */
     protected AidToNavigationReportSingleSlot(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
-                                              int second, double latitude, double longitude, int rawLatitude, int rawLongitude,
+                                              int second, double latitude, double longitude,
                                               RestrictedUseIndicator restrictedUse, AtoNStationType stationType, AidType aidType, int ialaMrn,
                                               AtoNDimensionsType dimensionsType, int dimensionA, int dimensionB, boolean multipleDimensionTypes,
                                               boolean charted, AtoNOnStationStatus onStationStatus, int atonStatusBits, boolean authenticated) {
@@ -62,8 +62,6 @@ public class AidToNavigationReportSingleSlot extends AISMessage {
         this.second = second;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.rawLatitude = rawLatitude;
-        this.rawLongitude = rawLongitude;
         this.restrictedUse = restrictedUse;
         this.stationType = stationType;
         this.aidType = aidType;
@@ -107,10 +105,6 @@ public class AidToNavigationReportSingleSlot extends AISMessage {
     double latitude;
     /** Longitude in decimal degrees; 181 = not available. */
     double longitude;
-    /** Latitude in 1/10 000 min before conversion. */
-    int rawLatitude;
-    /** Longitude in 1/10 000 min before conversion. */
-    int rawLongitude;
     /** Where the AtoN may be operated. */
     RestrictedUseIndicator restrictedUse;
     /** Type of AIS AtoN station (physical, synthetic, virtual, mobile). */

@@ -50,8 +50,7 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
                                                     int second, int regionalReserved2, String shipName, ShipType shipType,
                                                     int toBow, int toStern, int toPort, int toStarboard,
                                                     PositionFixingDevice positionFixingDevice, boolean raimFlag,
-                                                    boolean dataTerminalReady, boolean assigned, int regionalReserved3,
-                                                    int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround) {
+                                                    boolean dataTerminalReady, boolean assigned, int regionalReserved3) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.regionalReserved1 = regionalReserved1;
         this.speedOverGround = speedOverGround;
@@ -73,10 +72,6 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
         this.dataTerminalReady = dataTerminalReady;
         this.assigned = assigned;
         this.regionalReserved3 = regionalReserved3;
-        this.rawSpeedOverGround = rawSpeedOverGround;
-        this.rawLatitude = rawLatitude;
-        this.rawLongitude = rawLongitude;
-        this.rawCourseOverGround = rawCourseOverGround;
     }
 
     @Override
@@ -147,12 +142,4 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
     boolean assigned;
     /** Bits 308-312 (Table 69) as an unsigned integer, first bit most significant: 4 spare bits, should be zero. */
     int regionalReserved3;
-    /** Bits 46-56 (Table 69): speed over ground in 1/10 knot steps, 0-1022; 1022 = 102.2 knots or higher, 1023 = not available. */
-    int rawSpeedOverGround;
-    /** Bits 85-112 (Table 69): latitude in 1/10 000 min, two's complement; 91° (0x3412140) = not available. */
-    int rawLatitude;
-    /** Bits 57-85 (Table 69): longitude in 1/10 000 min, two's complement; 181° (0x6791AC0) = not available. */
-    int rawLongitude;
-    /** Bits 112-124 (Table 69): course over ground in 1/10 degree, 0-3599; 3600 = not available. */
-    int rawCourseOverGround;
 }

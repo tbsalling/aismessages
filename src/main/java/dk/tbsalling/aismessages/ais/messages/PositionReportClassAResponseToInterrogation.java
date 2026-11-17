@@ -38,15 +38,13 @@ import java.time.Instant;
 @ToString(callSuper = true)
 public class PositionReportClassAResponseToInterrogation extends PositionReport {
     protected PositionReportClassAResponseToInterrogation(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
-                                                          NavigationStatus navigationStatus, int rateOfTurn, float speedOverGround,
+                                                          NavigationStatus navigationStatus, int rateOfTurn, RateOfTurnIndicator rateOfTurnIndicator, float speedOverGround,
                                                           boolean positionAccuracy, double latitude, double longitude,
                                                           float courseOverGround, int trueHeading, int second,
-                                                          ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState,
-                                                          int rawRateOfTurn, int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround, boolean transmitPowerLow) {
+                                                          ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState, boolean transmitPowerLow) {
         super(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
-                navigationStatus, rateOfTurn, speedOverGround, positionAccuracy, latitude, longitude,
-                courseOverGround, trueHeading, second, specialManeuverIndicator, raimFlag, communicationState,
-                rawRateOfTurn, rawSpeedOverGround, rawLatitude, rawLongitude, rawCourseOverGround, transmitPowerLow);
+                navigationStatus, rateOfTurn, rateOfTurnIndicator, speedOverGround, positionAccuracy, latitude, longitude,
+                courseOverGround, trueHeading, second, specialManeuverIndicator, raimFlag, communicationState, transmitPowerLow);
     }
 
     @Override

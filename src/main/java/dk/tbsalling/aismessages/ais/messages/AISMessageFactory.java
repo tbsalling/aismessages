@@ -91,7 +91,7 @@ public class AISMessageFactory {
 
         return new ShipAndVoyageData(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 imo, callsign, shipName, shipType, toBow, toStern, toPort, toStarboard,
-                positionFixingDevice, etaMonth, etaDay, etaHour, etaMinute, draught, destination, dataTerminalReady, rawDraught, aisVersionIndicator);
+                positionFixingDevice, etaMonth, etaDay, etaHour, etaMinute, draught, destination, dataTerminalReady, aisVersionIndicator);
     }
 
     private static PositionReport createPositionReportClassAScheduled(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
@@ -117,6 +117,7 @@ public class AISMessageFactory {
                                                        PositionReportConstructor constructor) {
         NavigationStatus navigationStatus = NavigationStatus.fromInteger(bitString.getUnsignedInt(38, 42));
         int rawRateOfTurn = bitString.getSignedInt(42, 50);
+        RateOfTurnIndicator rateOfTurnIndicator = RateOfTurnIndicator.fromRawRateOfTurn(rawRateOfTurn);
         int rateOfTurn = rawRateOfTurn >= -126 && rawRateOfTurn <= 126 ? (int) (Math.signum(rawRateOfTurn) * Math.pow(rawRateOfTurn / 4.733, 2)) : 0;
         int rawSpeedOverGround = bitString.getUnsignedInt(50, 60);
         float speedOverGround = rawSpeedOverGround / 10f;
@@ -144,9 +145,8 @@ public class AISMessageFactory {
         };
 
         return constructor.create(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
-                navigationStatus, rateOfTurn, speedOverGround, positionAccuracy, latitude, longitude,
-                courseOverGround, trueHeading, second, specialManeuverIndicator, raimFlag, communicationState,
-                rawRateOfTurn, rawSpeedOverGround, rawLatitude, rawLongitude, rawCourseOverGround, transmitPowerLow);
+                navigationStatus, rateOfTurn, rateOfTurnIndicator, speedOverGround, positionAccuracy, latitude, longitude,
+                courseOverGround, trueHeading, second, specialManeuverIndicator, raimFlag, communicationState, transmitPowerLow);
     }
 
     private static BaseStationReport createBaseStationReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
@@ -258,7 +258,6 @@ public class AISMessageFactory {
         return new StandardSARAircraftPositionReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 altitude, speed, positionAccuracy, latitude, longitude, courseOverGround, second,
                 regionalReserved, dataTerminalReady, assigned, raimFlag, radioStatus,
-                rawSpeedOverGround, rawLongitude, rawLatitude, rawCourseOverGround,
                 barometricAltitude, commStateSelectorFlag, communicationState);
     }
 
@@ -452,8 +451,7 @@ public class AISMessageFactory {
         return new StandardClassBCSPositionReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 regionalReserved1, speedOverGround, positionAccuracy, latitude, longitude, courseOverGround,
                 trueHeading, second, regionalReserved2, csUnit, display, dsc, band, message22, assigned,
-                raimFlag, commStateSelectorFlag, commState,
-                rawSpeedOverGround, rawLatitude, rawLongitude, rawCourseOverGround, transmitPowerLow);
+                raimFlag, commStateSelectorFlag, commState, transmitPowerLow);
     }
 
     private static ExtendedClassBEquipmentPositionReport createExtendedClassBEquipmentPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
@@ -485,8 +483,7 @@ public class AISMessageFactory {
         return new ExtendedClassBEquipmentPositionReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 regionalReserved1, speedOverGround, positionAccuracy, latitude, longitude, courseOverGround, trueHeading,
                 second, regionalReserved2, shipName, shipType, toBow, toStern, toPort, toStarboard,
-                positionFixingDevice, raimFlag, dataTerminalReady, assigned, regionalReserved3,
-                rawSpeedOverGround, rawLatitude, rawLongitude, rawCourseOverGround);
+                positionFixingDevice, raimFlag, dataTerminalReady, assigned, regionalReserved3);
     }
 
     private static DataLinkManagement createDataLinkManagement(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
@@ -758,8 +755,7 @@ public class AISMessageFactory {
         int spare = bitString.getUnsignedInt(95, 96);
 
         return new LongRangeBroadcastMessage(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
-                positionAccuracy, raim, status, latitude, longitude, speed, course, positionLatency, spare,
-                rawLongitude, rawLatitude, rawSpeedOverGround, rawCourseOverGround);
+                positionAccuracy, raim, status, latitude, longitude, speed, course, positionLatency, spare);
     }
 
     private static AidToNavigationReportSingleSlot createAidToNavigationReportSingleSlot(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
@@ -783,7 +779,7 @@ public class AISMessageFactory {
         boolean authenticated = bitString.getBoolean(167, 168);
 
         return new AidToNavigationReportSingleSlot(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
-                second, latitude, longitude, rawLatitude, rawLongitude, restrictedUse, stationType, aidType, ialaMrn,
+                second, latitude, longitude, restrictedUse, stationType, aidType, ialaMrn,
                 dimensionsType, dimensionA, dimensionB, multipleDimensionTypes, charted, onStationStatus, atonStatusBits, authenticated);
     }
 
@@ -887,11 +883,10 @@ public class AISMessageFactory {
     @FunctionalInterface
     private interface PositionReportConstructor {
         PositionReport create(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
-                              NavigationStatus navigationStatus, int rateOfTurn, float speedOverGround,
+                              NavigationStatus navigationStatus, int rateOfTurn, RateOfTurnIndicator rateOfTurnIndicator, float speedOverGround,
                               boolean positionAccuracy, double latitude, double longitude,
                               float courseOverGround, int trueHeading, int second,
-                              ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState,
-                              int rawRateOfTurn, int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround, boolean transmitPowerLow);
+                              ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState, boolean transmitPowerLow);
     }
 
 }

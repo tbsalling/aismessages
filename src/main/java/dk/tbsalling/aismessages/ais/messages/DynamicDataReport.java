@@ -29,19 +29,9 @@ public interface DynamicDataReport extends DataReport {
     double getLatitude();
 
     /**
-     * @return Raw latitude value before conversion to decimal degrees
-     */
-    int getRawLatitude();
-
-    /**
      * @return Longitude in decimal degrees
      */
     double getLongitude();
-
-    /**
-     * @return Raw longitude value before conversion to decimal degrees
-     */
-    int getRawLongitude();
 
     /**
      * @return Speed over ground in knots
@@ -49,19 +39,9 @@ public interface DynamicDataReport extends DataReport {
     float getSpeedOverGround();
 
     /**
-     * @return Raw speed over ground value before conversion to knots
-     */
-    int getRawSpeedOverGround();
-
-    /**
      * @return Course over ground in degrees (0-359)
      */
     float getCourseOverGround();
-
-    /**
-     * @return Raw course over ground value before conversion to degrees
-     */
-    int getRawCourseOverGround();
 
     /**
      * @return True if position accuracy is high (DGPS quality), false otherwise
