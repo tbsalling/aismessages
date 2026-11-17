@@ -48,9 +48,24 @@ These are load-bearing — preserve them when changing code:
 
 - **Eager parsing, immutable value objects.** Since v4, decoded `AISMessage` instances are immutable and fully parsed up front (see `docs/articles/immutable-value-objects-v4.md`). Do not reintroduce lazy decoding, `WeakReference`s, or post-construction mutation. Instances must be safe to share across threads.
 - **Zero runtime dependencies.** Lombok is compile-time only. Do not add runtime dependencies to `pom.xml`.
-- **Prefer primitives over boxed types** in hot paths to keep allocation churn low.
-- **Primitive vs boxed message fields.** A field that every instance of the message carries is a primitive, even when the spec defines a not-available value for it (e.g. latitude 91, heading 511); that value is passed through and documented. A field is a nullable boxed type only when its part of the message can be absent (optional trailing parts, the other Message 24 part, addressed/broadcast variants); `null` means "not transmitted" — never use -1 sentinels. Box via autoboxing/`Integer.valueOf` (the JDK cache), no custom caches. Coded fields are enums, `null` for undefined codes or absent parts. Hot-path messages (1-3, 18, 19, 27) stay primitive: express special codes with a companion enum (as `RateOfTurnIndicator` does) rather than a nullable value.
+- **Minimal allocation.** Prefer primitives over boxed types to keep allocation churn low; message field types follow the rules below.
 - **Public API is backward compatible.** Breaking changes to anything under `dk.tbsalling.aismessages` need an explicit, deliberate call-out — this is a library consumed in production by external systems.
+
+### Message field types: primitive or boxed
+
+Goal: decoding allocates as little as possible. Decide each field's type with the first rule that matches.
+
+1. **Hot-path messages (1, 2, 3, 18, 19, 27): always primitive.** If a value has special codes, keep the primitive and add a companion enum that classifies it (example: `rateOfTurn` + `RateOfTurnIndicator`).
+2. **The spec defines a "not available" value: primitive, passed through as transmitted.** Document the value in the field's Javadoc (example: latitude 91, heading 511, dimension 0). Never invent a different sentinel.
+3. **The bits may not be in the message at all: nullable boxed type, `null` = not transmitted.** This covers optional trailing parts (Messages 7, 13, 15, 16, 17, 20), variant-only fields (Messages 22, 25, 26) and the other part of Message 24. Never use -1 or another made-up sentinel.
+4. **Otherwise: primitive.**
+
+Rules that apply to every field:
+
+- **Coded values are enums.** `null` means an undefined code or an absent part.
+- **Boxing uses autoboxing (`Integer.valueOf`).** No custom caches, and no `Optional`/`OptionalInt`, which allocate on every call.
+- **Interfaces use the most primitive type all implementers can satisfy.** If one implementer has no value, return the spec's not-available value (rule 2) rather than boxing the getter for every implementer.
+- **Measure before deviating.** A change that adds boxing or objects to a hot-path message needs a `-prof gc` JMH comparison of bytes allocated per operation.
 
 ## Conventions
 
