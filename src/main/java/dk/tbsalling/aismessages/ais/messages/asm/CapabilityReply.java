@@ -31,7 +31,7 @@ public class CapabilityReply extends ApplicationSpecificMessage {
 
     /**
      * @param functionalId a function identifier, 0-63
-     * @return true if the replying application reports the given FI as available under {@link #getRepliedDesignatedAreaCode()}
+     * @return true if the replying application reports the given FI as available under {@code getRepliedDesignatedAreaCode()}
      */
     public boolean isFunctionalIdAvailable(int functionalId) {
         if (functionalId < 0 || functionalId > 63) {

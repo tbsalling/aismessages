@@ -41,8 +41,8 @@ import static java.lang.String.format;
  * <p>
  * Provides similar information as Message 21 in one slot instead of two, and can additionally report a mobile AtoN's
  * direction and speed, or extended information about the AtoN (such as its height) and what it is marking (such as a
- * hazardous area), through the {@link #getDimensionsType()} field which governs the meaning of
- * {@link #getDimensionA()} and {@link #getDimensionB()}. It may be accompanied by a Message 24 Part A carrying the
+ * hazardous area), through the {@code getDimensionsType()} field which governs the meaning of
+ * {@code getDimensionA()} and {@code getDimensionB()}. It may be accompanied by a Message 24 Part A carrying the
  * charted name of the AtoN.
  */
 @Value

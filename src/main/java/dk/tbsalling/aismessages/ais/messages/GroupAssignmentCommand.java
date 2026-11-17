@@ -89,7 +89,7 @@ public class GroupAssignmentCommand extends AISMessage {
 
     /**
      * @return the 2 spare bits at bit offset 38 (ITU-R M.1371-6 Table 74), rendered as a decimal string.
-     * @deprecated since 5.1.0; the spare bits are not text. Use {@link #getSpare1Value()} instead.
+     * @deprecated since 5.1.0; the spare bits are not text. Use {@code getSpare1Value()} instead.
      */
     @Deprecated(since = "5.1.0")
     public String getSpare1() {
@@ -98,7 +98,7 @@ public class GroupAssignmentCommand extends AISMessage {
 
     /**
      * @return the 22 spare bits at bit offset 122 (ITU-R M.1371-6 Table 74), rendered as a decimal string.
-     * @deprecated since 5.1.0; the spare bits are not text. Use {@link #getSpare2Value()} instead.
+     * @deprecated since 5.1.0; the spare bits are not text. Use {@code getSpare2Value()} instead.
      */
     @Deprecated(since = "5.1.0")
     public String getSpare2() {
