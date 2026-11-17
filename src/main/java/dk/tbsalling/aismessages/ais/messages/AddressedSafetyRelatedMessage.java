@@ -63,7 +63,9 @@ public class AddressedSafetyRelatedMessage extends AISMessage {
 
         final int numberOfBits = getNumberOfBits();
 
-        if (numberOfBits > 1008)
+        if (numberOfBits < 72)
+            errorMessage.append(format("Message of type %s should be at least 72 bits long; not %d.", getMessageType(), numberOfBits));
+        else if (numberOfBits > 1008)
             errorMessage.append(format("Message of type %s should be at most 1008 bits long; not %d.", getMessageType(), numberOfBits));
 
         if (errorMessage.length() > 0) {

@@ -58,7 +58,7 @@ public final class AISText {
     public static String decode(BitString bits, int begin, int end) {
         int width = end - begin;
         int numChars = width / 6;
-        if (numChars == 0) return "";
+        if (numChars <= 0) return "";
         // Walk the bits inline so we can apply '@' → space + trim in a single allocation.
         char[] chars = new char[numChars];
         for (int i = 0; i < numChars; i++) {

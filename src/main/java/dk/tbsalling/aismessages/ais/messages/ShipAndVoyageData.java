@@ -107,7 +107,7 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
         }
         final int numberOfBits = getNumberOfBits();
         if (numberOfBits != 424 && numberOfBits != 422 && numberOfBits != 426) {
-            throw new InvalidMessage("Message of type %s expected to be 422, 424 or 426 bits long; not %d".formatted(messageType, numberOfBits));
+            throw new InvalidMessage("Message of type %s expected to be 422, 424 or 426 bits long; not %d. Assumed sourceMmsi: %d.".formatted(messageType, numberOfBits, getSourceMmsi().getMmsi()));
         }
     }
 

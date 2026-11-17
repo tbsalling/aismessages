@@ -68,7 +68,9 @@ public class BinaryMessageSingleSlot extends AISMessage {
         final StringBuilder errorMessage = new StringBuilder();
 
         final int numberOfBits = getNumberOfBits();
-        if (numberOfBits > 168)
+        if (numberOfBits < 40)
+            errorMessage.append(format("Message of type %s should be at least 40 bits long; not %d.", getMessageType(), numberOfBits));
+        else if (numberOfBits > 168)
             errorMessage.append(format("Message of type %s should be at most 168 bits long; not %d.", getMessageType(), numberOfBits));
 
         if (errorMessage.length() > 0) {
