@@ -5,47 +5,78 @@ traffic.
 
 ---
 
-## Version 5.1.0-SNAPSHOT
+## Version 6.0.0-SNAPSHOT
 
 **Development Version**
+
+**Major Version Update - ITU-R M.1371-6 compliance, binary incompatible with 5.x**
 
 Alignment with Recommendation ITU-R M.1371-6 (02/2026).
 
 ### Breaking API Changes
 
-Binary compatible with 5.0.0. The following changes can require source changes or change decoded values:
+**Not binary compatible with 5.x: applications must be recompiled against 6.0.0.** Several public getters
+changed their return types, so code compiled against 5.x fails with `NoSuchMethodError`; review the list below
+for source changes.
 
 - **New message type in sealed hierarchies.** `AidToNavigationReportSingleSlot` is a new permitted subclass of
   the sealed `AISMessage`, and `AidToNavigationReportSingleSlot` is a new `AISMessageType` constant. Code that
   switches exhaustively over either without a `default` branch (pattern-matching `switch` on `AISMessage`, or
-  a `switch` expression on `AISMessageType`) must add a case for it before it compiles against 5.1.0.
-- **`fromInteger` returns new enum constants for codes now defined by M.1371-6.** `ShipType` 65-67, 75-78, 85
-  and 86, `ReportingInterval` 11 and `AidType` 4 resolve to the new named constants listed under "Completed
-  enumerations". The former placeholder constants are deprecated, and comparisons against them no longer match
-  decoded values.
-- **`ChannelManagement` coordinate getters return `Float`.** `getNorthEastLongitude()`, `getNorthEastLatitude()`,
-  `getSouthWestLongitude()` and `getSouthWestLatitude()` now return `Float` instead of `float` and are `null` for
-  addressed messages.
-- **Corrected decodings change values.** Messages 15, 20, 23, 25 and 26 and the IFM 0 text telegram now decode
-  per M.1371-6, so applications that worked around the old values see different results; see "Corrected
-  decodings".
+  a `switch` expression on `AISMessageType`) must add a case for it; code compiled against 5.x throws
+  `MatchException` when such a message arrives.
+- **Coordinates are `double`.** Every `getLatitude()` and `getLongitude()` (including `DynamicDataReport`, the
+  corner coordinates of Message 23 and the application specific messages) returns `double` instead of `float`.
+  A float cannot distinguish adjacent positions at the 1/10 000-minute AIS resolution beyond about 32°.
+  `ChannelManagement`'s four corner getters return `Double`, which is `null` for addressed messages.
+- **Absent optional parts are `null`.** Fields that used -1 for "not present" are now nullable `Integer`:
+  `SafetyRelatedAcknowledge.getSequence2()`-`getSequence4()`; `Interrogation.getType1_2()`,
+  `getOffset1_2()`, `getType2_1()` and `getOffset2_1()`; `ClassBCSStaticDataReport.getUnitModelCode()` and
+  `getUnitSerialNumber()` for Part A; and the application identifier, `getDesignatedAreaCode()` and
+  `getFunctionalId()` of unstructured Messages 25 and 26. `StaticDataReport.getToBow()`, `getToStern()`,
+  `getToStarboard()` and `getToPort()` return `Integer` (`null` for Message 24 Part A), also on
+  `ShipAndVoyageData`.
+- **Coded fields are enums.** `ShipAndVoyageData.getAisVersionIndicator()` returns `AisVersionIndicator`,
+  `ClassBCSStaticDataReport.getVdesCapabilities()` returns `VdesCapabilities` (`null` for Part A) and
+  `LongRangeBroadcastMessage.getPositionLatency()` returns `PositionLatency`.
+- **Regional and spare bits are `int`.** `getRegionalReserved1()`-`getRegionalReserved3()` (Messages 18 and 19),
+  `getRegionalReserved()` and `getRadioStatus()` (Message 9) and `getRegionalUse()` (Message 21) return the bits
+  as an unsigned `int`, first bit most significant, instead of a string of '0'/'1'.
+- **Rate of turn special codes.** `PositionReport.getRateOfTurn()` is 0 for the special codes +127, -127 and
+  -128 instead of a bogus converted value; use the new `getRateOfTurnIndicator()` to tell them apart.
+- **Renamed.** `AidToNavigationReport.isNameExtensionIsLabel()` is `isNameExtensionLabel()`.
+  `GroupAssignmentCommand.getSpare1()` and `getSpare2()` return `int`.
+- **Removed.** The placeholder constants `ShipType.PassengerFuture1-3`, `CargoFuture1-4` and `TankerFuture1-2`,
+  `ReportingInterval.FutureUse1` and `AidType.FutureUse1` (their codes now resolve to the named constants
+  under "Completed enumerations"); `BinaryMessageSingleSlot.getBinaryData()`; and `NMEAMessageSocketClient`
+  and `SocketDemoApp`, deprecated since 4.0.
+- **Corrected decodings change values.** Messages 15, 17, 20, 22, 23, 25 and 26 and the IFM 0 text telegram now
+  decode per M.1371-6; see "Corrected decodings".
 - **Stricter validation.** Messages 12, 14 and 25 shorter than their header, and Messages 26 shorter than 64 or
   longer than 1064 bits, are now rejected with `InvalidMessage`.
-- **Constructors.** The `protected` constructors of several message classes gained parameters for the newly
-  decoded fields. They are not part of the supported API; construct messages through `AISMessageFactory`.
+- **Constructors.** The `protected` constructors of several message classes changed. They are not part of the
+  supported API; construct messages through `AISMessageFactory`.
 
 ### Upgrade Notes
 
-- No build changes: 5.1.0 still targets Java 25 and has no runtime dependencies.
+- Recompile against 6.0.0. The build is otherwise unchanged: Java 25 and no runtime dependencies.
 - Add a case for `AidToNavigationReportSingleSlot` to exhaustive `switch` statements or expressions over
   `AISMessage` or `AISMessageType`, or handle it through a `default` branch.
-- Replace comparisons against the deprecated `ShipType.PassengerFuture1-3`, `CargoFuture1-4`,
-  `TankerFuture1-2`, `ReportingInterval.FutureUse1` and `AidType.FutureUse1` constants with their named
-  replacements, or compare `getCode()` values.
-- Unbox the `ChannelManagement` coordinate getters with a null check, or test `isAddressed()` first.
-- If you read Message 25 or 26 data, use `getData()`, `getDesignatedAreaCode()`, `getFunctionalId()` and
-  `getApplicationSpecificMessage()`; `BinaryMessageSingleSlot.getBinaryData()` still returns the old value but
-  is deprecated.
+- Change `float` variables that hold latitudes or longitudes to `double`.
+- Replace `-1` checks on the optional fields listed above with `null` checks, and unbox
+  `ChannelManagement`'s corner coordinates after a null check or after testing `isAddressed()`.
+- Replace int comparisons of the AIS version indicator, VDES capabilities and position latency with the new
+  enum constants, or use their `getCode()`.
+- Replace `ShipType.PassengerFuture1-3` with `PassengerCruiseShip`, `PassengerFerry` and `PassengerExcursionShip`;
+  `CargoFuture1-4` with `CargoBulkCarrier`, `CargoContainerShip`, `CargoRollOnRollOffCarrier` and
+  `CargoLandingCraft`; `TankerFuture1-2` with `TankerNonHazardous` and `IntegratedTugAndTankBarge`;
+  `ReportingInterval.FutureUse1` with `TwoSeconds`; and `AidType.FutureUse1` with `EmergencyWreckMarkingBuoy`.
+- Check `getRateOfTurnIndicator()` before using `getRateOfTurn()`.
+- Parse regional and spare bits with bit operations instead of string handling; `Integer.toBinaryString` gives
+  the old representation without leading zeros.
+- For Message 25 data use `getData()`, `getDesignatedAreaCode()`, `getFunctionalId()` and
+  `getApplicationSpecificMessage()` instead of `getBinaryData()`.
+- Use `NMEAMessageUDPSocket`, or an `AISInputStreamReader` over a socket's input stream, instead of
+  `NMEAMessageSocketClient`.
 - Stream readers (`AISInputStreamReader`, `NMEAMessageInputStreamReader`, `NMEAMessageUDPSocket`) no longer
   stop on malformed sentences. Code that restarted a reader after such a failure can drop that workaround.
 
@@ -63,13 +94,13 @@ Binary compatible with 5.0.0. The following changes can require source changes o
 - **Message 25 (Single slot binary message):** the layout now follows Table 79. A destination MMSI is only
   decoded when the destination indicator is set (`getDestinationMMSI()` returns `null` for broadcasts; it
   used to return a value made of data bits). When the binary data flag is set, the 16-bit application
-  identifier is split into `getDesignatedAreaCode()` and `getFunctionalId()` (both -1 when unstructured)
+  identifier is split into `getDesignatedAreaCode()` and `getFunctionalId()` (both `null` when unstructured)
   and resolved to an `ApplicationSpecificMessage` via `getApplicationSpecificMessage()`. The application
   data proper is available as `BitString getData()`, starting at bit 40, 56, 72 or 88 depending on the two
   flags.
 - **Message 26 (Multiple slot binary message):** the layout now follows Table 81. Destination MMSI and
   application identifier are only decoded when their flags are set (`getDestinationMmsi()` is `null` for
-  broadcasts, `getApplicationId()`, `getDesignatedAreaCode()` and `getFunctionalId()` are -1 when
+  broadcasts, `getApplicationId()`, `getDesignatedAreaCode()` and `getFunctionalId()` are `null` when
   unstructured). The trailing 4 spare bits, communication state selector and 19-bit communication state
   are decoded into `isCommStateSelectorFlag()` and `getCommunicationState()` (SOTDMA or ITDMA).
   `getData()` now holds exactly the application data between header and trailer and is no longer
@@ -78,7 +109,7 @@ Binary compatible with 5.0.0. The following changes can require source changes o
 - **Message 22 (Channel management), addressed variant:** decoding threw a `NullPointerException` because
   the four area coordinate fields were primitive `float` while the factory passes `null` for addressed
   messages (whose area fields hold two station IDs instead). The getters `getNorthEastLongitude()`,
-  `getNorthEastLatitude()`, `getSouthWestLongitude()` and `getSouthWestLatitude()` now return `Float` and
+  `getNorthEastLatitude()`, `getSouthWestLongitude()` and `getSouthWestLatitude()` now return `Double` and
   are `null` when `isAddressed()` is true.
 - **Truncated or malformed payloads:** a payload shorter than its message type requires (for example a
   163-bit position report) or an NMEA sentence with more than 5 fill bits made `AISMessageFactory.create`
@@ -106,6 +137,13 @@ Binary compatible with 5.0.0. The following changes can require source changes o
   Tables 25 to 28 place in front of it, so every text came out two characters out of phase. The text now
   starts at bit 12 and the two header fields are exposed as `isAcknowledgeRequired()` and
   `getTextSequenceNumber()`. FI 1 is marked discontinued in M.1371-6 but is still decoded as text.
+- **Messages 17, 22 and 23, coordinates in 1/10 min:** the DGNSS reference station position (Table 66) and
+  the area corners (Tables 73 and 74) were divided by 10, which yields minutes instead of degrees (59.99° was
+  reported as 3599.2). They are now divided by 600 and returned in degrees.
+- **Messages 1-3, rate of turn special codes:** +127, -127 and -128 were converted like measured values into
+  rates such as -720° per minute. `getRateOfTurn()` is now 0 for them and `getRateOfTurnIndicator()` (new
+  `RateOfTurnIndicator`: `Measured`, `TurningRightWithoutTurnIndicator`, `TurningLeftWithoutTurnIndicator`,
+  `NotAvailable`) classifies the transmitted value (Table 46).
 
 ### New message type: Message 28, aid-to-navigation report (single slot)
 
@@ -129,15 +167,14 @@ Binary compatible with 5.0.0. The following changes can require source changes o
 - Messages 4 (`BaseStationReport`) and 11 (`UTCAndDateResponse`):
   `isSatelliteBroadcastTransmissionControl()` (Table 49, control of Message 27 transmission within the
   base station coverage area). `UTCAndDateResponse` additionally exposes `getCommunicationState()`.
-- Message 5 (`ShipAndVoyageData`): `getAisVersionIndicator()` (Table 50; 3 = M.1371-6 or later).
+- Message 5 (`ShipAndVoyageData`): `getAisVersionIndicator()` (new `AisVersionIndicator`, Table 50).
 - Message 9 (`StandardSARAircraftPositionReport`): `isBarometricAltitude()` (Table 57 altitude sensor),
-  `isCommStateSelectorFlag()` and a typed `getCommunicationState()`. The `getRegionalReserved()` and
-  `getRadioStatus()` strings are unchanged.
-- Message 21 (`AidToNavigationReport`): `isNameExtensionIsLabel()`. When the name extension starts with
+  `isCommStateSelectorFlag()` and a typed `getCommunicationState()`.
+- Message 21 (`AidToNavigationReport`): `isNameExtensionLabel()`. When the name extension starts with
   "@@@" (Table 71: portray as label, not as name), the marker is stripped from `getNameExtension()` and
   this flag is true.
 - Message 24 Part B (`ClassBCSStaticDataReport`): `getPositionFixingDevice()` and `getVdesCapabilities()`
-  (Table 77), plus the Table 78 split of the manufacturer ID into `getManufacturerMnemonic()`,
+  (new `VdesCapabilities`, Table 77), plus the Table 78 split of the manufacturer ID into `getManufacturerMnemonic()`,
   `getUnitModelCode()` and `getUnitSerialNumber()`. `getVendorId()` is unchanged; `getMothershipMmsi()`
   is kept but documented as not being part of M.1371-6.
 
@@ -148,19 +185,16 @@ Binary compatible with 5.0.0. The following changes can require source changes o
   `InternalGNSS` (15). Code 15 is what Class B "CS" stations transmit; `fromInteger(15)` previously
   returned `null`.
 - `ManeuverIndicator`: added `ReservedForRegionalUse` (3).
-- `ReportingInterval`: added `TwoSeconds` (11); `FutureUse1` is deprecated and `fromInteger(11)` now
-  returns `TwoSeconds`.
-- `AidType`: added `EmergencyWreckMarkingBuoy` (4; `FutureUse1` deprecated) and the Table 85 mobile
+- `ReportingInterval`: added `TwoSeconds` (11), replacing `FutureUse1`.
+- `AidType`: added `EmergencyWreckMarkingBuoy` (4, replacing `FutureUse1`) and the Table 85 mobile
   aid-to-navigation types 32-50 used by Message 28.
 - `ShipType`: added the special purpose and support vessel codes 1-19, the reserved codes 25-28, 47 and
   48, `WingInGroundNoAdditionalInfo` (29), `Trawler` (38), `PatrolVessel` (39),
   `HighSpeedCraftPassenger` (45), `HighSpeedCraftRoRo` (46), `HighSpeedCraftNoAdditionalInfo` (49),
   `PassengerCruiseShip` (65), `PassengerFerry` (66), `PassengerExcursionShip` (67), `CargoBulkCarrier`
   (75), `CargoContainerShip` (76), `CargoRollOnRollOffCarrier` (77), `CargoLandingCraft` (78),
-  `TankerNonHazardous` (85) and `IntegratedTugAndTankBarge` (86). The former `PassengerFuture1-3`,
-  `CargoFuture1-4`, `TankerFuture1` and `TankerFuture2` constants are deprecated; `fromInteger` now
-  returns the new constants for those codes, so comparisons against the deprecated constants no longer
-  match decoded values.
+  `TankerNonHazardous` (85) and `IntegratedTugAndTankBarge` (86). These replace the former `PassengerFuture1-3`,
+  `CargoFuture1-4`, `TankerFuture1` and `TankerFuture2` constants.
 
 ### New public APIs
 
@@ -168,15 +202,8 @@ Binary compatible with 5.0.0. The following changes can require source changes o
   `getApplicationSpecificMessage()`.
 - `BinaryMessageMultipleSlot`: `getDesignatedAreaCode()`, `getFunctionalId()`,
   `getApplicationSpecificMessage()`, `isCommStateSelectorFlag()`, `getCommunicationState()`.
-- `GroupAssignmentCommand`: `getSpare1Value()`, `getSpare2Value()`.
-
-### Deprecations
-
-- `BinaryMessageSingleSlot.getBinaryData()` (`String` of all bits from bit 40 to the end) is deprecated in
-  favour of the typed getters above; its value is unchanged.
-- `GroupAssignmentCommand.getSpare1()` and `getSpare2()` (both `String`) are deprecated. The spare
-  fields are not six-bit text; use the new `int getSpare1Value()` and `int getSpare2Value()`. The
-  deprecated getters now return the numeric value as a decimal string.
+- `PositionReport`: `getRateOfTurnIndicator()`.
+- New enums `AisVersionIndicator`, `VdesCapabilities`, `PositionLatency` and `RateOfTurnIndicator`.
 
 ### Documentation
 
