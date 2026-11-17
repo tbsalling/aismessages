@@ -20,6 +20,7 @@ import dk.tbsalling.aismessages.ais.BitString;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
+import dk.tbsalling.aismessages.ais.messages.types.VdesCapabilities;
 import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
 import dk.tbsalling.aismessages.ais.messages.types.ShipType;
 import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
@@ -55,7 +56,7 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
                                        String vendorId, String callsign,
                                        Integer toBow, Integer toStern, Integer toStarboard, Integer toPort,
                                        MMSI mothershipMmsi, String manufacturerMnemonic, Integer unitModelCode, Integer unitSerialNumber,
-                                       PositionFixingDevice positionFixingDevice, int vdesCapabilities) {
+                                       PositionFixingDevice positionFixingDevice, VdesCapabilities vdesCapabilities) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.partNumber = partNumber;
         this.shipName = shipName;
@@ -135,9 +136,8 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
     /** Part B, bits 162-166 (Table 77): type of electronic position fixing device. Null for Part A. */
     PositionFixingDevice positionFixingDevice;
     /**
-     * Part B, bits 166-168 (Table 77): 0 = AIS only, 1 = supports VDES ASM, 2 = supports VDES ASM/VDE-TER,
-     * 3 = supports VDES ASM/VDE-TER/VDE-SAT. Null for Part A.
+     * Part B, bits 166-168 (Table 77): VDES capabilities of the station. Null for Part A.
      */
-    int vdesCapabilities;
+    VdesCapabilities vdesCapabilities;
 
 }

@@ -70,7 +70,7 @@ public class AISMessageFactory {
     }
 
     private static ShipAndVoyageData createShipAndVoyageData(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
-        int aisVersionIndicator = bitString.getUnsignedInt(38, 40);
+        AisVersionIndicator aisVersionIndicator = AisVersionIndicator.fromInteger(bitString.getUnsignedInt(38, 40));
         IMO imo = new IMO(bitString.getUnsignedInt(40, 70));
         String callsign = AISText.decode(bitString, 70, 112);
         String shipName = AISText.decode(bitString, 112, 232);
@@ -557,7 +557,7 @@ public class AISMessageFactory {
         int spare1 = bitString.getUnsignedInt(271, 272);
 
         String nameExtension = null;
-        boolean nameExtensionIsLabel = false;
+        boolean nameExtensionLabel = false;
         Integer spare2 = 0;
 
         if (bitString.length() > 272) {
@@ -568,7 +568,7 @@ public class AISMessageFactory {
                 // ITU-R M.1371-6 Table 71: an extension preceded by "@@@" is to be portrayed as the AtoN's label, not as part of its name.
                 int textStart = 272;
                 if (extraChars >= 3 && bitString.getUnsignedInt(272, 290) == 0) {
-                    nameExtensionIsLabel = true;
+                    nameExtensionLabel = true;
                     textStart = 290;
                 }
                 nameExtension = AISText.decode(bitString, textStart, 272 + extraBitsOfChars);
@@ -579,7 +579,7 @@ public class AISMessageFactory {
         return new AidToNavigationReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 aidType, name, positionAccurate, latitude, longitude, toBow, toStern, toPort, toStarboard,
                 positionFixingDevice, second, offPosition, regionalUse, raimFlag, virtualAid, assignedMode,
-                spare1, nameExtension, spare2, nameExtensionIsLabel);
+                spare1, nameExtension, spare2, nameExtensionLabel);
     }
 
     private static ChannelManagement createChannelManagement(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
@@ -652,7 +652,7 @@ public class AISMessageFactory {
         Integer toPort = null;
         MMSI mothershipMmsi = null;
         PositionFixingDevice positionFixingDevice = null;
-        int vdesCapabilities = -1;
+        VdesCapabilities vdesCapabilities = null;
 
         switch (partNumber) {
             case 0 -> shipName = AISText.decode(bitString, 40, 160);
@@ -669,7 +669,7 @@ public class AISMessageFactory {
                 toPort = bitString.getUnsignedInt(150, 156);
                 toStarboard = bitString.getUnsignedInt(156, 162);
                 positionFixingDevice = PositionFixingDevice.fromInteger(bitString.getUnsignedInt(162, 166));
-                vdesCapabilities = bitString.getUnsignedInt(166, 168);
+                vdesCapabilities = VdesCapabilities.fromInteger(bitString.getUnsignedInt(166, 168));
 
                 int mmsiValue = bitString.getUnsignedInt(132, 162);
                 if (mmsiValue != 0) {
@@ -754,7 +754,7 @@ public class AISMessageFactory {
         int speed = rawSpeedOverGround;
         int rawCourseOverGround = bitString.getUnsignedInt(85, 94);
         int course = rawCourseOverGround;
-        int positionLatency = bitString.getUnsignedInt(94, 95);
+        PositionLatency positionLatency = PositionLatency.fromInteger(bitString.getUnsignedInt(94, 95));
         int spare = bitString.getUnsignedInt(95, 96);
 
         return new LongRangeBroadcastMessage(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,

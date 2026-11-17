@@ -80,7 +80,7 @@ public class AidToNavigationReportTest {
         assertEquals(151.49791f, message.getLongitude(), 0.0f);
         assertEquals(PositionFixingDevice.Surveyed, message.getPositionFixingDevice());
         assertFalse(message.isRaimFlag());
-        assertFalse(message.isNameExtensionIsLabel());
+        assertFalse(message.isNameExtensionLabel());
     }
 
     /**
@@ -104,7 +104,7 @@ public class AidToNavigationReportTest {
         assertEquals(12.5f, message.getLongitude(), 0.0f);
         assertEquals(55.75f, message.getLatitude(), 0.0f);
         assertEquals(PositionFixingDevice.Surveyed, message.getPositionFixingDevice());
-        assertTrue(message.isNameExtensionIsLabel());
+        assertTrue(message.isNameExtensionLabel());
         assertEquals("LB1", message.getNameExtension());
     }
 
@@ -133,7 +133,7 @@ public class AidToNavigationReportTest {
             assertEquals("MARK", message.getName());
             assertEquals(c.extension(), message.getNameExtension());
             assertEquals(c.spareValue(), message.getSpare2());
-            assertFalse(message.isNameExtensionIsLabel());
+            assertFalse(message.isNameExtensionLabel());
         }
     }
 }

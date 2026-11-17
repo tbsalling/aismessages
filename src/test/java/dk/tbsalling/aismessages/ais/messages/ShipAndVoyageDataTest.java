@@ -48,7 +48,7 @@ public class ShipAndVoyageDataTest {
         assertEquals(0, message.getEtaMinute());
         assertEquals(Optional.empty(), message.getEtaAfterReceived());
         assertEquals("SFO 70", message.getDestination());
-        assertEquals(0, message.getAisVersionIndicator());
+        assertEquals(AisVersionIndicator.ITU_R_M1371_1, message.getAisVersionIndicator());
         assertFalse(message.isDataTerminalReady());
     }
 
@@ -87,7 +87,7 @@ public class ShipAndVoyageDataTest {
         assertEquals(10, message.getEtaMinute());
         assertEquals(Optional.of(ZonedDateTime.of(2011, 5, 14, 20, 10, 0, 0, ZoneOffset.UTC)), message.getEtaAfterReceived());
         assertEquals("", message.getDestination());
-        assertEquals(1, message.getAisVersionIndicator());
+        assertEquals(AisVersionIndicator.ITU_R_M1371_3, message.getAisVersionIndicator());
         assertFalse(message.isDataTerminalReady());
     }
 

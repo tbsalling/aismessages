@@ -43,7 +43,7 @@ public class NMEAMessageHandlerFragmentTest {
         ShipAndVoyageData message = (ShipAndVoyageData) received.get(0);
         assertEquals("THREE PARTS", message.getShipName());
         assertEquals("AARHUS", message.getDestination());
-        assertEquals(3, message.getAisVersionIndicator());
+        assertEquals(dk.tbsalling.aismessages.ais.messages.types.AisVersionIndicator.ITU_R_M1371_6, message.getAisVersionIndicator());
         assertTrue(handler.flush().isEmpty());
     }
 

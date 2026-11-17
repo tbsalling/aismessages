@@ -4,6 +4,7 @@ import dk.tbsalling.aismessages.ais.BitString;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
+import dk.tbsalling.aismessages.ais.messages.types.PositionLatency;
 import dk.tbsalling.aismessages.ais.messages.types.NavigationStatus;
 import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidMessage;
@@ -36,7 +37,7 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
     protected LongRangeBroadcastMessage(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                         boolean positionAccuracy, boolean raim, NavigationStatus navigationStatus,
                                         float latitude, float longitude, float speedOverGround, float courseOverGround,
-                                        int positionLatency, int spare,
+                                        PositionLatency positionLatency, int spare,
                                         int rawLongitude, int rawLatitude, int rawSpeedOverGround, int rawCourseOverGround) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.positionAccuracy = positionAccuracy;
@@ -96,8 +97,8 @@ public class LongRangeBroadcastMessage extends AISMessage implements DynamicData
     float speedOverGround;
     /** Course over ground in degrees, equal to {@code rawCourseOverGround} since Message 27 uses 1-degree steps (Table 83); 511 = not available. */
     float courseOverGround;
-    /** Bit 94 (Table 83): position latency, 0 = reported position is less than 5 s old, 1 = more than 5 s old (default). */
-    int positionLatency;
+    /** Bit 94 (Table 83): position latency, whether the reported position is more or less than 5 s old. */
+    PositionLatency positionLatency;
     /** Bit 95 (Table 83): spare, set to zero to preserve the byte boundary. */
     int spare;
     /** Bits 44-62 (Table 83): longitude in 1/10 min, two's complement; 181° (0x1A838) = not available. */

@@ -4,6 +4,7 @@ import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
 import dk.tbsalling.aismessages.ais.messages.types.ShipType;
+import dk.tbsalling.aismessages.ais.messages.types.VdesCapabilities;
 import dk.tbsalling.aismessages.nmea.messages.NMEAMessage;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -41,7 +42,7 @@ public class ClassBCSStaticDataReportTest {
         assertEquals(5, message.getUnitModelCode());
         assertEquals(53330, message.getUnitSerialNumber());
         assertEquals(PositionFixingDevice.Undefined, message.getPositionFixingDevice());
-        assertEquals(0, message.getVdesCapabilities());
+        assertEquals(VdesCapabilities.AisOnly, message.getVdesCapabilities());
 
     }
 
@@ -117,7 +118,7 @@ public class ClassBCSStaticDataReportTest {
             assertEquals(12, reportB.getUnitModelCode());
             assertEquals(199796, reportB.getUnitSerialNumber());
             assertEquals(PositionFixingDevice.Undefined, reportB.getPositionFixingDevice());
-            assertEquals(0, reportB.getVdesCapabilities());
+            assertEquals(VdesCapabilities.AisOnly, reportB.getVdesCapabilities());
         }
     }
 

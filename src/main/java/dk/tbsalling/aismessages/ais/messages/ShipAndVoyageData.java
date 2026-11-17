@@ -77,7 +77,7 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
                                 Integer toBow, Integer toStern, Integer toPort, Integer toStarboard,
                                 PositionFixingDevice positionFixingDevice,
                                 int etaMonth, int etaDay, int etaHour, int etaMinute,
-                                float draught, String destination, boolean dataTerminalReady, int rawDraught, int aisVersionIndicator) {
+                                float draught, String destination, boolean dataTerminalReady, int rawDraught, AisVersionIndicator aisVersionIndicator) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.imo = imo;
         this.callsign = callsign;
@@ -190,8 +190,7 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
     /** Bits 294-302 (Table 50): maximum present static draught in 1/10 m, 0-255; 255 = 25.5 m or greater; 0 = not available. */
     int rawDraught;
     /**
-     * AIS version indicator, bits 38-40 (ITU-R M.1371-6 Table 50): 0 = station compliant with M.1371-1,
-     * 1 = compliant with M.1371-3, 2 = compliant with M.1371-5, 3 = compliant with M.1371-6 or later.
+     * AIS version indicator, bits 38-40 (ITU-R M.1371-6 Table 50): the edition of M.1371 the station complies with.
      */
-    int aisVersionIndicator;
+    AisVersionIndicator aisVersionIndicator;
 }
