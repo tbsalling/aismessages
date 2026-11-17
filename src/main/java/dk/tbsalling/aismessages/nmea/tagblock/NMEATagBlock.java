@@ -1,6 +1,5 @@
 package dk.tbsalling.aismessages.nmea.tagblock;
 
-import dk.tbsalling.aismessages.ais.messages.types.TAGBlockParameterCodeType;
 import dk.tbsalling.aismessages.nmea.exceptions.InvalidTagBlock;
 import dk.tbsalling.aismessages.nmea.exceptions.NMEAParseException;
 import lombok.Value;
@@ -23,7 +22,7 @@ public class NMEATagBlock {
     Integer checksum;
     String rawMessage;
     Boolean valid;
-    Map<TAGBlockParameterCodeType, NMEATagBlockParameterCode> parameterMap;
+    Map<NMEATagBlockParameterCode, NMEATagBlockParameter> parameterMap;
 
     public static NMEATagBlock fromString(String nmeaTagBlockString) {
         return new NMEATagBlock(nmeaTagBlockString);
@@ -50,26 +49,26 @@ public class NMEATagBlock {
             String[] code = parameter.split(":", 2);
             if (code.length != 2)
                 throw new NMEAParseException(rawMessage, "Parameter code and its value has to be separated by colon(:)");
-            if (TAGBlockParameterCodeType.contains(code[0])) {
-                NMEATagBlockParameterCode nmeaTagBlockParameterCode = new NMEATagBlockParameterCode(TAGBlockParameterCodeType.valueOf(code[0]), code[1]);
-                parameterMap.put(nmeaTagBlockParameterCode.getCode(), nmeaTagBlockParameterCode);
+            if (NMEATagBlockParameterCode.contains(code[0])) {
+                NMEATagBlockParameter tagBlockParameter = new NMEATagBlockParameter(NMEATagBlockParameterCode.valueOf(code[0]), code[1]);
+                parameterMap.put(tagBlockParameter.getCode(), tagBlockParameter);
             }
         }
 
-        this.timestamp = parameterMap.containsKey(TAGBlockParameterCodeType.c)
-                ? parseLong(rawMessage, TAGBlockParameterCodeType.c) : null;
-        this.destinationId = parameterMap.containsKey(TAGBlockParameterCodeType.d)
-                ? parameterMap.get(TAGBlockParameterCodeType.d).getValue() : null;
-        this.sentenceGrouping = parameterMap.containsKey(TAGBlockParameterCodeType.g)
-                ? parameterMap.get(TAGBlockParameterCodeType.g).getValue() : null;
-        this.lineCount = parameterMap.containsKey(TAGBlockParameterCodeType.n)
-                ? Math.toIntExact(parseLong(rawMessage, TAGBlockParameterCodeType.n)) : null;
-        this.relativeTime = parameterMap.containsKey(TAGBlockParameterCodeType.r)
-                ? parseLong(rawMessage, TAGBlockParameterCodeType.r) : null;
-        this.sourceId = parameterMap.containsKey(TAGBlockParameterCodeType.s)
-                ? parameterMap.get(TAGBlockParameterCodeType.s).getValue() : null;
-        this.text = parameterMap.containsKey(TAGBlockParameterCodeType.t)
-                ? parameterMap.get(TAGBlockParameterCodeType.t).getValue() : null;
+        this.timestamp = parameterMap.containsKey(NMEATagBlockParameterCode.c)
+                ? parseLong(rawMessage, NMEATagBlockParameterCode.c) : null;
+        this.destinationId = parameterMap.containsKey(NMEATagBlockParameterCode.d)
+                ? parameterMap.get(NMEATagBlockParameterCode.d).getValue() : null;
+        this.sentenceGrouping = parameterMap.containsKey(NMEATagBlockParameterCode.g)
+                ? parameterMap.get(NMEATagBlockParameterCode.g).getValue() : null;
+        this.lineCount = parameterMap.containsKey(NMEATagBlockParameterCode.n)
+                ? Math.toIntExact(parseLong(rawMessage, NMEATagBlockParameterCode.n)) : null;
+        this.relativeTime = parameterMap.containsKey(NMEATagBlockParameterCode.r)
+                ? parseLong(rawMessage, NMEATagBlockParameterCode.r) : null;
+        this.sourceId = parameterMap.containsKey(NMEATagBlockParameterCode.s)
+                ? parameterMap.get(NMEATagBlockParameterCode.s).getValue() : null;
+        this.text = parameterMap.containsKey(NMEATagBlockParameterCode.t)
+                ? parameterMap.get(NMEATagBlockParameterCode.t).getValue() : null;
 
         this.checksum = (checkSum == null || checkSum.isBlank()) ? null : Integer.valueOf(checkSum, 16);
         this.rawMessage = rawMessage;
@@ -79,7 +78,7 @@ public class NMEATagBlock {
     }
 
     /** @return the numeric value of the given parameter; a non-numeric value is an {@link NMEAParseException} */
-    private Long parseLong(String rawMessage, TAGBlockParameterCodeType code) {
+    private Long parseLong(String rawMessage, NMEATagBlockParameterCode code) {
         String value = parameterMap.get(code).getValue();
         try {
             return Long.valueOf(value);
@@ -103,19 +102,19 @@ public class NMEATagBlock {
         List<String> parameters = new ArrayList<>();
         builder.append(" TagBlock").append("{");
         if (timestamp != null)
-            parameters.add(String.format(" %s: %s", TAGBlockParameterCodeType.c.getName(), timestamp));
+            parameters.add(String.format(" %s: %s", NMEATagBlockParameterCode.c.getName(), timestamp));
         if (destinationId != null)
-            parameters.add(String.format(" %s: %s ", TAGBlockParameterCodeType.d.getName(), destinationId));
+            parameters.add(String.format(" %s: %s ", NMEATagBlockParameterCode.d.getName(), destinationId));
         if (sentenceGrouping != null)
-            parameters.add(String.format(" %s: %s", TAGBlockParameterCodeType.g.getName(), sentenceGrouping));
+            parameters.add(String.format(" %s: %s", NMEATagBlockParameterCode.g.getName(), sentenceGrouping));
         if (lineCount != null)
-            parameters.add(String.format(" %s: %s", TAGBlockParameterCodeType.n.getName(), lineCount));
+            parameters.add(String.format(" %s: %s", NMEATagBlockParameterCode.n.getName(), lineCount));
         if (relativeTime != null)
-            parameters.add(String.format(" %s: %s", TAGBlockParameterCodeType.r.getName(), relativeTime));
+            parameters.add(String.format(" %s: %s", NMEATagBlockParameterCode.r.getName(), relativeTime));
         if (sourceId != null)
-            parameters.add(String.format(" %s: %s", TAGBlockParameterCodeType.s.getName(), sourceId));
+            parameters.add(String.format(" %s: %s", NMEATagBlockParameterCode.s.getName(), sourceId));
         if (text != null)
-            parameters.add(String.format(" %s: %s", TAGBlockParameterCodeType.t.getName(), text));
+            parameters.add(String.format(" %s: %s", NMEATagBlockParameterCode.t.getName(), text));
         builder.append(String.join(",", parameters)).append(" }");
         return builder.toString();
     }

@@ -64,6 +64,9 @@ for source changes.
   `getPolygonLineCount()`, `getOrientation()`, `getLineLengthMetres()`, and `getDimensionAMetres()`/
   `getDimensionBMetres()` for type 0; the ones that do not apply are `null`.
 - **Renamed.** `AidToNavigationReport.isNameExtensionIsLabel()` is `isNameExtensionLabel()`.
+  `dk.tbsalling.aismessages.ais.messages.types.TAGBlockParameterCodeType` moved to the NMEA layer as
+  `dk.tbsalling.aismessages.nmea.tagblock.NMEATagBlockParameterCode` (tag blocks are IEC 61162-1, not ITU-R M.1371),
+  and the former `NMEATagBlockParameterCode` class, which holds a code and its value, is now `NMEATagBlockParameter`.
   `GroupAssignmentCommand.getSpare1()` and `getSpare2()` return `int`.
 - **Removed.** The placeholder constants `ShipType.PassengerFuture1-3`, `CargoFuture1-4` and `TankerFuture1-2`,
   `ReportingInterval.FutureUse1` and `AidType.FutureUse1` (their codes now resolve to the named constants
