@@ -49,7 +49,7 @@ public class BinaryMessageSingleSlot extends AISMessage {
      */
     protected BinaryMessageSingleSlot(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                       boolean destinationIndicator, boolean binaryDataFlag,
-                                      MMSI destinationMMSI, int designatedAreaCode, int functionalId,
+                                      MMSI destinationMMSI, Integer designatedAreaCode, Integer functionalId,
                                       BitString data, ApplicationSpecificMessage applicationSpecificMessage) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.destinationIndicator = destinationIndicator;
@@ -91,10 +91,10 @@ public class BinaryMessageSingleSlot extends AISMessage {
     boolean binaryDataFlag;
     /** Destination of an addressed message; null for a broadcast. */
     MMSI destinationMMSI;
-    /** Designated area code of a structured message; -1 when the binary data flag is not set. */
-    int designatedAreaCode;
-    /** Function identifier of a structured message; -1 when the binary data flag is not set. */
-    int functionalId;
+    /** Designated area code of a structured message; null when the binary data flag is not set. */
+    Integer designatedAreaCode;
+    /** Function identifier of a structured message; null when the binary data flag is not set. */
+    Integer functionalId;
     /** The application data (at most 128 bits), excluding destination ID and application identifier. */
     BitString data;
     /** Decoded application specific message of a structured message; null when the binary data flag is not set. */

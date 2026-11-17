@@ -36,9 +36,9 @@ public class BinaryMessageMultipleSlotTest {
         assertFalse(message.isAddressed());
         assertFalse(message.isStructured());
         assertNull(message.getDestinationMmsi());
-        assertEquals(-1, message.getApplicationId());
-        assertEquals(-1, message.getDesignatedAreaCode());
-        assertEquals(-1, message.getFunctionalId());
+        assertNull(message.getApplicationId());
+        assertNull(message.getDesignatedAreaCode());
+        assertNull(message.getFunctionalId());
         assertNull(message.getApplicationSpecificMessage());
         assertEquals(418 - 40 - 24, message.getData().length());
         assertEquals("0".repeat(354), message.getData().toString());
@@ -65,7 +65,7 @@ public class BinaryMessageMultipleSlotTest {
         assertTrue(message.isAddressed());
         assertFalse(message.isStructured());
         assertEquals(new MMSI(9229792), message.getDestinationMmsi());
-        assertEquals(-1, message.getApplicationId());
+        assertNull(message.getApplicationId());
         assertNull(message.getApplicationSpecificMessage());
         assertEquals(424 - 72 - 24, message.getData().length());
         assertEquals("0011001111001101100001000101111011100111111101000000011101001001001110000010001100000001100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000", message.getData().toString());
@@ -125,7 +125,7 @@ public class BinaryMessageMultipleSlotTest {
         assertTrue(message.isAddressed());
         assertFalse(message.isStructured());
         assertEquals(new MMSI(265547000), message.getDestinationMmsi());
-        assertEquals(-1, message.getApplicationId());
+        assertNull(message.getApplicationId());
         assertEquals(288 - 72 - 24, message.getData().length());
         assertTrue(message.isCommStateSelectorFlag());
         ITDMACommunicationState communicationState = (ITDMACommunicationState) message.getCommunicationState();

@@ -47,9 +47,9 @@ public class SafetyRelatedAcknowledge extends AISMessage {
      */
     protected SafetyRelatedAcknowledge(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                        int spare, MMSI mmsi1, int sequence1,
-                                       MMSI mmsi2, int sequence2,
-                                       MMSI mmsi3, int sequence3,
-                                       MMSI mmsi4, int sequence4,
+                                       MMSI mmsi2, Integer sequence2,
+                                       MMSI mmsi3, Integer sequence3,
+                                       MMSI mmsi4, Integer sequence4,
                                        int numOfAcks) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.spare = spare;
@@ -95,16 +95,16 @@ public class SafetyRelatedAcknowledge extends AISMessage {
     int sequence1;
     /** Bits 72-102 (Table 54): destination ID 2; null when the message carries fewer than two acknowledgements. */
     MMSI mmsi2;
-    /** Bits 102-104 (Table 54): sequence number for destination 2, 0-3; -1 when absent. */
-    int sequence2;
+    /** Bits 102-104 (Table 54): sequence number for destination 2, 0-3; null when absent. */
+    Integer sequence2;
     /** Bits 104-134 (Table 54): destination ID 3; null when absent. */
     MMSI mmsi3;
-    /** Bits 134-136 (Table 54): sequence number for destination 3, 0-3; -1 when absent. */
-    int sequence3;
+    /** Bits 134-136 (Table 54): sequence number for destination 3, 0-3; null when absent. */
+    Integer sequence3;
     /** Bits 136-166 (Table 54): destination ID 4; null when absent. */
     MMSI mmsi4;
-    /** Bits 166-168 (Table 54): sequence number for destination 4, 0-3; -1 when absent. */
-    int sequence4;
+    /** Bits 166-168 (Table 54): sequence number for destination 4, 0-3; null when absent. */
+    Integer sequence4;
     /** Number of acknowledgements carried, 1-4, derived from the message length (72, 104, 136 or 168 bits). */
     int numOfAcks;
 }

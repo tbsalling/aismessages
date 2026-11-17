@@ -74,7 +74,7 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
      */
     protected ShipAndVoyageData(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                 IMO imo, String callsign, String shipName, ShipType shipType,
-                                int toBow, int toStern, int toPort, int toStarboard,
+                                Integer toBow, Integer toStern, Integer toPort, Integer toStarboard,
                                 PositionFixingDevice positionFixingDevice,
                                 int etaMonth, int etaDay, int etaHour, int etaMinute,
                                 float draught, String destination, boolean dataTerminalReady, int rawDraught, int aisVersionIndicator) {
@@ -164,13 +164,13 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
     /** Bits 232-240 (Table 50, Table 51): type of ship and cargo type; null for the regional (100-199) and future-use (200-255) codes. */
     ShipType shipType;
     /** Bits 240-249 (Table 50, Fig. 38): dimension A, distance from the reference point to the bow in metres, 0-511; 511 = 511 m or greater. */
-    int toBow;
+    Integer toBow;
     /** Bits 249-258 (Table 50, Fig. 38): dimension B, distance from the reference point to the stern in metres, 0-511. */
-    int toStern;
+    Integer toStern;
     /** Bits 264-270 (Table 50, Fig. 38): dimension D, distance from the reference point to the starboard side in metres, 0-63; 63 = 63 m or greater. */
-    int toStarboard;
+    Integer toStarboard;
     /** Bits 258-264 (Table 50, Fig. 38): dimension C, distance from the reference point to the port side in metres, 0-63. */
-    int toPort;
+    Integer toPort;
     /** Bits 270-274 (Table 50): type of electronic position fixing device. */
     PositionFixingDevice positionFixingDevice;
     /** Bits 274-278 (Table 50): ETA month (UTC), 1-12; 0 = not available. */

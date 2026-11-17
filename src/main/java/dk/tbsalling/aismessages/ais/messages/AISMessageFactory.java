@@ -307,11 +307,11 @@ public class AISMessageFactory {
         int sequence1 = bitString.getUnsignedInt(70, 72);
 
         MMSI mmsi2 = null;
-        int sequence2 = -1;
+        Integer sequence2 = null;
         MMSI mmsi3 = null;
-        int sequence3 = -1;
+        Integer sequence3 = null;
         MMSI mmsi4 = null;
-        int sequence4 = -1;
+        Integer sequence4 = null;
 
         if (bitString.length() >= 104) {
             mmsi2 = new MMSI(bitString.getUnsignedInt(72, 102));
@@ -351,11 +351,11 @@ public class AISMessageFactory {
         int type1_1 = bitString.getUnsignedInt(70, 76);
         int offset1_1 = bitString.getUnsignedInt(76, 88);
 
-        int type1_2 = -1;
-        int offset1_2 = -1;
+        Integer type1_2 = null;
+        Integer offset1_2 = null;
         MMSI interrogatedMmsi2 = null;
-        int type2_1 = -1;
-        int offset2_1 = -1;
+        Integer type2_1 = null;
+        Integer offset2_1 = null;
 
         if (bitString.length() >= 110) {
             type1_2 = bitString.getUnsignedInt(90, 96);
@@ -643,13 +643,13 @@ public class AISMessageFactory {
         ShipType shipType = null;
         String vendorId = null;
         String manufacturerMnemonic = null;
-        int unitModelCode = -1;
-        int unitSerialNumber = -1;
+        Integer unitModelCode = null;
+        Integer unitSerialNumber = null;
         String callsign = null;
-        int toBow = -1;
-        int toStern = -1;
-        int toStarboard = -1;
-        int toPort = -1;
+        Integer toBow = null;
+        Integer toStern = null;
+        Integer toStarboard = null;
+        Integer toPort = null;
         MMSI mothershipMmsi = null;
         PositionFixingDevice positionFixingDevice = null;
         int vdesCapabilities = -1;
@@ -693,8 +693,8 @@ public class AISMessageFactory {
             destinationMMSI = new MMSI(bitString.getUnsignedInt(40, 70));
             dataStart = 72;
         }
-        int designatedAreaCode = -1;
-        int functionalId = -1;
+        Integer designatedAreaCode = null;
+        Integer functionalId = null;
         if (binaryDataFlag) {
             designatedAreaCode = bitString.getUnsignedInt(dataStart, dataStart + 10);
             functionalId = bitString.getUnsignedInt(dataStart + 10, dataStart + 16);
@@ -719,9 +719,9 @@ public class AISMessageFactory {
             destinationMmsi = new MMSI(bitString.getUnsignedInt(40, 70));
             dataStart = 72;
         }
-        int designatedAreaCode = -1;
-        int functionalId = -1;
-        int applicationId = -1;
+        Integer designatedAreaCode = null;
+        Integer functionalId = null;
+        Integer applicationId = null;
         if (structured) {
             designatedAreaCode = bitString.getUnsignedInt(dataStart, dataStart + 10);
             functionalId = bitString.getUnsignedInt(dataStart + 10, dataStart + 16);

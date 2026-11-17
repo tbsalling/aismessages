@@ -51,7 +51,7 @@ public class BinaryMessageMultipleSlot extends AISMessage {
      */
     protected BinaryMessageMultipleSlot(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                         boolean addressed, boolean structured, MMSI destinationMmsi,
-                                        int applicationId, int designatedAreaCode, int functionalId, BitString data,
+                                        Integer applicationId, Integer designatedAreaCode, Integer functionalId, BitString data,
                                         ApplicationSpecificMessage applicationSpecificMessage,
                                         boolean commStateSelectorFlag, CommunicationState communicationState) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
@@ -95,12 +95,12 @@ public class BinaryMessageMultipleSlot extends AISMessage {
     boolean structured;
     /** Destination of an addressed message; null for a broadcast. */
     MMSI destinationMmsi;
-    /** The 16-bit application identifier (DAC in the upper 10 bits, FI in the lower 6) of a structured message; -1 when unstructured. */
-    int applicationId;
-    /** Designated area code of a structured message; -1 when unstructured. */
-    int designatedAreaCode;
-    /** Function identifier of a structured message; -1 when unstructured. */
-    int functionalId;
+    /** The 16-bit application identifier (DAC in the upper 10 bits, FI in the lower 6) of a structured message; null when unstructured. */
+    Integer applicationId;
+    /** Designated area code of a structured message; null when unstructured. */
+    Integer designatedAreaCode;
+    /** Function identifier of a structured message; null when unstructured. */
+    Integer functionalId;
     /** The application data, excluding destination ID, application identifier and the trailing communication state. */
     BitString data;
     /** Decoded application specific message of a structured message; null when unstructured. */

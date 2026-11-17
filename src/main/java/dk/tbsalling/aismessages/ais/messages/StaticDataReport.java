@@ -42,23 +42,23 @@ public interface StaticDataReport extends DataReport {
 	ShipType getShipType();
 
     /**
-     * @return Distance from reference position to bow in meters
+     * @return Distance from reference position to bow in meters; null when the message part does not carry dimensions
      */
-    int getToBow();
+    Integer getToBow();
 
     /**
-     * @return Distance from reference position to stern in meters
+     * @return Distance from reference position to stern in meters; null when the message part does not carry dimensions
      */
-    int getToStern();
+    Integer getToStern();
 
     /**
-     * @return Distance from reference position to starboard side in meters
+     * @return Distance from reference position to starboard side in meters; null when the message part does not carry dimensions
      */
-    int getToStarboard();
+    Integer getToStarboard();
 
     /**
-     * @return Distance from reference position to port side in meters
+     * @return Distance from reference position to port side in meters; null when the message part does not carry dimensions
      */
-    int getToPort();
+    Integer getToPort();
 
 }

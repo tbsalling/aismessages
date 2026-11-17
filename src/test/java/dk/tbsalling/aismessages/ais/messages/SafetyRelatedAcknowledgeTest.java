@@ -32,11 +32,11 @@ public class SafetyRelatedAcknowledgeTest {
         assertEquals(new MMSI(211217560), message.getMmsi1());
         assertEquals(2, message.getSequence1());
         assertNull(message.getMmsi2());
-        assertEquals(-1, message.getSequence2());
+        assertNull(message.getSequence2());
         assertNull(message.getMmsi3());
-        assertEquals(-1, message.getSequence3());
+        assertNull(message.getSequence3());
         assertNull(message.getMmsi4());
-        assertEquals(-1, message.getSequence4());
+        assertNull(message.getSequence4());
         assertEquals(1, message.getNumOfAcks());
     }
 
@@ -75,9 +75,9 @@ public class SafetyRelatedAcknowledgeTest {
         assertEquals(new MMSI(211000002), message.getMmsi2());
         assertEquals(2, message.getSequence2());
         assertNull(message.getMmsi3());
-        assertEquals(-1, message.getSequence3());
+        assertNull(message.getSequence3());
         assertNull(message.getMmsi4());
-        assertEquals(-1, message.getSequence4());
+        assertNull(message.getSequence4());
     }
 
     /** Message 13 with 3 acknowledgements (136 bits, ITU-R M.1371-6 Table 54). Synthetic sentence built from the spec layout. */
@@ -96,7 +96,7 @@ public class SafetyRelatedAcknowledgeTest {
         assertEquals(new MMSI(211000003), message.getMmsi3());
         assertEquals(3, message.getSequence3());
         assertNull(message.getMmsi4());
-        assertEquals(-1, message.getSequence4());
+        assertNull(message.getSequence4());
     }
 
     /** Message 13 with 4 acknowledgements (168 bits, ITU-R M.1371-6 Table 54). Synthetic sentence built from the spec layout. */
