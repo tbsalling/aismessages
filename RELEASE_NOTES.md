@@ -11,6 +11,25 @@ traffic.
 
 Alignment with Recommendation ITU-R M.1371-6 (02/2026).
 
+### New message type: Message 28, aid-to-navigation report (single slot)
+
+- New `AidToNavigationReportSingleSlot` (`AISMessageType.AidToNavigationReportSingleSlot`, code 28) decodes
+  the 168-bit report of Table 84: time stamp, position, `RestrictedUseIndicator`, `AtoNStationType`, a 7-bit
+  `AidType` (Table 72 codes 0-31 plus the Table 85 mobile AtoN codes 32-50), IALA MRN,
+  `AtoNDimensionsType` with raw dimensions A and B, multiple-dimension-types flag, charted flag,
+  `AtoNOnStationStatus`, AtoN status bits and authentication flag.
+- `AISMessageType.MAXIMUM_CODE` is now 28. Message IDs 29 and above are still rejected.
+
+### Source compatibility notes
+
+- `AidToNavigationReportSingleSlot` is a new permitted subclass of the sealed `AISMessage`, and
+  `AidToNavigationReportSingleSlot` is a new `AISMessageType` constant. Code that switches exhaustively over
+  either without a `default` branch (pattern-matching `switch` on `AISMessage`, or a `switch` expression on
+  `AISMessageType`) must add a case for it before it compiles against 5.1.0. Binary compatibility is
+  unaffected.
+- The `protected` constructors of several message classes gained parameters for the newly decoded fields.
+  They are not part of the supported API; construct messages through `AISMessageFactory`.
+
 ### Corrected decodings (behaviour changes)
 
 - **Message 15 (Interrogation):** the second interrogated station was read from the wrong bit offsets

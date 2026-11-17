@@ -45,10 +45,11 @@ public enum AISMessageType {
 	BinaryMessageSingleSlot(25),
 	BinaryMessageMultipleSlot(26),
 	LongRangeBroadcastMessage(27),
+	AidToNavigationReportSingleSlot(28),
 	Error(-1);
 
 	public final static int MINIMUM_CODE = 1;
-	public final static int MAXIMUM_CODE = 27;
+	public final static int MAXIMUM_CODE = 28;
 
 	AISMessageType(int code) {
 		this.code = code;

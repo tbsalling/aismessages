@@ -748,6 +748,31 @@ public class AISMessageFactory {
                 rawLongitude, rawLatitude, rawSpeedOverGround, rawCourseOverGround);
     }
 
+    private static AidToNavigationReportSingleSlot createAidToNavigationReportSingleSlot(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
+        // ITU-R M.1371-6 Table 84
+        int second = bitString.getUnsignedInt(38, 44);
+        int rawLongitude = bitString.getSignedInt(44, 72);
+        float longitude = rawLongitude / 600000f;
+        int rawLatitude = bitString.getSignedInt(72, 99);
+        float latitude = rawLatitude / 600000f;
+        RestrictedUseIndicator restrictedUse = RestrictedUseIndicator.fromInteger(bitString.getUnsignedInt(99, 101));
+        AtoNStationType stationType = AtoNStationType.fromInteger(bitString.getUnsignedInt(101, 104));
+        AidType aidType = AidType.fromInteger(bitString.getUnsignedInt(104, 111));
+        int ialaMrn = bitString.getUnsignedInt(111, 128);
+        AtoNDimensionsType dimensionsType = AtoNDimensionsType.fromInteger(bitString.getUnsignedInt(128, 132));
+        int dimensionA = bitString.getUnsignedInt(132, 141);
+        int dimensionB = bitString.getUnsignedInt(141, 152);
+        boolean multipleDimensionTypes = bitString.getBoolean(152, 153);
+        boolean charted = bitString.getBoolean(153, 154);
+        AtoNOnStationStatus onStationStatus = AtoNOnStationStatus.fromInteger(bitString.getUnsignedInt(154, 158));
+        int atonStatusBits = bitString.getUnsignedInt(158, 166);
+        boolean authenticated = bitString.getBoolean(167, 168);
+
+        return new AidToNavigationReportSingleSlot(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
+                second, latitude, longitude, rawLatitude, rawLongitude, restrictedUse, stationType, aidType, ialaMrn,
+                dimensionsType, dimensionA, dimensionB, multipleDimensionTypes, charted, onStationStatus, atonStatusBits, authenticated);
+    }
+
     private static AISMessage createByType(
             AISMessageType messageType,
             MMSI sourceMmsi,
@@ -813,6 +838,8 @@ public class AISMessageFactory {
                     createBinaryMessageMultipleSlot(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received);
             case LongRangeBroadcastMessage ->
                     createLongRangeBroadcastMessage(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received);
+            case AidToNavigationReportSingleSlot ->
+                    createAidToNavigationReportSingleSlot(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received);
             default -> throw new dk.tbsalling.aismessages.ais.exceptions.UnsupportedMessageType(messageType.getCode());
         };
     }

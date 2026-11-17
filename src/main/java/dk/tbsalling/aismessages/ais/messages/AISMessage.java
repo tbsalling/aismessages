@@ -55,7 +55,7 @@ import static java.util.Objects.requireNonNull;
 @ToString
 @EqualsAndHashCode
 @Log
-public abstract sealed class AISMessage permits AddressedBinaryMessage, AddressedSafetyRelatedMessage, AidToNavigationReport, AssignedModeCommand, BaseStationReport, BinaryAcknowledge, BinaryBroadcastMessage, BinaryMessageMultipleSlot, BinaryMessageSingleSlot, ChannelManagement, ClassBCSStaticDataReport, DataLinkManagement, Error, ExtendedClassBEquipmentPositionReport, GNSSBinaryBroadcastMessage, GroupAssignmentCommand, Interrogation, LongRangeBroadcastMessage, PositionReport, SafetyRelatedAcknowledge, SafetyRelatedBroadcastMessage, ShipAndVoyageData, StandardClassBCSPositionReport, StandardSARAircraftPositionReport, UTCAndDateInquiry, UTCAndDateResponse {
+public abstract sealed class AISMessage permits AddressedBinaryMessage, AddressedSafetyRelatedMessage, AidToNavigationReport, AidToNavigationReportSingleSlot, AssignedModeCommand, BaseStationReport, BinaryAcknowledge, BinaryBroadcastMessage, BinaryMessageMultipleSlot, BinaryMessageSingleSlot, ChannelManagement, ClassBCSStaticDataReport, DataLinkManagement, Error, ExtendedClassBEquipmentPositionReport, GNSSBinaryBroadcastMessage, GroupAssignmentCommand, Interrogation, LongRangeBroadcastMessage, PositionReport, SafetyRelatedAcknowledge, SafetyRelatedBroadcastMessage, ShipAndVoyageData, StandardClassBCSPositionReport, StandardSARAircraftPositionReport, UTCAndDateInquiry, UTCAndDateResponse {
 
     static {
         log.info("""
