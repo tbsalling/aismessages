@@ -71,6 +71,17 @@ Alignment with Recommendation ITU-R M.1371-6 (02/2026).
   163-bit position report) or an NMEA sentence with more than 5 fill bits made `AISMessageFactory.create`
   leak an `IllegalArgumentException`, which `AISInputStreamReader` does not catch. Both cases now raise
   `InvalidMessage` like every other undecodable input, so stream readers log and continue.
+- **Non-numeric NMEA fields stopped stream readers:** a sentence whose fragment count, fragment number,
+  sequential message identifier or fill bits field was not a number, or a tag block whose `c`, `n` or `r`
+  parameter was not a number, threw `NumberFormatException`. `NMEAMessageInputStreamReader`,
+  `AISInputStreamReader` and `NMEAMessageUDPSocket` did not catch it, so one such sentence ended the
+  reader. `NMEAMessage` and `NMEATagBlock` now throw `NMEAParseException`, which the readers log and skip.
+- **Tag blocks with a wrong checksum stopped stream readers:** `InvalidTagBlock` was not among the
+  exceptions `NMEAMessageInputStreamReader` and `NMEAMessageUDPSocket` catch. They now log and skip it.
+- **A failed decode lost the next multi-fragment message:** when a sentence or a complete set of
+  fragments failed to decode, `NMEAMessageHandler` kept the fragments buffered, so the first fragment of
+  the next multi-fragment message was discarded as out of sequence. The buffer is now cleared before
+  decoding.
 - **Payloads shorter than their header:** a Message 12 shorter than 72 bits made the six-bit text decoder
   throw `NegativeArraySizeException`, and Messages 14 and 25 accepted payloads shorter than their 40-bit
   header. Messages 12, 14 and 25 now enforce their minimum lengths (72, 40 and 40 bits; ITU-R M.1371-6

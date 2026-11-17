@@ -59,13 +59,13 @@ public class NMEAMessage {
 
         // Eagerly parse and assign all fields (using sentinel -1 for missing numeric fields)
         this.messageType = (isBlank(fields[0]) ? null : fields[0].replace("!", ""));
-        this.numberOfFragments = (isBlank(fields[1]) ? -1 : Integer.parseInt(fields[1]));
-        this.fragmentNumber = (isBlank(fields[2]) ? -1 : Integer.parseInt(fields[2]));
-        this.sequenceNumber = (isBlank(fields[3]) ? -1 : Integer.parseInt(fields[3]));
+        this.numberOfFragments = parseIntOrSentinel(rawMessage, "number of fragments", fields[1], 10);
+        this.fragmentNumber = parseIntOrSentinel(rawMessage, "fragment number", fields[2], 10);
+        this.sequenceNumber = parseIntOrSentinel(rawMessage, "sequential message identifier", fields[3], 10);
         this.radioChannelCode = (isBlank(fields[4]) ? null : fields[4]);
         this.encodedPayload = (isBlank(fields[5]) ? null : fields[5]);
-        this.fillBits = (isBlank(lastFieldParts[0]) ? -1 : Integer.parseInt(lastFieldParts[0]));
-        this.checksum = (isBlank(lastFieldParts[1]) ? -1 : Integer.parseInt(lastFieldParts[1], 16));
+        this.fillBits = parseIntOrSentinel(rawMessage, "fill bits", lastFieldParts[0], 10);
+        this.checksum = parseIntOrSentinel(rawMessage, "checksum", lastFieldParts[1], 16);
 
         // Validate supported message type
         if (!isValid())
@@ -105,6 +105,16 @@ public class NMEAMessage {
 
     private static boolean isBlank(String s) {
         return s == null || s.isBlank();
+    }
+
+    /** @return the field parsed in the given radix, or -1 when blank; a non-numeric field is an {@link NMEAParseException} */
+    private static int parseIntOrSentinel(String rawMessage, String fieldName, String value, int radix) {
+        if (isBlank(value)) return -1;
+        try {
+            return Integer.parseInt(value, radix);
+        } catch (NumberFormatException e) {
+            throw new NMEAParseException(rawMessage, "Field \"%s\" is not a number: \"%s\"".formatted(fieldName, value));
+        }
     }
 
     String rawMessage;
