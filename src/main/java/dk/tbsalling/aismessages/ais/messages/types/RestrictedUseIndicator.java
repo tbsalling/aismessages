@@ -21,6 +21,7 @@ package dk.tbsalling.aismessages.ais.messages.types;
  * Use outside a restricted area requires permission of the AtoN's flag state competent authority.
  */
 public enum RestrictedUseIndicator {
+	/** 0 = unrestricted use (default). */
 	UnrestrictedUse(0),
 	/** Use restricted to the territorial waters of the flag state (of the MMSI's MID). */
 	TerritorialWaters(1),

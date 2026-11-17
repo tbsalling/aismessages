@@ -80,7 +80,9 @@ public enum AtoNDimensionsType {
 	LargeBoundaryLine2(12),
 	/** As {@link #AreaQuadrilateral} but combined with {@link #LargeBoundaryLine2}, B in 200 m steps. */
 	LargeAreaQuadrilateral(13),
+	/** 14 = reserved for future use. */
 	ReservedForFutureUse14(14),
+	/** 15 = reserved for future use. */
 	ReservedForFutureUse15(15);
 
 	AtoNDimensionsType(int code) {

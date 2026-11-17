@@ -24,41 +24,70 @@ package dk.tbsalling.aismessages.ais.messages.types;
  * Where two constants share a code, {@link #fromInteger(int)} returns the one declared first.
  */
 public enum AidType {
+	/** 0 = default, type of AtoN not specified. */
 	Unspecified (0),
+	/** 1 = reference point. */
 	ReferencePoint	(1),
 	/** RACON or mobile aid to navigation. */
 	RACON(2),
 	/** Fixed structures, such as oil platforms and wind farms. */
 	FixedStructure(3),
+	/** 4 = emergency wreck marking buoy. */
 	EmergencyWreckMarkingBuoy(4),
 	/** @deprecated since 5.1.0; code 4 is defined as {@link #EmergencyWreckMarkingBuoy} in ITU-R M.1371-6. */
 	@Deprecated(since = "5.1.0")
 	FutureUse1(4),
+	/** 5 = fixed AtoN: light, without sectors. */
 	LightWithoutSectors(5),
+	/** 6 = fixed AtoN: light, with sectors. */
 	LightWithSectors(6),
+	/** 7 = fixed AtoN: leading light front. */
 	LeadingLightFront(7),
+	/** 8 = fixed AtoN: leading light rear. */
 	LeadingLightRear(8),
+	/** 9 = fixed AtoN: beacon, cardinal N. */
 	BeaconCardinalNorth(9),
+	/** 10 = fixed AtoN: beacon, cardinal E. */
 	BeaconCardinalEast(10),
+	/** 11 = fixed AtoN: beacon, cardinal S. */
 	BeaconCardinalSouth(11),
+	/** 12 = fixed AtoN: beacon, cardinal W. */
 	BeaconCardinalWest(12),
+	/** 13 = fixed AtoN: beacon, port hand. */
 	BeaconPortHand(13),
+	/** 14 = fixed AtoN: beacon, starboard hand. */
 	BeaconStarboardHand(14),
+	/** 15 = fixed AtoN: beacon, preferred channel port hand. */
 	BeaconPreferredChannelPortHand(15),
+	/** 16 = fixed AtoN: beacon, preferred channel starboard hand. */
 	BeaconPreferredChannelStarboardHand(16),
+	/** 17 = fixed AtoN: beacon, isolated danger. */
 	BeaconIsolatedDanger(17),
+	/** 18 = fixed AtoN: beacon, safe water. */
 	BeaconSafeWater(18),
+	/** 19 = fixed AtoN: beacon, special mark. */
 	BeaconSpecialMark(19),
+	/** 20 = floating AtoN: cardinal mark N. */
 	CardinalMarkNorth(20),
+	/** 21 = floating AtoN: cardinal mark E. */
 	CardinalMarkEast(21),
+	/** 22 = floating AtoN: cardinal mark S. */
 	CardinalMarkSouth(22),
+	/** 23 = floating AtoN: cardinal mark W. */
 	CardinalMarkWest(23),
+	/** 24 = floating AtoN: port hand mark. */
 	PortHandMark(24),
+	/** 25 = floating AtoN: starboard hand mark. */
 	StarboardHandMark(25),
+	/** 26 = floating AtoN: preferred channel port hand. */
 	PreferredChannelPortHand(26),
+	/** 27 = floating AtoN: preferred channel starboard hand. */
 	PreferredChannelStarboardHand(27),
+	/** 28 = floating AtoN: isolated danger. */
 	IsolatedDanger(28),
+	/** 29 = floating AtoN: safe water. */
 	SafeWater(29),
+	/** 30 = floating AtoN: special mark. */
 	SpecialMark(30),
 	/** Light vessel, LANBY or rig. */
 	LightVessel(31),

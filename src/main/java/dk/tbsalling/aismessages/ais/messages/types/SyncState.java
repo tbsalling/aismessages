@@ -16,10 +16,18 @@
 
 package dk.tbsalling.aismessages.ais.messages.types;
 
+/**
+ * Synchronization state, the first 2 bits of the SOTDMA and ITDMA communication states (ITU-R M.1371-6 Tables 18 and
+ * 20, § A2-3.1.1, synchronization priorities in Table 9).
+ */
 public enum SyncState {
+	/** 0 = UTC direct: the station has direct access to UTC (§ A2-3.1.1.1). */
 	UTCDirect(0),
+	/** 1 = UTC indirect: synchronized to a station reporting UTC direct (§ A2-3.1.1.2). */
 	UTCIndirect(1),
+	/** 2 = synchronized to a base station, base direct (§ A2-3.1.1.3). */
 	BaseDirect(2),
+	/** 3 = synchronized to another station based on the highest number of received stations, or to a mobile station directly synchronized to a base station (§ A2-3.1.1.3, § A2-3.1.1.4). */
 	BaseIndirect(3);
 
 	SyncState(int code) {

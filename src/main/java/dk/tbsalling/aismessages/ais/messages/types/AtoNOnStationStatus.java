@@ -20,6 +20,7 @@ package dk.tbsalling.aismessages.ais.messages.types;
  * AtoN on-station status of Message 28 (ITU-R M.1371-6 Table 84).
  */
 public enum AtoNOnStationStatus {
+	/** 0 = on station (default). */
 	OnStation(0),
 	/** On station or on course (mobile AtoN). */
 	OnStationOrOnCourse(1),
@@ -27,9 +28,13 @@ public enum AtoNOnStationStatus {
 	OnStationNotProperlyVisible(2),
 	/** Off station; a virtual AtoN reporting the intended position of an AtoN that is reporting itself off-position. */
 	OffStationIntendedPosition(3),
+	/** 4 = off station, location unknown. */
 	OffStationLocationUnknown(4),
+	/** 5 = off station, but reporting its current position. */
 	OffStationReportingCurrentPosition(5),
+	/** 6 = off station, adrift. */
 	OffStationAdrift(6),
+	/** 7 = off station, removed or relocated. */
 	OffStationRemovedOrRelocated(7),
 	/** On station, as a new or temporary AtoN. */
 	OnStationNewOrTemporary(8),
@@ -37,10 +42,15 @@ public enum AtoNOnStationStatus {
 	UnmarkedNavigationHazard(9),
 	/** Unmarked obstruction (type of AtoN should be reference point, accompanied by a Message 14). */
 	UnmarkedObstruction(10),
+	/** 11 = reserved for future use. */
 	ReservedForFutureUse11(11),
+	/** 12 = reserved for future use. */
 	ReservedForFutureUse12(12),
+	/** 13 = reserved for future use. */
 	ReservedForFutureUse13(13),
+	/** 14 = reserved for future use. */
 	ReservedForFutureUse14(14),
+	/** 15 = reserved for future use. */
 	ReservedForFutureUse15(15);
 
 	AtoNOnStationStatus(int code) {

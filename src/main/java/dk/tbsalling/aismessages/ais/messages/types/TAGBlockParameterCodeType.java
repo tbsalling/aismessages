@@ -20,6 +20,7 @@ public enum TAGBlockParameterCodeType {
     s("sourceId"),
     t("textString");
 
+    /** Descriptive name of the IEC 61162-1 tag block parameter code. */
     private final String name;
 
     TAGBlockParameterCodeType(String codeName) {

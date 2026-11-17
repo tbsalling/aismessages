@@ -21,13 +21,21 @@ package dk.tbsalling.aismessages.ais.messages.types;
  * R0126, IALA R1016 and IMO MSC Circular 1473 for the definitions.
  */
 public enum AtoNStationType {
+	/** 0 = a physical AIS AtoN, floating. */
 	PhysicalFloating(0),
+	/** 1 = a physical AIS AtoN, fixed. */
 	PhysicalFixed(1),
+	/** 2 = a synthetic predicted AIS AtoN. */
 	SyntheticPredicted(2),
+	/** 3 = a synthetic monitored AIS AtoN. */
 	SyntheticMonitored(3),
+	/** 4 = a virtual AIS AtoN. */
 	Virtual(4),
+	/** 5 = a mobile AIS AtoN (MAtoN). */
 	Mobile(5),
+	/** 6 = reserved for future use. */
 	ReservedForFutureUse6(6),
+	/** 7 = reserved for future use. */
 	ReservedForFutureUse7(7);
 
 	AtoNStationType(int code) {
