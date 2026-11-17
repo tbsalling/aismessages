@@ -51,3 +51,7 @@ bin/
 /release.properties
 .DS_Store
 /.claude/
+
+# Local copy of Recommendation ITU-R M.1371 (copyrighted by ITU, must not be redistributed) #
+##############################################################################################
+docs/itu/
