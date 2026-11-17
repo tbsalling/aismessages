@@ -20,6 +20,7 @@ import dk.tbsalling.aismessages.ais.BitString;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
+import dk.tbsalling.aismessages.ais.messages.types.Message24Part;
 import dk.tbsalling.aismessages.ais.messages.types.VdesCapabilities;
 import dk.tbsalling.aismessages.ais.messages.types.PositionFixingDevice;
 import dk.tbsalling.aismessages.ais.messages.types.ShipType;
@@ -41,7 +42,7 @@ import static java.lang.String.format;
  * the MMSI-registered vessel and may be used by any station; Part B (168 bits) carries type of ship, manufacturer ID,
  * call sign, dimensions, EPFD type and VDES capabilities. Class B "CS" and "SO" stations transmit both parts every
  * 6 min, Part B within 1 min of Part A; Class A stations transmit Part B within 12 min of start-up and every 24 h.
- * Which part an instance holds is given by {@code partNumber}; the other part's fields are null, or 0 for the dimensions.
+ * Which part an instance holds is given by {@code part}; the other part's fields are null, or 0 for the dimensions.
  */
 @Value
 @EqualsAndHashCode(callSuper = true)
@@ -52,13 +53,13 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
      * Constructor accepting pre-parsed values for true immutability.
      */
     protected ClassBCSStaticDataReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
-                                       int partNumber, String shipName, ShipType shipType,
+                                       Message24Part part, String shipName, ShipType shipType,
                                        String vendorId, String callsign,
                                        int toBow, int toStern, int toStarboard, int toPort,
                                        MMSI mothershipMmsi, String manufacturerMnemonic, Integer unitModelCode, Integer unitSerialNumber,
                                        PositionFixingDevice positionFixingDevice, VdesCapabilities vdesCapabilities) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
-        this.partNumber = partNumber;
+        this.part = part;
         this.shipName = shipName;
         this.shipType = shipType;
         this.vendorId = vendorId;
@@ -103,8 +104,8 @@ public class ClassBCSStaticDataReport extends AISMessage implements StaticDataRe
         return TransponderClass.B;
     }
 
-    /** Bits 38-40 (Tables 76 and 77): part number, 0 = Part A (name), 1 = Part B (static data). Fields of the other part are null, or 0 for the dimensions. */
-    int partNumber;
+    /** Bits 38-40 (Tables 76 and 77): which part this report holds. Fields of the other part are null, or 0 for the dimensions. */
+    Message24Part part;
     /** Part A, bits 40-160 (Table 76): name of the MMSI-registered vessel, up to 20 six-bit ASCII characters (Table 45); all "@" = not available; "SAR AIRCRAFT NNNNNNN" for SAR aircraft. Null for Part B. */
     String shipName;
     /** Part B, bits 40-48 (Table 77, Table 51): type of ship and cargo type; 0 = not available; not applicable to SAR aircraft. Null for Part A. */

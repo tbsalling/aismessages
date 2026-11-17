@@ -357,23 +357,23 @@ public class AISMessageFactory {
     private static Interrogation createInterrogation(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
         int spare1 = bitString.getUnsignedInt(38, 40);
         MMSI interrogatedMmsi1 = new MMSI(bitString.getUnsignedInt(40, 70));
-        int type1_1 = bitString.getUnsignedInt(70, 76);
+        AISMessageType type1_1 = AISMessageType.fromInteger(bitString.getUnsignedInt(70, 76));
         int offset1_1 = bitString.getUnsignedInt(76, 88);
 
-        Integer type1_2 = null;
+        AISMessageType type1_2 = null;
         Integer offset1_2 = null;
         MMSI interrogatedMmsi2 = null;
-        Integer type2_1 = null;
+        AISMessageType type2_1 = null;
         Integer offset2_1 = null;
 
         if (bitString.length() >= 110) {
-            type1_2 = bitString.getUnsignedInt(90, 96);
+            type1_2 = AISMessageType.fromInteger(bitString.getUnsignedInt(90, 96));
             offset1_2 = bitString.getUnsignedInt(96, 108);
         }
 
         if (bitString.length() >= 160) {
             interrogatedMmsi2 = new MMSI(bitString.getUnsignedInt(110, 140));
-            type2_1 = bitString.getUnsignedInt(140, 146);
+            type2_1 = AISMessageType.fromInteger(bitString.getUnsignedInt(140, 146));
             offset2_1 = bitString.getUnsignedInt(146, 158);
         }
 
@@ -694,7 +694,7 @@ public class AISMessageFactory {
         }
 
         return new ClassBCSStaticDataReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
-                partNumber, shipName, shipType, vendorId, callsign, toBow, toStern, toStarboard, toPort, mothershipMmsi,
+                Message24Part.fromInteger(partNumber), shipName, shipType, vendorId, callsign, toBow, toStern, toStarboard, toPort, mothershipMmsi,
                 manufacturerMnemonic, unitModelCode, unitSerialNumber, positionFixingDevice, vdesCapabilities);
     }
 
