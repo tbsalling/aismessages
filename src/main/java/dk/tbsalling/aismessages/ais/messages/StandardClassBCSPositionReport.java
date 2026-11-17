@@ -51,10 +51,10 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
      * Constructor accepting pre-parsed values for true immutability.
      */
     protected StandardClassBCSPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
-                                             String regionalReserved1, float speedOverGround,
+                                             int regionalReserved1, float speedOverGround,
                                              boolean positionAccuracy, float latitude, float longitude,
                                              float courseOverGround, int trueHeading, int second,
-                                             String regionalReserved2, boolean csUnit, boolean display, boolean dsc, boolean band,
+                                             int regionalReserved2, boolean csUnit, boolean display, boolean dsc, boolean band,
                                              boolean message22, boolean assigned, boolean raimFlag, boolean commStateSelectorFlag,
                                              CommunicationState communicationState,
                                              int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround, boolean transmitPowerLow) {
@@ -112,8 +112,8 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
         return TransponderClass.B;
     }
 
-    /** Bits 38-46 (Table 68) as a string of '0'/'1': 8 spare bits, should be zero. */
-    String regionalReserved1;
+    /** Bits 38-46 (Table 68) as an unsigned integer, first bit most significant: 8 spare bits, should be zero. */
+    int regionalReserved1;
     /** Speed over ground in knots, {@code rawSpeedOverGround} / 10 (Table 68); 102.2 = 102.2 knots or higher, 102.3 = not available. */
     float speedOverGround;
     /** Bit 56 (Table 68): position accuracy flag, true = high (≤ 10 m), false = low (&gt; 10 m, default); see Table 48. */
@@ -128,8 +128,8 @@ public class StandardClassBCSPositionReport extends AISMessage implements Extend
     int trueHeading;
     /** Bits 133-139 (Table 68): UTC second when the report was generated, 0-59; 60 = not available (default), 61 = manual input, 62 = dead reckoning, 63 = EPFS inoperative (61-63 not used by Class B "CS"). */
     int second;
-    /** Bits 139-141 (Table 68) as a string of '0'/'1': the transmit power flag (see {@code transmitPowerLow}) followed by one spare bit. */
-    String regionalReserved2;
+    /** Bits 139-141 (Table 68) as an unsigned integer, first bit most significant: the transmit power flag (see {@code transmitPowerLow}) followed by one spare bit. */
+    int regionalReserved2;
     /** Bit 141 (Table 68): Class B unit flag, true = Class B "CS" (carrier sense) unit, false = Class B "SO" (SOTDMA) unit. */
     boolean csUnit;
     /** Bit 142 (Table 68): Class B display flag, true = equipped with an integrated display showing Messages 12 and 14, false = no display. */

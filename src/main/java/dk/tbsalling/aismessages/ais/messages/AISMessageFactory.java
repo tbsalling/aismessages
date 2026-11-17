@@ -245,11 +245,11 @@ public class AISMessageFactory {
         float courseOverGround = rawCourseOverGround / 10f;
         int second = bitString.getUnsignedInt(128, 134);
         boolean barometricAltitude = bitString.getBoolean(134, 135);
-        String regionalReserved = bitString.getBits(134, 142);
+        int regionalReserved = bitString.getUnsignedInt(134, 142);
         boolean dataTerminalReady = bitString.getBoolean(142, 143);
         boolean assigned = bitString.getBoolean(146, 147);
         boolean raimFlag = bitString.getBoolean(147, 148);
-        String radioStatus = bitString.getBits(148, 168);
+        int radioStatus = bitString.getUnsignedInt(148, 168);
         boolean commStateSelectorFlag = bitString.getBoolean(148, 149);
         CommunicationState communicationState = commStateSelectorFlag
                 ? ITDMACommunicationState.fromBitString(bitString.slice(149, 168))
@@ -422,7 +422,7 @@ public class AISMessageFactory {
     }
 
     private static StandardClassBCSPositionReport createStandardClassBCSPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
-        String regionalReserved1 = bitString.getBits(38, 46);
+        int regionalReserved1 = bitString.getUnsignedInt(38, 46);
         int rawSpeedOverGround = bitString.getUnsignedInt(46, 56);
         float speedOverGround = rawSpeedOverGround / 10f;
         boolean positionAccuracy = bitString.getBoolean(56, 57);
@@ -435,7 +435,7 @@ public class AISMessageFactory {
         int trueHeading = bitString.getUnsignedInt(124, 133);
         int second = bitString.getUnsignedInt(133, 139);
         boolean transmitPowerLow = bitString.getBoolean(139, 140);
-        String regionalReserved2 = bitString.getBits(139, 141);
+        int regionalReserved2 = bitString.getUnsignedInt(139, 141);
         boolean csUnit = bitString.getBoolean(141, 142);
         boolean display = bitString.getBoolean(142, 143);
         boolean dsc = bitString.getBoolean(143, 144);
@@ -457,7 +457,7 @@ public class AISMessageFactory {
     }
 
     private static ExtendedClassBEquipmentPositionReport createExtendedClassBEquipmentPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received) {
-        String regionalReserved1 = bitString.getBits(38, 46);
+        int regionalReserved1 = bitString.getUnsignedInt(38, 46);
         int rawSpeedOverGround = bitString.getUnsignedInt(46, 56);
         float speedOverGround = rawSpeedOverGround / 10f;
         boolean positionAccuracy = bitString.getBoolean(56, 57);
@@ -469,7 +469,7 @@ public class AISMessageFactory {
         float courseOverGround = rawCourseOverGround / 10f;
         int trueHeading = bitString.getUnsignedInt(124, 133);
         int second = bitString.getUnsignedInt(133, 139);
-        String regionalReserved2 = bitString.getBits(139, 143);
+        int regionalReserved2 = bitString.getUnsignedInt(139, 143);
         String shipName = AISText.decode(bitString, 143, 263);
         ShipType shipType = ShipType.fromInteger(bitString.getUnsignedInt(263, 271));
         int toBow = bitString.getUnsignedInt(271, 280);
@@ -480,7 +480,7 @@ public class AISMessageFactory {
         boolean raimFlag = bitString.getBoolean(305, 306);
         boolean dataTerminalReady = bitString.getBoolean(306, 307);
         boolean assigned = bitString.getBoolean(307, 308);
-        String regionalReserved3 = bitString.getBits(308, 312);
+        int regionalReserved3 = bitString.getUnsignedInt(308, 312);
 
         return new ExtendedClassBEquipmentPositionReport(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 regionalReserved1, speedOverGround, positionAccuracy, latitude, longitude, courseOverGround, trueHeading,
@@ -550,7 +550,7 @@ public class AISMessageFactory {
         PositionFixingDevice positionFixingDevice = PositionFixingDevice.fromInteger(bitString.getUnsignedInt(249, 253));
         int second = bitString.getUnsignedInt(253, 259);
         boolean offPosition = bitString.getBoolean(259, 260);
-        String regionalUse = bitString.getBits(260, 268);
+        int regionalUse = bitString.getUnsignedInt(260, 268);
         boolean raimFlag = bitString.getBoolean(268, 269);
         boolean virtualAid = bitString.getBoolean(269, 270);
         boolean assignedMode = bitString.getBoolean(270, 271);

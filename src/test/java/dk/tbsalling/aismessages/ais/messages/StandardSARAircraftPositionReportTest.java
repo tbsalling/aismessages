@@ -37,11 +37,11 @@ class StandardSARAircraftPositionReportTest {
         assertEquals(34.1f, message.getLatitude(), 0.1f);
         assertEquals(27.0f, message.getCourseOverGround(), 0.0f);
         assertEquals(3, message.getSecond());
-        assertEquals("11010010", message.getRegionalReserved());
+        assertEquals(0b11010010, message.getRegionalReserved());
         assertTrue(message.isDataTerminalReady());
         assertFalse(message.isAssigned());
         assertEquals(Boolean.FALSE, message.isRaimFlag());
-        assertEquals("00010000000110001010", message.getRadioStatus());
+        assertEquals(0b00010000000110001010, message.getRadioStatus());
         assertTrue(message.isBarometricAltitude());
         assertFalse(message.isCommStateSelectorFlag());
         SOTDMACommunicationState communicationState = (SOTDMACommunicationState) message.getCommunicationState();

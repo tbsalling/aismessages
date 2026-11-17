@@ -45,12 +45,12 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
      * Constructor accepting pre-parsed values for true immutability.
      */
     protected ExtendedClassBEquipmentPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
-                                                    String regionalReserved1, float speedOverGround, boolean positionAccuracy,
+                                                    int regionalReserved1, float speedOverGround, boolean positionAccuracy,
                                                     float latitude, float longitude, float courseOverGround, int trueHeading,
-                                                    int second, String regionalReserved2, String shipName, ShipType shipType,
+                                                    int second, int regionalReserved2, String shipName, ShipType shipType,
                                                     int toBow, int toStern, int toPort, int toStarboard,
                                                     PositionFixingDevice positionFixingDevice, boolean raimFlag,
-                                                    boolean dataTerminalReady, boolean assigned, String regionalReserved3,
+                                                    boolean dataTerminalReady, boolean assigned, int regionalReserved3,
                                                     int rawSpeedOverGround, int rawLatitude, int rawLongitude, int rawCourseOverGround) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.regionalReserved1 = regionalReserved1;
@@ -107,8 +107,8 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
         return TransponderClass.B;
     }
 
-    /** Bits 38-46 (Table 69) as a string of '0'/'1': 8 spare bits, should be zero. */
-    String regionalReserved1;
+    /** Bits 38-46 (Table 69) as an unsigned integer, first bit most significant: 8 spare bits, should be zero. */
+    int regionalReserved1;
     /** Speed over ground in knots, {@code rawSpeedOverGround} / 10 (Table 69); 102.2 = 102.2 knots or higher, 102.3 = not available. */
     float speedOverGround;
     /** Bit 56 (Table 69): position accuracy flag, true = high (≤ 10 m), false = low (&gt; 10 m, default); see Table 48. */
@@ -123,8 +123,8 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
     int trueHeading;
     /** Bits 133-139 (Table 69): UTC second when the report was generated, 0-59; 60 = not available (default), 61 = manual input, 62 = dead reckoning, 63 = EPFS inoperative. */
     int second;
-    /** Bits 139-143 (Table 69) as a string of '0'/'1': 4 spare bits, should be zero. */
-    String regionalReserved2;
+    /** Bits 139-143 (Table 69) as an unsigned integer, first bit most significant: 4 spare bits, should be zero. */
+    int regionalReserved2;
     /** Bits 143-263 (Table 69): name, up to 20 six-bit ASCII characters (Table 45); all "@" = not available. */
     String shipName;
     /** Bits 263-271 (Table 69, Table 51): type of ship and cargo type; null for the regional (100-199) and future-use (200-255) codes. */
@@ -145,8 +145,8 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
     boolean dataTerminalReady;
     /** Bit 307 (Table 69): assigned mode flag, true = station operating in assigned mode, false = autonomous and continuous mode (default). */
     boolean assigned;
-    /** Bits 308-312 (Table 69) as a string of '0'/'1': 4 spare bits, should be zero. */
-    String regionalReserved3;
+    /** Bits 308-312 (Table 69) as an unsigned integer, first bit most significant: 4 spare bits, should be zero. */
+    int regionalReserved3;
     /** Bits 46-56 (Table 69): speed over ground in 1/10 knot steps, 0-1022; 1022 = 102.2 knots or higher, 1023 = not available. */
     int rawSpeedOverGround;
     /** Bits 85-112 (Table 69): latitude in 1/10 000 min, two's complement; 91° (0x3412140) = not available. */

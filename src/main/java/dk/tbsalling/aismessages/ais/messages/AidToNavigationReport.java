@@ -54,7 +54,7 @@ public class AidToNavigationReport extends AISMessage {
                                     float latitude, float longitude,
                                     int toBow, int toStern, int toPort, int toStarboard,
                                     PositionFixingDevice positionFixingDevice, int second,
-                                    boolean offPosition, String regionalUse, boolean raimFlag,
+                                    boolean offPosition, int regionalUse, boolean raimFlag,
                                     boolean virtualAid, boolean assignedMode, int spare1,
                                     String nameExtension, Integer spare2, boolean nameExtensionIsLabel) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
@@ -126,8 +126,8 @@ public class AidToNavigationReport extends AISMessage {
     int second;
     /** Bit 259 (Table 71): off-position indicator, true = off position (floating aid outside its zone, or fixed aid with suspected GNSS anomaly); only meaningful when {@code second} ≤ 59. */
     boolean offPosition;
-    /** Bits 260-268 (Table 71) as a string of '0'/'1': the 8 AtoN status bits reserved for IALA Recommendation R0126; all zero = default. */
-    String regionalUse;
+    /** Bits 260-268 (Table 71) as an unsigned integer, first bit most significant: the 8 AtoN status bits reserved for IALA Recommendation R0126; all zero = default. */
+    int regionalUse;
     /** Bit 268 (Table 71): RAIM flag of the electronic position fixing device, true = RAIM in use; see Table 48. */
     boolean raimFlag;
     /** Bit 269 (Table 71): virtual AtoN flag, true = virtual aid that does not physically exist, false = physical aid at the indicated position (default). */

@@ -50,8 +50,8 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
     protected StandardSARAircraftPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
                                                 int altitude, float speedOverGround, boolean positionAccuracy,
                                                 float latitude, float longitude, float courseOverGround,
-                                                int second, String regionalReserved, boolean dataTerminalReady,
-                                                boolean assigned, boolean raimFlag, String radioStatus,
+                                                int second, int regionalReserved, boolean dataTerminalReady,
+                                                boolean assigned, boolean raimFlag, int radioStatus,
                                                 int rawSpeedOverGround, int rawLongitude, int rawLatitude, int rawCourseOverGround,
                                                 boolean barometricAltitude, boolean commStateSelectorFlag, CommunicationState communicationState) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
@@ -118,16 +118,16 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
     float courseOverGround;
     /** Bits 128-134 (Table 57): UTC second when the report was generated, 0-59; 60 = not available (default), 61 = manual input, 62 = dead reckoning, 63 = EPFS inoperative. */
     int second;
-    /** Bits 134-142 (Table 57) as a string of '0'/'1': the altitude sensor bit followed by 7 spare bits. See {@code barometricAltitude} for the typed value. */
-    String regionalReserved;
+    /** Bits 134-142 (Table 57) as an unsigned integer, first bit most significant: the altitude sensor bit followed by 7 spare bits. See {@code barometricAltitude} for the typed value. */
+    int regionalReserved;
     /** Bit 142 (Table 57, § A7-3.3.1): data terminal equipment ready, true = available (bit 0), false = not available (bit 1, default). */
     boolean dataTerminalReady;
     /** Bit 146 (Table 57): assigned mode flag, true = station operating in assigned mode, false = autonomous and continuous mode (default). */
     boolean assigned;
     /** Bit 147 (Table 57): RAIM flag of the electronic position fixing device, true = RAIM in use; see Table 48. */
     boolean raimFlag;
-    /** Bits 148-168 (Table 57) as a string of '0'/'1': the communication state selector flag followed by the 19-bit communication state. See {@code communicationState} for the typed value. */
-    String radioStatus;
+    /** Bits 148-168 (Table 57) as an unsigned integer, first bit most significant: the communication state selector flag followed by the 19-bit communication state. See {@code communicationState} for the typed value. */
+    int radioStatus;
     /** Bits 50-60 (Table 57): speed over ground in knots, 0-1022; 1022 = 1022 knots or higher, 1023 = not available. */
     int rawSpeedOverGround;
     /** Bits 61-89 (Table 57): longitude in 1/10 000 min, two's complement; 181° (0x6791AC0) = not available. */
