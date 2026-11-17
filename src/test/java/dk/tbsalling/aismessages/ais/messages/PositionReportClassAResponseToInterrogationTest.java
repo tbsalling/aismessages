@@ -103,8 +103,8 @@ public class PositionReportClassAResponseToInterrogationTest {
         assertEquals(ManeuverIndicator.SpecialManeuver, message.getSpecialManeuverIndicator());
         assertTrue(message.isTransmitPowerLow());
         ITDMACommunicationState communicationState = (ITDMACommunicationState) message.getCommunicationState();
-        assertEquals(1000, communicationState.getSlotIncrement());
-        assertEquals(6, communicationState.getNumberOfSlots());
+        assertEquals(1000 + 8192, communicationState.getSlotIncrement()); // code 6: 2 slots at increment + 8192
+        assertEquals(2, communicationState.getNumberOfSlots());
         assertFalse(communicationState.getKeepFlag());
     }
 }

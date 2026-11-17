@@ -119,7 +119,7 @@ public class StandardClassBCSPositionReportTest {
         assertTrue(communicationState instanceof ITDMACommunicationState);
         if (communicationState instanceof ITDMACommunicationState itdmaCommunicationState) {
             assertEquals(0, itdmaCommunicationState.getSlotIncrement());
-            assertEquals(3, itdmaCommunicationState.getNumberOfSlots());
+            assertEquals(4, itdmaCommunicationState.getNumberOfSlots());
             assertFalse(itdmaCommunicationState.getKeepFlag());
         }
     }

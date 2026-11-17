@@ -131,7 +131,7 @@ public class BinaryMessageMultipleSlotTest {
         ITDMACommunicationState communicationState = (ITDMACommunicationState) message.getCommunicationState();
         assertEquals(SyncState.BaseDirect, communicationState.getSyncState());
         assertEquals(2380, communicationState.getSlotIncrement());
-        assertEquals(1, communicationState.getNumberOfSlots());
+        assertEquals(2, communicationState.getNumberOfSlots());
         assertTrue(communicationState.getKeepFlag());
     }
 }

@@ -140,11 +140,11 @@ public class CommunicationStateTest {
     @ParameterizedTest(name = "number-of-slots code {0}")
     @ValueSource(ints = {0, 1, 2, 3, 4, 5, 6, 7})
     public void itdmaDecodesEveryNumberOfSlotsCode(int code) {
-        // Codes 0-4 mean 1-5 slots; codes 5-7 mean 1-3 slots at slot increment + 8192 (Table 20). The raw code is exposed.
+        // Codes 0-4 mean 1-5 slots; codes 5-7 mean 1-3 slots at slot increment + 8192 (Table 20).
         ITDMACommunicationState s = ITDMACommunicationState.fromBitString(itdma(2, 8191, code, code % 2 == 0));
 
-        assertEquals(8191, s.getSlotIncrement());
-        assertEquals(code, s.getNumberOfSlots());
+        assertEquals(code <= 4 ? 8191 : 8191 + 8192, s.getSlotIncrement());
+        assertEquals(code <= 4 ? code + 1 : code - 4, s.getNumberOfSlots());
         assertEquals(code % 2 == 0, s.getKeepFlag());
     }
 

@@ -67,7 +67,7 @@ class StandardSARAircraftPositionReportTest {
         ITDMACommunicationState communicationState = (ITDMACommunicationState) message.getCommunicationState();
         assertEquals(SyncState.UTCIndirect, communicationState.getSyncState());
         assertEquals(4500, communicationState.getSlotIncrement());
-        assertEquals(2, communicationState.getNumberOfSlots());
+        assertEquals(3, communicationState.getNumberOfSlots());
         assertTrue(communicationState.getKeepFlag());
     }
 }
