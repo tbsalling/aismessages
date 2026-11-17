@@ -40,8 +40,29 @@ for source changes.
 - **Regional and spare bits are `int`.** `getRegionalReserved1()`-`getRegionalReserved3()` (Messages 18 and 19),
   `getRegionalReserved()` and `getRadioStatus()` (Message 9) and `getRegionalUse()` (Message 21) return the bits
   as an unsigned `int`, first bit most significant, instead of a string of '0'/'1'.
-- **Rate of turn special codes.** `PositionReport.getRateOfTurn()` is 0 for the special codes +127, -127 and
-  -128 instead of a bogus converted value; use the new `getRateOfTurnIndicator()` to tell them apart.
+- **No magic numbers: not-available values are `NaN` or `null`.** Decoded fields no longer return the
+  transmitted "not available" code; see the table under "Upgrade Notes". Primitive decimals (coordinates, speed and
+  course over ground, rate of turn, draught) are `NaN`; integers become nullable `Integer`: `getTrueHeading()`
+  and `getSecond()` (also on `ExtendedDynamicDataReport`), Message 9 `getAltitude()`, the year to second of
+  Messages 4 and 11, the ETA parts of Message 5, and `getImo()`. Names, call signs, destinations and vendor IDs
+  transmitted as all "@" are `null` instead of "". `ChannelManagement`'s north-east corner is `null` when not
+  available.
+- **Indicator enums for fields with several special values.** `getSpeedOverGroundIndicator()` (Messages 1-3, 9,
+  18, 19, 27, also on `DynamicDataReport`), `getTimeStampIndicator()` (Messages 1-3, 9, 18, 19, 21, 28),
+  `getAltitudeIndicator()` (Message 9), `getDraughtIndicator()` (Message 5) and `getRateOfTurnIndicator()`
+  (Messages 1-3) tell measured values, "maximum or higher" and the special codes apart. `getRateOfTurn()` is a
+  `float` in degrees per minute, `NaN` unless measured.
+- **Raw values removed.** `getRawLatitude()`, `getRawLongitude()`, `getRawSpeedOverGround()`,
+  `getRawCourseOverGround()` (also from `DynamicDataReport`), `getRawRateOfTurn()` and `getRawDraught()` are
+  gone; use the decoded getters. Spare, regional-reserved, radio-status and AtoN-status bits stay, as ITU-R
+  M.1371 defines them.
+- **More coded values are enums.** `ClassBCSStaticDataReport.getPartNumber()` is replaced by `getPart()`
+  returning `Message24Part`. `Interrogation.getType1_1()`, `getType1_2()` and `getType2_1()` return
+  `AISMessageType`. Message 28's `getDimensionA()` and `getDimensionB()` are replaced by decoded getters that
+  depend on the dimension type (Table 84): `getRadiusMetres()`, `getHeightMetres()`, `getMobileCourseOverGround()`
+  with `getMobileCourseIndicator()`, `getMobileSpeedOverGround()`, `getPolygonVertexNumber()`,
+  `getPolygonLineCount()`, `getOrientation()`, `getLineLengthMetres()`, and `getDimensionAMetres()`/
+  `getDimensionBMetres()` for type 0; the ones that do not apply are `null`.
 - **Renamed.** `AidToNavigationReport.isNameExtensionIsLabel()` is `isNameExtensionLabel()`.
   `GroupAssignmentCommand.getSpare1()` and `getSpare2()` return `int`.
 - **Removed.** The placeholder constants `ShipType.PassengerFuture1-3`, `CargoFuture1-4` and `TankerFuture1-2`,
@@ -69,7 +90,25 @@ for source changes.
   `CargoFuture1-4` with `CargoBulkCarrier`, `CargoContainerShip`, `CargoRollOnRollOffCarrier` and
   `CargoLandingCraft`; `TankerFuture1-2` with `TankerNonHazardous` and `IntegratedTugAndTankBarge`;
   `ReportingInterval.FutureUse1` with `TwoSeconds`; and `AidType.FutureUse1` with `EmergencyWreckMarkingBuoy`.
-- Check `getRateOfTurnIndicator()` before using `getRateOfTurn()`.
+- Replace checks for transmitted "not available" codes with `NaN`, `null` or indicator checks:
+
+  | Field | 5.x value when not available | 6.0.0 |
+  |---|---|---|
+  | Latitude, longitude | 91, 181 | `Double.isNaN(...)` |
+  | Speed over ground | 102.3 (Message 9: 1023, Message 27: 63) | `NaN`; `getSpeedOverGroundIndicator()` |
+  | Speed over ground, maximum | 102.2 (1022, 62) | same value; indicator `AtLeastMaximum` |
+  | Course over ground | 360 (Message 27: 511) | `Float.isNaN(...)` |
+  | True heading | 511 | `null` |
+  | Time stamp second | 60-63 | `null`; `getTimeStampIndicator()` |
+  | Rate of turn | converted -128/±127 | `NaN`; `getRateOfTurnIndicator()` |
+  | Altitude (Message 9) | 4095 (4094 = or higher) | `null`; `getAltitudeIndicator()` |
+  | Draught (Message 5) | 0 (25.5 = or greater) | `NaN`; `getDraughtIndicator()` |
+  | Date and time (Messages 4, 11), ETA (Message 5) | 0, 24, 60 | `null` |
+  | IMO number | `IMO` of 0 | `null` |
+  | Name, call sign, destination | "" | `null` |
+
+- Use `getLength()`, `getBeam()` and `isReferencePointAvailable()` on `StaticDataReport` instead of interpreting
+  zero dimensions.
 - Parse regional and spare bits with bit operations instead of string handling; `Integer.toBinaryString` gives
   the old representation without leading zeros.
 - For Message 25 data use `getData()`, `getDesignatedAreaCode()`, `getFunctionalId()` and
@@ -140,7 +179,7 @@ for source changes.
   the area corners (Tables 73 and 74) were divided by 10, which yields minutes instead of degrees (59.99° was
   reported as 3599.2). They are now divided by 600 and returned in degrees.
 - **Messages 1-3, rate of turn special codes:** +127, -127 and -128 were converted like measured values into
-  rates such as -720° per minute. `getRateOfTurn()` is now 0 for them and `getRateOfTurnIndicator()` (new
+  rates such as -720° per minute. `getRateOfTurn()` is now `NaN` for them and `getRateOfTurnIndicator()` (new
   `RateOfTurnIndicator`: `Measured`, `TurningRightWithoutTurnIndicator`, `TurningLeftWithoutTurnIndicator`,
   `NotAvailable`) classifies the transmitted value (Table 46).
 
@@ -196,6 +235,11 @@ for source changes.
   `CargoFuture1-4`, `TankerFuture1` and `TankerFuture2` constants.
 
 ### New public APIs
+
+- `StaticDataReport` (Messages 5 and 24): `getLength()`, `getBeam()` and `isReferencePointAvailable()`, applying
+  the dimension rules of Fig. 38.
+- New enums `SpeedOverGroundIndicator`, `TimeStampIndicator`, `AltitudeIndicator`, `DraughtIndicator`,
+  `MobileAtoNCourseIndicator` and `Message24Part`, each citing its ITU-R M.1371-6 table.
 
 - `BinaryMessageSingleSlot`: `getDesignatedAreaCode()`, `getFunctionalId()`, `getData()`,
   `getApplicationSpecificMessage()`.

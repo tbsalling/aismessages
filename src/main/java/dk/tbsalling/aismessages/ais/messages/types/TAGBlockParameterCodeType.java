@@ -11,6 +11,10 @@ package dk.tbsalling.aismessages.ais.messages.types;
  * t - Text String / Valid Character String
  *
  */
+/**
+ * Parameter codes of an NMEA tag block (IEC 61162-1 § 7.9). Not part of ITU-R M.1371: tag blocks belong to the NMEA
+ * transport layer and are parsed by {@code NMEATagBlock}.
+ */
 public enum TAGBlockParameterCodeType {
     c("timestamp"),
     d("destinationId"),

@@ -48,31 +48,30 @@ These are load-bearing — preserve them when changing code:
 
 - **Eager parsing, immutable value objects.** Since v4, decoded `AISMessage` instances are immutable and fully parsed up front (see `docs/articles/immutable-value-objects-v4.md`). Do not reintroduce lazy decoding, `WeakReference`s, or post-construction mutation. Instances must be safe to share across threads.
 - **Zero runtime dependencies.** Lombok is compile-time only. Do not add runtime dependencies to `pom.xml`.
-- **Minimal allocation.** Prefer primitives over boxed types to keep allocation churn low; message field types follow the rules below.
+- **Minimal allocation.** Prefer primitives over boxed types to keep allocation churn low, within the field rules below.
 - **Public API is backward compatible.** Breaking changes to anything under `dk.tbsalling.aismessages` need an explicit, deliberate call-out — this is a library consumed in production by external systems.
 
-### Message field types: primitive or boxed
+### Message field types: no magic numbers
 
-Goal: decoding allocates as little as possible. Decide each field's type with the first rule that matches.
+AISmessages is a decoding library: its public API exposes decoded, self-explanatory values, so users need no knowledge of ITU-R M.1371 codes or bit layouts.
 
-1. **Hot-path messages (1, 2, 3, 18, 19, 27): always primitive.** If a value has special codes, keep the primitive and add a companion enum that classifies it (example: `rateOfTurn` + `RateOfTurnIndicator`).
-2. **The spec defines a "not available" value: primitive, passed through as transmitted.** Document the value in the field's Javadoc (example: latitude 91, heading 511, dimension 0). Never invent a different sentinel.
-3. **The bits may not be in the message at all: nullable boxed type, `null` = not transmitted.** This covers optional trailing parts (Messages 7, 13, 15, 16, 17, 20), variant-only fields (Messages 22, 25, 26) and the other part of Message 24. Never use -1 or another made-up sentinel.
-4. **Otherwise: primitive.**
-
-Rules that apply to every field:
-
-- **Coded values are enums.** `null` means an undefined code or an absent part.
-- **Boxing uses autoboxing (`Integer.valueOf`).** No custom caches, and no `Optional`/`OptionalInt`, which allocate on every call.
-- **Interfaces use the most primitive type all implementers can satisfy.** If one implementer has no value, return the spec's not-available value (rule 2) rather than boxing the getter for every implementer.
-- **Measure before deviating.** A change that adds boxing or objects to a hot-path message needs a `-prof gc` JMH comparison of bytes allocated per operation.
+1. **Decimals:** primitive `double`/`float` fields (coordinates, speed, course, rate of turn, draught) are `NaN` when not available. Boxed `Double`/`Float` fields, used only where a part can be absent, are `null` when not available or absent — never `NaN`.
+2. **Integers with a not-available code** (heading, time-stamp second, altitude, date and time parts, ETA parts) are `Integer`, `null` when not available. Integers that are always valid stay primitive.
+3. **Parts that may be absent** (optional trailing parts, variant-only fields, the other Message 24 part) are `null`. Never use -1 or another made-up sentinel.
+4. **A field with more than one special value gets a companion `<Field>Indicator` enum** (e.g. `RateOfTurnIndicator`, `SpeedOverGroundIndicator`, `TimeStampIndicator`). The value is `NaN`/`null` unless the indicator says it holds one; for "X or higher" it holds that lower bound. A field with a single not-available code needs no indicator.
+5. **No raw values.** Do not expose transmitted values next to decoded ones (no `getRaw*`). Fields that ITU-R M.1371 itself defines as spare, regional reserved, radio status or AtoN status bits stay as `int`, documented per their table.
+6. **Coded values are enums**, `null` for undefined codes or absent parts. **Every enum corresponds to a table or field description of ITU-R M.1371-6, cited in its class Javadoc**, and each constant states the code(s) it stands for.
+7. **Text** transmitted as all "@" (not available) is `null`, not "".
+8. **Interfaces** declare the most primitive type all implementers can satisfy.
+9. **Decode eagerly.** Convert codes in `AISMessageFactory` or the constructor; keep the code constants in the package-private `FieldDecoder`.
+10. **Allocation.** Box only through autoboxing (`Integer.valueOf`); no custom caches and no `Optional`/`OptionalInt`. A change that adds objects to the hot-path messages (1-3, 18, 19, 27) needs a `-prof gc` JMH comparison of bytes allocated per operation.
 
 ## Conventions
 
 - 4-space indent; standard Java style; match the surrounding file's indentation/whitespace exactly so diffs stay reviewable.
 - Single concern per change/PR. Avoid reformatting unrelated code.
 - Update JavaDoc when public API behavior changes.
-- In the message model (`ais/messages`, `ais/messages/types`, `ais/messages/asm`) every class, field and enum constant has Javadoc. Message classes start with `Message N: <name> (ITU-R M.1371-6 § A7-3.x, Table T).`; fields with `Bits a-b (Table T): <meaning>; <units>; <not-available value>.`; derived fields name their raw counterpart and conversion; ASM classes cite IMO SN.1/Circ.289 (DAC/FI) or Annex 4.
+- In the message model (`ais/messages`, `ais/messages/types`, `ais/messages/asm`) every class, field and enum constant has Javadoc. Message classes start with `Message N: <name> (ITU-R M.1371-6 § A7-3.x, Table T).`; fields with `Bits a-b (Table T): <meaning>; <units>; <what NaN/null/the indicator means>.`; converted fields name the transmitted unit; ASM classes cite IMO SN.1/Circ.289 (DAC/FI) or Annex 4.
 - Never write `{@link #getX()}` to a Lombok-generated getter: javadoc runs on the undelomboked source and fails on the unresolved reference. Use `{@code getX()}` instead.
 
 ## Release
