@@ -13,7 +13,11 @@ import static java.util.Objects.requireNonNull;
 @ToString
 @EqualsAndHashCode
 public abstract sealed class ApplicationSpecificMessage permits
+    ApplicationAcknowledgement,
     AreaNotice,
+    CapabilityInterrogation,
+    CapabilityReply,
+    InterrogationForSpecificFunctionalMessage,
         BerthingData,
     DangerousCargoIndication,
     Environmental,
@@ -45,7 +49,11 @@ public abstract sealed class ApplicationSpecificMessage permits
         ApplicationSpecificMessage asm = switch (designatedAreaCode) {
             case 1 -> switch (functionalId) {
                 case 0 -> new TextDescription(designatedAreaCode, functionalId, binaryData);
-                case 1 -> new TextDescription(designatedAreaCode, functionalId, binaryData);
+                case 1 -> new TextDescription(designatedAreaCode, functionalId, binaryData); // discontinued in ITU-R M.1371-6 Table 24; kept for legacy traffic
+                case 2 -> new InterrogationForSpecificFunctionalMessage(designatedAreaCode, functionalId, binaryData);
+                case 3 -> new CapabilityInterrogation(designatedAreaCode, functionalId, binaryData);
+                case 4 -> new CapabilityReply(designatedAreaCode, functionalId, binaryData);
+                case 5 -> new ApplicationAcknowledgement(designatedAreaCode, functionalId, binaryData);
                 case 10 -> new UtcDateInquiry(designatedAreaCode, functionalId, binaryData);
                 case 11 -> new UtcDateResponse(designatedAreaCode, functionalId, binaryData);
                 case 14 -> new TidalWindow(designatedAreaCode, functionalId, binaryData);

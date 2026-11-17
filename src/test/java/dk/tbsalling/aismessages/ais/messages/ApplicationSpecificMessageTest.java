@@ -48,7 +48,8 @@ public class ApplicationSpecificMessageTest {
     public void canDecodeTextDescription() {
         // Arrange
         String testText = "SAFETY WARNING";
-        String binaryData = encodeText(testText, 20); // 20 characters = 120 bits
+        // ITU-R M.1371-6 Table 25: acknowledge required flag (1 bit), text sequence number (11 bits), then 6-bit ASCII text
+        String binaryData = "1" + toBinaryString(110, 11) + encodeText(testText, 20); // 20 characters = 120 bits
 
         // Act
         ApplicationSpecificMessage asm0 = ApplicationSpecificMessage.create(1, 0, BitString.ofBitString(binaryData));
@@ -59,6 +60,8 @@ public class ApplicationSpecificMessageTest {
         if (asm0 instanceof TextDescription textDescription) {
             assertEquals(1, textDescription.getDesignatedAreaCode());
             assertEquals(0, textDescription.getFunctionalId());
+            assertTrue(textDescription.isAcknowledgeRequired());
+            assertEquals(110, textDescription.getTextSequenceNumber());
             assertEquals(testText, textDescription.getText().trim());
         }
 
@@ -68,6 +71,76 @@ public class ApplicationSpecificMessageTest {
             assertEquals(1, textDescription.getFunctionalId());
             assertEquals(testText, textDescription.getText().trim());
         }
+    }
+
+    @Test
+    public void canDecodeInterrogationForSpecificFunctionalMessage() {
+        // Arrange (ITU-R M.1371-6 Table 30: requested DAC 10 bits, requested FI 6 bits, 64 spare bits)
+        String binaryData = toBinaryString(200, 10) + toBinaryString(10, 6) + "0".repeat(64);
+
+        // Act
+        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 2, BitString.ofBitString(binaryData));
+
+        // Assert
+        assertTrue(asm instanceof InterrogationForSpecificFunctionalMessage);
+        InterrogationForSpecificFunctionalMessage interrogation = (InterrogationForSpecificFunctionalMessage) asm;
+        assertEquals(200, interrogation.getRequestedDesignatedAreaCode());
+        assertEquals(10, interrogation.getRequestedFunctionalId());
+    }
+
+    @Test
+    public void canDecodeCapabilityInterrogation() {
+        // Arrange (ITU-R M.1371-6 Table 31: requested DAC 10 bits, 70 spare bits)
+        String binaryData = toBinaryString(1, 10) + "0".repeat(70);
+
+        // Act
+        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 3, BitString.ofBitString(binaryData));
+
+        // Assert
+        assertTrue(asm instanceof CapabilityInterrogation);
+        assertEquals(1, ((CapabilityInterrogation) asm).getRequestedDesignatedAreaCode());
+    }
+
+    @Test
+    public void canDecodeCapabilityReply() {
+        // Arrange (ITU-R M.1371-6 Table 32: DAC 10 bits, then 64 pairs of 2 bits; first bit of pair = FI available). FI 0, 22 and 63 available.
+        StringBuilder pairs = new StringBuilder();
+        for (int fi = 0; fi < 64; fi++) {
+            pairs.append(fi == 0 || fi == 22 || fi == 63 ? "10" : "00");
+        }
+        String binaryData = toBinaryString(1, 10) + pairs + "0".repeat(126);
+
+        // Act
+        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 4, BitString.ofBitString(binaryData));
+
+        // Assert
+        assertTrue(asm instanceof CapabilityReply);
+        CapabilityReply reply = (CapabilityReply) asm;
+        assertEquals(1, reply.getRepliedDesignatedAreaCode());
+        assertTrue(reply.isFunctionalIdAvailable(0));
+        assertTrue(reply.isFunctionalIdAvailable(22));
+        assertTrue(reply.isFunctionalIdAvailable(63));
+        assertEquals(false, reply.isFunctionalIdAvailable(1));
+        assertEquals(false, reply.isFunctionalIdAvailable(31));
+        assertEquals((1L << 0) | (1L << 22) | (1L << 63), reply.getAvailableFunctionalIds());
+    }
+
+    @Test
+    public void canDecodeApplicationAcknowledgement() {
+        // Arrange (ITU-R M.1371-6 Table 33: DAC 10, FI 6, text sequence number 11, AI available 1, AI response 3, 49 spare bits)
+        String binaryData = toBinaryString(1, 10) + toBinaryString(0, 6) + toBinaryString(110, 11) + "1" + toBinaryString(2, 3) + "0".repeat(49);
+
+        // Act
+        ApplicationSpecificMessage asm = ApplicationSpecificMessage.create(1, 5, BitString.ofBitString(binaryData));
+
+        // Assert
+        assertTrue(asm instanceof ApplicationAcknowledgement);
+        ApplicationAcknowledgement ack = (ApplicationAcknowledgement) asm;
+        assertEquals(1, ack.getReceivedDesignatedAreaCode());
+        assertEquals(0, ack.getReceivedFunctionalId());
+        assertEquals(110, ack.getTextSequenceNumber());
+        assertTrue(ack.isApplicationIdentifierAvailable());
+        assertEquals(2, ack.getApplicationIdentifierResponse());
     }
 
     @Test

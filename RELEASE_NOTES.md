@@ -56,6 +56,17 @@ Alignment with Recommendation ITU-R M.1371-6 (02/2026).
   `getData()` now holds exactly the application data between header and trailer and is no longer
   zero-padded to 1005 bits. Messages shorter than 64 bits or longer than 1064 bits are rejected as
   `InvalidMessage`.
+- **IFM 0 text telegram (`TextDescription`, DAC 1 FI 0):** the text was decoded from bit 0 of the
+  application data, ignoring the 1-bit "acknowledge required" flag and 11-bit text sequence number that
+  Tables 25 to 28 place in front of it, so every text came out two characters out of phase. The text now
+  starts at bit 12 and the two header fields are exposed as `isAcknowledgeRequired()` and
+  `getTextSequenceNumber()`. FI 1 is marked discontinued in M.1371-6 but is still decoded as text.
+
+### New application specific messages (ITU-R M.1371-6 Annex 4, DAC 1)
+
+- `InterrogationForSpecificFunctionalMessage` (IFM 2), `CapabilityInterrogation` (IFM 3),
+  `CapabilityReply` (IFM 4, with `isFunctionalIdAvailable(int)`) and `ApplicationAcknowledgement` (IFM 5)
+  replace `UnknownApplicationSpecificMessage` for these function identifiers.
 
 ### Completed enumerations (ITU-R M.1371-6 Tables 46, 49, 51, 72, 75, 85)
 
