@@ -38,12 +38,12 @@ import java.time.Instant;
 @ToString(callSuper = true)
 public class PositionReportClassAResponseToInterrogation extends PositionReport {
     protected PositionReportClassAResponseToInterrogation(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
-                                                          NavigationStatus navigationStatus, int rateOfTurn, RateOfTurnIndicator rateOfTurnIndicator, float speedOverGround,
+                                                          NavigationStatus navigationStatus, float rateOfTurn, RateOfTurnIndicator rateOfTurnIndicator, float speedOverGround, SpeedOverGroundIndicator speedOverGroundIndicator,
                                                           boolean positionAccuracy, double latitude, double longitude,
                                                           float courseOverGround, int trueHeading, int second,
                                                           ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState, boolean transmitPowerLow) {
         super(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
-                navigationStatus, rateOfTurn, rateOfTurnIndicator, speedOverGround, positionAccuracy, latitude, longitude,
+                navigationStatus, rateOfTurn, rateOfTurnIndicator, speedOverGround, speedOverGroundIndicator, positionAccuracy, latitude, longitude,
                 courseOverGround, trueHeading, second, specialManeuverIndicator, raimFlag, communicationState, transmitPowerLow);
     }
 

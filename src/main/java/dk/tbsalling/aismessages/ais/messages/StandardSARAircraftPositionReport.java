@@ -19,6 +19,7 @@ package dk.tbsalling.aismessages.ais.messages;
 import dk.tbsalling.aismessages.ais.BitString;
 
 import dk.tbsalling.aismessages.ais.messages.types.AISMessageType;
+import dk.tbsalling.aismessages.ais.messages.types.SpeedOverGroundIndicator;
 import dk.tbsalling.aismessages.ais.messages.types.CommunicationState;
 import dk.tbsalling.aismessages.ais.messages.types.MMSI;
 import dk.tbsalling.aismessages.ais.messages.types.TransponderClass;
@@ -48,7 +49,7 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
      * Constructor accepting pre-parsed values for true immutability.
      */
     protected StandardSARAircraftPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
-                                                int altitude, float speedOverGround, boolean positionAccuracy,
+                                                int altitude, float speedOverGround, SpeedOverGroundIndicator speedOverGroundIndicator, boolean positionAccuracy,
                                                 double latitude, double longitude, float courseOverGround,
                                                 int second, int regionalReserved, boolean dataTerminalReady,
                                                 boolean assigned, boolean raimFlag, int radioStatus,
@@ -56,6 +57,7 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.altitude = altitude;
         this.speedOverGround = speedOverGround;
+        this.speedOverGroundIndicator = speedOverGroundIndicator;
         this.positionAccuracy = positionAccuracy;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -101,15 +103,17 @@ public class StandardSARAircraftPositionReport extends AISMessage implements Dyn
 
     /** Bits 38-50 (Table 57): altitude in metres from GNSS or barometric sensor (see {@code barometricAltitude}), 0-4094; 4094 = 4094 m or higher, 4095 = not available. */
     int altitude;
-    /** Speed over ground in knots, equal to {@code rawSpeedOverGround} since Message 9 uses 1-knot steps (Table 57); 1022 = 1022 knots or higher, 1023 = not available. */
+    /** Speed over ground in knots, transmitted in 1-knot steps (Table 57); 1022 when 1 022 knots or higher and {@code NaN} when not available, as told by {@code speedOverGroundIndicator}. */
     float speedOverGround;
+    /** Meaning of {@code speedOverGround}: measured, at least the field's maximum, or not available (see {@link SpeedOverGroundIndicator}). */
+    SpeedOverGroundIndicator speedOverGroundIndicator;
     /** Bit 60 (Table 57): position accuracy flag, true = high (≤ 10 m), false = low (&gt; 10 m, default); see Table 48. */
     boolean positionAccuracy;
-    /** Latitude in decimal degrees, {@code rawLatitude} / 600 000 (Table 57); north positive; 91 = not available. */
+    /** Latitude in decimal degrees, transmitted in 1/10 000 min (Table 57); north positive; {@code NaN} when not available (transmitted as 91°). */
     double latitude;
-    /** Longitude in decimal degrees, {@code rawLongitude} / 600 000 (Table 57); east positive; 181 = not available. */
+    /** Longitude in decimal degrees, transmitted in 1/10 000 min (Table 57); east positive; {@code NaN} when not available (transmitted as 181°). */
     double longitude;
-    /** Course over ground in degrees, {@code rawCourseOverGround} / 10 (Table 57); 360 = not available. */
+    /** Course over ground in degrees, transmitted in 1/10° (Table 57); {@code NaN} when not available (transmitted as 360°). */
     float courseOverGround;
     /** Bits 128-134 (Table 57): UTC second when the report was generated, 0-59; 60 = not available (default), 61 = manual input, 62 = dead reckoning, 63 = EPFS inoperative. */
     int second;

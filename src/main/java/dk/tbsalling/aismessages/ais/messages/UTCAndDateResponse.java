@@ -104,9 +104,9 @@ public class UTCAndDateResponse extends AISMessage {
     int second;
     /** Bit 78 (Table 49): position accuracy flag, true = high (≤ 10 m), false = low (&gt; 10 m, default); see Table 48. */
     boolean positionAccurate;
-    /** Bits 107-134 (Table 49): latitude in decimal degrees (1/10 000 min / 600 000); north positive; 91 = not available. */
+    /** Bits 107-134 (Table 49): latitude in decimal degrees, transmitted in 1/10 000 min; north positive; {@code NaN} when not available (transmitted as 91°). */
     double latitude;
-    /** Bits 79-107 (Table 49): longitude in decimal degrees (1/10 000 min / 600 000); east positive; 181 = not available. */
+    /** Bits 79-107 (Table 49): longitude in decimal degrees, transmitted in 1/10 000 min; east positive; {@code NaN} when not available (transmitted as 181°). */
     double longitude;
     /** Bits 134-138 (Table 49): type of electronic position fixing device. */
     PositionFixingDevice positionFixingDevice;

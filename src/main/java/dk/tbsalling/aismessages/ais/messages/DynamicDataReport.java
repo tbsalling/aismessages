@@ -16,6 +16,8 @@
 
 package dk.tbsalling.aismessages.ais.messages;
 
+import dk.tbsalling.aismessages.ais.messages.types.SpeedOverGroundIndicator;
+
 /**
  * Interface for AIS messages containing dynamic data such as position, speed and course, which changes frequently
  * during operation. Implemented by Messages 1, 2, 3, 18 and 19 (through {@link ExtendedDynamicDataReport}) and by
@@ -37,6 +39,11 @@ public interface DynamicDataReport extends DataReport {
      * @return Speed over ground in knots
      */
     float getSpeedOverGround();
+
+    /**
+     * @return Whether {@link #getSpeedOverGround()} is a measured speed, the lower bound of "maximum or higher", or not available
+     */
+    SpeedOverGroundIndicator getSpeedOverGroundIndicator();
 
     /**
      * @return Course over ground in degrees (0-359)

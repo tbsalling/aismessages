@@ -102,9 +102,9 @@ public class ChannelManagement extends AISMessage {
     TxRxMode transmitReceiveMode;
     /** Bit 68 (Table 73): power, false = high (default), true = low. */
     boolean power;
-    /** Bits 69-87 (Table 73): longitude of the north-east corner of the area in decimal degrees (raw value in 1/10 min divided by 600); east positive; 181 = not available. Null in the addressed form. */
+    /** Bits 69-87 (Table 73): longitude of the north-east corner of the area in decimal degrees, transmitted in 1/10 min; east positive; null when not available (transmitted as 181°) and in the addressed form. */
     Double northEastLongitude;
-    /** Bits 87-104 (Table 73): latitude of the north-east corner of the area in decimal degrees (raw value in 1/10 min divided by 600); north positive; 91 = not available. Null in the addressed form. */
+    /** Bits 87-104 (Table 73): latitude of the north-east corner of the area in decimal degrees, transmitted in 1/10 min; north positive; null when not available (transmitted as 91°) and in the addressed form. */
     Double northEastLatitude;
     /** Bits 104-122 (Table 73): longitude of the south-west corner of the area in decimal degrees; null in the addressed form. */
     Double southWestLongitude;

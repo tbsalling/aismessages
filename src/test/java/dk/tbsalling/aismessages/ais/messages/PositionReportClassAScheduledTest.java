@@ -22,7 +22,7 @@ public class PositionReportClassAScheduledTest {
         Instant received = Instant.EPOCH;
 
         NavigationStatus navigationStatus = NavigationStatus.UnderwayUsingEngine;
-        int rateOfTurn = 0;
+        float rateOfTurn = 0;
         float speedOverGround = 12.3f;
         boolean positionAccuracy = true;
         float latitude = 55.0f;
@@ -36,7 +36,7 @@ public class PositionReportClassAScheduledTest {
 
         PositionReportClassAScheduled msg = new PositionReportClassAScheduled(
                 mmsi, repeatIndicator, null, nmeaMessages, bitString, source, received,
-                navigationStatus, rateOfTurn, RateOfTurnIndicator.Measured, speedOverGround, positionAccuracy, latitude, longitude,
+                navigationStatus, rateOfTurn, RateOfTurnIndicator.Measured, speedOverGround, SpeedOverGroundIndicator.Measured, positionAccuracy, latitude, longitude,
                 courseOverGround, trueHeading, second, specialManeuverIndicator, raimFlag, communicationState, false);
 
         // Act

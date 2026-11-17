@@ -90,9 +90,9 @@ public class GNSSBinaryBroadcastMessage extends AISMessage {
 
     /** Bits 38-40 (Table 66): spare, should be zero. */
     int spare1;
-    /** Bits 58-75 (Table 66): surveyed latitude of the DGNSS reference station in decimal degrees (raw value in 1/10 min divided by 600); north positive; 91 = correction service not available. */
+    /** Bits 58-75 (Table 66): surveyed latitude of the DGNSS reference station in decimal degrees, transmitted in 1/10 min; north positive; {@code NaN} when the correction service is not available (transmitted as 91°). */
     double latitude;
-    /** Bits 40-58 (Table 66): surveyed longitude of the DGNSS reference station in decimal degrees (raw value in 1/10 min divided by 600); east positive; 181 = correction service not available. */
+    /** Bits 40-58 (Table 66): surveyed longitude of the DGNSS reference station in decimal degrees, transmitted in 1/10 min; east positive; {@code NaN} when the correction service is not available (transmitted as 181°). */
     double longitude;
     /** Bits 75-80 (Table 66): spare, should be zero. */
     int spare2;

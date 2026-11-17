@@ -58,7 +58,7 @@ public abstract sealed class PositionReport extends AISMessage implements Extend
      * @param nmeaMessages             the NMEA messages
      * @param bitString                the bit string
      * @param navigationStatus         the navigation status
-     * @param rateOfTurn               the rate of turn in degrees per minute (calculated from raw value; 0 unless measured)
+     * @param rateOfTurn               the rate of turn in degrees per minute; NaN unless measured
      * @param rateOfTurnIndicator      what kind of rate of turn value was transmitted
      * @param speedOverGround          the speed over ground
      * @param positionAccuracy         the position accuracy flag
@@ -73,7 +73,7 @@ public abstract sealed class PositionReport extends AISMessage implements Extend
      * @param transmitPowerLow         the transmit power flag (false = high power, true = low power)
      */
     protected PositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
-                             NavigationStatus navigationStatus, int rateOfTurn, RateOfTurnIndicator rateOfTurnIndicator, float speedOverGround,
+                             NavigationStatus navigationStatus, float rateOfTurn, RateOfTurnIndicator rateOfTurnIndicator, float speedOverGround, SpeedOverGroundIndicator speedOverGroundIndicator,
                              boolean positionAccuracy, double latitude, double longitude,
                              float courseOverGround, int trueHeading, int second,
                              ManeuverIndicator specialManeuverIndicator, boolean raimFlag, CommunicationState communicationState, boolean transmitPowerLow) {
@@ -81,6 +81,7 @@ public abstract sealed class PositionReport extends AISMessage implements Extend
         this.navigationStatus = navigationStatus;
         this.rateOfTurn = rateOfTurn;
         this.speedOverGround = speedOverGround;
+        this.speedOverGroundIndicator = speedOverGroundIndicator;
         this.positionAccuracy = positionAccuracy;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -121,22 +122,23 @@ public abstract sealed class PositionReport extends AISMessage implements Extend
     /** Bits 38-42 (Table 46): navigational status; null for a code the enum does not define. */
     NavigationStatus navigationStatus;
     /**
-     * Rate of turn in degrees per minute, derived from {@code rawRateOfTurn} by inverting ROT_AIS = 4.733 × √ROT_sensor
-     * (Table 46); negative = turning left. Only meaningful when {@code rateOfTurnIndicator} is
-     * {@link RateOfTurnIndicator#Measured}; 0 for the special codes ±127 and -128.
+     * Rate of turn in degrees per minute, decoded by inverting ROT_AIS = 4.733 × √ROT_sensor (Table 46); negative =
+     * turning left. {@code NaN} unless {@code rateOfTurnIndicator} is {@link RateOfTurnIndicator#Measured}.
      */
-    int rateOfTurn;
-    /** Meaning of {@code rawRateOfTurn}: a measured rate of turn, turning without a turn indicator (±127), or not available (-128). */
+    float rateOfTurn;
+    /** Meaning of the transmitted rate of turn: a measured value, turning without a turn indicator, or not available (Table 46). */
     RateOfTurnIndicator rateOfTurnIndicator;
-    /** Speed over ground in knots, {@code rawSpeedOverGround} / 10 (Table 46); 102.2 = 102.2 knots or higher, 102.3 = not available. */
+    /** Speed over ground in knots, transmitted in 1/10 knot (Table 46); 102.2 when 102.2 knots or higher and {@code NaN} when not available, as told by {@code speedOverGroundIndicator}. */
     float speedOverGround;
+    /** Meaning of {@code speedOverGround}: measured, at least the field's maximum, or not available (see {@link SpeedOverGroundIndicator}). */
+    SpeedOverGroundIndicator speedOverGroundIndicator;
     /** Bit 60 (Table 46): position accuracy flag, true = high (≤ 10 m), false = low (&gt; 10 m, default); see Table 48. */
     boolean positionAccuracy;
-    /** Latitude in decimal degrees, {@code rawLatitude} / 600 000 (Table 46); north positive; 91 = not available. */
+    /** Latitude in decimal degrees, transmitted in 1/10 000 min (Table 46); north positive; {@code NaN} when not available (transmitted as 91°). */
     double latitude;
-    /** Longitude in decimal degrees, {@code rawLongitude} / 600 000 (Table 46); east positive; 181 = not available. */
+    /** Longitude in decimal degrees, transmitted in 1/10 000 min (Table 46); east positive; {@code NaN} when not available (transmitted as 181°). */
     double longitude;
-    /** Course over ground in degrees, {@code rawCourseOverGround} / 10 (Table 46); 360 = not available. */
+    /** Course over ground in degrees, transmitted in 1/10° (Table 46); {@code NaN} when not available (transmitted as 360°). */
     float courseOverGround;
     /** Bits 128-137 (Table 46): true heading in degrees, 0-359; 511 = not available. */
     int trueHeading;

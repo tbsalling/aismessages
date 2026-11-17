@@ -76,7 +76,7 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
                                 int toBow, int toStern, int toPort, int toStarboard,
                                 PositionFixingDevice positionFixingDevice,
                                 int etaMonth, int etaDay, int etaHour, int etaMinute,
-                                float draught, String destination, boolean dataTerminalReady, AisVersionIndicator aisVersionIndicator) {
+                                float draught, DraughtIndicator draughtIndicator, String destination, boolean dataTerminalReady, AisVersionIndicator aisVersionIndicator) {
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.imo = imo;
         this.callsign = callsign;
@@ -92,6 +92,7 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
         this.etaHour = etaHour;
         this.etaMinute = etaMinute;
         this.draught = draught;
+        this.draughtIndicator = draughtIndicator;
         this.destination = destination;
         this.dataTerminalReady = dataTerminalReady;
         this.aisVersionIndicator = aisVersionIndicator;
@@ -179,8 +180,10 @@ public class ShipAndVoyageData extends AISMessage implements StaticDataReport {
     int etaHour;
     /** Bits 288-294 (Table 50): ETA minute (UTC), 0-59; 60 = not available. */
     int etaMinute;
-    /** Maximum present static draught in metres, {@code rawDraught} / 10 (Table 50); 25.5 = 25.5 m or greater; 0 = not available. */
+    /** Maximum present static draught in metres, transmitted in 1/10 m (Table 50); 25.5 when 25.5 m or greater and {@code NaN} when not available, as told by {@code draughtIndicator}. */
     float draught;
+    /** Meaning of {@code draught}: measured, 25.5 m or greater, or not available (see {@link DraughtIndicator}). */
+    DraughtIndicator draughtIndicator;
     /** Bits 302-422 (Table 50): destination, up to 20 six-bit ASCII characters; all "@" = not available. */
     String destination;
     /** Bit 422 (Table 50, § A7-3.3.1): data terminal equipment ready, true = available (bit 0), false = not available (bit 1, default). */

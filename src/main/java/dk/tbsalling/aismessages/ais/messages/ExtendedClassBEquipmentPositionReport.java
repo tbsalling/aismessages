@@ -45,7 +45,7 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
      * Constructor accepting pre-parsed values for true immutability.
      */
     protected ExtendedClassBEquipmentPositionReport(MMSI sourceMmsi, int repeatIndicator, NMEATagBlock nmeaTagBlock, NMEAMessage[] nmeaMessages, BitString bitString, String source, Instant received,
-                                                    int regionalReserved1, float speedOverGround, boolean positionAccuracy,
+                                                    int regionalReserved1, float speedOverGround, SpeedOverGroundIndicator speedOverGroundIndicator, boolean positionAccuracy,
                                                     double latitude, double longitude, float courseOverGround, int trueHeading,
                                                     int second, int regionalReserved2, String shipName, ShipType shipType,
                                                     int toBow, int toStern, int toPort, int toStarboard,
@@ -54,6 +54,7 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
         super(received, nmeaTagBlock, nmeaMessages, bitString, source, sourceMmsi, repeatIndicator);
         this.regionalReserved1 = regionalReserved1;
         this.speedOverGround = speedOverGround;
+        this.speedOverGroundIndicator = speedOverGroundIndicator;
         this.positionAccuracy = positionAccuracy;
         this.latitude = latitude;
         this.longitude = longitude;
@@ -104,15 +105,17 @@ public class ExtendedClassBEquipmentPositionReport extends AISMessage implements
 
     /** Bits 38-46 (Table 69) as an unsigned integer, first bit most significant: 8 spare bits, should be zero. */
     int regionalReserved1;
-    /** Speed over ground in knots, {@code rawSpeedOverGround} / 10 (Table 69); 102.2 = 102.2 knots or higher, 102.3 = not available. */
+    /** Speed over ground in knots, transmitted in 1/10 knot (Table 69); 102.2 when 102.2 knots or higher and {@code NaN} when not available, as told by {@code speedOverGroundIndicator}. */
     float speedOverGround;
+    /** Meaning of {@code speedOverGround}: measured, at least the field's maximum, or not available (see {@link SpeedOverGroundIndicator}). */
+    SpeedOverGroundIndicator speedOverGroundIndicator;
     /** Bit 56 (Table 69): position accuracy flag, true = high (≤ 10 m), false = low (&gt; 10 m, default); see Table 48. */
     boolean positionAccuracy;
-    /** Latitude in decimal degrees, {@code rawLatitude} / 600 000 (Table 69); north positive; 91 = not available. */
+    /** Latitude in decimal degrees, transmitted in 1/10 000 min (Table 69); north positive; {@code NaN} when not available (transmitted as 91°). */
     double latitude;
-    /** Longitude in decimal degrees, {@code rawLongitude} / 600 000 (Table 69); east positive; 181 = not available. */
+    /** Longitude in decimal degrees, transmitted in 1/10 000 min (Table 69); east positive; {@code NaN} when not available (transmitted as 181°). */
     double longitude;
-    /** Course over ground in degrees, {@code rawCourseOverGround} / 10 (Table 69); 360 = not available. */
+    /** Course over ground in degrees, transmitted in 1/10° (Table 69); {@code NaN} when not available (transmitted as 360°). */
     float courseOverGround;
     /** Bits 124-133 (Table 69): true heading in degrees, 0-359; 511 = not available. */
     int trueHeading;

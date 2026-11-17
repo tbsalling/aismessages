@@ -90,13 +90,13 @@ public class GroupAssignmentCommand extends AISMessage {
 
     /** Bits 38-40 (Table 74): spare, should be zero. */
     int spare1;
-    /** Bits 58-75 (Table 74): latitude of the north-east corner of the area in decimal degrees (raw value in 1/10 min divided by 600); north positive. */
+    /** Bits 58-75 (Table 74): latitude of the north-east corner of the area in decimal degrees transmitted in 1/10 min; north positive. */
     double northEastLatitude;
-    /** Bits 40-58 (Table 74): longitude of the north-east corner of the area in decimal degrees (raw value in 1/10 min divided by 600); east positive. */
+    /** Bits 40-58 (Table 74): longitude of the north-east corner of the area in decimal degrees transmitted in 1/10 min; east positive. */
     double northEastLongitude;
-    /** Bits 93-110 (Table 74): latitude of the south-west corner of the area in decimal degrees (raw value in 1/10 min divided by 600). */
+    /** Bits 93-110 (Table 74): latitude of the south-west corner of the area in decimal degrees transmitted in 1/10 min. */
     double southWestLatitude;
-    /** Bits 75-93 (Table 74): longitude of the south-west corner of the area in decimal degrees (raw value in 1/10 min divided by 600). */
+    /** Bits 75-93 (Table 74): longitude of the south-west corner of the area in decimal degrees transmitted in 1/10 min. */
     double southWestLongitude;
     /** Bits 110-114 (Table 74): station type selector; 0 = all types of mobiles (default), 10 = base station coverage area. */
     StationType stationType;
