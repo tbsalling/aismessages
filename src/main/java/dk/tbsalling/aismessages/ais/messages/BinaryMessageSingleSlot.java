@@ -68,8 +68,14 @@ public class BinaryMessageSingleSlot extends AISMessage {
         final StringBuilder errorMessage = new StringBuilder();
 
         final int numberOfBits = getNumberOfBits();
-        if (numberOfBits < 40)
-            errorMessage.append(format("Message of type %s should be at least 40 bits long; not %d.", getMessageType(), numberOfBits));
+        // Table 79: 40-bit header, plus a 32-bit destination ID when addressed and a 16-bit application identifier when structured.
+        // The flags are read from the bit string because this check runs before the subclass fields are set.
+        final BitString bits = getMetadata().bitString();
+        final boolean addressed = numberOfBits >= 39 && bits.getBoolean(38, 39);
+        final boolean structured = numberOfBits >= 40 && bits.getBoolean(39, 40);
+        final int minimum = 40 + (addressed ? 32 : 0) + (structured ? 16 : 0);
+        if (numberOfBits < minimum)
+            errorMessage.append(format("Message of type %s (%s, %s) should be at least %d bits long; not %d.", getMessageType(), addressed ? "addressed" : "broadcast", structured ? "structured" : "unstructured", minimum, numberOfBits));
         else if (numberOfBits > 168)
             errorMessage.append(format("Message of type %s should be at most 168 bits long; not %d.", getMessageType(), numberOfBits));
 

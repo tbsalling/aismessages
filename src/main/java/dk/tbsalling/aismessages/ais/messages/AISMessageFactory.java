@@ -704,19 +704,19 @@ public class AISMessageFactory {
         boolean binaryDataFlag = bitString.getBoolean(39, 40);
         int dataStart = 40;
         MMSI destinationMMSI = null;
-        if (destinationIndicator) {
+        if (destinationIndicator && bitString.length() >= 72) {
             destinationMMSI = new MMSI(bitString.getUnsignedInt(40, 70));
             dataStart = 72;
         }
         Integer designatedAreaCode = null;
         Integer functionalId = null;
-        if (binaryDataFlag) {
+        if (binaryDataFlag && bitString.length() >= dataStart + 16) {
             designatedAreaCode = bitString.getUnsignedInt(dataStart, dataStart + 10);
             functionalId = bitString.getUnsignedInt(dataStart + 10, dataStart + 16);
             dataStart += 16;
         }
         BitString data = dataStart < bitString.length() ? bitString.slice(dataStart, bitString.length()) : BitString.EMPTY;
-        ApplicationSpecificMessage applicationSpecificMessage = binaryDataFlag ? ApplicationSpecificMessage.create(designatedAreaCode, functionalId, data) : null;
+        ApplicationSpecificMessage applicationSpecificMessage = designatedAreaCode != null ? ApplicationSpecificMessage.create(designatedAreaCode, functionalId, data) : null;
 
         return new BinaryMessageSingleSlot(sourceMmsi, repeatIndicator, nmeaTagBlock, nmeaMessages, bitString, source, received,
                 destinationIndicator, binaryDataFlag, destinationMMSI, designatedAreaCode, functionalId, data, applicationSpecificMessage);
@@ -730,14 +730,14 @@ public class AISMessageFactory {
         int length = bitString.length();
         int dataStart = 40;
         MMSI destinationMmsi = null;
-        if (addressed) {
+        if (addressed && length >= 72) {
             destinationMmsi = new MMSI(bitString.getUnsignedInt(40, 70));
             dataStart = 72;
         }
         Integer designatedAreaCode = null;
         Integer functionalId = null;
         Integer applicationId = null;
-        if (structured) {
+        if (structured && length >= dataStart + 16) {
             designatedAreaCode = bitString.getUnsignedInt(dataStart, dataStart + 10);
             functionalId = bitString.getUnsignedInt(dataStart + 10, dataStart + 16);
             applicationId = bitString.getUnsignedInt(dataStart, dataStart + 16);
@@ -745,7 +745,7 @@ public class AISMessageFactory {
         }
         int dataEnd = length - 24;
         BitString data = dataEnd > dataStart ? bitString.slice(dataStart, dataEnd) : BitString.EMPTY;
-        ApplicationSpecificMessage applicationSpecificMessage = structured ? ApplicationSpecificMessage.create(designatedAreaCode, functionalId, data) : null;
+        ApplicationSpecificMessage applicationSpecificMessage = designatedAreaCode != null ? ApplicationSpecificMessage.create(designatedAreaCode, functionalId, data) : null;
         boolean commStateSelectorFlag = false;
         CommunicationState communicationState = null;
         if (length >= 64) {
