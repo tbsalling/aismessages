@@ -58,7 +58,7 @@ public abstract sealed class PositionReport extends AISMessage implements Extend
      * @param nmeaMessages             the NMEA messages
      * @param bitString                the bit string
      * @param navigationStatus         the navigation status
-     * @param rateOfTurn               the rate of turn (calculated from raw value)
+     * @param rateOfTurn               the rate of turn in degrees per minute (calculated from raw value; 0 unless measured)
      * @param speedOverGround          the speed over ground
      * @param positionAccuracy         the position accuracy flag
      * @param latitude                 the latitude
@@ -96,6 +96,7 @@ public abstract sealed class PositionReport extends AISMessage implements Extend
         this.raimFlag = raimFlag;
         this.communicationState = communicationState;
         this.rawRateOfTurn = rawRateOfTurn;
+        this.rateOfTurnIndicator = RateOfTurnIndicator.fromRawRateOfTurn(rawRateOfTurn);
         this.rawSpeedOverGround = rawSpeedOverGround;
         this.rawLatitude = rawLatitude;
         this.rawLongitude = rawLongitude;
@@ -131,10 +132,12 @@ public abstract sealed class PositionReport extends AISMessage implements Extend
     NavigationStatus navigationStatus;
     /**
      * Rate of turn in degrees per minute, derived from {@code rawRateOfTurn} by inverting ROT_AIS = 4.733 × √ROT_sensor
-     * (Table 46); negative = turning left. The sentinels ±127 ("turning at more than 5° per 30 s, no turn indicator") and
-     * -128 ("not available") are converted like ordinary values, so check {@code rawRateOfTurn} for those cases.
+     * (Table 46); negative = turning left. Only meaningful when {@code rateOfTurnIndicator} is
+     * {@link RateOfTurnIndicator#Measured}; 0 for the special codes ±127 and -128.
      */
     int rateOfTurn;
+    /** Meaning of {@code rawRateOfTurn}: a measured rate of turn, turning without a turn indicator (±127), or not available (-128). */
+    RateOfTurnIndicator rateOfTurnIndicator;
     /** Speed over ground in knots, {@code rawSpeedOverGround} / 10 (Table 46); 102.2 = 102.2 knots or higher, 102.3 = not available. */
     float speedOverGround;
     /** Bit 60 (Table 46): position accuracy flag, true = high (≤ 10 m), false = low (&gt; 10 m, default); see Table 48. */

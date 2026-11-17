@@ -117,7 +117,7 @@ public class AISMessageFactory {
                                                        PositionReportConstructor constructor) {
         NavigationStatus navigationStatus = NavigationStatus.fromInteger(bitString.getUnsignedInt(38, 42));
         int rawRateOfTurn = bitString.getSignedInt(42, 50);
-        int rateOfTurn = (int) (Math.signum(rawRateOfTurn) * Math.pow(rawRateOfTurn / 4.733, 2));
+        int rateOfTurn = rawRateOfTurn >= -126 && rawRateOfTurn <= 126 ? (int) (Math.signum(rawRateOfTurn) * Math.pow(rawRateOfTurn / 4.733, 2)) : 0;
         int rawSpeedOverGround = bitString.getUnsignedInt(50, 60);
         float speedOverGround = rawSpeedOverGround / 10f;
         boolean positionAccuracy = bitString.getBoolean(60, 61);

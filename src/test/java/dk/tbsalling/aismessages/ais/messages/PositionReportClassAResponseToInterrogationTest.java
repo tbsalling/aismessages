@@ -64,7 +64,8 @@ public class PositionReportClassAResponseToInterrogationTest {
         PositionReportClassAResponseToInterrogation message = (PositionReportClassAResponseToInterrogation) aisMessage;
         assertEquals(new MMSI(710000815), message.getSourceMmsi());
         assertEquals(NavigationStatus.UnderwayUsingEngine, message.getNavigationStatus());
-        assertEquals(-720, message.getRateOfTurn());
+        assertEquals(0, message.getRateOfTurn());
+        assertEquals(RateOfTurnIndicator.TurningLeftWithoutTurnIndicator, message.getRateOfTurnIndicator());
         assertEquals(0.7f, message.getSpeedOverGround());
         assertEquals(7, message.getRawSpeedOverGround());
         assertFalse(message.isPositionAccuracy());
