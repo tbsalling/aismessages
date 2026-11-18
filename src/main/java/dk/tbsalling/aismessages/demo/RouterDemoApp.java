@@ -47,7 +47,7 @@ public class RouterDemoApp {
                 .build();
 
         // The router is a plain Consumer<AISMessage>, so it plugs straight into AISInputStreamReader.
-        AISInputStreamReader streamReader = new AISInputStreamReader(inputStream, router);
+        var streamReader = new AISInputStreamReader(inputStream, router);
         streamReader.run();
     }
 

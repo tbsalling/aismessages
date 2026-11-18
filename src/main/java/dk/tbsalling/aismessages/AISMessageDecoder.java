@@ -173,7 +173,7 @@ public final class AISMessageDecoder {
      */
     private static List<AISMessage> decodeLenient(List<String> nmeaSentences) {
         List<AISMessage> messages = new ArrayList<>();
-        NMEAMessageHandler handler = new NMEAMessageHandler("DECODER", messages::add);
+        var handler = new NMEAMessageHandler("DECODER", messages::add);
 
         for (String nmeaSentence : nmeaSentences) {
             if (nmeaSentence == null || nmeaSentence.isBlank()) {

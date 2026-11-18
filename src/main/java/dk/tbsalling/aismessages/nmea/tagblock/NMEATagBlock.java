@@ -50,7 +50,7 @@ public class NMEATagBlock {
             if (code.length != 2)
                 throw new NMEAParseException(rawMessage, "Parameter code and its value has to be separated by colon(:)");
             if (NMEATagBlockParameterCode.contains(code[0])) {
-                NMEATagBlockParameter tagBlockParameter = new NMEATagBlockParameter(NMEATagBlockParameterCode.valueOf(code[0]), code[1]);
+                var tagBlockParameter = new NMEATagBlockParameter(NMEATagBlockParameterCode.valueOf(code[0]), code[1]);
                 parameterMap.put(tagBlockParameter.getCode(), tagBlockParameter);
             }
         }
