@@ -67,7 +67,7 @@ public class NMEAMessageUDPSocket {
             log.info("Listening for UDP packets on " + host + ":" + port);
 
             byte[] buffer = new byte[BUFFER_SIZE];
-            DatagramPacket packet = new DatagramPacket(buffer, buffer.length);
+            var packet = new DatagramPacket(buffer, buffer.length);
 
             while (!isStopRequested()) {
                 try {

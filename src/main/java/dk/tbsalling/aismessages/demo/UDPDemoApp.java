@@ -44,7 +44,7 @@ public class UDPDemoApp implements Consumer<AISMessage> {
         System.out.println();
 
         try {
-            NMEAMessageUDPSocket udpSocket = new NMEAMessageUDPSocket(
+            var udpSocket = new NMEAMessageUDPSocket(
                 host, 
                 port, 
                 new NMEAMessageHandler("UDPDEMO", this)

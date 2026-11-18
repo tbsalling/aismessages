@@ -64,8 +64,8 @@ public class NMEAMessageInputStreamReader {
 		this.nmeaMessageHandler = nmeaMessageHandler;
 		this.nmeaMessagePreProcessor = nmeaStringPreProcessor;
 
-		InputStreamReader reader = new InputStreamReader(inputStream, Charset.defaultCharset());
-		BufferedReader bufferedReader = new BufferedReader(reader);
+		var reader = new InputStreamReader(inputStream, Charset.defaultCharset());
+		var bufferedReader = new BufferedReader(reader);
 		this.stringSupplier = () -> {
 			try {
 				return bufferedReader.readLine();
